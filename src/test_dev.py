@@ -1,3 +1,4 @@
+import numpy as np
 from importlib import reload
 import mesh, boundary
 reload(mesh)
@@ -34,3 +35,24 @@ print(rhs)
 # there are other functions for flattening the array including a flat that is the 
 # flat form of the array for indexing and reshape(-1) that also flattens the array 
 # apparently without making a copy
+
+# session 3 of development
+# numpy broadcasts arrays
+m_rad = MeshRadial2D(7,9, 1, 2*np.pi)
+bc_rad = BoundaryCondition2D(m_rad)
+M, rhs = boundaryConditionRadial2D(bc_rad)
+print(M)
+print(rhs)
+
+# It runs now
+# the [:, np.newaxis] is just amazing!
+# The code is not clean. I'm still doing lots of copy and pasting with tons of
+# boiler plate. But remember any answer is better than no answer.
+# The final boundary: 3D cylindrical
+m_cyl = MeshCylindrical3D(7,9,10, 1, 2*np.pi,3)
+bc_cyl = BoundaryCondition3D(m_cyl)
+M, rhs = boundaryConditionCylindrical3D(bc_cyl)
+print(M)
+print(rhs)
+
+# It runs now! Now I will add all the cell and face variable creations.

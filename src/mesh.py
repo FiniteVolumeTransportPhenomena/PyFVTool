@@ -302,7 +302,7 @@ class MeshRadial2D(Mesh2D):
 
 class MeshCylindrical3D(Mesh3D):
     def __init__(self, *args):
-        if args[4] > np.pi:
+        if args[4] > 2*np.pi:
             warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
         Mesh3D.__init__(self, *args)
         self.dimension = 3.2
@@ -315,9 +315,9 @@ class MeshCylindrical3D(Mesh3D):
 
 class MeshSpherical3D(Mesh3D):
     def __init__(self, *args):
-        if args[4] > np.pi:
+        if args[4] > 2*np.pi:
             warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
-        if args[5] > np.pi:
+        if args[5] > 2*np.pi:
             warn("Recreate the mesh with an upper bound of 2*pi for \phi or there will be unknown consequences!")
         Mesh3D.__init__(self, *args)
         self.dimension = 3.5
