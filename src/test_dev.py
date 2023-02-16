@@ -56,3 +56,54 @@ print(M)
 print(rhs)
 
 # It runs now! Now I will add all the cell and face variable creations.
+# the saga continues
+# Now I'm creating the CellVariables, for which I need cellBoundary functions.
+# Here they are being tested:
+Nx = 5
+Ny = 6
+Nz = 7
+Lx = 1.0
+Ly = 2.0 
+Lz = 3.0
+m1 = Mesh1D(Nx, Lx)
+BC1 = createBC(m1)
+phi = np.random.rand(Nx)
+phi_cell = cellBoundary1D(phi, BC1)
+print(phi)
+print(phi_cell)
+
+m2 = Mesh2D(Nx, Ny, Lx, Ly)
+BC2 = createBC(m2)
+phi = np.random.rand(Nx, Ny)
+phi_cell = cellBoundary2D(phi, BC2)
+print(phi)
+print(phi_cell)
+
+m3 = Mesh3D(Nx, Ny, Nz, Lx, Ly, Lz)
+BC3 = createBC(m3)
+phi = np.ones((Nx, Ny, Nz))
+phi_cell = cellBoundary3D(phi, BC3)
+print(phi)
+print(phi_cell)
+
+m3 = MeshCylindrical3D(Nx, Ny, Nz, Lx, Ly, Lz)
+BC3 = createBC(m3)
+phi = np.ones((Nx, Ny, Nz))
+phi_cell = cellBoundaryCylindrical3D(phi, BC3)
+print(phi)
+print(phi_cell)
+
+m2 = MeshRadial2D(Nx, Ny, Lx, Ly)
+BC2 = createBC(m2)
+phi = np.random.rand(Nx, Ny)
+phi_cell = cellBoundaryRadial2D(phi, BC2)
+print(phi)
+print(phi_cell)
+
+# I just finished the boundary values and the create cell functions.
+# the overloading functions must wait until later this afternoon.
+# for overloading, python has __add__ and __radd__ for the second argument and __iadd__ for +=
+# It will be a lot of writing today!
+# now I'm moving to porting the diffusion and advection terms.
+# It is going to be fun because we are very close to having the first 1D problems solved!
+# I will also write the first tests for the cell and face creation here:
