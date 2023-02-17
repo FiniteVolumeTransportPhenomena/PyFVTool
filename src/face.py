@@ -15,7 +15,7 @@ class FaceVariable:
 def createFaceVariable(mesh, faceval):
     if issubclass(type(mesh), Mesh1D):
         Nx = mesh.dims
-        return FaceVariable(mesh, faceval[0]*np.ones(Nx), np.array([]), np.array([]))
+        return FaceVariable(mesh, faceval[0]*np.ones(Nx+1), np.array([]), np.array([]))
     elif issubclass(type(mesh), Mesh2D):
         Nx, Ny = mesh.dims
         return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny)), 

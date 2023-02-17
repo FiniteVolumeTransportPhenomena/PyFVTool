@@ -1380,3 +1380,14 @@ def cellBoundary(phi, BC) -> np.ndarray:
     else:
         raise Exception("The cellBoundary function is not defined for this mesh type.")
 
+def boundaryConditionTerm(BC):
+    if issubclass(type(BC.domain), Mesh1D):
+        return boundaryCondition1D(BC)
+    elif isinstance(type(BC.domain), Mesh2D) or isinstance(type(BC.domain), MeshCylindrical2D):
+        return boundaryCondition2D(BC)
+    elif isinstance(type(BC.domain), MeshRadial2D):
+        return boundaryConditionRadial2D(BC)
+    elif isinstance(type(BC.domain), Mesh3D):
+        return boundaryCondition3D(BC)
+    elif isinstance(type(BC.domain), MeshCylindrical3D):
+        return boundaryConditionCylindrical3D(BC)

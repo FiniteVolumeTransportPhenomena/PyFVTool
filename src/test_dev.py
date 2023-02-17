@@ -1,10 +1,17 @@
 import numpy as np
 from importlib import reload
-import mesh, boundary
+from scipy.sparse.linalg import spsolve
+import mesh, boundary, cell, face, diffusion
 reload(mesh)
 reload(boundary)
+reload(cell)
+reload(face)
+reload(diffusion)
 from mesh import *
 from boundary import *
+from cell import *
+from face import *
+from diffusion import *
 
 # Development story
 m1 = MeshCylindrical1D(10, 1.0)
@@ -107,3 +114,35 @@ print(phi_cell)
 # now I'm moving to porting the diffusion and advection terms.
 # It is going to be fun because we are very close to having the first 1D problems solved!
 # I will also write the first tests for the cell and face creation here:
+# let's create a face variable and test the diffusion term
+D = createFaceVariable(m1, np.array([1.0]))
+# D_obj = DiffusionTerm(D)
+M = diffusionTerm1D(D)
+print(M)
+
+D2 = createFaceVariable(m2, np.array([1.0, 1.0]))
+D_obj = DiffusionTerm(D2)
+M = diffusionTerm2D(D2)
+print(M[0])
+
+# Now I'm testing the first PDE:
+# steady state diffusion equation
+m1 = Mesh1D(20, 1.0)
+BC = createBC(m1)
+BC.left.a[:] = 0.0
+BC.left.b[:] = 1.0
+BC.left.c[:] = 2.0
+BC.right.a[:] = 0.0
+BC.right.b[:] = 1.0
+BC.right.c[:] = 0.0
+Mbc, RHSbc = boundaryConditionTerm(BC)
+D = createFaceVariable(m1, np.array([1.0]))
+Mdiff = diffusionTerm1D(D)
+c_new = spsolve(-Mdiff+Mbc, RHSbc)
+print(Mdiff)
+print(c_new)
+# [ 2.05  1.95  1.85  1.75  1.65  1.55  1.45  1.35  1.25  1.15  1.05  0.95
+#   0.85  0.75  0.65  0.55  0.45  0.35  0.25  0.15  0.05 -0.05]
+# works fine
+# learning: numpy repeats elements of an array, tile repeats the whole bunch
+# in Julia, repeat does what tile does in numpy! Took me some time to fix it :-(
