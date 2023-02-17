@@ -112,10 +112,14 @@ class Mesh1D(MeshStructure):
             dx = Width/Nx
             cell_size = CellSize(
                 dx*np.ones(Nx+2), np.array([0.0]), np.array([0.0]))
-            cell_location = CellLocation(np.linspace(
-                1, Nx, Nx)*dx-dx/2, np.array([0.0]), np.array([0.0]))
-            face_location = FaceLocation(np.linspace(
-                0, Nx, Nx)*dx, np.array([0.0]), np.array([0.0]))
+            cell_location = CellLocation(
+                int_range(1, Nx)*dx-dx/2, 
+                np.array([0.0]), 
+                np.array([0.0]))
+            face_location = FaceLocation(
+                int_range(0, Nx)*dx, 
+                np.array([0.0]), 
+                np.array([0.0]))
 
         self.dims = np.array([Nx], dtype=int)
         self.cellsize = cell_size
@@ -164,12 +168,12 @@ class Mesh2D(MeshStructure):
                 dy*np.ones(Ny+2),
                 np.array([0.0]))
             cell_location = CellLocation(
-                np.linspace(1, Nx, Nx)*dx-dx/2,
-                np.linspace(1, Ny, Ny)*dy-dy/2,
+                int_range(1, Nx)*dx-dx/2,
+                int_range(1, Ny)*dy-dy/2,
                 np.array([0.0]))
             face_location = FaceLocation(
-                np.linspace(0, Nx, Nx)*dx,
-                np.linspace(0, Ny, Ny)*dy,
+                int_range(0, Nx)*dx,
+                int_range(0, Ny)*dy,
                 np.array([0.0]))
 
         self.dims = np.array([Nx, Ny], dtype=int)
@@ -226,13 +230,13 @@ class Mesh3D(MeshStructure):
                 dy*np.ones(Ny+2),
                 dz*np.ones(Nz+2))
             cell_location = CellLocation(
-                np.linspace(1, Nx, Nx)*dx-dx/2,
-                np.linspace(1, Ny, Ny)*dy-dy/2,
-                np.linspace(1, Nz, Nz)*dz-dz/2)
+                int_range(1, Nx)*dx-dx/2,
+                int_range(1, Ny)*dy-dy/2,
+                int_range(1, Nz)*dz-dz/2)
             face_location = FaceLocation(
-                np.linspace(0, Nx, Nx)*dx,
-                np.linspace(0, Ny, Ny)*dy,
-                np.linspace(0, Nz, Nz)*dz)
+                int_range(0, Nx)*dx,
+                int_range(0, Ny)*dy,
+                int_range(0, Nz)*dz)
         G = int_range(1, (Nx+2)*(Ny+2)*(Nz+2))-1
         G = G.reshape(Nx+2, Ny+2, Nz+2)
         self.dims = np.array([Nx, Ny, Nz], dtype=int)

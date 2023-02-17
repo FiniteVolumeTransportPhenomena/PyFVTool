@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 from importlib import reload
 from scipy.sparse.linalg import spsolve
 import mesh, boundary, cell, face, diffusion
@@ -146,3 +147,51 @@ print(c_new)
 # works fine
 # learning: numpy repeats elements of an array, tile repeats the whole bunch
 # in Julia, repeat does what tile does in numpy! Took me some time to fix it :-(
+
+# Another day, further development
+# I continue with diffusion and later go to advection terms. continue with source,
+# transient, and calculus functions
+
+m2 = Mesh2D(20, 25, 1.0, 2.0)
+BC = createBC(m2)
+BC.left.a[:] = 0.0
+BC.left.b[:] = 1.0
+BC.left.c[:] = 2.0
+BC.right.a[:] = 0.0
+BC.right.b[:] = 1.0
+BC.right.c[:] = 0.0
+Mbc, RHSbc  = boundaryConditionTerm(BC)
+D = createFaceVariable(m2, np.array([1.0, 1.0]))
+Mdiff = diffusionTerm(D)
+c_new = spsolve(-Mdiff[0]+Mbc, RHSbc)
+# plt.pcolormesh(c_new.reshape(m2.dims+2)[1:-1,1:-1])
+# plt.show()
+
+# I was totally confused with isinstance, issubclass, inheritance.
+# Now I simply check the class type using type and is.
+# Note: visualization is a copy and paste of the python code 
+# with a bit of clean up. Everything is already done in 
+# pyplot for Julia.
+
+# Now I'm just testing the 3D diffusion term.
+m3 = Mesh3D(Nx, Ny, Nz, Lx, Ly, Lz)
+D3 = createFaceVariable(m3, np.array([1.0, 2.0, 3.0]))
+M3 = diffusionTerm(D3)
+print(M3[0])
+
+# Now I fix the rest of the diffusion terms.
+# all diffusion terms written. Now testing:
+Nx, Ny, Nz = 5, 6, 7
+Lx, Ly, Lz = 1.0, 2*np.pi, 5.0
+m1 = Mesh1D(Nx, Lx)
+m2 = Mesh2D(Nx, Ny, Lx, Ly)
+m3 = Mesh3D(Nx, Ny, Nz, Lx, Ly, Lz)
+mcyl1 = MeshCylindrical1D(Nx, Lx)
+mcyl2 = MeshCylindrical2D(Nx, Ny, Lx, Ly)
+mcyl3 = MeshCylindrical3D(Nx, Ny, Nz, Lx, Ly, Lz)
+mrad2 = MeshRadial2D(Nx, Ny, Lx, Ly)
+
+m_list = (m1, m2, m3, mcyl1, mcyl2, mcyl3, mrad2)
+for m in m_list:
+    D = createFaceVariable(m, np.array([1.0, 2.0, 3.0]))
+    M = diffusionTerm(D)

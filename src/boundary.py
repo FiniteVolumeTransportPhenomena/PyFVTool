@@ -194,7 +194,7 @@ def boundaryCondition1D(BC: BoundaryCondition1D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), shape=(Nx+2, Nx+2))
     return BCMatrix, BCRHS
 
-def boundaryCondition2D(BC: BoundaryCondition1D):
+def boundaryCondition2D(BC: BoundaryCondition2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -223,12 +223,12 @@ def boundaryCondition2D(BC: BoundaryCondition1D):
         q = q[-1]+i
         ii[q] = G[i,j]  
         jj[q] = G[i,j]  
-        s[q] = (BC.top.b/2 + BC.top.a/dy_end).squeeze()
+        s[q] = (BC.top.b/2 + BC.top.a/dy_end).ravel()
         q = q[-1]+i
         ii[q] = G[i,j]  
         jj[q] = G[i,j-1] 
-        s[q] = (BC.top.b/2 - BC.top.a/dy_end).squeeze()
-        BCRHS[G[i,j]] = (BC.top.c).squeeze()
+        s[q] = (BC.top.b/2 - BC.top.a/dy_end).ravel()
+        BCRHS[G[i,j]] = (BC.top.c).ravel()
 
         # Bottom boundary
         j=0
@@ -236,12 +236,12 @@ def boundaryCondition2D(BC: BoundaryCondition1D):
         q = q[-1]+i
         ii[q] = G[i,j]  
         jj[q] = G[i,j+1]  
-        s[q] = -(BC.bottom.b/2 + BC.bottom.a/dy_1).squeeze()
+        s[q] = -(BC.bottom.b/2 + BC.bottom.a/dy_1).ravel()
         q = q[-1]+i
         ii[q] = G[i,j]  
         jj[q] = G[i,j] 
-        s[q] = -(BC.bottom.b/2 - BC.bottom.a/dy_1).squeeze()
-        BCRHS[G[i,j]] = (-BC.bottom.c).squeeze()
+        s[q] = -(BC.bottom.b/2 - BC.bottom.a/dy_1).ravel()
+        BCRHS[G[i,j]] = (-BC.bottom.c).ravel()
     elif BC.top.periodic or BC.bottom.periodic: # periodic boundary
         # top boundary
         j=Ny+1
@@ -1369,13 +1369,13 @@ def cellBoundaryRadial2D(phi, BC):
 def cellBoundary(phi, BC) -> np.ndarray:
     if issubclass(type(BC.domain), Mesh1D):
         return cellBoundary1D(phi, BC)
-    elif isinstance(type(BC.domain), Mesh2D) or isinstance(type(BC.domain), MeshCylindrical2D):
+    elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
         return cellBoundary2D(phi, BC)
-    elif isinstance(type(BC.domain), MeshRadial2D):
+    elif (type(BC.domain) is MeshRadial2D):
         return cellBoundaryRadial2D(phi, BC)
-    elif isinstance(type(BC.domain), Mesh3D):
+    elif (type(BC.domain) is Mesh3D):
         return cellBoundary3D(phi, BC)
-    elif isinstance(type(BC.domain), MeshCylindrical3D):
+    elif (type(BC.domain) is MeshCylindrical3D):
         return cellBoundaryCylindrical3D(phi, BC)
     else:
         raise Exception("The cellBoundary function is not defined for this mesh type.")
@@ -1383,11 +1383,11 @@ def cellBoundary(phi, BC) -> np.ndarray:
 def boundaryConditionTerm(BC):
     if issubclass(type(BC.domain), Mesh1D):
         return boundaryCondition1D(BC)
-    elif isinstance(type(BC.domain), Mesh2D) or isinstance(type(BC.domain), MeshCylindrical2D):
+    elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
         return boundaryCondition2D(BC)
-    elif isinstance(type(BC.domain), MeshRadial2D):
+    elif (type(BC.domain) is MeshRadial2D):
         return boundaryConditionRadial2D(BC)
-    elif isinstance(type(BC.domain), Mesh3D):
+    elif (type(BC.domain) is Mesh3D):
         return boundaryCondition3D(BC)
-    elif isinstance(type(BC.domain), MeshCylindrical3D):
+    elif (type(BC.domain) is MeshCylindrical3D):
         return boundaryConditionCylindrical3D(BC)
