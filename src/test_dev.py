@@ -2,17 +2,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 from importlib import reload
 from scipy.sparse.linalg import spsolve
-import mesh, boundary, cell, face, diffusion
+import mesh, boundary, cell, face, diffusion, advection
 reload(mesh)
 reload(boundary)
 reload(cell)
 reload(face)
 reload(diffusion)
+reload(advection)
 from mesh import *
 from boundary import *
 from cell import *
 from face import *
 from diffusion import *
+from advection import *
 
 # Development story
 m1 = MeshCylindrical1D(10, 1.0)
@@ -195,3 +197,6 @@ m_list = (m1, m2, m3, mcyl1, mcyl2, mcyl3, mrad2)
 for m in m_list:
     D = createFaceVariable(m, np.array([1.0, 2.0, 3.0]))
     M = diffusionTerm(D)
+
+u = createFaceVariable(m1, [1.0])
+M = convectionTerm1D(u)
