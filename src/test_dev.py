@@ -199,4 +199,10 @@ for m in m_list:
     M = diffusionTerm(D)
 
 u = createFaceVariable(m1, [1.0])
-M = convectionTerm1D(u)
+M1 = convectionTerm1D(u)
+Mup = convectionUpwindTerm1D(u, u)
+BC1 = createBC(m1)
+phi = createCellVariable(m1, np.array([1.0]), BC1)
+FL = fluxLimiter("SUPERBEE")
+rhs_tvd = convectionTvdRHS1D(u, phi, FL, u)
+print(rhs_tvd)
