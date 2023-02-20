@@ -57,3 +57,9 @@ def linearSourceTerm(betta0: CellVariable):
         row_index = G[1:Nx+1, 1:Ny+1, 1:Nz+1].ravel()
         return csr_array((AP_diag, (row_index, row_index)),
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
+
+
+def transientTerm(phi_old: CellVariable, dt, alfa):
+    if not (type(alfa) is CellVariable):
+        a = createCellVariable(phi_old.domain, alfa, createBC(phi_old.domain))
+    return linearSourceTerm(a/dt), constantSourceTerm(a*phi_old/dt)

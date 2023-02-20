@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from importlib import reload
 from scipy.sparse.linalg import spsolve
-import mesh, boundary, cell, face, diffusion, advection, source, calculus, averaging
+import mesh, boundary, cell, face, diffusion, advection, source, calculus, averaging, visualization
 reload(mesh)
 reload(boundary)
 reload(cell)
@@ -12,6 +12,7 @@ reload(advection)
 reload(source)
 reload(calculus)
 reload(averaging)
+reload(visualization)
 from mesh import *
 from boundary import *
 from cell import *
@@ -21,6 +22,7 @@ from advection import *
 from source import *
 from calculus import *
 from averaging import *
+from visualization import *
 
 # # Development story
 # m1 = MeshCylindrical1D(10, 1.0)
@@ -269,3 +271,13 @@ for m in m_list:
 # Now the linear averaging works fine. I'm also getting the hang of np.newaxis and
 # how to do vectorization the right way in numpy (I guess). I'm not sure if my code is the most efficient one
 # but it does not look too bad.
+
+# more development despite limited time. At this point, I'm using this code for
+# therapy :-)
+bc = createBC(m1)
+phi = createCellVariable(m1, np.sin(m1.cellcenters.x), bc)
+# visualizeCells(phi)
+
+bc = createBC(mrad2)
+phi = createCellVariable(mrad2, np.random.random_sample(mrad2.dims), bc)
+visualizeCells(phi)
