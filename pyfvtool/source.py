@@ -1,10 +1,10 @@
 
 import numpy as np
 from scipy.sparse import csr_array
-from mesh import *
-from utilities import *
-from cell import *
-from face import *
+from pyfvtool.mesh import *
+from pyfvtool.utilities import *
+from pyfvtool.cell import *
+from pyfvtool.face import *
 
 
 def constantSourceTerm(phi0: CellVariable):

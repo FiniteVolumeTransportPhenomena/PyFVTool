@@ -1,5 +1,5 @@
 import numpy as np
-from mesh import *
+from pyfvtool.mesh import *
 
 
 class FaceVariable:
@@ -192,7 +192,10 @@ class FaceVariable:
 def createFaceVariable(mesh, faceval):
     if issubclass(type(mesh), Mesh1D):
         Nx = mesh.dims
-        return FaceVariable(mesh, faceval[0]*np.ones(Nx+1), np.array([]), np.array([]))
+        if np.isscalar(faceval):
+            return FaceVariable(mesh, faceval*np.ones(Nx+1), np.array([]), np.array([]))
+        else:
+            return FaceVariable(mesh, faceval[0]*np.ones(Nx+1), np.array([]), np.array([]))
     elif issubclass(type(mesh), Mesh2D):
         Nx, Ny = mesh.dims
         return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny)),

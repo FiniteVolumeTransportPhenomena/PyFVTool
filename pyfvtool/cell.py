@@ -1,8 +1,8 @@
 # CellValue class definition and operator overloading
 
 import numpy as np
-from mesh import *
-from boundary import *
+from pyfvtool.mesh import *
+from pyfvtool.boundary import *
 
 class CellVariable:
     def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray):
@@ -126,8 +126,9 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: B
     """Create a cell variable of class CellVariable
     createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryCondition) -> CellVariable
     """
-
-    if cell_value.size == 1:
+    if np.isscalar(cell_value):
+        phi_val = cell_value*np.ones(mesh_struct.dims)
+    elif cell_value.size == 1:
         phi_val = cell_value*np.ones(mesh_struct.dims)
     elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
         phi_val = cell_value

@@ -1,3 +1,6 @@
 
 *.pyc
 .vscode/settings.json
+vscode/
+build/
+PyFVTool.egg-info/
