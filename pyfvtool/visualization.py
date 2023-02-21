@@ -1,10 +1,10 @@
 import numpy as np
-from scipy.sparse import csr_array
-from scipy.sparse.linalg import spsolve
-from pyfvtool.mesh import *
-from pyfvtool.utilities import *
-from pyfvtool.cell import *
-from pyfvtool.face import *
+# from scipy.sparse import csr_array
+# from scipy.sparse.linalg import spsolve
+from .mesh import *
+from .utilities import *
+from .cell import *
+from .face import *
 import matplotlib.pyplot as plt
 
 

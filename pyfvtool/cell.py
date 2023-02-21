@@ -1,8 +1,8 @@
 # CellValue class definition and operator overloading
 
 import numpy as np
-from pyfvtool.mesh import *
-from pyfvtool.boundary import *
+from .mesh import *
+from .boundary import *
 
 class CellVariable:
     def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray):

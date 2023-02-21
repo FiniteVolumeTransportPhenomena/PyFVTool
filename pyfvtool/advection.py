@@ -1,10 +1,10 @@
 # advection terms
 import numpy as np
 from scipy.sparse import csr_array
-from pyfvtool.mesh import *
-from pyfvtool.utilities import *
-from pyfvtool.cell import *
-from pyfvtool.face import *
+from .mesh import *
+from .utilities import *
+from .cell import *
+from .face import *
 
 # ------------------- Utility functions ---------------------
 
@@ -27,14 +27,10 @@ def convectionTerm1D(u: FaceVariable):
     # reassign the east, west for code readability
     ue = u.xvalue[1:Nx+1]/(DXp+DXe)
     uw = u.xvalue[0:Nx]/(DXp+DXw)
-    # calculate the coefficients for the internal cells
-    AE = ue
-    AW = -uw
-    APx = (ue*DXe-uw*DXw)/DXp
     # build the sparse matrix based on the numbering system
     iix = np.tile(G[1:Nx+1].ravel(), 3)
     jjx = np.hstack([G[0:Nx], G[1:Nx+1], G[2:Nx+2]])
-    sx = np.hstack([AW, APx, AE])
+    sx = np.hstack([-uw, (ue*DXe-uw*DXw)/DXp, ue])
     # build the sparse matrix
     kx = 3*Nx
     return csr_array((sx[0:kx], (iix[0:kx], jjx[0:kx])),
@@ -51,10 +47,10 @@ def convectionUpwindTerm1D(u: FaceVariable, *args):
     Nx = u.domain.dims[0]
     G = u.domain.cell_numbers()
     DXp = u.domain.cellsize.x[1:-1]
-    ue_min = u.xvalue[1:Nx+1]
-    ue_max = u.xvalue[1:Nx+1]
-    uw_min = u.xvalue[0:Nx]
-    uw_max = u.xvalue[0:Nx]
+    ue_min = np.copy(u.xvalue[1:Nx+1])
+    ue_max = np.copy(u.xvalue[1:Nx+1])
+    uw_min = np.copy(u.xvalue[0:Nx])
+    uw_max = np.copy(u.xvalue[0:Nx])
     # find the velocity direction for the upwind scheme
     ue_min[u_upwind.xvalue[1:Nx+1] > 0.0] = 0.0
     ue_max[u_upwind.xvalue[1:Nx+1] < 0.0] = 0.0
@@ -107,10 +103,10 @@ def convectionTvdRHS1D(u: FaceVariable, phi: CellVariable,
     psi_m[0:Nx] = 0.5*FL(rm)*(phi.value[0:Nx]-phi.value[1:Nx+1])
     psi_m[Nx] = 0.0  # right boundary will be handled explicitly
     # find the velocity direction for the upwind scheme
-    ue_min = u.xvalue[1:Nx+1]
-    ue_max = u.xvalue[1:Nx+1]
-    uw_min = u.xvalue[0:Nx]
-    uw_max = u.xvalue[0:Nx]
+    ue_min = np.copy(u.xvalue[1:Nx+1])
+    ue_max = np.copy(u.xvalue[1:Nx+1])
+    uw_min = np.copy(u.xvalue[0:Nx])
+    uw_max = np.copy(u.xvalue[0:Nx])
     ue_min[u_upwind.xvalue[1:Nx+1] > 0.0] = 0.0
     ue_max[u_upwind.xvalue[1:Nx+1] < 0.0] = 0.0
     uw_min[u_upwind.xvalue[0:Nx] > 0.0] = 0.0
@@ -163,10 +159,10 @@ def convectionUpwindTermCylindrical1D(u: FaceVariable, *args):
     DXp = u.domain.cellsize.x[1:-1]
     rp = u.domain.cellcenters.x
     rf = u.domain.facecenters.x
-    ue_min = u.xvalue[1:Nx+1]
-    ue_max = u.xvalue[1:Nx+1]
-    uw_min = u.xvalue[0:Nx]
-    uw_max = u.xvalue[0:Nx]
+    ue_min = np.copy(u.xvalue[1:Nx+1])
+    ue_max = np.copy(u.xvalue[1:Nx+1])
+    uw_min = np.copy(u.xvalue[0:Nx])
+    uw_max = np.copy(u.xvalue[0:Nx])
     # find the velocity direction for the upwind scheme
     ue_min[u_upwind.xvalue[1:Nx+1] > 0.0] = 0.0
     ue_max[u_upwind.xvalue[1:Nx+1] < 0.0] = 0.0
@@ -221,10 +217,10 @@ def convectionTvdRHSCylindrical1D(u: FaceVariable, phi: CellVariable,
     psi_m[0:Nx] = 0.5*FL(rm)*(phi.value[0:Nx]-phi.value[1:Nx+1])
     psi_m[Nx] = 0.0  # right boundary will be handled explicitly
     # find the velocity direction for the upwind scheme
-    ue_min = u.xvalue[1:Nx+1]
-    ue_max = u.xvalue[1:Nx+1]
-    uw_min = u.xvalue[0:Nx]
-    uw_max = u.xvalue[0:Nx]
+    ue_min = np.copy(u.xvalue[1:Nx+1])
+    ue_max = np.copy(u.xvalue[1:Nx+1])
+    uw_min = np.copy(u.xvalue[0:Nx])
+    uw_max = np.copy(u.xvalue[0:Nx])
     ue_min[u_upwind.xvalue[1:Nx+1] > 0.0] = 0.0
     ue_max[u_upwind.xvalue[1:Nx+1] < 0.0] = 0.0
     uw_min[u_upwind.xvalue[0:Nx] > 0.0] = 0.0
@@ -284,9 +280,13 @@ def convectionTerm2D(u: FaceVariable):
     return M, Mx, My
 
 
-def convectionUpwindTerm2D(u: FaceVariable, u_upwind: FaceVariable):
+def convectionUpwindTerm2D(u: FaceVariable, *args):
     # u is a face variable
     # extract data from the mesh structure
+    if len(args) > 0:
+        u_upwind = args[0]
+    else:
+        u_upwind = u
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
     DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
@@ -294,14 +294,14 @@ def convectionUpwindTerm2D(u: FaceVariable, u_upwind: FaceVariable):
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # find the velocity direction for the upwind scheme
-    ue_min = u.xvalue[1:Nx+1, :]
-    ue_max = u.xvalue[1:Nx+1, :]
-    uw_min = u.xvalue[0:Nx, :]
-    uw_max = u.xvalue[0:Nx, :]
-    vn_min = u.yvalue[:, 1:Ny+1]
-    vn_max = u.yvalue[:, 1:Ny+1]
-    vs_min = u.yvalue[:, 0:Ny]
-    vs_max = u.yvalue[:, 0:Ny]
+    ue_min = np.copy(u.xvalue[1:Nx+1, :])
+    ue_max = np.copy(u.xvalue[1:Nx+1, :])
+    uw_min = np.copy(u.xvalue[0:Nx, :])
+    uw_max = np.copy(u.xvalue[0:Nx, :])
+    vn_min = np.copy(u.yvalue[:, 1:Ny+1])
+    vn_max = np.copy(u.yvalue[:, 1:Ny+1])
+    vs_min = np.copy(u.yvalue[:, 0:Ny])
+    vs_max = np.copy(u.yvalue[:, 0:Ny])
     ue_min[u_upwind.xvalue[1:Nx+1, :] > 0.0] = 0.0
     ue_max[u_upwind.xvalue[1:Nx+1, :] < 0.0] = 0.0
     uw_min[u_upwind.xvalue[0:Nx, :] > 0.0] = 0.0
@@ -372,13 +372,13 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     else:
         raise Exception("convectionTerm is not defined for this Mesh type.")
 
-def convectionUpwindTerm(u: FaceVariable) -> csr_array:
+def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     if (type(u.domain) is Mesh1D):
-        return convectionUpwindTerm1D(u)
+        return convectionUpwindTerm1D(u, *args)
     elif (type(u.domain) is MeshCylindrical1D):
-        return convectionUpwindTermCylindrical1D(u)
+        return convectionUpwindTermCylindrical1D(u, *args)
     elif (type(u.domain) is Mesh2D):
-        return convectionUpwindTerm2D(u)
+        return convectionUpwindTerm2D(u, *args)
     elif (type(u.domain) is MeshCylindrical2D):
         raise Exception("Not implemented yet. Work in progress")
         # return convectionUpwindTermCylindrical2D(u)

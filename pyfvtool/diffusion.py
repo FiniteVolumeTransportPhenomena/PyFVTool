@@ -1,10 +1,10 @@
 # diffusion terms
 import numpy as np
 from scipy.sparse import csr_array
-from pyfvtool.mesh import *
-from pyfvtool.utilities import *
-from pyfvtool.cell import *
-from pyfvtool.face import *
+from .mesh import *
+from .utilities import *
+from .cell import *
+from .face import *
 
 
 class DiffusionTerm:

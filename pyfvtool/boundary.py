@@ -4,8 +4,8 @@ Boundary condition classes
 
 import numpy as np
 from scipy.sparse import csr_array
-from pyfvtool.mesh import *
-from pyfvtool.utilities import *
+from .mesh import *
+from .utilities import *
 
 
 class Boundary:

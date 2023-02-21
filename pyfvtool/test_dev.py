@@ -1,28 +1,33 @@
+from pyfvtool.visualization import *
+from pyfvtool.averaging import *
+from pyfvtool.calculus import *
+from pyfvtool.source import *
+from pyfvtool.advection import *
+from pyfvtool.diffusion import *
+from pyfvtool.face import *
+from pyfvtool.cell import *
+from pyfvtool.boundary import *
+from pyfvtool.mesh import *
 import numpy as np
 import matplotlib.pyplot as plt
 from importlib import reload
 from scipy.sparse.linalg import spsolve
-import mesh, boundary, cell, face, diffusion, advection, source, calculus, averaging, visualization
-reload(mesh)
-reload(boundary)
-reload(cell)
-reload(face)
-reload(diffusion)
-reload(advection)
-reload(source)
-reload(calculus)
-reload(averaging)
-reload(visualization)
-from mesh import *
-from boundary import *
-from cell import *
-from face import *
-from diffusion import *
-from advection import *
-from source import *
-from calculus import *
-from averaging import *
-from visualization import *
+import pyfvtool.mesh
+import pyfvtool.boundary
+import pyfvtool.cell
+import pyfvtool.face
+import pyfvtool.diffusion
+import pyfvtool.advection, pyfvtool.source, pyfvtool.calculus, pyfvtool.averaging, pyfvtool.visualization
+reload(pyfvtool.mesh)
+reload(pyfvtool.boundary)
+reload(pyfvtool.cell)
+reload(pyfvtool.face)
+reload(pyfvtool.diffusion)
+reload(pyfvtool.advection)
+reload(pyfvtool.source)
+reload(pyfvtool.calculus)
+reload(pyfvtool.averaging)
+reload(pyfvtool.visualization)
 
 # # Development story
 # m1 = MeshCylindrical1D(10, 1.0)
@@ -50,8 +55,8 @@ from visualization import *
 # print(rhs)
 
 # # learning: use ravel instead of flatten to make the code faster
-# # there are other functions for flattening the array including a flat that is the 
-# # flat form of the array for indexing and reshape(-1) that also flattens the array 
+# # there are other functions for flattening the array including a flat that is the
+# # flat form of the array for indexing and reshape(-1) that also flattens the array
 # # apparently without making a copy
 
 # # session 3 of development
@@ -81,7 +86,7 @@ from visualization import *
 # Ny = 6
 # Nz = 7
 # Lx = 1.0
-# Ly = 2.0 
+# Ly = 2.0
 # Lz = 3.0
 # m1 = Mesh1D(Nx, Lx)
 # BC1 = createBC(m1)
@@ -179,8 +184,8 @@ from visualization import *
 
 # # I was totally confused with isinstance, issubclass, inheritance.
 # # Now I simply check the class type using type and is.
-# # Note: visualization is a copy and paste of the python code 
-# # with a bit of clean up. Everything is already done in 
+# # Note: visualization is a copy and paste of the python code
+# # with a bit of clean up. Everything is already done in
 # # pyplot for Julia.
 
 # # Now I'm just testing the 3D diffusion term.
@@ -206,15 +211,20 @@ for m in m_list:
     D = createFaceVariable(m, np.array([1.0, 2.0, 3.0]))
     M = diffusionTerm(D)
 u = createFaceVariable(m1, [1.0])
+print("before upwind call: ")
+print(u.xvalue)
+uu = createFaceVariable(m1, [-1.0])
 M1 = convectionTerm1D(u)
-Mup = convectionUpwindTerm1D(u, u)
+Mup = convectionUpwindTerm1D(u, uu)
+print("after upwind call: ")
+print(u.xvalue)
 BC1 = createBC(m1)
 phi = createCellVariable(m1, np.array([1.0]), BC1)
 FL = fluxLimiter("SUPERBEE")
 rhs_tvd = convectionTvdRHS1D(u, phi, FL, u)
 print(rhs_tvd)
 
-# I keep going. There are lots of repitition in the code, that are 
+# I keep going. There are lots of repitition in the code, that are
 # not a bad thing necessarily. I can clean them up later. One issue is that if there
 # is a bug in those part, than I have to clean up several functions.
 # I have implemented two more concection (that is advection really) terms.
@@ -244,11 +254,11 @@ print(rhs_tvd)
 # in the code, I made the mistake of using np.pi as an upper limit for raising warnings.
 # It is repeated 4 times in the mesh generation routines. I will have to define these
 # as constants in the code. There are probably similar cases in the code
-# that is hard to remember now. It is Sunday afternoon and I have not had enough 
+# that is hard to remember now. It is Sunday afternoon and I have not had enough
 # sleep this week. Lots of document reading and python learning!
 
 # Continuing in the evening:
-# Note: lots of calculations in the advection and diffusion terms are for the code 
+# Note: lots of calculations in the advection and diffusion terms are for the code
 # readability. I will think of some functions to clean up the code as much as possible
 # I stopped writing more advection term because there are many left
 # I move to source terms:

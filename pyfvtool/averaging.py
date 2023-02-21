@@ -1,9 +1,9 @@
 import numpy as np
 from scipy.sparse import csr_array
-from pyfvtool.mesh import *
-from pyfvtool.utilities import *
-from pyfvtool.cell import *
-from pyfvtool.face import *
+from .mesh import *
+from .utilities import *
+from .cell import *
+from .face import *
 
 def cell_size_array(m: MeshStructure):
     if issubclass(type(m), Mesh1D):

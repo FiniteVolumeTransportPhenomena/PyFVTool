@@ -3,7 +3,7 @@ Mesh generation
 """
 import numpy as np
 from warnings import warn
-from pyfvtool.utilities import *
+from .utilities import *
 
 
 class CellSize:

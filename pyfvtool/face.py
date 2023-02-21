@@ -1,5 +1,5 @@
 import numpy as np
-from pyfvtool.mesh import *
+from .mesh import *
 
 
 class FaceVariable:
