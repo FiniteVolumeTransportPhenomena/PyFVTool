@@ -6,10 +6,10 @@ from pyfvtool.diffusion import diffusionTerm
 from pyfvtool.source import linearSourceTerm, constantSourceTerm, transientTerm
 from pyfvtool.boundary import createBC, boundaryConditionTerm
 from pyfvtool.utilities import fluxLimiter
-from pyfvtool.calculus import gradientTerm
+from pyfvtool.calculus import gradientTerm, divergenceTerm
 from pyfvtool.averaging import linearMean, arithmeticMean, upwindMean, harmonicMean, geometricMean, tvdMean
 from pyfvtool.solver import solvePDE
-from pyfvtool.cell import createCellVariable
+from pyfvtool.cell import createCellVariable, cellVolume
 from pyfvtool.face import createFaceVariable
 from pyfvtool.visualization import visualizeCells
 

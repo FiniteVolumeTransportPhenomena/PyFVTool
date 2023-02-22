@@ -136,3 +136,20 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: B
         raise Exception("The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
     return CellVariable(mesh_struct, cellBoundary(phi_val, BC))
 
+def cellVolume(m: MeshStructure):
+    BC = createBC(m)
+    if (type(m) is Mesh1D):
+        c=m.cellsize.x[1:-1]
+    elif (type(m) is MeshCylindrical1D):
+        c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
+    elif (type(m) is Mesh2D):
+        c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
+    elif (type(m) is MeshCylindrical2D):
+        c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
+    elif (type(m) is MeshRadial2D):
+        c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
+    elif (type(m) is Mesh3D):
+        c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
+    elif (type(m) is MeshCylindrical3D):
+        c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*z[np.newaxis,np.newaxis,:]
+    return createCellVariable(m, c, BC)
