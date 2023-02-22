@@ -349,6 +349,89 @@ def convectionUpwindTerm2D(u: FaceVariable, *args):
     M = Mx + My
     return M, Mx, My
 
+def convectionTvdRHS2D(u: FaceVariable, phi: CellVariable, FL, *args):
+    # u is a face variable
+    # phi is a cell variable
+    if len(args) > 0:
+        u_upwind = args[0]
+    else:
+        u_upwind = u
+    # a function to avoid division by zero
+    # extract data from the mesh structure
+    Nx, Ny = u.domain.dims
+    G=u.domain.cell_numbers()
+    DXp = u.domain.cellsize.x[1:-1][:,np.newaxis]
+    DYp = u.domain.cellsize.y[1:-1][np.newaxis,:]
+    dx=0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])[:,np.newaxis]
+    dy =0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])[np.newaxis,:]
+    psiX_p = np.zeros((Nx+1,Ny))
+    psiX_m = np.zeros((Nx+1,Ny))
+    psiY_p = np.zeros((Nx,Ny+1))
+    psiY_m = np.zeros((Nx,Ny+1))
+    # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+    # x direction
+    dphiX_p = (phi.value[1:Nx+2, 1:Ny+1]-phi.value[0:Nx+1, 1:Ny+1])/dx
+    rX_p = dphiX_p[0:-1,:]/fsign(dphiX_p[1:,:])
+    psiX_p[1:Nx+1,:] = 0.5*FL(rX_p)*(phi.value[2:Nx+2,1:Ny+1]-
+                phi.value[1:Nx+1, 1:Ny+1])
+    psiX_p[0, :] = 0.0 # left boundary will be handled in the main matrix
+    # y direction
+    dphiY_p = (phi.value[1:Nx+1, 1:Ny+2]-phi.value[1:Nx+1, 0:Ny+1])/dy
+    rY_p = dphiY_p[:,0:-1]/fsign(dphiY_p[:,1:])
+    psiY_p[:,1:Ny+1] = 0.5*FL(rY_p)*(phi.value[1:Nx+1,2:Ny+2]-
+            phi.value[1:Nx+1, 1:Ny+1])
+    psiY_p[:,0] = 0.0 # Bottom boundary will be handled in the main matrix
+    # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+    # x direction
+    rX_m = dphiX_p[1:,:]/fsign(dphiX_p[0:-1,:])
+    psiX_m[0:Nx,:] = 0.5*FL(rX_m)*(phi.value[0:Nx, 1:Ny+1]-
+            phi.value[1:Nx+1, 1:Ny+1])
+    psiX_m[-1,:] = 0.0 # right boundary
+    # y direction
+    rY_m = dphiY_p[:,1:]/fsign(dphiY_p[:,0:-1])
+    psiY_m[:,0:Ny] = 0.5*FL(rY_m)*(phi.value[1:Nx+1, 0:Ny]-
+            phi.value[1:Nx+1, 1:Ny+1])
+    psiY_m[:, -1] = 0.0 # top boundary will be handled in the main matrix
+    # find the velocity direction for the upwind scheme
+    ue_min = np.copy(u.xvalue[1:Nx+1, :])
+    ue_max = np.copy(u.xvalue[1:Nx+1, :])
+    uw_min = np.copy(u.xvalue[0:Nx, :])
+    uw_max = np.copy(u.xvalue[0:Nx, :])
+    vn_min = np.copy(u.yvalue[:, 1:Ny+1])
+    vn_max = np.copy(u.yvalue[:, 1:Ny+1])
+    vs_min = np.copy(u.yvalue[:, 0:Ny])
+    vs_max = np.copy(u.yvalue[:, 0:Ny])
+    ue_min[u_upwind.xvalue[1:Nx+1, :] > 0.0] = 0.0
+    ue_max[u_upwind.xvalue[1:Nx+1, :] < 0.0] = 0.0
+    uw_min[u_upwind.xvalue[0:Nx, :] > 0.0] = 0.0
+    uw_max[u_upwind.xvalue[0:Nx, :] < 0.0] = 0.0
+    vn_min[u_upwind.yvalue[:, 1:Ny+1] > 0.0] = 0.0
+    vn_max[u_upwind.yvalue[:, 1:Ny+1] < 0.0] = 0.0
+    vs_min[u_upwind.yvalue[:, 0:Ny] > 0.0] = 0.0
+    vs_max[u_upwind.yvalue[:, 0:Ny] < 0.0] = 0.0
+
+    # calculate the TVD correction term
+    div_x = -(1.0/DXp)*((ue_max*psiX_p[1:Nx+1,:]+ue_min*psiX_m[1:Nx+1,:])-
+                (uw_max*psiX_p[0:Nx,:]+uw_min*psiX_m[0:Nx,:]))
+    div_y = -(1.0/DYp)*((vn_max*psiY_p[:,1:Ny+1]+vn_min*psiY_m[:,1:Ny+1])-
+                (vs_max*psiY_p[:,0:Ny]+vs_min*psiY_m[:,0:Ny]))
+
+    # define the RHS Vector
+    RHS = np.zeros((Nx+2)*(Ny+2))
+    RHSx = np.zeros((Nx+2)*(Ny+2))
+    RHSy = np.zeros((Nx+2)*(Ny+2))
+
+    # assign the values of the RHS vector
+    mnx = Nx*Ny
+    mny = Nx*Ny
+    rowx_index = rowy_index = G[1:Nx+1,1:Ny+1].ravel() # main diagonal x, y
+    RHS[rowx_index] = (div_x+div_y).ravel()
+    RHSx[rowx_index] = div_x.ravel()
+    RHSy[rowy_index] = div_y.ravel()
+
+    return RHS, RHSx, RHSy
+
+
     # ----------------------- User call ----------------------
 def convectionTerm(u: FaceVariable) -> csr_array:
     if (type(u.domain) is Mesh1D):
