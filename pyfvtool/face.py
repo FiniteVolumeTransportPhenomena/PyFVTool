@@ -198,10 +198,19 @@ def createFaceVariable(mesh, faceval):
             return FaceVariable(mesh, faceval[0]*np.ones(Nx+1), np.array([]), np.array([]))
     elif issubclass(type(mesh), Mesh2D):
         Nx, Ny = mesh.dims
-        return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny)),
+        if np.isscalar(faceval):
+            return FaceVariable(mesh, faceval*np.ones((Nx+1, Ny)),
+                            faceval*np.ones((Nx, Ny+1)), np.array([]))
+        else:
+            return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny)),
                             faceval[1]*np.ones((Nx, Ny+1)), np.array([]))
     elif issubclass(type(mesh), Mesh3D):
         Nx, Ny, Nz = mesh.dims
-        return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny, Nz)),
+        if np.isscalar(faceval):
+            return FaceVariable(mesh, faceval*np.ones((Nx+1, Ny, Nz)),
+                            faceval*np.ones((Nx, Ny+1, Nz)),
+                            faceval*np.ones((Nx, Ny, Nz+1)))
+        else:
+            return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny, Nz)),
                             faceval[1]*np.ones((Nx, Ny+1, Nz)),
                             faceval[2]*np.ones((Nx, Ny, Nz+1)))
