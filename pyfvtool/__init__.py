@@ -13,8 +13,6 @@ from pyfvtool.cell import createCellVariable, cellVolume
 from pyfvtool.face import createFaceVariable
 from pyfvtool.visualization import visualizeCells
 
-__version__ = "0.1"
-
 __author__ = (
     "Ali A. Eftekhari"
 )
