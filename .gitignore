@@ -1,5 +1,6 @@
 
 *.pyc
+*.mat
 .vscode/settings.json
 vscode/
 build/

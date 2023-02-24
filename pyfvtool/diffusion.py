@@ -197,10 +197,10 @@ def diffusionTermRadial2D(D: FaceVariable) -> csr_array:
                             * DY[1:Ny+1][np.newaxis, :])
 
     # calculate the coefficients for the internal cells
-    AE = De.ravel()
-    AW = Dw.ravel()
-    AN = Dn.ravel()
-    AS = Ds.ravel()
+    AE = De #.ravel()
+    AW = Dw #.ravel()
+    AN = Dn #.ravel()
+    AS = Ds #.ravel()
     APx = -(AE+AW)
     APy = -(AN+AS)
 
@@ -212,8 +212,8 @@ def diffusionTermRadial2D(D: FaceVariable) -> csr_array:
     jjy = np.hstack([G[1:Nx+1, 0:Ny].ravel(),
                      G[1:Nx+1, 1:Ny+1].ravel(),
                      G[1:Nx+1, 2:Ny+2].ravel()])
-    sx = np.hstack([AW, APx, AE])
-    sy = np.hstack([AS, APy, AN])
+    sx = np.hstack([AW, APx, AE]).ravel()
+    sy = np.hstack([AS, APy, AN]).ravel()
 
     # build the sparse matrix
     kx = 3*mn
@@ -275,9 +275,9 @@ def diffusionTerm3D(D: FaceVariable) -> csr_array:
     jjz = np.hstack([G[1:Nx+1, 1:Ny+1, 0:Nz].ravel(),
                     G[1:Nx+1, 1:Ny+1, 1:Nz+1].ravel(),
                      G[1:Nx+1, 1:Ny+1, 2:Nz+2].ravel()])
-    sx = np.hstack([AW, APx, AE])
-    sy = np.hstack([AS, APy, AN])
-    sz = np.hstack([AB, APz, AF])
+    sx = np.hstack([AW, APx, AE]) #.ravel()
+    sy = np.hstack([AS, APy, AN]) #.ravel()
+    sz = np.hstack([AB, APz, AF]) #.ravel()
 
     # build the sparse matrix
     kx = ky = kz = 3*mn
@@ -364,14 +364,14 @@ def diffusionTerm(D: FaceVariable) -> csr_array:
     elif (type(D.domain) is MeshCylindrical1D):
         return diffusionTermCylindrical1D(D)
     elif (type(D.domain) is Mesh2D):
-        return diffusionTerm2D(D)
+        return diffusionTerm2D(D)[0]
     elif (type(D.domain) is MeshCylindrical2D):
-        return diffusionTermCylindrical2D(D)
+        return diffusionTermCylindrical2D(D)[0]
     elif (type(D.domain) is MeshRadial2D):
-        return diffusionTermRadial2D(D)
+        return diffusionTermRadial2D(D)[0]
     elif (type(D.domain) is Mesh3D):
-        return diffusionTerm3D(D)
+        return diffusionTerm3D(D)[0]
     elif (type(D.domain) is MeshCylindrical3D):
-        return diffusionTermCylindrical3D(D)
+        return diffusionTermCylindrical3D(D)[0]
     else:
         raise Exception("DiffusionTerm is not defined for this Mesh type.")

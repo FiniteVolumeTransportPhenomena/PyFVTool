@@ -247,7 +247,9 @@ class Mesh3D(MeshStructure):
         self.edges = np.hstack([G[0, [0, -1], 1:-1].flatten(),
                                 G[-1, [0, -1], 1:-1].flatten(),
                                 G[0, 1:-1, [0, -1]].flatten(),
-                                G[-1, 1:-1, [0, -1]].flatten()])
+                                G[-1, 1:-1, [0, -1]].flatten(),
+                                G[1:-1, 0, [0, -1]].flatten(),
+                                G[1:-1, -1, [0, -1]].flatten()])
     
     def cell_numbers(self):
         Nx, Ny, Nz = self.dims

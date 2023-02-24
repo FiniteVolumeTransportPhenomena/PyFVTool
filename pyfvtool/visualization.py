@@ -63,93 +63,45 @@ def visualizeCells(phi: CellVariable,
         plt.subplot(111, polar="true")
         plt.pcolor(y, x, phi0)
         plt.show()
-    # elseif d == 3
-    # Nx = phi.domain.dims[1]
-    # Ny = phi.domain.dims[2]
-    # Nz = phi.domain.dims[3]
-    # x = [phi.domain.facecenters.x[1]
-    #      phi.domain.cellcenters.x
-    #      phi.domain.facecenters.x[end]]
-    # y = zeros(1, Ny+2)
-    # y[:] = [phi.domain.facecenters.y[1]
-    #         phi.domain.cellcenters.y
-    #         phi.domain.facecenters.y[end]]
-    # z = zeros(1, 1, Nz+2)
-    # z[:] = [phi.domain.facecenters.z[1]
-    #         phi.domain.cellcenters.z
-    #         phi.domain.facecenters.z[end]]
+    elif (type(phi.domain) is Mesh3D):
+          Nx, Ny, Nz = phi.domain.dims
+          x = np.hstack([phi.domain.facecenters.x[0], phi.domain.cellcenters.x, phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
+          y = np.hstack([phi.domain.facecenters.y[0], phi.domain.cellcenters.y, phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
+          z = np.hstack([phi.domain.facecenters.z[0], phi.domain.cellcenters.z, phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
 
-    # phi0 = Base.copy(phi.value)
-    # phi0[:, 1, :] = 0.5*(phi0[:, 1, :]+phi0[:, 2, :])
-    # phi0[:, end, :] = 0.5*(phi0[:, end-1, :]+phi0[:, end, :])
-    # phi0[:, :, 1] = 0.5*(phi0[:, :, 1]+phi0[:, :, 1])
-    # phi0[:, :, end] = 0.5*(phi0[:, :, end-1]+phi0[:, :, end])
-    # phi0[1, :, :] = 0.5*(phi0[1, :, :]+phi0[2, :, :])
-    # phi0[end, :, :] = 0.5*(phi0[end-1, :, :]+phi0[end, :, :])
+          phi0 = np.copy(phi.value)
+          phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
+          phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
+          phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
+          phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
+          phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
+          phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
 
-    # vmin = minimum(phi0)
-    # vmax = maximum(phi0)
-    # mynormalize = a -> (a .- vmin)./(vmax-vmin)
+          vmin = np.min(phi0)
+          vmax = np.max(phi0)
+          mynormalize = lambda a:((a - vmin)/(vmax-vmin))
 
-    # a = ones(Nx+2, Ny+2, Nz+2)
-    # X = x.*a
-    # Y = y.*a
-    # Z = z.*a
+          a= np.ones((Nx+2,Ny+2,Nz+2))
+          X = x*a
+          Y = y*a
+          Z = z*a
 
-    # fig = figure()
-    # ax = fig[:add_subplot](111, projection="3d")
-    # # r = linspace(1.25, 1.25, 50)
-    # # p = linspace(0, 2π, 50)
-    # # R = repmat(r, 1, 50)
-    # # P = repmat(p', 50, 1)
-    # # Zc = rand(50, 50) # (P.^2-1).^2
-    # # Z = repmat(linspace(0, 2, 50), 1, 50)
-    # # X, Y = R.*cos.(P), R.*sin.(P)
-    # ax[:plot_surface](X[1, :, :], Y[1, :, :], Z[1, :, :], facecolors=PyPlot.cm[:viridis](
-    #     mynormalize(phi0[1, :, :])), alpha=0.8)
-    # ax[:plot_surface](X[end, :, :], Y[end, :, :], Z[end, :, :], facecolors=PyPlot.cm[:viridis](
-    #     mynormalize(phi0[end, :, :])), alpha=0.8)
-    # ax[:plot_surface](X[:, 1, :], Y[:, 1, :], Z[:, 1, :], facecolors=PyPlot.cm[:viridis](
-    #     mynormalize(phi0[:, 1, :])), alpha=0.8)
-    # ax[:plot_surface](X[:, end, :], Y[:, end, :], Z[:, end, :], facecolors=PyPlot.cm[:viridis](
-    #     mynormalize(phi0[:, end, :])), alpha=0.8)
-    # ax[:plot_surface](X[:, :, 1], Y[:, :, 1], Z[:, :, 1], facecolors=PyPlot.cm[:viridis](
-    #     mynormalize(phi0[:, :, 1])), alpha=0.8)
-    # ax[:plot_surface](X[:, :, end], Y[:, :, end], Z[:, :, end], facecolors=PyPlot.cm[:viridis](
-    #     mynormalize(phi0[:, :, end])), alpha=0.8)
-    # # s=mayavis.pipeline[:scalar_field](X,Y,Z,phi0)
-    # #
-    # # mayavis.pipeline[:image_plane_widget](s, plane_orientation="x_axes", slice_index=0, vmin=vmin, vmax=vmax)
-    # # mayavis.pipeline[:image_plane_widget](s, plane_orientation="y_axes", slice_index=0, vmin=vmin, vmax=vmax)
-    # # mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=0, vmin=vmin, vmax=vmax)
-    # # mayavis.pipeline[:image_plane_widget](s, plane_orientation="z_axes", slice_index=floor(Integer,Nz/2.0), vmin=vmin, vmax=vmax)
-    # # mayavis.outline()
-
-    # #   # 6 surfaces
-    # #   # surfaces 1,2 (x=x[1], x=x[end])
-    # #   Y=repmat(y,1,Nz)
-    # #   Z=repmat(z,1,Ny)
-    # #   mayavis.mesh(x[1]*ones(Ny,Nz),Y,Z',scalars=squeeze(phi.value[2,2:end-1,2:end-1],1), vmin=vmin, vmax=vmax, opacity=0.8)
-    # #   mayavis.mesh(x[end]*ones(Ny,Nz),Y,Z',scalars=squeeze(phi.value[end-1,2:end-1,2:end-1],1), vmin=vmin, vmax=vmax, opacity=0.8)
-    # #
-    # #   # surfaces 3,4 (y=y[1], y=y[end]
-    # #   X = repmat(x,1,Nz)
-    # #   Z = repmat(z,1,Nx)
-    # #   mayavis.mesh(X,y[1]*ones(Nx,Nz),Z',scalars=squeeze(phi.value[2:end-1,2,2:end-1],2), vmin=vmin, vmax=vmax, opacity=0.8)
-    # #   mayavis.mesh(X,y[end]*ones(Nx,Nz),Z',scalars=squeeze(phi.value[2:end-1,end-1,2:end-1],2), vmin=vmin, vmax=vmax, opacity=0.8)
-    # #   mayavis.axes()
-    # #
-    # #   # surfaces 5,6 (z=z[1], z=z[end]
-    # #   X = repmat(x,1,Ny)
-    # #   Y = repmat(y,1,Nx)
-    # #   mayavis.mesh(X,Y',z[1]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,2], vmin=vmin, vmax=vmax, opacity=0.8)
-    # #   mayavis.mesh(X,Y',z[end]*ones(Nx,Ny),scalars=phi.value[2:end-1,2:end-1,end-1], vmin=vmin, vmax=vmax, opacity=0.8)
-
-    # # mayavis.colorbar()
-    # # mayavis.axes()
-    # # mshot= mayavis.screenshot()
-    # # mayavis.show()
-    # # return mshot
+          fig = plt.figure()
+          ax = fig.add_subplot(111, projection = "3d")
+          # r = linspace(1.25, 1.25, 50)
+          # p = linspace(0, 2π, 50)
+          # R = repmat(r, 1, 50)
+          # P = repmat(p', 50, 1)
+          # Zc = rand(50, 50) # (P.^2-1).^2
+          # Z = repmat(linspace(0, 2, 50), 1, 50)
+          # X, Y = R.*cos.(P), R.*sin.(P)
+          ax.plot_surface(X[0,:,:], Y[0,:,:], Z[0,:,:], facecolors=plt.cm.viridis(mynormalize(phi0[0,:,:])), alpha=0.8)
+          ax.plot_surface(X[-1,:,:], Y[-1,:,:], Z[-1,:,:], facecolors=plt.cm.viridis(mynormalize(phi0[-1,:,:])), alpha=0.8)
+          ax.plot_surface(X[:,0,:], Y[:,0,:], Z[:,0,:], facecolors=plt.cm.viridis(mynormalize(phi0[:,0,:])), alpha=0.8)
+          ax.plot_surface(X[:,-1,:], Y[:,-1,:], Z[:,-1,:], facecolors=plt.cm.viridis(mynormalize(phi0[:,-1,:])), alpha=0.8)
+          ax.plot_surface(X[:,:,0], Y[:,:,0], Z[:,:,0], facecolors=plt.cm.viridis(mynormalize(phi0[:,:,0])), alpha=0.8)
+          ax.plot_surface(X[:,:,-1], Y[:,:,-1], Z[:,:,-1], facecolors=plt.cm.viridis(mynormalize(phi0[:,:,-1])), alpha=0.8)
+          plt.show()
 
     # elseif d==3.2
     # Nx = phi.domain.dims[1]

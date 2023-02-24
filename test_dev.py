@@ -1,33 +1,40 @@
-from pyfvtool.visualization import *
-from pyfvtool.averaging import *
-from pyfvtool.calculus import *
-from pyfvtool.source import *
-from pyfvtool.advection import *
-from pyfvtool.diffusion import *
-from pyfvtool.face import *
-from pyfvtool.cell import *
-from pyfvtool.boundary import *
-from pyfvtool.mesh import *
+# from visualization import *
+# from averaging import *
+# from calculus import *
+# from source import *
+# from advection import *
+# from diffusion import *
+# from face import *
+# from cell import *
+# from boundary import *
+# from mesh import *
+# import numpy as np
+# import matplotlib.pyplot as plt
+# from importlib import reload
+# from scipy.sparse.linalg import spsolve
+# import mesh
+# import boundary
+# import cell
+# import face
+# import diffusion
+# import advection, source, calculus, averaging, visualization
+# reload(mesh)
+# reload(boundary)
+# reload(cell)
+# reload(face)
+# reload(diffusion)
+# reload(advection)
+# reload(source)
+# reload(calculus)
+# reload(averaging)
+# reload(visualization)
+from pyfvtool import *
 import numpy as np
 import matplotlib.pyplot as plt
 from importlib import reload
 from scipy.sparse.linalg import spsolve
-import pyfvtool.mesh
-import pyfvtool.boundary
-import pyfvtool.cell
-import pyfvtool.face
-import pyfvtool.diffusion
-import pyfvtool.advection, pyfvtool.source, pyfvtool.calculus, pyfvtool.averaging, pyfvtool.visualization
-reload(pyfvtool.mesh)
-reload(pyfvtool.boundary)
-reload(pyfvtool.cell)
-reload(pyfvtool.face)
-reload(pyfvtool.diffusion)
-reload(pyfvtool.advection)
-reload(pyfvtool.source)
-reload(pyfvtool.calculus)
-reload(pyfvtool.averaging)
-reload(pyfvtool.visualization)
+import pyfvtool
+reload(pyfvtool)
 
 # # Development story
 # m1 = MeshCylindrical1D(10, 1.0)
@@ -214,14 +221,14 @@ u = createFaceVariable(m1, [1.0])
 print("before upwind call: ")
 print(u.xvalue)
 uu = createFaceVariable(m1, [-1.0])
-M1 = convectionTerm1D(u)
-Mup = convectionUpwindTerm1D(u, uu)
+M1 = convectionTerm(u)
+Mup = convectionUpwindTerm(u, uu)
 print("after upwind call: ")
 print(u.xvalue)
 BC1 = createBC(m1)
 phi = createCellVariable(m1, np.array([1.0]), BC1)
 FL = fluxLimiter("SUPERBEE")
-rhs_tvd = convectionTvdRHS1D(u, phi, FL, u)
+rhs_tvd = convectionTvdRHSTerm(u, phi, FL, u)
 print(rhs_tvd)
 
 # I keep going. There are lots of repitition in the code, that are
@@ -232,17 +239,17 @@ print(rhs_tvd)
 # lighter.
 # Here we go:
 ucyl1 = createFaceVariable(mcyl1, [1.0])
-M1 = convectionTermCylindrical1D(ucyl1)
-Mup = convectionUpwindTermCylindrical1D(u, u)
+M1 = convectionTerm(ucyl1)
+Mup = convectionUpwindTerm(u, u)
 BCcyl1 = createBC(mcyl1)
 phi = createCellVariable(mcyl1, np.array([1.0]), BCcyl1)
 FL = fluxLimiter("SUPERBEE")
-rhs_tvd = convectionTvdRHSCylindrical1D(u, phi, FL, u)
+rhs_tvd = convectionTvdRHSTerm(u, phi, FL, u)
 print(rhs_tvd)
 
 u2 = createFaceVariable(m2, [1.0, 1.0])
-M2 = convectionTerm2D(u2)
-Mup = convectionUpwindTerm2D(u2, u2)
+M2 = convectionTerm(u2)
+Mup = convectionUpwindTerm(u2, u2)
 BC2 = createBC(m2)
 phi = createCellVariable(m2, np.array([1.0]), BC2)
 FL = fluxLimiter("SUPERBEE")

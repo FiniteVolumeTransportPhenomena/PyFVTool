@@ -909,11 +909,11 @@ def convectionUpwindTerm3D(u: FaceVariable, *args):
     AN[:, -1, :] = AN[:, -1, :]/2.0
     APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]/(2.0*DYp[:, -1, :])
     # Back boundary:
-    APz[:, :, 1] = APz[:, :, 1]-wb_max[:, :, 1]/(2.0*DZp[1, :, :])
-    AB[:, :, 1] = AB[:, :, 1]/2.0
+    APz[:, :, 0] = APz[:, :, 1]-wb_max[:, :, 1]/(2.0*DZp[:, :, 0])
+    AB[:, :, 0] = AB[:, :, 1]/2.0
     # Front boundary:
     AF[:, :, -1] = AF[:, :, -1]/2.0
-    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[-1, :, :])
+    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[:, :, -1])
 
     AE = AE.ravel()
     AW = AW.ravel()
@@ -935,7 +935,7 @@ def convectionUpwindTerm3D(u: FaceVariable, *args):
                      G[1:Nx+1, 2:Ny+2, 1:Nz+1].ravel()])
     jjz = np.hstack([G[1:Nx+1, 1:Ny+1, 0:Nz].ravel(),
                      G[1:Nx+1, 1:Ny+1, 1:Nz+1].ravel(),
-                     G[1:Nx+1, 1:Ny+1, 2:Nz+2]].ravel())
+                     G[1:Nx+1, 1:Ny+1, 2:Nz+2].ravel()])
     sx = np.hstack([AW.ravel(), APx.ravel(), AE.ravel()])
     sy = np.hstack([AS.ravel(), APy.ravel(), AN.ravel()])
     sz = np.hstack([AB.ravel(), APz.ravel(), AF.ravel()])
@@ -1088,7 +1088,7 @@ def convectionTermCylindrical3D(u: FaceVariable):
     APz = ((DZf*wf-DZb*wb)/DZp).ravel()
 
     # build the sparse matrix based on the numbering system
-    ii = np.tile(G[2:Nr+1, 2:Ntheta+1, 2:Nz+1].ravel(), 3)
+    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(), 3)
     jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nz+1].ravel(),
                      G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
                      G[2:Nr+2, 1:Ntheta+1, 1:Nz+1].ravel()])
@@ -1135,8 +1135,8 @@ def convectionUpwindTermCylindrical3D(u: FaceVariable, *args):
     rp = u.domain.cellcenters.x[:, np.newaxis, np.newaxis]
     rf = u.domain.facecenters.x[:, np.newaxis, np.newaxis]
     mn = Nr*Ntheta*Nz
-    re = rf[2:Nr+1, :, :]
-    rw = rf[1:Nr, :, :]
+    re = rf[1:Nr+1, :, :]
+    rw = rf[0:Nr, :, :]
     # find the velocity direction for the upwind scheme
     ux_min, ux_max, uy_min, uy_max, uz_min, uz_max = _upwind_min_max(
         u, u_upwind)
@@ -1168,21 +1168,19 @@ def convectionUpwindTermCylindrical3D(u: FaceVariable, *args):
     APx[-1, :, :] = APx[-1, :, :]+re[-1, :, :] * \
         ue_min[-1, :, :]/(2.0*DRp[-1, :, :]*rp[-1, :, :])
     # Bottom boundary:
-    APy[:, 0, :] = APy[:, 0, :]-vs_max[:, 0, :] / \
-        (2.0*DTHETAp[0, :, :]*rp[:, 0, :])
+    APy[:, 0, :] = APy[:, 0, :]-vs_max[:, 0, :]/(2.0*DTHETAp[:, 0, :]*rp[:,0, :]) 
     AS[:, 0, :] = AS[:, 0, :]/2.0
     # Top boundary:
     AN[:, -1, :] = AN[:, -1, :]/2.0
-    APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :] / \
-        (2.0*DTHETAp[-1, :, :]*rp[:, -1, :])
+    APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]/(2.0*DTHETAp[:, -1, :]*rp[:, -1, :])
     # Back boundary:
-    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DZp[0, :, :])
+    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DZp[:, :, 0])
     AB[:, :, 0] = AB[:, :, 0]/2.0
     # Front boundary:
     AF[:, :, -1] = AF[:, :, -1]/2.0
-    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[-1, :, :])
+    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[:, :, -1])
     # build the sparse matrix based on the numbering system
-    ii = np.tile(G[2:Nr+1, 2:Ntheta+1, 2:Nz+1].ravel(), 3)
+    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(), 3)
     jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nz+1].ravel(),
                      G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
                      G[2:Nr+2, 1:Ntheta+1, 1:Nz+1].ravel()])
@@ -1334,19 +1332,19 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     elif (type(u.domain) is MeshCylindrical1D):
         return convectionTermCylindrical1D(u)
     elif (type(u.domain) is Mesh2D):
-        return convectionTerm2D(u)
+        return convectionTerm2D(u)[0]
     elif (type(u.domain) is MeshCylindrical2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTermCylindrical2D(u)
+        return convectionTermCylindrical2D(u)[0]
     elif (type(u.domain) is MeshRadial2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTermRadial2D(u)
+        return convectionTermRadial2D(u)[0]
     elif (type(u.domain) is Mesh3D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTerm3D(u)
+        return convectionTerm3D(u)[0]
     elif (type(u.domain) is MeshCylindrical3D):
-        raise Exception("Not implemented yet. Work in progress")
-        # return convectionTermCylindrical3D(u)
+        # raise Exception("Not implemented yet. Work in progress")
+        return convectionTermCylindrical3D(u)[0]
     else:
         raise Exception("convectionTerm is not defined for this Mesh type.")
 
@@ -1357,44 +1355,44 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     elif (type(u.domain) is MeshCylindrical1D):
         return convectionUpwindTermCylindrical1D(u, *args)
     elif (type(u.domain) is Mesh2D):
-        return convectionUpwindTerm2D(u, *args)
+        return convectionUpwindTerm2D(u, *args)[0]
     elif (type(u.domain) is MeshCylindrical2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionUpwindTermCylindrical2D(u)
+        return convectionUpwindTermCylindrical2D(u)[0]
     elif (type(u.domain) is MeshRadial2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionUpwindTermRadial2D(u)
+        return convectionUpwindTermRadial2D(u)[0]
     elif (type(u.domain) is Mesh3D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionUpwindTerm3D(u)
+        return convectionUpwindTerm3D(u)[0]
     elif (type(u.domain) is MeshCylindrical3D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionUpwindTermCylindrical3D(u)
+        return convectionUpwindTermCylindrical3D(u)[0]
     else:
         raise Exception(
             "convectionUpwindTerm is not defined for this Mesh type.")
 
 
-def convectionTvdRHSTerm(u: FaceVariable) -> np.ndarray:
+def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.ndarray:
     if (type(u.domain) is Mesh1D):
-        return convectionTvdRHS1D(u)
+        return convectionTvdRHS1D(u, phi, FL, *args)
     elif (type(u.domain) is MeshCylindrical1D):
-        return convectionTvdRHSCylindrical1D(u)
+        return convectionTvdRHSCylindrical1D(u, phi, FL, *args)
     elif (type(u.domain) is Mesh2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTvdRHS2D(u)
+        return convectionTvdRHS2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is MeshCylindrical2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTvdRHSCylindrical2D(u)
+        return convectionTvdRHSCylindrical2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is MeshRadial2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTvdRHSRadial2D(u)
+        return convectionTvdRHSRadial2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is Mesh3D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTvdRHS3D(u)
+        return convectionTvdRHS3D(u, phi, FL, *args)[0]
     elif (type(u.domain) is MeshCylindrical3D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTvdRHSCylindrical3D(u)
+        return convectionTvdRHSCylindrical3D(u, phi, FL, *args)[0]
     else:
         raise Exception(
             "convectionTvdRHSTerm is not defined for this Mesh type.")
