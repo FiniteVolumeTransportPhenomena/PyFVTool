@@ -205,13 +205,13 @@ reload(pyfvtool)
 # all diffusion terms written. Now testing:
 Nx, Ny, Nz = 4, 6, 8
 Lx, Ly, Lz = 1.0, 2*np.pi, 5.0
-m1 = Mesh1D(Nx, Lx)
-m2 = Mesh2D(Nx, Ny, Lx, Ly)
-m3 = Mesh3D(Nx, Ny, Nz, Lx, Ly, Lz)
-mcyl1 = MeshCylindrical1D(Nx, Lx)
-mcyl2 = MeshCylindrical2D(Nx, Ny, Lx, Ly)
-mcyl3 = MeshCylindrical3D(Nx, Ny, Nz, Lx, Ly, Lz)
-mrad2 = MeshRadial2D(Nx, Ny, Lx, Ly)
+m1 = createMesh1D(Nx, Lx)
+m2 = createMesh2D(Nx, Ny, Lx, Ly)
+m3 = createMesh3D(Nx, Ny, Nz, Lx, Ly, Lz)
+mcyl1 = createMeshCylindrical1D(Nx, Lx)
+mcyl2 = createMeshCylindrical2D(Nx, Ny, Lx, Ly)
+mcyl3 = createMeshCylindrical3D(Nx, Ny, Nz, Lx, Ly, Lz)
+mrad2 = createMeshRadial2D(Nx, Ny, Lx, Ly)
 
 m_list = (m1, m2, m3, mcyl1, mcyl2, mcyl3, mrad2)
 for m in m_list:

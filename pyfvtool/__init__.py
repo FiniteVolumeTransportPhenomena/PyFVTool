@@ -1,6 +1,6 @@
-from pyfvtool.mesh import (Mesh1D, Mesh2D, Mesh3D, 
-                  MeshCylindrical1D, MeshCylindrical2D, MeshCylindrical3D, 
-                  MeshRadial2D, MeshSpherical3D,)
+from pyfvtool.mesh import (createMesh1D, createMesh2D, createMesh3D, 
+                  createMeshCylindrical1D, createMeshCylindrical2D, createMeshCylindrical3D, 
+                  createMeshRadial2D, createMeshSpherical3D,)
 from pyfvtool.advection import convectionTerm, convectionTvdRHSTerm, convectionUpwindTerm
 from pyfvtool.diffusion import diffusionTerm
 from pyfvtool.source import linearSourceTerm, constantSourceTerm, transientTerm

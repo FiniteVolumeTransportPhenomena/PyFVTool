@@ -19,7 +19,7 @@ t_sim = L**2/(20*alfa) # [s]
 time_steps = 50
 dt = t_sim/time_steps # 
 Nx = 20 # number of cells
-m = Mesh1D(Nx, L)
+m = createMesh1D(Nx, L)
 left_bc = "Dirichlet"
 # Boundary condition
 BC = createBC(m)
