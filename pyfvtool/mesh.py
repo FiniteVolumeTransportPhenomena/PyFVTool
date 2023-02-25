@@ -3,6 +3,7 @@ Mesh generation
 """
 import numpy as np
 from warnings import warn
+from typing import overload
 from .utilities import *
 
 
@@ -346,3 +347,17 @@ def _facelocation_to_cellsize(facelocation):
     return np.hstack([facelocation[1]-facelocation[0],
                       facelocation[1:]-facelocation[0:-1],
                       facelocation[-1]-facelocation[-2]])
+
+@overload
+def createMesh1D(Nx: int, Lx: float) -> Mesh1D:
+    ...
+
+@overload
+def createMesh1D(face_locations: np.ndarray):
+    ...
+
+def createMesh1D(*args):
+    if len(args)==2:
+        pass
+    else:
+        pass
