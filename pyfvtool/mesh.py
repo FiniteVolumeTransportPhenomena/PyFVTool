@@ -78,6 +78,14 @@ class MeshStructure:
     def visualize(self):
         pass
 
+    def shift_origin(self, x=0.0, y=0.0, z=0.0):
+        self.cellcenters.x += x
+        self.cellcenters.y += y
+        self.cellcenters.z += z
+        self.facecenters.x += x
+        self.facecenters.y += y
+        self.facecenters.z += z
+
     def __str__(self):
         temp = vars(self)
         for item in temp:

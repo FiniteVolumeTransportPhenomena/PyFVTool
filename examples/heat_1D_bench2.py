@@ -50,7 +50,10 @@ while t<t_sim:
 x = m.facecenters.x
 T_face = linearMean(T_val)
 T_num = T_face.xvalue
-plt.plot(x, T_analytic(x, t_sim), x, T_num, 'o')
+T_an = T_analytic(x, t_sim)
+er = np.sum(np.abs(T_num-T_an)/T_an)/Nx
+print(er)
+plt.plot(x, T_an, x, T_num, 'o')
 plt.legend({'Analytical', 'Numerical'})
 plt.xlabel('x [m]')
 plt.ylabel('T [K]')
