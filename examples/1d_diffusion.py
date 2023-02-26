@@ -22,7 +22,7 @@ bc.left.c[:] = c_left
 c_old = createCellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = createCellVariable(m1, D_val, createBC(m1))
+D_cell = createCellVariable(m1, D_val)
 D_face = geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization
