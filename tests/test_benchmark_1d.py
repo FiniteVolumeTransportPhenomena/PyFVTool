@@ -62,9 +62,13 @@ def T_numerical(left_bc: str) -> float:
 class TestDiffusion(unittest.TestCase):
     def test_1d_dirichlet(self):
         print("\n Running 1D conduction heat transfer with Dirichlet boundary:")
-        # code goes here
-        # Parameters
         left_bc = "Dirichlet"
+        er = T_numerical(left_bc)
+        eps_T = 0.001
+        self.assertLessEqual(er, eps_T)
+    def test_1d_neumann(self):
+        print("\n Running 1D conduction heat transfer with Neumann boundary:")
+        left_bc = "Neumann"
         er = T_numerical(left_bc)
         eps_T = 0.001
         self.assertLessEqual(er, eps_T)

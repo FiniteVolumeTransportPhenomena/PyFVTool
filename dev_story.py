@@ -297,4 +297,20 @@ phi = createCellVariable(m1, np.sin(m1.cellcenters.x), bc)
 
 bc = createBC(mrad2)
 phi = createCellVariable(mrad2, np.random.random_sample(mrad2.dims), bc)
-visualizeCells(phi)
+# visualizeCells(phi)
+
+# I missed a lot of stories here since the development and debugging became a bit too fast.
+# I finally added some integrated tests in the form of analytical solutions. Now, I'm going
+# to make it availale via pypi and conda-forge
+# but before that, I create some more examples and convenience functions.
+# let's see if createCellVariable works fine:
+c = createCellVariable(m1, 1.0)
+c = createCellVariable(m1, np.ones(m1.dims), createBC(m1))
+c = createCellVariable(m1, np.ones(m1.dims))
+c = createCellVariable(m1, 1.0, createBC(m1))
+
+# callin numpy functions on cell and face variables
+sin_c = funceval(np.sin, c)
+sin_c = celleval(np.sin, c)
+sin_c_face = faceeval(np.sin, linearMean(c))
+celleval(lambda x,y:(np.sin(x)+np.cos(y)), c, 2*c)

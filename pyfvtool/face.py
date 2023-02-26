@@ -214,3 +214,46 @@ def createFaceVariable(mesh, faceval):
             return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny, Nz)),
                             faceval[1]*np.ones((Nx, Ny+1, Nz)),
                             faceval[2]*np.ones((Nx, Ny, Nz+1)))
+
+
+def faceeval(f, *args):
+    if len(args)==1:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue),
+                            f(args[0].yvalue),
+                            f(args[0].zvalue))
+    elif len(args)==2:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue),
+                            f(args[0].yvalue, args[1].yvalue),
+                            f(args[0].zvalue, args[1].zvalue))
+    elif len(args)==3:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue, args[2].xvalue),
+                            f(args[0].yvalue, args[1].yvalue, args[2].yvalue),
+                            f(args[0].zvalue, args[1].zvalue, args[2].zvalue))
+    elif len(args)==4:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue, args[2].xvalue, args[3].xvalue),
+                            f(args[0].yvalue, args[1].yvalue, args[2].yvalue, args[3].yvalue),
+                            f(args[0].zvalue, args[1].zvalue, args[2].zvalue, args[3].zvalue))
+    elif len(args)==5:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue, args[2].xvalue, args[3].xvalue, args[4].xvalue),
+                            f(args[0].yvalue, args[1].yvalue, args[2].yvalue, args[3].yvalue, args[4].yvalue),
+                            f(args[0].zvalue, args[1].zvalue, args[2].zvalue, args[3].zvalue, args[4].zvalue))
+    elif len(args)==6:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue, args[2].xvalue, args[3].xvalue, args[4].xvalue, args[5].xvalue),
+                            f(args[0].yvalue, args[1].yvalue, args[2].yvalue, args[3].yvalue, args[4].yvalue, args[5].yvalue),
+                            f(args[0].zvalue, args[1].zvalue, args[2].zvalue, args[3].zvalue, args[4].zvalue, args[5].zvalue))
+    elif len(args)==7:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue, args[2].xvalue, args[3].xvalue, args[4].xvalue, args[5].xvalue, args[6].xvalue),
+                            f(args[0].yvalue, args[1].yvalue, args[2].yvalue, args[3].yvalue, args[4].yvalue, args[5].yvalue, args[6].yvalue),
+                            f(args[0].zvalue, args[1].zvalue, args[2].zvalue, args[3].zvalue, args[4].zvalue, args[5].zvalue, args[6].zvalue))
+    elif len(args)==8:
+        return FaceVariable(args[0].domain,
+                            f(args[0].xvalue, args[1].xvalue, args[2].xvalue, args[3].xvalue, args[4].xvalue, args[5].xvalue, args[6].xvalue, args[7].xvalue),
+                            f(args[0].yvalue, args[1].yvalue, args[2].yvalue, args[3].yvalue, args[4].yvalue, args[5].yvalue, args[6].yvalue, args[7].yvalue),
+                            f(args[0].zvalue, args[1].zvalue, args[2].zvalue, args[3].zvalue, args[4].zvalue, args[5].zvalue, args[6].zvalue, args[7].zvalue))

@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0", "numpy", "scipy", "matplotlib"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyfvtool"
+version = "0.0.1"
+authors = [
+  { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
+]
+description = "A Finite Volume Tool in Python"
+readme = "README.md"
+requires-python = ">=3.5"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/simulkade/PyFVTool"
+"Bug Tracker" = "https://github.com/simulkade/PyFVTool/issues"

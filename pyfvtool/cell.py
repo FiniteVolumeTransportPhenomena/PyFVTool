@@ -1,6 +1,7 @@
 # CellValue class definition and operator overloading
 
 import numpy as np
+from typing import overload
 from .mesh import *
 from .boundary import *
 
@@ -121,8 +122,24 @@ class CellVariable:
     
     def __abs__(self):
         return CellVariable(self.domain, np.abs(self.value))
-    
+
+@overload
 def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryCondition) -> CellVariable:
+    ...
+
+@overload
+def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray) -> CellVariable:
+    ...
+
+@overload
+def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryCondition) -> CellVariable:
+    ...
+
+@overload
+def createCellVariable(mesh_struct: MeshStructure, cell_value: float) -> CellVariable:
+    ...
+
+def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVariable:
     """Create a cell variable of class CellVariable
     createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryCondition) -> CellVariable
     """
@@ -133,8 +150,12 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: B
     elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
         phi_val = cell_value
     else:
-        raise Exception("The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
-    return CellVariable(mesh_struct, cellBoundary(phi_val, BC))
+        raise Exception(f"The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
+    
+    if len(arg)==1:
+        return CellVariable(mesh_struct, cellBoundary(phi_val, arg[0]))
+    else:
+        return CellVariable(mesh_struct, cellBoundary(phi_val, createBC(mesh_struct)))
 
 def cellVolume(m: MeshStructure):
     BC = createBC(m)
@@ -153,3 +174,32 @@ def cellVolume(m: MeshStructure):
     elif (type(m) is MeshCylindrical3D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*z[np.newaxis,np.newaxis,:]
     return createCellVariable(m, c, BC)
+
+def funceval(f, *args):
+    if len(args)==1:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value))
+    elif len(args)==2:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value))
+    elif len(args)==3:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value, args[2].value))
+    elif len(args)==4:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value, args[2].value, args[3].value))
+    elif len(args)==5:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value))
+    elif len(args)==6:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value, args[5].value))
+    elif len(args)==7:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value, args[5].value, args[6].value))
+    elif len(args)==8:
+        return CellVariable(args[0].domain, 
+                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value, args[5].value, args[6].value, args[7].value))
+    
+def celleval(f, *args):
+    return funceval(f, *args)

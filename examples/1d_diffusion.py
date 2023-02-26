@@ -10,7 +10,7 @@ D_val = 1e-5 # diffusion coefficient (gas phase)
 t_simulation = 3600.0 # [s] simulation time
 dt = 60.0 # [s] time step
 
-m1 = Mesh1D(Nx, Lx) # mesh object
+m1 = createMesh1D(Nx, Lx) # mesh object
 bc = createBC(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
