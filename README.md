@@ -1,13 +1,17 @@
 # PyFVTool
-This is a Python implementation of my Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) heavily inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) albeit with a small fraction of FiPy features. The boundary conditions, however, is much easier to implement in PyFVTool.   
+This is a Python implementation of my Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) heavily inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) albeit with a fraction of FiPy features. The boundary conditions, however, are much easier (and perhaps more consistent) to implement in PyFVTool.   
 
-This tool can solve a transient convection-diffusion equation with variable velocity field/diffusion coefficients. The discretization schemes include:  
-  * central difference diffusion term
-  * central difference convection term
-  * upwind convection term
-  * TVD convection term with various flux limiters
-  * transient term
-  * Dirichlet, Neumann, Robin, and periodic boundary conditions
+This package can dicretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients. The [finite volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
+  * 1D, 2D and 3D Cartesian and Cylindrical grids (only 1D spherical)
+  * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
+  * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
+  * Constant and linear source terms
+  * Backward and forward [Euler](https://en.wikipedia.org/wiki/Euler_method) for transient terms
+  * [Dirichlet](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition), [Neumann](https://en.wikipedia.org/wiki/Neumann_boundary_condition), [Robin](https://en.wikipedia.org/wiki/Robin_boundary_condition), and [periodic](https://en.wikipedia.org/wiki/Periodic_boundary_conditions) boundary conditions
+  * (Relatively) easy linearization of nonlinear PDEs
+  * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
+  * Divergence and gradient terms
+  * Convenient visualization of results
 
 The code is still being tested although the preliminary simulations match analytical solutions. More validation will be done soon.  
 
