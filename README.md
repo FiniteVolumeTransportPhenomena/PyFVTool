@@ -1,7 +1,18 @@
 # PyFVTool
 This is a Python implementation of my Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) heavily inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) albeit with a fraction of FiPy features. The boundary conditions, however, are much easier (and perhaps more consistent) to implement in PyFVTool.   
 
-This package can dicretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients. The [finite volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
+This package can dicretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients:  
+
+```math
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla.\left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla.(\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
+```
+with the following general form of boundary conditions (by specifying constants `a`, `b`, and `c`):
+
+```math
+a\nabla\phi.\mathbf{e}+b\phi=c
+```
+
+The [finite volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
   * 1D, 2D and 3D Cartesian and Cylindrical grids (only 1D spherical)
   * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
   * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
