@@ -4,7 +4,7 @@ This is a Python implementation of my Matlab/Octave FVM solver [FVTool](http://g
 This package can dicretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients:  
 
 ```math
-\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla.\left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla.(\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla.\left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla.(-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
 ```
 with the following general form of boundary conditions (by specifying constants `a`, `b`, and `c`):
 
