@@ -62,4 +62,6 @@ def linearSourceTerm(betta0: CellVariable):
 def transientTerm(phi_old: CellVariable, dt, alfa):
     if not (type(alfa) is CellVariable):
         a = createCellVariable(phi_old.domain, alfa, createBC(phi_old.domain))
+    else:
+        a = alfa
     return linearSourceTerm(a/dt), constantSourceTerm(a*phi_old/dt)
