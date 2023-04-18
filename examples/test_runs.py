@@ -17,13 +17,13 @@ Z= np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
 N_mesh=7
 # create nonuniform mesh
 mesh_nonuniform= []
-mesh_nonuniform.append(Mesh1D(X))
-mesh_nonuniform.append(Mesh2D(X, Y))
-mesh_nonuniform.append(Mesh3D(X, Y, Z))
-mesh_nonuniform.append(MeshCylindrical1D(X))
-mesh_nonuniform.append(MeshCylindrical2D(X, Y))
-mesh_nonuniform.append(MeshCylindrical3D(X, Y, Z))
-mesh_nonuniform.append(MeshRadial2D(X, Y))
+mesh_nonuniform.append(createMesh1D(X))
+mesh_nonuniform.append(createMesh2D(X, Y))
+mesh_nonuniform.append(createMesh3D(X, Y, Z))
+mesh_nonuniform.append(createMeshCylindrical1D(X))
+mesh_nonuniform.append(createMeshCylindrical2D(X, Y))
+mesh_nonuniform.append(createMeshCylindrical3D(X, Y, Z))
+mesh_nonuniform.append(createMeshRadial2D(X, Y))
 print("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables
 c_val= 1.0
