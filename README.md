@@ -29,7 +29,7 @@ The code is still being tested although the preliminary simulations match analyt
 There are simple tricks to use the code for systems of nonlinear partial differential equations that take the form of advection-diffusion-reaction equations. There are not so much documentations for the code but the example folder is the best place to start. If you know the topic, there is a good chance you will never need any documentations.  
 
 ## Installation
-For now, install it directly from the repo using pip. You will need `Python 3.5` or higher and `numpy`, `scipy`, and `matplotlib`:  
+For now, install it directly from the repo using pip. You will need `Python 3.6` or higher and `numpy`, `scipy`, and `matplotlib`:  
 
 ```
 pip install git+https://github.com/simulkade/PyFVTool.git
