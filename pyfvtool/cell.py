@@ -219,6 +219,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
     else:
         return CellVariable(mesh_struct, cellBoundary(phi_val, createBC(mesh_struct)))
 
+
 def copyCellVariable(phi: CellVariable) -> CellVariable:
     """
     Create a copy of a CellVariable
@@ -235,6 +236,7 @@ def copyCellVariable(phi: CellVariable) -> CellVariable:
 
     """
     return CellVariable(phi.domain, np.copy(phi.value))
+
 
 def cellVolume(m: MeshStructure):
     BC = createBC(m)
@@ -254,6 +256,61 @@ def cellVolume(m: MeshStructure):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
     return createCellVariable(m, c, BC)
 
+
+def cellLocations(m: MeshStructure):
+    """
+    this function returns the location of the cell centers as cell variables. 
+    
+    It can later be used in defining properties that are variable in space.
+    
+    Parameters
+    ----------
+    m : {MeshStructure object}
+        Domain of the problem
+
+    Returns
+    -------
+    X : {CellVariable object}
+        Node x-positions        
+    Y : {CellVariable object}
+        Node y-positions        
+    Z : {CellVariable object}
+        Node z-positions        
+
+    See Also
+    --------
+    faceLocations
+
+    Notes
+    -----
+
+    Examples
+    --------
+    >>>     
+    
+    """    
+    N = m.dims
+    d = m.dimension
+    
+    X = createCellVariable(m, 0)
+    Y = createCellVariable(m, 0)
+    Z = createCellVariable(m, 0)
+    
+    if (d == 1) or (d == 1.5) or (d == 1.8):
+        X = createCellVariable(m, m.cellcenters.x)
+        
+    elif (d==2) or (d == 2.5) or (d==2.8): 
+        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
+        Y = createCellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
+            
+    elif (d==3) or (d==3.2): 
+        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
+        Y = createCellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
+        
+        z = np.zeros((1,1,N[2]))
+        z[0, 0, :] = m.cellcenters.z
+        Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
+    return X, Y, Z
 
 
 def funceval(f, *args):

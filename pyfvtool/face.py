@@ -225,7 +225,76 @@ def createFaceVariable(mesh, faceval):
                             faceval[1]*np.ones((Nx, Ny+1, Nz)),
                             faceval[2]*np.ones((Nx, Ny, Nz+1)))
 
+        
+def faceLocations(m: MeshStructure):
+    """
+    this function returns the location of the cell faces as face variables. 
+    
+    It can later be used for the calculation of face variables as a function of location
+    
+    Parameters
+    ----------
+    m : {MeshStructure object}
+        Domain of the problem
 
+    Returns
+    -------
+    X : {FaceVariable object}
+        Edge x-positions        
+    Y : {FaceVariable object}
+        Edge y-positions        
+    Z : {FaceVariable object}
+        Edge z-positions        
+
+    See Also
+    --------
+    cellLocations
+
+    Notes
+    -----
+
+    Examples
+    --------
+    >>>     
+    
+    """    
+    N=m.dims
+    X = createFaceVariable(m, 0)
+    Y = createFaceVariable(m, 0)
+    Z = createFaceVariable(m, 0)
+    
+    N = m.dims
+    d = m.dimension
+    
+    if (d == 1) or (d == 1.5) or (d == 1.8):
+        X.xvalue = m.facecenters.x
+        
+    elif (d==2) or (d == 2.5) or (d==2.8):
+        X.xvalue = np.tile(m.facecenters.x[:, np.newaxis], (1, N[1]))
+        X.yvalue = np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0]+1, 1))
+        Y.xvalue = np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1]+1))
+        Y.yvalue = np.tile(m.facecenters.y[:, np.newaxis].T, (N[0], 1))
+        
+    elif (d==3) or (d==3.2): 
+        z = np.zeros((1,1,N[2]))
+        z[0, 0, :] = m.cellcenters.z
+        
+        X.xvalue = np.tile(m.facecenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2]))
+        X.yvalue = np.tile((m.cellcenters.y[:, np.newaxis].T)[:, :, np.newaxis], (N[0]+1, 1, N[2]))
+        X.zvalue = np.tile(z, (N[0]+1, N[1], 1))
+        
+        Y.xvalue = np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1]+1, N[2]))
+        Y.yvalue = np.tile((m.facecenters.y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]))
+        Y.zvalue = np.tile(z, (N[0], N[1]+1, 1))
+
+        z = np.zeros((1,1,N[2]+1))
+        z[0, 0, :] = m.cellcenters.z
+        Z.xvalue = np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2]+1))
+        Z.yvalue = np.tile((m.facecenters.y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]+1))
+        Z.zvalue = np.tile(z, (N[0], N[1], 1))
+    return X, Y, Z
+        
+        
 def faceeval(f, *args):
     """
     Evaluate a function f on a FaceVariable.
