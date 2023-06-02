@@ -6,5 +6,9 @@
 .virtual_documents/
 vscode/
 build/
+
+# Git is case-sensitive on some operating systems
 PyFVTool.egg-info/
+pyfvtool.egg-info/
+
 local/
