@@ -84,3 +84,20 @@ def fluxLimiter(flName: str, eps =2e-16):
         def FL(r):
             return (np.maximum(0.0, np.maximum(np.minimum(2.0*r,1.0), np.minimum(r,2.0))))
     return FL
+
+
+# add a utility function to extract 1D profile
+# this may later become a method of CellVariable
+def get_CellVariable_profile1D(cv):
+    x = np.hstack([cv.domain.facecenters.x[0],
+                   cv.domain.cellcenters.x,
+                   cv.domain.facecenters.x[-1]])
+    phi = np.hstack([0.5*(cv.value[0]+cv.value[1]),
+                     cv.value[1:-1],
+                     0.5*(cv.value[-2]+cv.value[-1])])
+    # The size of the ghost cell is always equal to the size of the 
+    # first (or last) cell within the domain. The value at the
+    # boundary can therefore be obtained by direct averaging with a
+    # weight factor of 0.5.
+    return (x, phi)
+        
