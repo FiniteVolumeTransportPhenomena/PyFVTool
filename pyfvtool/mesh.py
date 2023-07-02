@@ -381,6 +381,30 @@ def createMesh1D(face_locations: np.ndarray) -> Mesh1D:
 def createMesh1D(*args) -> Mesh1D:
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
         *args)
+    """Create a Mesh1D object from a list of cell face locations or from
+    number of cells and domain length.
+
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Lx : float
+        Length of the domain in the x direction.
+    face_locations : ndarray
+        Locations of the cell faces in the x direction.
+
+    Returns
+    -------
+    Mesh1D
+        A 1D mesh object.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMesh1D
+    >>> mesh = createMesh1D(10, 10.0)
+    >>> print(mesh)
+    """
     return Mesh1D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
@@ -396,6 +420,36 @@ def createMesh2D(face_locationsX: np.ndarray,
 
 
 def createMesh2D(*args) -> Mesh2D:
+    """Create a Mesh2D object from a list of cell face locations or from
+    number of cells and domain length.
+
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Ny : int
+        Number of cells in the y direction.
+    Lx : float
+        Length of the domain in the x direction.
+    Ly : float
+        Length of the domain in the y direction.
+    face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+    face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+
+    Returns
+    -------
+    Mesh2D
+        A 2D mesh object.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMesh2D
+    >>> mesh = createMesh2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
+    """
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
         *args)
     return Mesh2D(dims, cellsize, cellcenters, facecenters, corners, edges)

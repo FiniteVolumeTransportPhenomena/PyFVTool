@@ -9,6 +9,13 @@ from .utilities import *
 
 
 class Boundary:
+    """
+    Boundary condition class
+    a: coefficient of the boundary condition
+    b: coefficient of the boundary condition
+    c: coefficient of the boundary condition
+    periodic: True if the boundary is periodic
+    """
     def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, periodic=False):
         self.a = a
         self.b = b
@@ -29,6 +36,16 @@ class Boundary:
 
 
 class BoundaryCondition:
+    """
+    Boundary condition class
+    mesh: mesh structure
+    left: left boundary condition
+    right: right boundary condition
+    bottom: bottom boundary condition
+    top: top boundary condition
+    back: back boundary condition
+    front: front boundary condition
+    """
     def __init__(self, mesh: MeshStructure,
                  left: Boundary, right: Boundary,
                  bottom: Boundary, top: Boundary,
