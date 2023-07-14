@@ -5,17 +5,30 @@ utility functions come here
 import numpy as np
 
 def int_range(a:int, b:int) -> np.ndarray:
+    """
+    returns a range of integer values from a to b
+    """
     return np.linspace(a, b, b-a+1, dtype=int)
 
 def fluxLimiter(flName: str, eps =2e-16):
-    # This function returns a function handle to a flux limiter of user's
-    # choice.
-    # available flux limiters are: 'CHARM', 'HCUS', 'HQUICK', 'VanLeer',
-    # 'VanAlbada1', 'VanAlbada2', 'MinMod', 'SUPERBEE', 'Sweby', 'Osher',
-    # 'Koren', 'smart', 'MUSCL', 'QUICK', 'MC', and 'UMIST'.
-    # Default limiter is 'SUPERBEE'. See:
-    # <http://en.wikipedia.org/wiki/Flux_limiter>
-    # find the flux limiter function
+    """
+    returns a flux limiter function
+
+    Parameters
+    -----
+
+    
+    Notes
+    -----
+    This function returns a function handle to a flux limiter of user's
+    choice.
+    available flux limiters are: 'CHARM', 'HCUS', 'HQUICK', 'VanLeer',
+    'VanAlbada1', 'VanAlbada2', 'MinMod', 'SUPERBEE', 'Sweby', 'Osher',
+    'Koren', 'smart', 'MUSCL', 'QUICK', 'MC', and 'UMIST'.
+    Default limiter is 'SUPERBEE'. See:
+    <http://en.wikipedia.org/wiki/Flux_limiter>
+    
+    """
     if flName=="CHARM":
         def FL(r):
             return ((r>0.0)*r*(3.0*r+1.0)/(((r+1.0)**2.0)+eps*(r==-1.0)))

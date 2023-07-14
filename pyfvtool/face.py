@@ -3,6 +3,9 @@ from .mesh import *
 
 
 class FaceVariable:
+    """
+    Face variable class
+    """
     def __init__(self,
                  mesh_struct: MeshStructure,
                  xvalue: np.ndarray,
@@ -190,6 +193,13 @@ class FaceVariable:
 
 
 def createFaceVariable(mesh, faceval):
+    """
+    Create a FaceVariable for the given mesh with the given value.
+    Examples:
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> f = createFaceVariable(m, 1.0)
+    """
     if issubclass(type(mesh), Mesh1D):
         Nx = mesh.dims
         if np.isscalar(faceval):
@@ -217,6 +227,14 @@ def createFaceVariable(mesh, faceval):
 
 
 def faceeval(f, *args):
+    """
+    Evaluate a function f on a FaceVariable.
+    Examples:
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> f = createFaceVariable(m, 1.0)
+    >>> g = faceeval(lambda x: x**2, f)
+    """
     if len(args)==1:
         return FaceVariable(args[0].domain,
                             f(args[0].xvalue),

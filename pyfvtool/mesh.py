@@ -468,6 +468,43 @@ def createMesh3D(face_locationsX: np.ndarray,
 
 
 def createMesh3D(*args) -> Mesh3D:
+    """
+    Create a Mesh3D object from a list of cell face locations or from
+    number of cells and domain length.
+    
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+        Ny : int
+        Number of cells in the y direction.
+        Nz : int
+        Number of cells in the z direction.
+        Lx : float
+        Length of the domain in the x direction.
+        Ly : float
+        Length of the domain in the y direction.
+        Lz : float
+        Length of the domain in the z direction.
+        face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+        face_locationsZ : ndarray
+        Locations of the cell faces in the z direction.
+        
+        Returns
+        -------
+        Mesh3D
+        A 3D mesh object.
+            
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import createMesh3D
+        >>> mesh = createMesh3D(10, 10, 10, 10.0, 10.0, 10.0)
+        >>> print(mesh)
+        """
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_3d_param(
         *args)
     return Mesh3D(dims, cellsize, cellcenters, facecenters, corners, edges)
@@ -484,6 +521,30 @@ def createMeshCylindrical1D(face_locations: np.ndarray) -> MeshCylindrical1D:
 
 
 def createMeshCylindrical1D(*args) -> MeshCylindrical1D:
+    """Create a MeshCylindrical1D object from a list of cell face locations or from
+    number of cells and domain length.
+    
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Lx : float
+        Length of the domain in the x direction.
+    face_locations : ndarray
+        Locations of the cell faces in the x direction.
+        
+    Returns
+    -------
+    MeshCylindrical1D
+        A 1D cylindrical mesh object.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshCylindrical1D
+    >>> mesh = createMeshCylindrical1D(10, 10.0)
+    >>> print(mesh)
+    """
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
         *args)
     return MeshCylindrical1D(dims, cellsize, cellcenters, facecenters, corners, edges)
@@ -502,6 +563,36 @@ def createMeshCylindrical2D(face_locationsX: np.ndarray,
 
 
 def createMeshCylindrical2D(*args) -> MeshCylindrical2D:
+    """Create a MeshCylindrical2D object from a list of cell face locations or from
+    number of cells and domain length.
+    
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Ny : int
+        Number of cells in the y direction.
+    Lx : float
+        Length of the domain in the x direction.
+    Ly : float
+        Length of the domain in the y direction.
+    face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+    face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+    
+    Returns
+    -------
+    MeshCylindrical2D
+        A 2D cylindrical mesh object.
+        
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshCylindrical2D
+    >>> mesh = createMeshCylindrical2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
+    """
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
         *args)
     return MeshCylindrical2D(dims, cellsize, cellcenters, facecenters, corners, edges)
@@ -522,6 +613,47 @@ def createMeshCylindrical3D(face_locationsX: np.ndarray,
 
 
 def createMeshCylindrical3D(*args) -> MeshCylindrical3D:
+    """
+    Create a MeshCylindrical3D object from a list of cell face locations or from
+    number of cells and domain length.
+
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Ny : int
+        Number of cells in the y direction.
+    Nz : int
+        Number of cells in the z direction.
+    Lx : float
+        Length of the domain in the x direction.
+    Ly : float
+        Length of the domain in the y direction.
+    Lz : float
+        Length of the domain in the z direction.
+    face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+    face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+    face_locationsZ : ndarray
+        Locations of the cell faces in the z direction.
+    
+    Returns
+    -------
+    MeshCylindrical3D
+        A 3D cylindrical mesh object.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshCylindrical3D
+    >>> mesh = createMeshCylindrical3D(10, 10, 10, 10.0, 10.0, 10.0)
+    >>> print(mesh)
+
+    Notes
+    -----
+    The mesh is created in cylindrical coordinates.
+    """
     if len(args) == 3:
         theta_max = args[1][-1]
     else:
@@ -543,6 +675,35 @@ def createMeshSpherical1D(face_locations: np.ndarray) -> MeshSpherical1D:
 
 
 def createMeshSpherical1D(*args) -> MeshSpherical1D:
+    """
+    Create a MeshSpherical1D object from a list of cell face locations or from
+    number of cells and domain length.
+
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Lx : float
+        Length of the domain in the x direction.
+    face_locations : ndarray
+        Locations of the cell faces in the x direction.
+    
+    Returns
+    -------
+    MeshSpherical1D
+        A 1D spherical mesh object.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshSpherical1D
+    >>> mesh = createMeshSpherical1D(10, 10.0)
+    >>> print(mesh)
+
+    Notes
+    -----
+    The mesh is created in spherical coordinates.
+    """
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
         *args)
     return MeshSpherical1D(dims, cellsize, cellcenters, facecenters, corners, edges)
@@ -560,6 +721,41 @@ def createMeshRadial2D(face_locationsX: np.ndarray,
 
 
 def createMeshRadial2D(*args) -> MeshRadial2D:
+    """
+    Create a MeshRadial2D object from a list of cell face locations or from
+    number of cells and domain length.
+    
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Ny : int
+        Number of cells in the y direction.
+    Lx : float
+        Length of the domain in the x direction.
+    Ly : float
+        Length of the domain in the y direction.
+    face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+    face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+    
+    Returns
+    -------
+    MeshRadial2D
+        A 2D radial mesh object.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshRadial2D
+    >>> mesh = createMeshRadial2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
+
+    Notes
+    -----
+    The mesh is created in radial (cylindrical) coordinates.
+    """
     if len(args) == 2:
         theta_max = args[1][-1]
     else:
@@ -583,6 +779,47 @@ def createMeshSpherical3D(face_locationsX: np.ndarray, face_locationsY: np.ndarr
 
 
 def createMeshSpherical3D(*args) -> MeshSpherical3D:
+    """
+    Create a MeshSpherical3D object from a list of cell face locations or from
+    number of cells and domain length.
+
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Ny : int
+        Number of cells in the y direction.
+    Nz : int
+        Number of cells in the z direction.
+    Lx : float
+        Length of the domain in the x direction.
+    Ly : float
+        Length of the domain in the y direction.
+    Lz : float
+        Length of the domain in the z direction.
+    face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+    face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+    face_locationsZ : ndarray
+        Locations of the cell faces in the z direction.
+    
+    Returns
+    -------
+    MeshSpherical3D
+        A 3D spherical mesh object.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshSpherical3D
+    >>> mesh = createMeshSpherical3D(10, 10, 10, 10.0, 10.0, 10.0)
+    >>> print(mesh)
+
+    Notes
+    -----
+    The mesh is created in spherical coordinates.
+    """
     if args[4] > 2*np.pi:
         warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
     if args[5] > 2*np.pi:

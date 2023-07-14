@@ -13,6 +13,29 @@ def visualizeCells(phi: CellVariable,
                    vmax=0.0,
                    cmap="viridis",
                    shading="gouraud"):
+     """
+     Visualize the cell variable.
+     
+     Parameters
+     ----------
+     phi: CellVariable
+          Cell variable to be visualized
+     vmin: float
+          Minimum value of the colormap
+     vmax: float
+          Maximum value of the colormap
+     cmap: str
+          Colormap
+     shading: str
+          Shading method
+     
+     Examples
+     --------
+     >>> from pyfvtool import *
+     >>> m = createMesh1D(10, 1.0)
+     >>> phi = createCellVariable(m, 1.0)
+     >>> visualizeCells(phi)
+     """
     # copy of julia code that calls matplotlib
      if issubclass(type(phi.domain), Mesh1D):
           x = np.hstack([phi.domain.facecenters.x[0],

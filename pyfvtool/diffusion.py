@@ -359,6 +359,26 @@ def diffusionTermCylindrical3D(D: FaceVariable) -> csr_array:
 
 
 def diffusionTerm(D: FaceVariable) -> csr_array:
+    """Builds the discretized diffusion term in matrix form for a given
+    Cartesian mesh.
+
+    Parameters
+    ----------
+    D : FaceVariable
+        The diffusion coefficient.
+    
+    Returns
+    -------
+    csr_array
+        The discretized diffusion term in matrix form.
+
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> D = createFaceVariable(m, 1.0)
+    >>> M = diffusionTerm(D)
+    """
     if (type(D.domain) is Mesh1D):
         return diffusionTerm1D(D)
     elif (type(D.domain) is MeshCylindrical1D):
