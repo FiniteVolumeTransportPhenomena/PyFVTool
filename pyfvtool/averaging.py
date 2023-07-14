@@ -20,8 +20,27 @@ def cell_size_array(m: MeshStructure):
         return dx, dy, dz
 
 def linearMean(phi: CellVariable) -> FaceVariable:
-    # calculates the average values of a cell variable. The output is a
-    # face variable
+    """
+    calculates the average values of a cell variable. The output is a
+    face variable
+
+    Parameters
+    ----------
+    phi : CellVariable
+        cell variable
+
+    Returns
+    -------
+    FaceVariable
+        face variable
+    
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> linearMean(phi)
+    """
     if issubclass(type(phi.domain), Mesh1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,

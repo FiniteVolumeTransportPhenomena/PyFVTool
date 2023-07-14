@@ -1327,6 +1327,25 @@ def convectionTvdRHSCylindrical3D(u: FaceVariable, phi: CellVariable, FL, *args)
 
 
 def convectionTerm(u: FaceVariable) -> csr_array:
+    """
+    Returns the discretized convection term, :math:`\\nabla \\cdot (u \\phi)`.
+
+    Parameters
+    ----------
+    u : FaceVariable
+        The velocity field.
+    
+    Returns
+    -------
+    The discretized convection term.
+
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> u = createFaceVariable(m, 1.0)
+    >>> M = convectionTerm(u)
+    """
     if (type(u.domain) is Mesh1D):
         return convectionTerm1D(u)
     elif (type(u.domain) is MeshCylindrical1D):
@@ -1350,6 +1369,26 @@ def convectionTerm(u: FaceVariable) -> csr_array:
 
 
 def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
+    """
+    Returns the discretized upwind convection term, :math:`\\nabla \\cdot (u \\phi)`.
+    The convection term is evaluated based on the upwind scheme.
+
+    Parameters
+    ----------
+    u : FaceVariable
+        The velocity field.
+    
+    Returns
+    -------
+    The discretized upwind convection term.
+
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> u = createFaceVariable(m, 1.0)
+    >>> M = convectionUpwindTerm(u)
+    """
     if (type(u.domain) is Mesh1D):
         return convectionUpwindTerm1D(u, *args)
     elif (type(u.domain) is MeshCylindrical1D):
@@ -1374,6 +1413,28 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
 
 
 def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.ndarray:
+    """
+    Returns the discretized correction vector fot the convection term, :math:`\\nabla \\cdot (u \\phi)`.
+    The convection term is evaluated based on the TVD scheme.
+
+    Parameters
+    ----------
+    u : FaceVariable
+        The velocity field.
+    
+    Returns
+    -------
+    The discretized correction vector for the convection term.
+
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> u = createFaceVariable(m, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> FL = fluxLimiter('SUPERBEE')
+    >>> RHS = convectionTvdRHSTerm(u, phi, FL)
+    """
     if (type(u.domain) is Mesh1D):
         return convectionTvdRHS1D(u, phi, FL, *args)
     elif (type(u.domain) is MeshCylindrical1D):
