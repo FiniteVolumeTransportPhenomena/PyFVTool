@@ -15,8 +15,17 @@ class CellVariable:
 
         self.value = cell_value
 
+    def internalCells(self):
+        if issubclass(type(self.domain), Mesh1D):
+            return self.value[1:-1]
+        elif issubclass(type(self.domain), Mesh2D):
+            return self.value[1:-1, 1:-1]
+        elif issubclass(type(self.domain), Mesh3D):
+            return self.value[1:-1, 1:-1, 1:-1]
+    
     def update_bc_cells(self, BC: BoundaryCondition):
-        pass
+        phi_temp = createCellVariable(self.domain, self.internalCells(), BC)
+        self.update_value(phi_temp)
 
     def update_value(self, new_cell):
         self.value[:] = new_cell.value

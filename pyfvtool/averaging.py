@@ -21,8 +21,9 @@ def cell_size_array(m: MeshStructure):
 
 def linearMean(phi: CellVariable) -> FaceVariable:
     """
-    calculates the average values of a cell variable. The output is a
-    face variable
+    calculates the average values of a cell variable by 
+    linear interpolation between neighboring cells. 
+    The output is a face variable
 
     Parameters
     ----------
@@ -67,8 +68,27 @@ def linearMean(phi: CellVariable) -> FaceVariable:
                       phi.value[1:-1, 1:-1, 1:])/(dz[:,:,0:-1]+dz[:,:,1:]))
 
 def arithmeticMean(phi: CellVariable):
-    # calculates the average values of a cell variable. The output is a
-    # face variable
+    """
+    calculates the average values of a cell variable. The output is a
+    face variable
+
+    Parameters
+    ----------
+    phi : CellVariable
+        cell variable
+    
+    Returns
+    -------
+    FaceVariable
+        face variable
+    
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> arithmeticMean(phi)
+    """
     if issubclass(type(phi.domain), Mesh1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
@@ -89,8 +109,27 @@ def arithmeticMean(phi: CellVariable):
             (dz[:,:,0:-1]*phi.value[1:-1,1:-1,0:-1]+dz[:,:,1:]*phi.value[1:-1,1:-1,1:])/(dz[:,:,0:-1]+dz[:,:,1:]))
 
 def geometricMean(phi: CellVariable):
-    # calculates the average values of a cell variable. The output is a
-    # face variable
+    """
+    calculates the average values of a cell variable. The output is a
+    face variable
+
+    Parameters
+    ----------
+    phi : CellVariable
+        cell variable
+
+    Returns
+    -------
+    FaceVariable
+        face variable
+    
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> geometricMean(phi)
+    """
     if issubclass(type(phi.domain), Mesh1D):
         dx = cell_size_array(phi.domain)
         n= phi.domain.dims[0]

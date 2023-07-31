@@ -1384,6 +1384,21 @@ def cellBoundaryRadial2D(phi, BC):
     return phiBC
 
 def cellBoundary(phi, BC) -> np.ndarray:
+    """
+    Calculate the boundary values of a variable given the boundary conditions.
+
+    Parameters
+    ----------
+    phi : array_like
+        internal cell values
+    BC : BoundaryCondition
+        Boundary condition object
+    
+    Returns
+    -------
+    phiBC : array_like
+        Boundary cell values
+    """
     if issubclass(type(BC.domain), Mesh1D):
         return cellBoundary1D(phi, BC)
     elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):

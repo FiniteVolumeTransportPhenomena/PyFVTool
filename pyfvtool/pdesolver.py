@@ -28,3 +28,30 @@ def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray) -> CellVariable:
     """
     phi = spsolve(M, RHS)
     return CellVariable(m, np.reshape(phi, m.dims+2))
+
+def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray, BC: BoundaryCondition) -> CellVariable:
+    """
+    Solve the PDE using the finite volume method.
+
+    Parameters
+    ----------
+    phi_old: CellVariable
+        Solution of the previous time step
+    dt: float
+        Time step
+    RHS: np.ndarray
+        Right hand side of the linear system
+    BC: BoundaryCondition
+        Boundary condition
+    
+    Returns
+    -------
+    phi: CellVariable
+        Solution of the PDE
+    """
+    
+
+    x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
+
+    phi= createCellVariable(phi_old.domain, x)
+    return phi.update_bc_cells(BC)
