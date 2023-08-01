@@ -52,6 +52,7 @@ def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray, BC: Boun
     
 
     x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
-
-    phi= createCellVariable(phi_old.domain, x)
-    return phi.update_bc_cells(BC)
+    phi= createCellVariable(phi_old.domain, 0.0)
+    phi.value = x
+    phi.update_bc_cells(BC)
+    return phi
