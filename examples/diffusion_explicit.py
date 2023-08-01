@@ -4,7 +4,6 @@
 from pyfvtool import *
 import matplotlib.pyplot as plt
 import numpy as np
-import scipy.special as sp
 from scipy.special import erf
 
 # define the domain
