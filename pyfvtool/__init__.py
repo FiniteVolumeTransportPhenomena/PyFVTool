@@ -8,7 +8,7 @@ from pyfvtool.boundary import createBC, boundaryConditionTerm
 from pyfvtool.utilities import fluxLimiter
 from pyfvtool.calculus import gradientTerm, divergenceTerm
 from pyfvtool.averaging import linearMean, arithmeticMean, upwindMean, harmonicMean, geometricMean, tvdMean
-from pyfvtool.pdesolver import solvePDE
+from pyfvtool.pdesolver import solvePDE, solveExplicitPDE
 from pyfvtool.cell import createCellVariable, cellVolume, funceval, celleval
 from pyfvtool.face import createFaceVariable, faceeval
 from pyfvtool.visualization import visualizeCells
