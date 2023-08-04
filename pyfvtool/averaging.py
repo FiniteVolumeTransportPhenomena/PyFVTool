@@ -94,13 +94,13 @@ def arithmeticMean(phi: CellVariable):
         return FaceVariable(phi.domain,
             (dx[0:-1]*phi.value[0:-1]+dx[1:]*phi.value[1:])/(dx[1:]+dx[0:-1]),
             np.array([]),
-            [1.0])
+            np.array([]))
     elif issubclass(type(phi.domain), Mesh2D):
         dx, dy = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             (dx[0:-1]*phi.value[0:-1,1:-1]+dx[1:]*phi.value[1:,1:-1])/(dx[1:]+dx[0:-1]),
             (dy[:,0:-1]*phi.value[1:-1,0:-1]+dy[:,1:]*phi.value[1:-1,1:])/(dy[:,1:]+dy[:,0:-1]),
-            [1.0])
+            np.array([]))
     elif issubclass(type(phi.domain), Mesh3D):
         dx, dy, dz = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
