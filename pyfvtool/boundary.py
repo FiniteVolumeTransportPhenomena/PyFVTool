@@ -1423,3 +1423,24 @@ def boundaryConditionTerm(BC):
         return boundaryCondition3D(BC)
     elif (type(BC.domain) is MeshCylindrical3D):
         return boundaryConditionCylindrical3D(BC)
+    
+
+def BC2GhostCells(phi):
+    """
+    assign the boundary values to the ghost cells
+    """
+    if issubclass(type(phi.domain), Mesh1D):
+        phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
+        phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
+    elif issubclass(type(phi.domain), Mesh2D):
+        phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
+        phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
+        phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
+        phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
+    elif issubclass(type(phi.domain), Mesh3D):
+        phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
+        phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
+        phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
+        phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
+        phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
+        phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])

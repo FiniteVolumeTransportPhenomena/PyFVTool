@@ -7,6 +7,27 @@ from .face import *
 
 
 def gradientTerm(phi: CellVariable):
+    """
+    This function calculates the gradient of a cell variable. The output is a face variable.
+
+    Parameters
+    ----------
+    phi : CellVariable
+        The cell variable for which the gradient is calculated.
+    
+    Returns
+    -------
+    FaceVariable
+        The gradient of the cell variable.
+    
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> gradPhi = gradientTerm(phi)
+    >>> gradPhi.xvalue
+    """
     # calculates the gradient of a variable
     # the output is a face variable
     if issubclass(type(phi.domain), Mesh1D):
@@ -274,6 +295,25 @@ def divergenceTermCylindrical3D(F:FaceVariable):
     return RHSdiv, RHSdivx, RHSdivy, RHSdivz
 
 def divergenceTerm(F: FaceVariable):
+    """
+    parameters
+    ----------
+    F : FaceVariable
+        The face variable for which the divergence is calculated.
+
+    Returns
+    -------
+    RHS : ndarray
+        The divergence of the face variable returned as a RHS vector.
+
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> m = createMesh1D(10, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> gradPhi = gradientTerm(phi)
+    >>> RHSdiv = divergenceTerm(gradPhi)
+    """
     if (type(F.domain) is Mesh1D):
         RHSdiv = divergenceTerm1D(F)
     elif (type(F.domain) is MeshCylindrical1D):
@@ -291,3 +331,53 @@ def divergenceTerm(F: FaceVariable):
     else:
         raise Exception("DivergenceTerm is not defined for this Mesh type.")
     return RHSdiv
+
+def gradientTermFixedBC(phi):
+    """
+    Warning: unless you know for sure that you need this function, do not use it!
+    This function calculates the gradient of parameter phi in x,y, and z directions. It takes care of the often nonphysical
+    values of the ghost cells. Note that phi is not a variable but a parameter calculated with a function over a domain. 
+    Make sure that phi is calculated by BC2GhostCells (usually but not necessarily in combination with celleval); 
+    otherwise, do not use this function as it leads to wrong values at the boundaries.
+    It checks for the availability of the ghost variables and use them, otherwise estimate them, assuming a zero gradient 
+    on the boundaries.
+    Note: I'm not happy with this implementation but it was the fastest solution that came into my mind while onboard the Geilo-Oslo train.
+    I have to find a better way to do this. The problem is that it is almost always used for a cell variable calculated as f(phi) so having a boundary condition
+    does not really help. I have to think about it.
+
+    parameters
+    ----------
+    phi : CellVariable
+        The cell variable for which the gradient is calculated.
+    
+    Returns
+    -------
+    FaceVariable
+        The gradient of the cell variable.
+    
+    Examples
+    --------
+    >>> from pyfvtool import *
+    >>> import numpy as np
+    >>> m = createMesh1D(10, 1.0)
+    >>> phi = createCellVariable(m, 1.0)
+    >>> sin_phi = celleval(np.sin, BC2GhostCells(sw))
+    >>> gradPhi = gradientTermFixedBC(sin_phi)
+    """
+    faceGrad = gradientTerm(phi)
+    if issubclass(type(phi.domain), Mesh1D):
+        faceGrad.xvalue[0] = 2*faceGrad.xvalue[0]
+        faceGrad.xvalue[-1] = 2*faceGrad.xvalue[-1]
+    elif issubclass(type(phi.domain), Mesh2D):
+        faceGrad.xvalue[0, :] = 2*faceGrad.xvalue[0, :]
+        faceGrad.xvalue[-1, :] = 2*faceGrad.xvalue[-1, :]
+        faceGrad.yvalue[:, 0] = 2*faceGrad.yvalue[:, 0]
+        faceGrad.yvalue[:, -1] = 2*faceGrad.yvalue[:, -1]
+    elif issubclass(type(phi.domain), Mesh3D):
+        faceGrad.xvalue[0, :, :] = 2*faceGrad.xvalue[0, :, :]
+        faceGrad.xvalue[-1, :, :] = 2*faceGrad.xvalue[-1, :, :]
+        faceGrad.yvalue[:, 0, :] = 2*faceGrad.yvalue[:, 0, :]
+        faceGrad.yvalue[:, -1, :] = 2*faceGrad.yvalue[:, -1, :]
+        faceGrad.zvalue[:, :, 0] = 2*faceGrad.zvalue[:, :, 0]
+        faceGrad.zvalue[:, :, -1] = 2*faceGrad.zvalue[:, :, -1]
+    return faceGrad

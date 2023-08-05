@@ -4,9 +4,9 @@ from pyfvtool.mesh import (createMesh1D, createMesh2D, createMesh3D,
 from pyfvtool.advection import convectionTerm, convectionTvdRHSTerm, convectionUpwindTerm
 from pyfvtool.diffusion import diffusionTerm
 from pyfvtool.source import linearSourceTerm, constantSourceTerm, transientTerm
-from pyfvtool.boundary import createBC, boundaryConditionTerm
+from pyfvtool.boundary import createBC, boundaryConditionTerm, BC2GhostCells
 from pyfvtool.utilities import fluxLimiter
-from pyfvtool.calculus import gradientTerm, divergenceTerm
+from pyfvtool.calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from pyfvtool.averaging import linearMean, arithmeticMean, upwindMean, harmonicMean, geometricMean, tvdMean
 from pyfvtool.pdesolver import solvePDE, solveExplicitPDE
 from pyfvtool.cell import createCellVariable, cellVolume, funceval, celleval
