@@ -212,3 +212,9 @@ def funceval(f, *args):
     
 def celleval(f, *args):
     return funceval(f, *args)
+
+
+def domainInt(phi: CellVariable) -> float:
+    v = cellVolume(phi.domain).internalCells()
+    c=phi.internalCells()
+    return (v*c).flatten().sum()

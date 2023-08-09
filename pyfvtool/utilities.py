@@ -84,4 +84,3 @@ def fluxLimiter(flName: str, eps =2e-16):
         def FL(r):
             return (np.maximum(0.0, np.maximum(np.minimum(2.0*r,1.0), np.minimum(r,2.0))))
     return FL
-
