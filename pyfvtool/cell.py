@@ -218,3 +218,6 @@ def domainInt(phi: CellVariable) -> float:
     v = cellVolume(phi.domain).internalCells()
     c=phi.internalCells()
     return (v*c).flatten().sum()
+
+def domainIntegrate(phi: CellVariable) -> float:
+    return domainInt(phi)
