@@ -181,7 +181,7 @@ def cellVolume(m: MeshStructure):
     elif (type(m) is Mesh3D):
         c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
     elif (type(m) is MeshCylindrical3D):
-        c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*z[np.newaxis,np.newaxis,:]
+        c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
     return createCellVariable(m, c, BC)
 
 def funceval(f, *args):
