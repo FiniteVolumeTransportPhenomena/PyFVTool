@@ -149,9 +149,36 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value: float) -> CellVar
     ...
 
 def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVariable:
-    """Create a cell variable of class CellVariable
-    createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryCondition) -> CellVariable
     """
+    Create a cell variable of class CellVariable
+
+    Parameters
+    ----------
+    mesh_struct : MeshStructure
+        Mesh describing the calculation domain.
+    cell_value : float or numpy.ndarray
+        Initialization value(s) of the CellVariable
+    BC: BoundaryCondition
+        Boundary conditions to be applied to the cell variable.
+        *Required if CellVariable represents a solution variable.* This
+        requirement also applies if default 'no-flux' boundary conditions are
+        desired, in which case the BoundaryCondition should be created without
+        further parameters (see boundary.createBC)
+        
+
+    Raises
+    ------
+    ValueError
+        The shape of cell_value does not correspond to the mesh shape.
+
+    Returns
+    -------
+    CellVariable
+        An initialized instance of CellVariable.
+
+    """
+    
+
     if np.isscalar(cell_value):
         phi_val = cell_value*np.ones(mesh_struct.dims)
     elif cell_value.size == 1:
@@ -159,7 +186,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
     elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
         phi_val = cell_value
     else:
-        raise Exception(f"The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
+        raise ValueError(f"The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
     
     if len(arg)==1:
         return CellVariable(mesh_struct, cellBoundary(phi_val, arg[0]))
@@ -215,9 +242,40 @@ def celleval(f, *args):
 
 
 def domainInt(phi: CellVariable) -> float:
+    """
+    Calculate the finite-volume integral of a CellVariable over entire domain
+    
+    The finite-volume integral over the entire mesh domain gives the total
+    amount of `CellVariable` present in the system. Calculation of this
+    integral is useful for checking conservation of the quantity concerned
+    (in case of 'no-flux' BCs), or for monitoring its evolution due to 
+    exchanges via the boundaries (other BCs) or to the presence of source
+    terms.
+
+    May later become a built-in method of the CellVariable class, but for now 
+    this implementation as a function is chosen for consistency with FVTool. 
+    An alias `domainIntegrate`has been added that sounds better than
+    `domainInt`.
+
+    Parameters
+    ----------
+    phi : CellVariable
+        Variable whose finite-volume integral will calculated.
+
+    Returns
+    -------
+    float
+        Total finite-volume integral over entire domain.
+
+    """
     v = cellVolume(phi.domain).internalCells()
-    c=phi.internalCells()
+    c = phi.internalCells()
     return (v*c).flatten().sum()
 
 def domainIntegrate(phi: CellVariable) -> float:
+    """
+    Alias for `domainInt()`
+    
+    See `domainInt()`
+    """
     return domainInt(phi)
