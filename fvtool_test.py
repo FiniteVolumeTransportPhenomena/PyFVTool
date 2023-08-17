@@ -7,6 +7,14 @@ from scipy.special import erf
 import pyfvtool
 reload(pyfvtool)
 
+
+# Test script, run this before committing changes & creating pull requests...
+
+#TODO: Include visualizeCells testing
+#TODO: Futher organize this test script
+#TODO: Consider setting up pytest or other testing infrastructure
+
+
 Lx= 1.0
 Ly= 2*np.pi
 Lz= 2.0
