@@ -40,24 +40,24 @@ def visualizeCells(phi: CellVariable,
         plt.show()
 
     elif (type(phi.domain) is Mesh2D) or (type(phi.domain) is MeshCylindrical2D):
-        ## x, y, phi0 = get_CellVariable_profile2D(phi)
-        x = np.hstack([phi.domain.facecenters.x[0],
-                       phi.domain.cellcenters.x,
-                       phi.domain.facecenters.x[-1]])
-        y = np.hstack([phi.domain.facecenters.y[0],
-                       phi.domain.cellcenters.y,
-                       phi.domain.facecenters.y[-1]])
-        phi0 = np.copy(phi.value)
-        phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
-        phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
-        phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
-        phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
-        phi0[0, 0] = phi0[0, 1]
-        phi0[0, -1] = phi0[0, -2]
-        phi0[-1, 0] = phi0[-1, 1]
-        phi0[-1, -1] = phi0[-1, -2]
+        x, y, phi0 = get_CellVariable_profile2D(phi)
+        ## Kept old code below for reference. Can be removed.
+        # x = np.hstack([phi.domain.facecenters.x[0],
+        #                phi.domain.cellcenters.x,
+        #                phi.domain.facecenters.x[-1]])
+        # y = np.hstack([phi.domain.facecenters.y[0],
+        #                phi.domain.cellcenters.y,
+        #                phi.domain.facecenters.y[-1]])
+        # phi0 = np.copy(phi.value)
+        # phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
+        # phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
+        # phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
+        # phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
+        # phi0[0, 0] = phi0[0, 1]
+        # phi0[0, -1] = phi0[0, -2]
+        # phi0[-1, 0] = phi0[-1, 1]
+        # phi0[-1, -1] = phi0[-1, -2]
         ## 
-        
         if vmin is None:
             vmin = phi0.min()
         if vmax is None:
@@ -68,24 +68,24 @@ def visualizeCells(phi: CellVariable,
         plt.show()
 
     elif (type(phi.domain) is MeshRadial2D):
-        ## x, y, phi0 = get_CellVariable_profile2D(phi)
-        x = np.hstack([phi.domain.facecenters.x[0],
-             phi.domain.cellcenters.x,
-             phi.domain.facecenters.x[-1]])
-        y = np.hstack([phi.domain.facecenters.y[0],
-             phi.domain.cellcenters.y,
-             phi.domain.facecenters.y[-1]])
-        phi0 = np.copy(phi.value)
-        phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
-        phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
-        phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
-        phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
-        phi0[0, 0] = phi0[0, 1]
-        phi0[0, -1] = phi0[0, -2]
-        phi0[-1, 0] = phi0[-1, 1]
-        phi0[-1, -1] = phi0[-1, -2]
+        x, y, phi0 = get_CellVariable_profile2D(phi)
+        ## Kept old code below for reference. Can be removed.
+        # x = np.hstack([phi.domain.facecenters.x[0],
+        #                phi.domain.cellcenters.x,
+        #                phi.domain.facecenters.x[-1]])
+        # y = np.hstack([phi.domain.facecenters.y[0],
+        #                phi.domain.cellcenters.y,
+        #                phi.domain.facecenters.y[-1]])
+        # phi0 = np.copy(phi.value)
+        # phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
+        # phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
+        # phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
+        # phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
+        # phi0[0, 0] = phi0[0, 1]
+        # phi0[0, -1] = phi0[0, -2]
+        # phi0[-1, 0] = phi0[-1, 1]
+        # phi0[-1, -1] = phi0[-1, -2]
         ## 
-        
         plt.subplot(111, polar="true")
         plt.pcolor(y, x, phi0)
         plt.show()

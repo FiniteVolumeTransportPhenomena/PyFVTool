@@ -2,7 +2,6 @@ from pyfvtool import *
 import numpy as np
 import matplotlib.pyplot as plt
 from importlib import reload
-from scipy.sparse.linalg import spsolve
 from scipy.special import erf
 import pyfvtool
 reload(pyfvtool)
@@ -236,7 +235,7 @@ plt.plot(x, c.internalCells(), x, c_analytical, 'r--')
 
 
 
-# Testing visualization...
+# Testing 1D visualization...
 # (code from README.md )
 
 # Solving a 1D diffusion equation with a fixed concentration 
@@ -280,6 +279,14 @@ plt.figure(2)
 plt.clf()
 visualizeCells(c_old)
 
+# Testing 2D visualization
+#
+mm = createMesh2D(50, 50, 5*np.pi, 5*np.pi)
+XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters.y)
+vv = createCellVariable(mm, np.cos(XX)*np.sin(YY))
+plt.figure(3)
+plt.clf()
+visualizeCells(vv)
 
 # Only use show() at the end of the script, since only a single call is needed
 # to display all open Figures.

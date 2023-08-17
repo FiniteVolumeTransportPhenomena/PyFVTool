@@ -311,9 +311,9 @@ def get_CellVariable_profile1D(phi: CellVariable):
     Returns
     -------
     x : np.ndarray
-        DESCRIPTION.
+        x (or r) coordinates.
     phi0 : np.ndarray
-        DESCRIPTION.
+        Value of the CellVariables at those points.
 
     """
 
@@ -328,3 +328,51 @@ def get_CellVariable_profile1D(phi: CellVariable):
     # boundary can therefore be obtained by direct averaging with a
     # weight factor of 0.5.
     return (x, phi0)
+
+
+
+def get_CellVariable_profile2D(phi: CellVariable):
+    """
+    Create a profile of a cell variable for plotting, export, etc. (2D).
+    
+    This generates a set of vectors containing the (x, y) or (r, z)  
+    coordinates and the values of the cell variable at those coordinates
+    for plotting the values of the cell variable over the entire calculation
+    domain. It includes the values at the outer faces of the domain, by 
+    taking into account the values of the ghost cells.
+    
+    This function may later become a method of the CellVariable class, but
+    is a function now for simplicity and consistency with other CellVariable
+    utility functions (e.g. `domainIntegrate`).
+
+    Parameters
+    ----------
+    phi : CellVariable
+
+
+    Returns
+    -------
+    x : np.ndarray
+        x (or r) coordinates.
+    y : np.ndarray
+        y (or z) coordinates.
+    phi0 : np.ndarray
+        Value of the CellVariables at those coordinates.
+
+    """
+    x = np.hstack([phi.domain.facecenters.x[0],
+                   phi.domain.cellcenters.x,
+                   phi.domain.facecenters.x[-1]])
+    y = np.hstack([phi.domain.facecenters.y[0],
+                   phi.domain.cellcenters.y,
+                   phi.domain.facecenters.y[-1]])
+    phi0 = np.copy(phi.value)
+    phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
+    phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
+    phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
+    phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
+    phi0[0, 0] = phi0[0, 1]
+    phi0[0, -1] = phi0[0, -2]
+    phi0[-1, 0] = phi0[-1, 1]
+    phi0[-1, -1] = phi0[-1, -2]
+    return (x, y, phi0)
