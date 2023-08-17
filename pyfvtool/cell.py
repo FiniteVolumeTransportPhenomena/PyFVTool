@@ -321,8 +321,8 @@ def get_CellVariable_profile1D(phi: CellVariable):
                    phi.domain.cellcenters.x,
                    phi.domain.facecenters.x[-1]])
     phi0 = np.hstack([0.5*(phi.value[0]+phi.value[1]),
-                     phi.value[1:-1],
-                     0.5*(phi.value[-2]+phi.value[-1])])
+                      phi.value[1:-1],
+                      0.5*(phi.value[-2]+phi.value[-1])])
     # The size of the ghost cell is always equal to the size of the 
     # first (or last) cell within the domain. The value at the
     # boundary can therefore be obtained by direct averaging with a

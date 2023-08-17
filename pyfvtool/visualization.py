@@ -35,15 +35,7 @@ def visualizeCells(phi: CellVariable,
     >>> visualizeCells(phi)
     """
     if issubclass(type(phi.domain), Mesh1D):
-        ## x, phi0 = get_CellVariable_profile1D(phi)
-        x = np.hstack([phi.domain.facecenters.x[0],
-                       phi.domain.cellcenters.x,
-                       phi.domain.facecenters.x[-1]])
-        phi0 = np.hstack([0.5*(phi.value[0]+phi.value[1]),
-                         phi.value[1:-1],
-                         0.5*(phi.value[-2]+phi.value[-1])])
-        ##
-        
+        x, phi0 = get_CellVariable_profile1D(phi)
         plt.plot(x, phi0)
         plt.show()
 
