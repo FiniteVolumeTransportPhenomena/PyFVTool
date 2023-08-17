@@ -376,3 +376,54 @@ def get_CellVariable_profile2D(phi: CellVariable):
     phi0[-1, 0] = phi0[-1, 1]
     phi0[-1, -1] = phi0[-1, -2]
     return (x, y, phi0)
+
+
+
+def get_CellVariable_profile3D(phi: CellVariable):
+    """
+    Create a profile of a cell variable for plotting, export, etc. (3D).
+    
+    This generates a set of vectors containing the (x, y, z) or (r, theta, z)  
+    coordinates and the values of the cell variable at those coordinates
+    for plotting the values of the cell variable over the entire calculation
+    domain. It includes the values at the outer faces of the domain, by 
+    taking into account the values of the ghost cells.
+    
+    This function may later become a method of the CellVariable class, but
+    is a function now for simplicity and consistency with other CellVariable
+    utility functions (e.g. `domainIntegrate`).
+
+    Parameters
+    ----------
+    phi : CellVariable
+
+
+    Returns
+    -------
+    x : np.ndarray
+        x (or r) coordinates.
+    y : np.ndarray
+        y (or theta) coordinates.
+    z : np.ndarray
+        z coordinates.
+    phi0 : np.ndarray
+        Value of the CellVariables at those coordinates.
+    """
+    
+    x = np.hstack([phi.domain.facecenters.x[0],
+                   phi.domain.cellcenters.x,
+                   phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
+    y = np.hstack([phi.domain.facecenters.y[0],
+                   phi.domain.cellcenters.y,
+                   phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
+    z = np.hstack([phi.domain.facecenters.z[0],
+                   phi.domain.cellcenters.z,
+                   phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
+    phi0 = np.copy(phi.value)
+    phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
+    phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
+    phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
+    phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
+    phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
+    phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
+    return (x, y, z, phi0)

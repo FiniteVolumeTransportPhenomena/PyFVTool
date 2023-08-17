@@ -91,25 +91,26 @@ def visualizeCells(phi: CellVariable,
         plt.show()
 
     elif (type(phi.domain) is Mesh3D):
-        ## x, y, z, phi0 = get_CellVariable_profile3D(phi)
-        x = np.hstack([phi.domain.facecenters.x[0],
-                       phi.domain.cellcenters.x,
-                       phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
-        y = np.hstack([phi.domain.facecenters.y[0],
-                       phi.domain.cellcenters.y,
-                       phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
-        z = np.hstack([phi.domain.facecenters.z[0],
-                       phi.domain.cellcenters.z,
-                       phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
-        phi0 = np.copy(phi.value)
-        phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
-        phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
-        phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
-        phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
-        phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
-        phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
+        x, y, z, phi0 = get_CellVariable_profile3D(phi)
+        ## Kept old code below for reference. Can be removed.
+        # x = np.hstack([phi.domain.facecenters.x[0],
+        #                phi.domain.cellcenters.x,
+        #                phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
+        # y = np.hstack([phi.domain.facecenters.y[0],
+        #                phi.domain.cellcenters.y,
+        #                phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
+        # z = np.hstack([phi.domain.facecenters.z[0],
+        #                phi.domain.cellcenters.z,
+        #                phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
+        # phi0 = np.copy(phi.value)
+        # phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
+        # phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
+        # phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
+        # phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
+        # phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
+        # phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
         ##
-        
+
         vmin = np.min(phi0)
         vmax = np.max(phi0)
         mynormalize = lambda a:((a - vmin)/(vmax-vmin))
@@ -149,23 +150,24 @@ def visualizeCells(phi: CellVariable,
         plt.show()
 
     elif (type(phi.domain) is MeshCylindrical3D):
-        ## r, theta, z, phi0 = get_CellVariable_profile3D(phi)
-        r = np.hstack([phi.domain.facecenters.x[0],
-                       phi.domain.cellcenters.x,
-                       phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
-        theta = np.hstack([phi.domain.facecenters.y[0],
-                           phi.domain.cellcenters.y,
-                           phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
-        z = np.hstack([phi.domain.facecenters.z[0],
-                       phi.domain.cellcenters.z,
-                       phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
-        phi0 = np.copy(phi.value)
-        phi0[:, 0, :] = 0.5*(phi0[:, 0, :]+phi0[:, 1, :])
-        phi0[:, -1, :] = 0.5*(phi0[:, -2, :]+phi0[:, -1, :])
-        phi0[:, :, 0] = 0.5*(phi0[:, :, 0]+phi0[:, :, 0])
-        phi0[:, :, -1] = 0.5*(phi0[:, :, -2]+phi0[:, :, -1])
-        phi0[0, :, :] = 0.5*(phi0[1, :, :]+phi0[2, :, :])
-        phi0[-1, :, :] = 0.5*(phi0[-2, :, :]+phi0[-1, :, :])
+        r, theta, z, phi0 = get_CellVariable_profile3D(phi)
+        ## Kept old code below for reference. Can be removed.
+        # r = np.hstack([phi.domain.facecenters.x[0],
+        #                phi.domain.cellcenters.x,
+        #                phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
+        # theta = np.hstack([phi.domain.facecenters.y[0],
+        #                    phi.domain.cellcenters.y,
+        #                    phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
+        # z = np.hstack([phi.domain.facecenters.z[0],
+        #                phi.domain.cellcenters.z,
+        #                phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
+        # phi0 = np.copy(phi.value)
+        # phi0[:, 0, :] = 0.5*(phi0[:, 0, :]+phi0[:, 1, :])
+        # phi0[:, -1, :] = 0.5*(phi0[:, -2, :]+phi0[:, -1, :])
+        # phi0[:, :, 0] = 0.5*(phi0[:, :, 0]+phi0[:, :, 0])
+        # phi0[:, :, -1] = 0.5*(phi0[:, :, -2]+phi0[:, :, -1])
+        # phi0[0, :, :] = 0.5*(phi0[1, :, :]+phi0[2, :, :])
+        # phi0[-1, :, :] = 0.5*(phi0[-2, :, :]+phi0[-1, :, :])
         ##
         
         x = r*np.cos(theta)
@@ -199,5 +201,7 @@ def visualizeCells(phi: CellVariable,
                        facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
                        alpha=alfa)
         plt.show()
-         
-         
+        
+    else:
+        # just in case...
+        raise ValueError('Unsupported mesh: '+str(type(phi.domain)))
