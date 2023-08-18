@@ -9,7 +9,10 @@ from pyfvtool.utilities import fluxLimiter
 from pyfvtool.calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from pyfvtool.averaging import linearMean, arithmeticMean, upwindMean, harmonicMean, geometricMean, tvdMean
 from pyfvtool.pdesolver import solvePDE, solveExplicitPDE
-from pyfvtool.cell import createCellVariable, cellVolume, funceval, celleval, domainInt, domainIntegrate
+from pyfvtool.cell import createCellVariable, cellVolume
+from pyfvtool.cell import funceval, celleval
+from pyfvtool.cell import domainInt, domainIntegrate
+from pyfvtool.cell import get_CellVariable_profile1D
 from pyfvtool.face import createFaceVariable, faceeval
 from pyfvtool.visualization import visualizeCells
 
