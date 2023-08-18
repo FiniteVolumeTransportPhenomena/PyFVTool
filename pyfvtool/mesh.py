@@ -4,7 +4,7 @@ Mesh generation
 import numpy as np
 from warnings import warn
 from typing import overload
-from .utilities import *
+from .utilities import int_range
 
 
 class CellSize:
@@ -65,9 +65,8 @@ class FaceLocation:
 
 
 class MeshStructure:
-    def __init__(self, dimension, dims, cellsize,
+    def __init__(self, dims, cellsize,
                  cellcenters, facecenters, corners, edges) -> None:
-        self.dimension = dimension
         self.dims = dims
         self.cellsize = cellsize
         self.cellcenters = cellcenters
@@ -101,9 +100,8 @@ class MeshStructure:
 
 class Mesh1D(MeshStructure):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 1
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def cell_numbers(self):
         Nx = self.dims[0]
@@ -116,9 +114,8 @@ class Mesh1D(MeshStructure):
 
 class Mesh2D(MeshStructure):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 2
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def cell_numbers(self):
         Nx, Ny = self.dims
@@ -132,9 +129,8 @@ class Mesh2D(MeshStructure):
 
 class Mesh3D(MeshStructure):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 3
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def cell_numbers(self):
         Nx, Ny, Nz = self.dims
@@ -149,9 +145,8 @@ class Mesh3D(MeshStructure):
 
 class MeshCylindrical1D(Mesh1D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 1.5
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def __repr__(self):
         print(f"1D Cylindrical (radial) mesh with Nr={self.dims[0]} cells")
@@ -160,9 +155,8 @@ class MeshCylindrical1D(Mesh1D):
 
 class MeshSpherical1D(Mesh1D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 1.8
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def __repr__(self):
         print(f"1D Spherical mesh with Nr={self.dims[0]} cells")
@@ -171,9 +165,8 @@ class MeshSpherical1D(Mesh1D):
 
 class MeshCylindrical2D(Mesh2D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 2.5
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def __repr__(self):
         print(
@@ -183,9 +176,8 @@ class MeshCylindrical2D(Mesh2D):
 
 class MeshRadial2D(Mesh2D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 2.8
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def __repr__(self):
         print(
@@ -195,9 +187,8 @@ class MeshRadial2D(Mesh2D):
 
 class MeshCylindrical3D(Mesh3D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 3.2
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def __repr__(self):
         print(
@@ -207,9 +198,8 @@ class MeshCylindrical3D(Mesh3D):
 
 class MeshSpherical3D(Mesh3D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        dimension = 3.5
         MeshStructure.__init__(
-            self, dimension, dims, cell_size, cell_location, face_location, corners, edges)
+            self, dims, cell_size, cell_location, face_location, corners, edges)
 
     def __repr__(self):
         print(
