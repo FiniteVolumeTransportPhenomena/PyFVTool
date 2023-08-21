@@ -29,6 +29,32 @@ class CellVariable:
 
     def update_value(self, new_cell):
         self.value[:] = new_cell.value
+
+    def bc_to_ghost(self):
+        """
+        assign the boundary values to the ghost cells
+        """
+        if issubclass(type(self.domain), Mesh1D):
+            self.value[0] = 0.5*(self.value[1]+self.value[0])
+            self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
+        elif issubclass(type(self.domain), Mesh2D):
+            self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
+            self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
+            self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
+            self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
+        elif issubclass(type(self.domain), Mesh3D):
+            self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
+            self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
+            self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
+            self.value[1:-1, -1, 1:-1] = 0.5*(self.value[1:-1, -2, 1:-1]+self.value[1:-1, -1, 1:-1])
+            self.value[1:-1, 1:-1, 0] = 0.5*(self.value[1:-1, 1:-1, 1]+self.value[1:-1, 1:-1, 0])
+            self.value[1:-1, 1:-1, -1] = 0.5*(self.value[1:-1, 1:-1, -2]+self.value[1:-1, 1:-1, -1])
+    
+    def copy(self):
+        """
+        Create a copy of the CellVariable
+        """
+        return CellVariable(self.domain, np.copy(self.value))
     
     def __add__(self, other):
         if type(other) is CellVariable:
@@ -193,7 +219,22 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
     else:
         return CellVariable(mesh_struct, cellBoundary(phi_val, createBC(mesh_struct)))
 
+def copyCellVariable(phi: CellVariable) -> CellVariable:
+    """
+    Create a copy of a CellVariable
 
+    Parameters
+    ----------
+    phi : CellVariable
+        CellVariable to be copied.
+
+    Returns
+    -------
+    CellVariable
+        Copy of the CellVariable.
+
+    """
+    return CellVariable(phi.domain, np.copy(phi.value))
 
 def cellVolume(m: MeshStructure):
     BC = createBC(m)
