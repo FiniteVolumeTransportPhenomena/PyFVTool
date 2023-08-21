@@ -6,7 +6,6 @@ import numpy as np
 from scipy.sparse import csr_array
 from .mesh import *
 from .utilities import *
-from .cell import copyCellVariable
 
 
 class Boundary:
@@ -1424,26 +1423,3 @@ def boundaryConditionTerm(BC):
         return boundaryCondition3D(BC)
     elif (type(BC.domain) is MeshCylindrical3D):
         return boundaryConditionCylindrical3D(BC)
-    
-
-def BC2GhostCells(phi0):
-    """
-    assign the boundary values to the ghost cells and returns the new cell variable
-    """
-    phi = copyCellVariable(phi0)
-    if issubclass(type(phi.domain), Mesh1D):
-        phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
-        phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
-    elif issubclass(type(phi.domain), Mesh2D):
-        phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
-        phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
-        phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
-        phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
-    elif issubclass(type(phi.domain), Mesh3D):
-        phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
-        phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
-        phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
-        phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
-        phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
-        phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
-    return phi

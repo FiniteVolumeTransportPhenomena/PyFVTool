@@ -468,3 +468,25 @@ def get_CellVariable_profile3D(phi: CellVariable):
     phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
     phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
     return (x, y, z, phi0)
+
+def BC2GhostCells(phi0):
+    """
+    assign the boundary values to the ghost cells and returns the new cell variable
+    """
+    phi = copyCellVariable(phi0)
+    if issubclass(type(phi.domain), Mesh1D):
+        phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
+        phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
+    elif issubclass(type(phi.domain), Mesh2D):
+        phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
+        phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
+        phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
+        phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
+    elif issubclass(type(phi.domain), Mesh3D):
+        phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
+        phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
+        phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
+        phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
+        phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
+        phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
+    return phi
