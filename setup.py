@@ -16,14 +16,14 @@ setup(
     license="MIT",
     packages=['pyfvtool'],
     include_package_data=True,
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[
         "numpy",
-        "scipy",
+        "scipy>=1.8.0",
         "matplotlib",
     ],
     classifiers=[
-        "Development Status :: under development - unstable",
+        "Development Status :: Beta",
         "Intended Audience :: Research",
         "License :: MIT License",
         "Natural Language :: English",
