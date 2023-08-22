@@ -211,7 +211,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
         # assign the value of the right boundary to the right ghost cells
         phi_tmp[-1,:] = 0.5*(phi.value[-1,:]+phi.value[-2,:])
         # assign the value of the bottom boundary to the bottom ghost cells
-        phi_tmp[:,1] = 0.5*(phi.value[:,0]+phi.value[:,1])
+        phi_tmp[:,0] = 0.5*(phi.value[:,0]+phi.value[:,1])
         # assign the value of the top boundary to the top ghost cells
         phi_tmp[:,-1] = 0.5*(phi.value[:,-1]+phi.value[:,-2])
         return FaceVariable(phi.domain,

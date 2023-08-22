@@ -28,7 +28,7 @@ class CellVariable:
         self.update_value(phi_temp)
 
     def update_value(self, new_cell):
-        self.value[:] = new_cell.value
+        np.copyto(self.value, new_cell.value)
 
     def bc_to_ghost(self):
         """
