@@ -8,7 +8,8 @@ from .face import *
 
 
 
-def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray) -> CellVariable:
+def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
+             externalsolver = None) -> CellVariable:
     """
     Solve the PDE using the finite volume method.
     
@@ -20,13 +21,21 @@ def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray) -> CellVariable:
         Matrix of the linear system
     RHS: np.ndarray
         Right hand side of the linear system
+    externalsolver: function (optional)
+        If provided, use an external sparse solver via a function call
+        having the same interface as the default solver
+        scipy.sparse.linalg.spsolve.
     
     Returns
     -------
     phi: CellVariable
         Solution of the PDE
     """
-    phi = spsolve(M, RHS)
+    if externalsolver is None:
+        solver = spsolve
+    else:
+        solver = externalsolver
+    phi = solver(M, RHS)
     return CellVariable(m, np.reshape(phi, m.dims+2))
 
 def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray, BC: BoundaryCondition) -> CellVariable:
