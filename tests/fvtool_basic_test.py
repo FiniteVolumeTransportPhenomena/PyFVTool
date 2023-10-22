@@ -7,6 +7,9 @@ import pyfvtool
 reload(pyfvtool)
 
 
+print('***** HELLO ******')
+
+
 # Test script, run this before committing changes & creating pull requests...
 
 #TODO: Include more visualizeCells testing
@@ -289,9 +292,14 @@ plt.clf()
 visualizeCells(vv)
 
 # Only use show() at the end of the script, since only a single call is needed
-# to display all open Figures.
-# However, `visualizeCells` also calls plt.show()... we need to figure out
-# if this is desirable.
+# to display all created Figures. `visualizeCells` does not call plt.show() anymore
+#
 # In Notebooks and in Spyder, plt.show() is not necessary. It is only needed
 # when running scripts in a stand-alone Python interpreter.
-plt.show()
+#
+# plt.show() # show figures and wait for user to close windows
+
+# Replaced plt.show() with plt.pause(3) which does not necessitate user 
+# interaction to close windows.
+#
+plt.pause(3) # show figures and pause for 3 seconds before continuing

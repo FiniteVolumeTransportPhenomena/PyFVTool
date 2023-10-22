@@ -3,7 +3,7 @@ import numpy as np
 from scipy.special import erf
 
 # provision for running this test script directly without pytest and
-# directly from the `pyfvtool` repository `tests`directory, without explicit
+# directly from the `pyfvtool` repository `tests` directory, without explicit
 # installation of the module
 try:
     import pyfvtool as pf
