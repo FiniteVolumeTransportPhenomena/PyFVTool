@@ -37,7 +37,7 @@ def visualizeCells(phi: CellVariable,
     if issubclass(type(phi.domain), Mesh1D):
         x, phi0 = get_CellVariable_profile1D(phi)
         plt.plot(x, phi0)
-        plt.show()
+        # plt.show()
 
     elif (type(phi.domain) is Mesh2D) or (type(phi.domain) is MeshCylindrical2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
@@ -65,7 +65,7 @@ def visualizeCells(phi: CellVariable,
         plt.pcolormesh(x, y, phi0.T, 
                        vmin=vmin, vmax=vmax,
                        cmap=cmap, shading=shading)
-        plt.show()
+        # plt.show()
 
     elif (type(phi.domain) is MeshRadial2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
@@ -88,7 +88,7 @@ def visualizeCells(phi: CellVariable,
         ## 
         plt.subplot(111, polar="true")
         plt.pcolor(y, x, phi0)
-        plt.show()
+        # plt.show()
 
     elif (type(phi.domain) is Mesh3D):
         x, y, z, phi0 = get_CellVariable_profile3D(phi)
@@ -147,7 +147,7 @@ def visualizeCells(phi: CellVariable,
         ax.plot_surface(X[:,:,-1], Y[:,:,-1], Z[:,:,-1],
                         facecolors=plt.cm.viridis(mynormalize(phi0[:,:,-1])),
                         alpha=0.8)
-        plt.show()
+        # plt.show()
 
     elif (type(phi.domain) is MeshCylindrical3D):
         r, theta, z, phi0 = get_CellVariable_profile3D(phi)
@@ -200,7 +200,7 @@ def visualizeCells(phi: CellVariable,
         ax.plot_surface(X[:, :, -1], Y[:, :, -1], Z[:, :, -1],
                        facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
                        alpha=alfa)
-        plt.show()
+        # plt.show()
         
     else:
         # just in case...
