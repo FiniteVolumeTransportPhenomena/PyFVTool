@@ -1,7 +1,19 @@
 import unittest
-from pyfvtool import *
 import numpy as np
 from scipy.special import erf
+
+# provision for running this test script directly without pytest and
+# directly from the `pyfvtool` repository `tests`directory, without explicit
+# installation of the module
+try:
+    import pyfvtool as pf
+except ModuleNotFoundError:
+    import sys
+    sys.path.append('./..')
+    import pyfvtool as pf
+    
+OUTPUT_DIAGNOSTICS = False
+
 
 def T_analytical_dirichlet(x,t, alfa, T0, Ts):
         return (T0-Ts)*erf(x/np.sqrt(4*alfa*t))+Ts
@@ -22,9 +34,9 @@ def T_numerical(left_bc: str) -> float:
     time_steps = 50
     dt = t_sim/time_steps # 
     Nx = 50 # number of cells
-    m = createMesh1D(Nx, L)
+    m = pf.createMesh1D(Nx, L)
     # Boundary condition
-    BC = createBC(m)
+    BC = pf.createBC(m)
     if left_bc == "Dirichlet":
         BC.left.a[:] = 0.0
         BC.left.b[:] = 1.0
@@ -37,33 +49,34 @@ def T_numerical(left_bc: str) -> float:
         T_analytic = lambda x,t: T_analytical_neuman(x, t, alfa, T0, k, qs)
 
     # Initial condition
-    T_init = createCellVariable(m, T0, BC) # initial condition
+    T_init = pf.createCellVariable(m, T0, BC) # initial condition
     # physical parameters
-    alfa_cell = createCellVariable(m, alfa, createBC(m))
-    alfa_face = harmonicMean(alfa_cell)
+    alfa_cell = pf.createCellVariable(m, alfa, pf.createBC(m))
+    alfa_face = pf.harmonicMean(alfa_cell)
 
-    M_diff = diffusionTerm(alfa_face)
-    [M_bc, RHS_bc] = boundaryConditionTerm(BC)
+    M_diff = pf.diffusionTerm(alfa_face)
+    [M_bc, RHS_bc] = pf.boundaryConditionTerm(BC)
 
     t=0
     while t<t_sim:
         t +=dt
-        [M_trans, RHS_trans] = transientTerm(T_init, dt, 1.0)
-        T_val = solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
+        [M_trans, RHS_trans] = pf.transientTerm(T_init, dt, 1.0)
+        T_val = pf.solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
         T_init.update_value(T_val)
 
     x = m.facecenters.x
-    T_face = linearMean(T_val)
+    T_face = pf.linearMean(T_val)
     T_num = T_face.xvalue
     T_an = T_analytic(x, t_sim)
     er = np.sum(np.abs(T_num-T_an)/T_an)/Nx
     return er
 
 def conv_numerical_1d() -> float:
+    global OUTPUT_DIAGNOSTICS
     L = 1.0  # domain length
-    Nx = 25 # number of cells
-    meshstruct = createMesh1D(Nx, L)
-    BC = createBC(meshstruct) # all Neumann boundary condition structure
+    Nx = 50 # number of cells
+    meshstruct = pf.createMesh1D(Nx, L)
+    BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
     BC.left.a[:] = 0 
     BC.left.b[:] = 1 
     BC.left.c[:] = 0 # left boundary
@@ -73,35 +86,38 @@ def conv_numerical_1d() -> float:
     x = meshstruct.cellcenters.x
     ## define the transfer coeffs
     D_val = -1
-    D = createCellVariable(meshstruct, D_val)
-    Dave = harmonicMean(D) # convert a cell variable to face variable
+    D = pf.createCellVariable(meshstruct, D_val)
+    Dave = pf.harmonicMean(D) # convert a cell variable to face variable
     # alfa = createCellVariable(meshstruct, 1)
     u = -10
-    u_face = createFaceVariable(meshstruct, u)
+    u_face = pf.createFaceVariable(meshstruct, u)
     ## solve
-    Mconv =  convectionTerm(u_face)
+    Mconv =  pf.convectionTerm(u_face)
     # Mconvupwind =  convectionUpwindTerm(u_face)
-    Mdiff = diffusionTerm(Dave)
-    [Mbc, RHSbc] = boundaryConditionTerm(BC)
+    Mdiff = pf.diffusionTerm(Dave)
+    [Mbc, RHSbc] = pf.boundaryConditionTerm(BC)
     M = Mconv-Mdiff-Mbc
     # Mupwind = Mconvupwind-Mdiff-Mbc
     RHS = -RHSbc
-    c = solvePDE(meshstruct, M, RHS)
+    c = pf.solvePDE(meshstruct, M, RHS)
     # c_upwind = solvePDE(meshstruct, Mupwind, RHS)
     c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
-    er = np.sum(np.abs(c_analytical-c.value[1:Nx+1]))
-    return er
+    er = np.sum(np.abs(c_analytical-c.value[1:-1]))/Nx
+    if OUTPUT_DIAGNOSTICS:
+        return er, x, c_analytical, c.value[1:-1]
+    else:
+        return er
 
 
 class TestDiffusion(unittest.TestCase):
     def test_1d_dirichlet(self):
-        print("\n Running 1D conduction heat transfer with Dirichlet boundary:")
+        print("\nRunning 1D conduction heat transfer with Dirichlet boundary:")
         left_bc = "Dirichlet"
         er = T_numerical(left_bc)
         eps_T = 0.001
         self.assertLessEqual(er, eps_T)
     def test_1d_neumann(self):
-        print("\n Running 1D conduction heat transfer with Neumann boundary:")
+        print("\nRunning 1D conduction heat transfer with Neumann boundary:")
         left_bc = "Neumann"
         er = T_numerical(left_bc)
         eps_T = 0.001
@@ -113,3 +129,27 @@ class TestConvection(unittest.TestCase):
         er = conv_numerical_1d()
         eps_c = 0.001
         self.assertLessEqual(er, eps_c)
+        
+        
+if __name__ == '__main__':
+    # This part allows for this script to be run directly, without
+    # `pytest`. This is useful for further diagnostics and debugging
+    print('Running test script without pytest...')
+    print()
+    
+    import matplotlib.pyplot as plt
+    OUTPUT_DIAGNOSTICS = True
+    
+    print("\nRunning 1D convection...")
+    er, x, c_an, c_num = conv_numerical_1d()
+    plt.figure(1)
+    plt.clf()
+    plt.plot(x, c_an, label='analytic')
+    plt.plot(x, c_num, label='FVM')
+    plt.legend()
+    
+    plt.show()
+    
+    
+    
+
