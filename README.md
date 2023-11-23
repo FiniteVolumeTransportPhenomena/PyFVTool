@@ -1,7 +1,8 @@
-# PyFVTool
-This is a Python implementation of my Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) heavily inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) albeit with a fraction of FiPy features. The boundary conditions, however, are much easier (and perhaps more consistent) to implement in PyFVTool.   
+# PyFVTool: Python toolbox for the finite-volume method
 
-This package can dicretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients:  
+This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) heavily inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) albeit with a fraction of FiPy features. The boundary conditions, however, are much easier (and perhaps more consistent) to implement in PyFVTool.   
+
+This package can discretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients:  
 
 ```math
 \underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla.\left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla.(-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
@@ -12,7 +13,7 @@ with the following general form of boundary conditions (by specifying constants 
 a\nabla\phi.\mathbf{e}+b\phi=c
 ```
 
-The [finite volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
+The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
   * 1D, 2D and 3D Cartesian and Cylindrical grids (only 1D spherical)
   * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
   * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
@@ -22,14 +23,15 @@ The [finite volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * (Relatively) easy linearization of nonlinear PDEs
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
   * Divergence and gradient terms
-  * Convenient visualization of results
 
-The code is still being tested although the preliminary simulations match analytical solutions. More validation will be done soon.  
+The code is under active development. Preliminary simulations match analytical solutions. More validation is under way, and the use of this PyFVTool toolbox in ongoing research projects will further consolidate the code and verify its validity.  
 
-There are simple tricks to use the code for systems of nonlinear partial differential equations that take the form of advection-diffusion-reaction equations. There are not so much documentations for the code but the example folder is the best place to start. If you know the topic, there is a good chance you will never need any documentations.  
+There are simple tricks to use the code for systems of nonlinear partial differential equations that take the form of advection-diffusion-reaction equations. There is not much documentation for the code yet (help wanted!) but the example folder is the best place to start. If you know the topic, there is a good chance you will never need any documentations.  
 
 ## Installation
-For now, install it directly from the repo using pip. You will need `Python 3.6` or higher and `numpy`, `scipy`, and `matplotlib`:  
+An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
+
+For now, install it directly from the repo using pip. You will need `Python 3.8` or higher and `numpy`, `scipy`, and `matplotlib`:  
 
 ```
 pip install git+https://github.com/simulkade/PyFVTool.git
