@@ -3,6 +3,7 @@
 *.mat
 .vscode/settings.json
 .ipynb_checkpoints/
+.virtual_documents/
 vscode/
 build/
 PyFVTool.egg-info/
