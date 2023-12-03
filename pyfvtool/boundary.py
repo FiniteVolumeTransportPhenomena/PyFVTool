@@ -149,24 +149,24 @@ def boundaryCondition1D(BC: BoundaryCondition1D):
         q += 1
         ii[q] = G[i]
         jj[q] = G[i]
-        s[q] = BC.right.b/2 + BC.right.a/dx_end
+        s[q] = BC.right.b.item()/2 + BC.right.a.item()/dx_end
         q = q+1
         ii[q] = G[i]
         jj[q] = G[i-1]
-        s[q] = BC.right.b/2 - BC.right.a/dx_end
-        BCRHS[G[i]] = BC.right.c
+        s[q] = BC.right.b.item()/2 - BC.right.a.item()/dx_end
+        BCRHS[G[i]] = BC.right.c.item()
 
         # Left boundary
         i = 0
         q += 1
         ii[q] = G[i]
         jj[q] = G[i+1]
-        s[q] = -(BC.left.b/2 + BC.left.a/dx_1)
+        s[q] = -(BC.left.b.item()/2 + BC.left.a.item()/dx_1)
         q = q+1
         ii[q] = G[i]
         jj[q] = G[i]
-        s[q] = -(BC.left.b/2 - BC.left.a/dx_1)
-        BCRHS[G[i]] = -BC.left.c
+        s[q] = -(BC.left.b.item()/2 - BC.left.a.item()/dx_1)
+        BCRHS[G[i]] = -BC.left.c.item()
     elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
         # Right boundary
         i = Nx+1
@@ -1082,9 +1082,9 @@ def cellBoundary1D(phi, BC):
     #  phi(i-1) (-a/dx+b/2) = c - phi(i) (a/dx+b/2)
     # define the new phi
     if (not BC.left.periodic) and (not BC.right.periodic):
-        phiBC = np.hstack([(BC.left.c-phi[0]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2), 
+        phiBC = np.hstack([(BC.left.c.item()-phi[0]*(BC.left.a.item()/dx_1+BC.left.b.item()/2))/(-BC.left.a.item()/dx_1+BC.left.b.item()/2), 
         phi,
-        (BC.right.c-phi[-1]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)])
+        (BC.right.c.item()-phi[-1]*(-BC.right.a.item()/dx_end+BC.right.b.item()/2))/(BC.right.a.item()/dx_end+BC.right.b.item()/2)])
     else:
         phiBC = np.hstack([phi[-1], phi, phi[0]])
     return phiBC
