@@ -1,10 +1,5 @@
 """
 Boundary condition classes
-
-
-Notes
------
-
 """
 
 import numpy as np
@@ -120,168 +115,6 @@ def createBC(mesh: MeshStructure):
     elif issubclass(type(mesh), Mesh3D):
         return BoundaryCondition3D(mesh)
 
-    
-def BC2GhostCells(phi):   
-    """
-    Assign values at teh bounadries to the ghost cells
-    
-    Parameters
-    ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
-        
-    Returns
-    -------
-    out : {CellVariable object}
-        Updated variable defined at mesh-nodes with ghost cells
-        
-
-    See Also
-    --------
-
-    Notes
-    -----
-    phi is a CellVariable, but specifying it here would create a circular reference, as this module is imported into the cell-module
-
-    Examples
-    --------
-
-    """
-    d = phi.domain.dimension
-    phi = phi.copy()
-    if (d == 1 ) or (d==1.5) or (d==1.8):
-        phi.value[0] = 0.5*(phi.value[0]+phi.value[1])
-        phi.value[-1] = 0.5*(phi.value[-1]+phi.value[-2])
-        
-    elif (d == 2) or (d == 2.5) or (d == 2.8):
-        phi.value[0, 1:-2] = 0.5*(phi.value[0, 1:-2] + phi.value[1, 1:-2])  # (1,2:end-1)
-        phi.value[-1, 1:-2] = 0.5*(phi.value[-1, 1:-2] + phi.value[-2, 1:-2])    # (end,2:end-1)
-        phi.value[1:-2, 0] = 0.5*(phi.value[1:-2, 0] + phi.value[1:-2, 1])         # (2:end-1, 1)
-        phi.value[1:-2, -1] = 0.5*(phi.value[1:-2, -1] + phi.value[1:-2, -2])  # (2:end-1, end) 
-        
-    elif (d == 3) or (d == 3.2):
-        phi.value[0, 1:-2, 1:-2] = 0.5*(phi.value[0, 1:-2, 1:-2] + phi.value[1, 1:-2, 1:-2])  # (1, 2:end-1, 2:end-1)
-        phi.value[-1, 1:-2, 1:-2] = 0.5*(phi.value[-1, 1:-2, 1:-2] + phi.value[-2, 1:-2, 1:-2]) # (end, 2:end-1, 2:end-1)
-        phi.value[1:-2, 0, 1:-2] = 0.5*(phi.value[1:-2, 0, 1:-2] + phi.value[1:-2, 1, 1:-2]) # (2:end-1, 1, 2:end-1)
-        phi.value[1:-2, -1, 1:-2] = 0.5*(phi.value[1:-2, -1, 1:-2] + phi.value[1:-2, -2, 1:-2])  # (2:end-1, end, 2:end-1)
-        phi.value[1:-2, 1:-2, 0] = 0.5*(phi.value[1:-2, 1:-2, 0] + phi.value[1:-2, 1:-2, 1])     # (2:end-1, 2:end-1, 1)
-        phi.value[1:-2, 1:-2, -1] = 0.5*(phi.value[1:-2, 1:-2, -2])    # (2:end-1, 2:end-1, end)
-    return phi
-
-
-def combineBC(BC: BoundaryCondition, Meq: csr_array, RHSeq: csr_array):
-    """
-    Combine boundary conditions to return a modified coefficient matrix and RHS vector.
-    
-    This function combines the boundary condition equatiosn with the new main physical model equations (Meq), and delivers the matrix of coefficients and right-hand-side of the equation to be solved for the internal cells.  It is useful if one needs to use an ODE solver for the accumulation term, i.e., 
-        d(phi)/dt = M phi
-        
-    Parameters
-    ----------
-    BC : {BoundaryCondition object}
-        Class object structure with boundary condtion definitions
-        
-    Meq : {csr_array}
-        Coefficient matrix defining equations to be solved
-        
-    RHSeq : {csr_array}
-        Coefficient matrix defining right-hand side of the equations
-
-    Returns
-    -------
-    Mout : {csr_array}
-        Altered coefficient matrix including boundary condition terms
-        
-    RHSout : {csr_array}
-        Altered right-hand-side coefficient vector including boundary condition terms
-
-    See Also
-    --------
-    combineBC1D : combine boundary conditions for a 1D grid
-    combineBC2D : combine boundary conditions for a 2D grid
-    combineBC3D : combine boundary conditions for a 3D grid
-
-    Notes
-    -----
-
-    Examples
-    --------
-    >>>     
-    
-    
-    """
-    # Number of dimensions on domain (and therefore boundary conditions)
-    d = BC.domain.dimension
-    
-    if (d == 1) or (d == 1.5):
-        return combineBC1D(BC, Meq, RHSeq)
-    elif (d == 2) or (d == 2.5):
-        return combineBC2D(BC, Meq, RHSeq)
-    elif (d == 3):
-        return combineBC3D(BC, Meq, RHSeq)
-    
-    
-def combineBC1D(BC: BoundaryCondition, Meq: csr_array, RHSeq: csr_array):
-    """
-    Wrap boundary conditions into the problem coefficient matrix and RHS-vector
-    
-    -->  Errors abound here
-    
-    """
-    # extract data from the mesh structure
-    Nx = BC.domain.dims[0]
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end= BC.domain.cellsize.x[-1]
-    G = np.asarray(range(Nx+2))   # G = 1:Nx+2;
-
-    # define the RHS column vector
-    ms = np.shape(Meq)
-    
-    # Copy input matrices
-    M = Meq
-    RHS = RHSeq
-
-    # Assign values to the boundary condition matrix and the RHS vector based
-    # on the BC structure
-
-    # Right boundary
-    ii = Nx+1  # Nx+2
-    right = sub2ind(ms, G[ii-1], G[ii-1])  # right boundary cells
-    rightE = sub2ind(ms, G[ii-1], G[ii])   # east cells to right boundary cells
-    
-    try:
-        print(M[right])
-        print(M[rightE])
-
-        M[right] = M[right]-((BC.right.b/2.0 - BC.right.a/dx_end)/(BC.right.b/2.0 + BC.right.a/dx_end))*M[rightE]    
-        RHS[G[ii-1]] = RHS[G[ii-1]]-M[rightE]*BC.right.c/(BC.right.b/2.0 + BC.right.a/dx_end)
-    except:
-        print((M.shape, right, rightE))
-        print((RHS.shape, G[ii-1]))
-        raise
-        
-    # Left boundary
-    ii = 0
-    left = sub2ind(ms, G[ii+1], G[ii+1])  # left boundary cells
-    leftW = sub2ind(ms, G[ii+1], G[ii])   # west cells to left boundary cells
-    M[left] = M[left]-((BC.left.b/2.0 + BC.left.a/dx_1)/(BC.left.b/2.0 - BC.left.a/dx_1))*M[leftW]
-    RHS[G[ii+1]] = RHS[G[ii+1]]-M[leftW]*BC.left.c/(BC.left.b/2.0 - BC.left.a/dx_1)
-
-    return M[G[1:-1], G[1:-1]], RHS[G[1:-1].reshape(Nx, 1, order='F')]
-
-
-def combineBC2D(BC: BoundaryCondition, Meq: csr_array, RHSeq: csr_array):
-    """   
-    
-    """
-    return NotImplemented
-
-def combineBC3D(BC: BoundaryCondition, Meq: csr_array, RHSeq: csr_array):
-    """   
-    
-    """
-    return NotImplemented
-
 
 """
 Discretizing boundary conditions to csr array
@@ -294,75 +127,6 @@ array([[1, 0, 2],
        [0, 0, 3],
        [4, 5, 6]])
 """
-
-
-def boundaryCondition(BC: BoundaryCondition):
-    """
-    Creates and returns the matrix of coefficients (equations) and the RHS-vector.
-    
-    Calculates the coefficient matrix for the system of equations, and also returns the right-hand-side vector, including boundary conditions as effective source terms.
-        function [BCMatrix, BCRHS] = boundaryCondition(BC)
-
-    Parameters
-    ----------
-    BC : {Boundary Condition object}
-        Container for boundary condition data.  
-        
-    Returns
-    -------
-    BCMatrix : {np.ndarray}
-        A square sparse matrix - matrix of coefficients for the given boundary conditions (not including system of equations)
-        
-    BCRHS : {np.ndarray}
-        A column of vecotrs - vector of effective source terms caused by the the given boundary conditions (not including real source terms)
-
-    See Also
-    --------
-    createBC : 
-    createMesh1D :
-    createMesh2D :
-    createMesh3D :
-    createMeshCylindrical1D :
-    createMeshCylindrical2D :
-    createMeshCylindrical3D :    NotImplemented
-    createMeshRadial2D :
-    createMeshCylindrical3D :
-    cellBoundary :
-    combineBC :
-    createCellVariable :
-
-    Notes
-    -----
-
-    Examples
-    --------
-    >>> L = 1.0  # Length of a 1D domain
-    L = 1.0
-    >>> Nx = 5   # Number of grids in x-direction
-    Nx = 5
-    >>> m = createMesh1D(Nx, L)
-    m
-    >>> BC = createBC(m)  # all Neumann BC's
-    BC
-    >>> Mbc, RHSbc = boundaryCondition(BC)
-    ...
-    >>> print(Mbc)
-    ...
-
-
-    """
-    d = BC.domain.dimension
-    if (d ==1) or (d==1.5) or (d==1.8):
-        BCMatrix, BCRHS = boundaryCondition1D(BC)
-    elif (d == 2) or (d == 2.5):
-        BCMatrix, BCRHS = boundaryCondition2D(BC)
-    elif (d == 2.8):
-        BCMatrix, BCRHS = boundaryConditionRadial2D(BC)
-    elif (d == 3):
-        BCMatrix, BCRHS = boundaryCondition3D(BC)
-    elif (d == 3.2):
-        BCMatrix, BCRHS = boundaryConditionCylindrical3D(BC)   
-    return BCMatrix, BCRHS
 
 
 def boundaryCondition1D(BC: BoundaryCondition1D):
@@ -446,7 +210,6 @@ def boundaryCondition1D(BC: BoundaryCondition1D):
     q += 1
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), shape=(Nx+2, Nx+2))
     return BCMatrix, BCRHS
-
 
 def boundaryCondition2D(BC: BoundaryCondition2D):
     Nx, Ny = BC.domain.dims
@@ -610,7 +373,6 @@ def boundaryCondition2D(BC: BoundaryCondition2D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
                          shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
     return BCMatrix, BCRHS
-
 
 def boundaryCondition3D(BC: BoundaryCondition3D):
     # extract data from the mesh structure
@@ -876,7 +638,6 @@ def boundaryCondition3D(BC: BoundaryCondition3D):
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
     return BCMatrix, BCRHS
 
-
 def boundaryConditionRadial2D(BC: BoundaryCondition2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
@@ -1040,7 +801,6 @@ def boundaryConditionRadial2D(BC: BoundaryCondition2D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
                          shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
     return BCMatrix, BCRHS
-
 
 def boundaryConditionCylindrical3D(BC: BoundaryCondition3D):
     # extract data from the mesh structure
@@ -1307,7 +1067,6 @@ def boundaryConditionCylindrical3D(BC: BoundaryCondition3D):
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
     return BCMatrix, BCRHS
 
-
 def cellBoundary1D(phi, BC):
     # extract data from the mesh structure
     # Nx = MeshStructure.numberofcells
@@ -1329,7 +1088,6 @@ def cellBoundary1D(phi, BC):
     else:
         phiBC = np.hstack([phi[-1], phi, phi[0]])
     return phiBC
-
 
 def cellBoundary2D(phi, BC):
     # extract data from the mesh structure
@@ -1382,7 +1140,6 @@ def cellBoundary2D(phi, BC):
         i = 0
         phiBC[i,j]= phi[-1,:]
     return phiBC
-
 
 def cellBoundary3D(phi, BC):
     Nx, Ny, Nz = BC.domain.dims
@@ -1477,7 +1234,6 @@ def cellBoundary3D(phi, BC):
         k = 0
         phiBC[i,j,k]= phi[:,:,-1]
     return phiBC
-
 
 def cellBoundaryCylindrical3D(phi, BC):
     Nx, Ny, Nz = BC.domain.dims
@@ -1574,7 +1330,6 @@ def cellBoundaryCylindrical3D(phi, BC):
         phiBC[i,j,k]= phi[:,:,-1]
     return phiBC
 
-
 def cellBoundaryRadial2D(phi, BC):
     # extract data from the mesh structure
     Nx, Ny = BC.domain.dims
@@ -1628,7 +1383,6 @@ def cellBoundaryRadial2D(phi, BC):
         phiBC[i,j]= phi[-1,:]
     return phiBC
 
-
 def cellBoundary(phi, BC) -> np.ndarray:
     """
     Calculate the boundary values of a variable given the boundary conditions.
@@ -1658,7 +1412,6 @@ def cellBoundary(phi, BC) -> np.ndarray:
     else:
         raise Exception("The cellBoundary function is not defined for this mesh type.")
 
-        
 def boundaryConditionTerm(BC):
     if issubclass(type(BC.domain), Mesh1D):
         return boundaryCondition1D(BC)
@@ -1670,7 +1423,3 @@ def boundaryConditionTerm(BC):
         return boundaryCondition3D(BC)
     elif (type(BC.domain) is MeshCylindrical3D):
         return boundaryConditionCylindrical3D(BC)
-    
-    
-
-   
