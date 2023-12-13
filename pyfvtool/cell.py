@@ -263,6 +263,8 @@ def cellLocations(m: MeshStructure):
     
     It can later be used in defining properties that are variable in space.
     
+    Incompletely tested
+    
     Parameters
     ----------
     m : {MeshStructure object}
@@ -290,27 +292,27 @@ def cellLocations(m: MeshStructure):
     
     """    
     N = m.dims
-    d = m.dimension
+   
     
-    X = createCellVariable(m, 0)
-    Y = createCellVariable(m, 0)
-    Z = createCellVariable(m, 0)
-    
-    if (d == 1) or (d == 1.5) or (d == 1.8):
+    if (type(m) is Mesh1D)\
+     or (type(m) is MeshCylindrical1D):
         X = createCellVariable(m, m.cellcenters.x)
-        
-    elif (d==2) or (d == 2.5) or (d==2.8): 
+        return X
+    elif (type(m) is Mesh2D)\
+       or (type(m) is MeshCylindrical2D)\
+       or (type(m) is MeshRadial2D): 
         X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
         Y = createCellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
-            
-    elif (d==3) or (d==3.2): 
+        return X, Y  
+    elif (type(m) is Mesh3D)\
+       or (type(m) is MeshCylindrical3D): 
         X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
         Y = createCellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
-        
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
         Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
-    return X, Y, Z
+    raise TypeError('mesh type not implemented')
+    return None 
 
 
 def funceval(f, *args):
