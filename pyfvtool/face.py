@@ -232,6 +232,8 @@ def faceLocations(m: MeshStructure):
     
     It can later be used for the calculation of face variables as a function of location
     
+    Incompletely tested
+    
     Parameters
     ----------
     m : {MeshStructure object}
@@ -258,24 +260,31 @@ def faceLocations(m: MeshStructure):
     >>>     
     
     """    
-    N=m.dims
-    X = createFaceVariable(m, 0)
-    Y = createFaceVariable(m, 0)
-    Z = createFaceVariable(m, 0)
     
     N = m.dims
-    d = m.dimension
     
-    if (d == 1) or (d == 1.5) or (d == 1.8):
+    if (type(m) is Mesh1D)\
+     or (type(m) is MeshCylindrical1D):
+        X = createFaceVariable(m, 0)
         X.xvalue = m.facecenters.x
+        return X
         
-    elif (d==2) or (d == 2.5) or (d==2.8):
+    elif (type(m) is Mesh2D)\
+       or (type(m) is MeshCylindrical2D)\
+       or (type(m) is MeshRadial2D):
+        X = createFaceVariable(m, 0)
+        Y = createFaceVariable(m, 0)
         X.xvalue = np.tile(m.facecenters.x[:, np.newaxis], (1, N[1]))
         X.yvalue = np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0]+1, 1))
         Y.xvalue = np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1]+1))
         Y.yvalue = np.tile(m.facecenters.y[:, np.newaxis].T, (N[0], 1))
+        return X, Y
         
-    elif (d==3) or (d==3.2): 
+    elif (type(m) is Mesh3D)\
+       or (type(m) is MeshCylindrical3D):
+        X = createFaceVariable(m, 0)
+        Y = createFaceVariable(m, 0)
+        Z = createFaceVariable(m, 0)
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
         
@@ -292,7 +301,9 @@ def faceLocations(m: MeshStructure):
         Z.xvalue = np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2]+1))
         Z.yvalue = np.tile((m.facecenters.y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]+1))
         Z.zvalue = np.tile(z, (N[0], N[1], 1))
-    return X, Y, Z
+        return X, Y, Z
+    raise TypeError('mesh type not implemented')
+    return None
         
         
 def faceeval(f, *args):
