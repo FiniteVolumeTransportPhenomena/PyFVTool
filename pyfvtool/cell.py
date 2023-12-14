@@ -219,6 +219,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
     else:
         return CellVariable(mesh_struct, cellBoundary(phi_val, createBC(mesh_struct)))
 
+
 def copyCellVariable(phi: CellVariable) -> CellVariable:
     """
     Create a copy of a CellVariable
@@ -235,6 +236,7 @@ def copyCellVariable(phi: CellVariable) -> CellVariable:
 
     """
     return CellVariable(phi.domain, np.copy(phi.value))
+
 
 def cellVolume(m: MeshStructure):
     BC = createBC(m)
@@ -254,6 +256,63 @@ def cellVolume(m: MeshStructure):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
     return createCellVariable(m, c, BC)
 
+
+def cellLocations(m: MeshStructure):
+    """
+    this function returns the location of the cell centers as cell variables. 
+    
+    It can later be used in defining properties that are variable in space.
+    
+    Incompletely tested
+    
+    Parameters
+    ----------
+    m : {MeshStructure object}
+        Domain of the problem
+
+    Returns
+    -------
+    X : {CellVariable object}
+        Node x-positions        
+    Y : {CellVariable object}
+        Node y-positions        
+    Z : {CellVariable object}
+        Node z-positions        
+
+    See Also
+    --------
+    faceLocations
+
+    Notes
+    -----
+
+    Examples
+    --------
+    >>>     
+    
+    """    
+    N = m.dims
+   
+    
+    if (type(m) is Mesh1D)\
+     or (type(m) is MeshCylindrical1D):
+        X = createCellVariable(m, m.cellcenters.x)
+        return X
+    elif (type(m) is Mesh2D)\
+       or (type(m) is MeshCylindrical2D)\
+       or (type(m) is MeshRadial2D): 
+        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
+        Y = createCellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
+        return X, Y  
+    elif (type(m) is Mesh3D)\
+       or (type(m) is MeshCylindrical3D): 
+        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
+        Y = createCellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
+        z = np.zeros((1,1,N[2]))
+        z[0, 0, :] = m.cellcenters.z
+        Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
+    raise TypeError('mesh type not implemented')
+    return None 
 
 
 def funceval(f, *args):
