@@ -1,10 +1,10 @@
-
 import numpy as np
 from scipy.sparse import csr_array
-from .mesh import *
-from .utilities import *
-from .cell import *
-from .face import *
+
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .cell import CellVariable, createCellVariable
+from .boundary import createBC
+
 
 
 def constantSourceTerm(gamma: CellVariable):
@@ -26,10 +26,10 @@ def constantSourceTerm(gamma: CellVariable):
     
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> gamma = createCellVariable(m, 1.0)
-    >>> RHS = constantSourceTerm(gamma)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> gamma = pf.createCellVariable(m, 1.0)
+    >>> RHS = pf.constantSourceTerm(gamma)
     """
     m = gamma.domain
     if issubclass(type(m), Mesh1D):
@@ -74,10 +74,10 @@ def linearSourceTerm(beta: CellVariable):
     
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> beta = createCellVariable(m, 1.0)
-    >>> RHS = linearSourceTerm(beta)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> beta = pf.createCellVariable(m, 1.0)
+    >>> RHS = pf.linearSourceTerm(beta)
     """
     m = beta.domain
     if issubclass(type(m), Mesh1D):
@@ -127,10 +127,10 @@ def transientTerm(phi_old: CellVariable, dt, alfa):
     
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> phi_old = createCellVariable(m, 0.0)
-    >>> M, RHS = transientTerm(phi_old, 1.0, 1.0)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> phi_old = pf.createCellVariable(m, 0.0)
+    >>> M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)
     """
     if not (type(alfa) is CellVariable):
         a = createCellVariable(phi_old.domain, alfa, createBC(phi_old.domain))

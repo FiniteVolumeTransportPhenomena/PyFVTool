@@ -1,6 +1,5 @@
-"""
-Mesh generation
-"""
+# Mesh generation
+
 import numpy as np
 from warnings import warn
 from typing import overload
