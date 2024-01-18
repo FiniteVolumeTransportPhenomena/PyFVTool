@@ -1,8 +1,7 @@
-
-from pyfvtool import *
 import numpy as np
 from scipy.special import erf
 import matplotlib.pyplot as plt
+import pyfvtool as pf
 
 def T_analytical_dirichlet(x,t, alfa, T0, Ts):
     return (T0-Ts)*erf(x/np.sqrt(4*alfa*t))+Ts
@@ -23,10 +22,10 @@ t_sim = L**2/(20*alfa) # [s]
 time_steps = 50
 dt = t_sim/time_steps # 
 Nx = 50 # number of cells
-m = createMesh1D(Nx, L)
+m = pf.createMesh1D(Nx, L)
 left_bc = "Dirichlet"
 # Boundary condition
-BC = createBC(m)
+BC = pf.createBC(m)
 if left_bc == "Dirichlet":
     BC.left.a[:] = 0.0
     BC.left.b[:] = 1.0
@@ -39,23 +38,23 @@ else:
     T_analytic = lambda x,t: T_analytical_neuman(x, t, alfa, T0, k, qs)
 
 # Initial condition
-T_init = createCellVariable(m, T0, BC) # initial condition
+T_init = pf.createCellVariable(m, T0, BC) # initial condition
 # physical parameters
-alfa_cell = createCellVariable(m, alfa, createBC(m))
-alfa_face = harmonicMean(alfa_cell)
+alfa_cell = pf.createCellVariable(m, alfa, pf.createBC(m))
+alfa_face = pf.harmonicMean(alfa_cell)
 
-M_diff = diffusionTerm(alfa_face)
-[M_bc, RHS_bc] = boundaryConditionTerm(BC)
+M_diff = pf.diffusionTerm(alfa_face)
+[M_bc, RHS_bc] = pf.boundaryConditionTerm(BC)
 
 t=0
 while t<t_sim:
     t +=dt
-    [M_trans, RHS_trans] = transientTerm(T_init, dt, 1.0)
-    T_val = solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
+    [M_trans, RHS_trans] = pf.transientTerm(T_init, dt, 1.0)
+    T_val = pf.solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
     T_init.update_value(T_val)
 
 x = m.facecenters.x
-T_face = linearMean(T_val)
+T_face = pf.linearMean(T_val)
 T_num = T_face.xvalue
 T_an = T_analytic(x, t_sim)
 er = np.sum(np.abs(T_num-T_an)/T_an)/Nx
