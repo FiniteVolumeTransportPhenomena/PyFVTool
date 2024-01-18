@@ -4,6 +4,8 @@ Here, we may document the functions and classes needed for setting up set up fin
 
 ## Initial list (not necessarily complete yet)
 
+See also `__init__.py` in the `pyfvtool` module directory.
+
 Taken from test script:
 
 ```python
