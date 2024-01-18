@@ -37,26 +37,26 @@ For now, install it directly from the repo using pip. You will need `Python 3.8`
 pip install git+https://github.com/simulkade/PyFVTool.git
 ```
 
-Soon, it will be possible to install from conda-forge and Python Package Index too.
-
 ## Example
-Here is a simple example of 1D transient diffusion equation:
+Here is a simple example of a 1D transient diffusion equation:
 
 ```python
-from pyfvtool import *
+import pyfvtool as pf
 
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
+
 Nx = 20 # number of finite volume cells
 Lx = 1.0 # [m] length of the domain 
 c_left = 1.0 # left boundary concentration
 c_init = 0.0 # initial concentration
 D_val = 1e-5 # diffusion coefficient (gas phase)
-t_simulation = 3600.0 # [s] simulation time
+t_simulation = 7200.0 # [s] simulation time
 dt = 60.0 # [s] time step
+Nskip = 10 # plot every Nskip-th profile
 
-m1 = createMesh1D(Nx, Lx) # mesh object
-bc = createBC(m1) # Neumann boundary condition by default
+m1 = pf.createMesh1D(Nx, Lx) # mesh object
+bc = pf.createBC(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0
@@ -64,23 +64,25 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = createCellVariable(m1, c_init, bc)
+c_old = pf.createCellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = createCellVariable(m1, D_val)
-D_face = geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
+D_cell = pf.createCellVariable(m1, D_val)
+D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization
-Mdiff = diffusionTerm(D_face)
-Mbc, RHSbc = boundaryConditionTerm(bc)
+Mdiff = pf.diffusionTerm(D_face)
+Mbc, RHSbc = pf.boundaryConditionTerm(bc)
 
 # time loop
 t = 0
+nplot = 0
 while t<t_simulation:
     t+=dt
-    Mt, RHSt = transientTerm(c_old, dt, 1.0)
-    c_new = solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
+    Mt, RHSt = pf.transientTerm(c_old, dt, 1.0)
+    c_new = pf.solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
     c_old.update_value(c_new)
-
-visualizeCells(c_old)
+    if (nplot % Nskip == 0):
+        pf.visualizeCells(c_old)
+    nplot+=1
 ```
