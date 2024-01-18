@@ -1,9 +1,11 @@
 import numpy as np
-from scipy.sparse import csr_array
-from .mesh import *
-from .utilities import *
-from .cell import *
-from .face import *
+
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+from .cell import CellVariable
+from .face import FaceVariable
+
 
 
 def gradientTerm(phi: CellVariable):
@@ -22,10 +24,10 @@ def gradientTerm(phi: CellVariable):
     
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> phi = createCellVariable(m, 1.0)
-    >>> gradPhi = gradientTerm(phi)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> gradPhi = pf.gradientTerm(phi)
     >>> gradPhi.xvalue
     """
     # calculates the gradient of a variable
@@ -308,11 +310,11 @@ def divergenceTerm(F: FaceVariable):
 
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> phi = createCellVariable(m, 1.0)
-    >>> gradPhi = gradientTerm(phi)
-    >>> RHSdiv = divergenceTerm(gradPhi)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> gradPhi = pf.gradientTerm(phi)
+    >>> RHSdiv = pf.divergenceTerm(gradPhi)
     """
     if (type(F.domain) is Mesh1D):
         RHSdiv = divergenceTerm1D(F)
@@ -357,12 +359,12 @@ def gradientTermFixedBC(phi):
     
     Examples
     --------
-    >>> from pyfvtool import *
+    >>> import pyfvtool as pf
     >>> import numpy as np
-    >>> m = createMesh1D(10, 1.0)
-    >>> phi = createCellVariable(m, 1.0)
-    >>> sin_phi = celleval(np.sin, BC2GhostCells(sw))
-    >>> gradPhi = gradientTermFixedBC(sin_phi)
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> sin_phi = pf.celleval(np.sin, BC2GhostCells(sw))
+    >>> gradPhi = pf.gradientTermFixedBC(sin_phi)
     """
     faceGrad = gradientTerm(phi)
     if issubclass(type(phi.domain), Mesh1D):

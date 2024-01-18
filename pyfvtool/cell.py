@@ -2,8 +2,13 @@
 
 import numpy as np
 from typing import overload
-from .mesh import *
-from .boundary import *
+
+from .mesh import MeshStructure
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+from .boundary import BoundaryCondition, createBC
+from .boundary import cellBoundary
 
 class CellVariable:
     def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray):
@@ -311,6 +316,7 @@ def cellLocations(m: MeshStructure):
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
         Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
+        return X, Y, Z # added by MW 240118, double check if OK
     raise TypeError('mesh type not implemented')
     return None 
 

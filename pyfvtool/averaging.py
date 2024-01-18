@@ -16,11 +16,12 @@ functions:
     tvdMean - NotImplemented
 """
 import numpy as np
-from scipy.sparse import csr_array
-from .mesh import *
-from .utilities import *
-from .cell import *
-from .face import *
+
+
+from .mesh import MeshStructure
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .cell import CellVariable
+from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
     if issubclass(type(m), Mesh1D):
