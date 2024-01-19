@@ -1,10 +1,12 @@
 # advection terms
 import numpy as np
 from scipy.sparse import csr_array
-from .mesh import *
-from .utilities import *
-from .cell import *
-from .face import *
+
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+from .cell import CellVariable
+from .face import FaceVariable
 
 # ------------------- Utility functions ---------------------
 
@@ -1341,10 +1343,10 @@ def convectionTerm(u: FaceVariable) -> csr_array:
 
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> u = createFaceVariable(m, 1.0)
-    >>> M = convectionTerm(u)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> u = pf.createFaceVariable(m, 1.0)
+    >>> M = pf.convectionTerm(u)
     """
     if (type(u.domain) is Mesh1D):
         return convectionTerm1D(u)
@@ -1384,10 +1386,10 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
 
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> u = createFaceVariable(m, 1.0)
-    >>> M = convectionUpwindTerm(u)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> u = pf.createFaceVariable(m, 1.0)
+    >>> M = pf.convectionUpwindTerm(u)
     """
     if (type(u.domain) is Mesh1D):
         return convectionUpwindTerm1D(u, *args)
@@ -1428,12 +1430,12 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
 
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> u = createFaceVariable(m, 1.0)
-    >>> phi = createCellVariable(m, 1.0)
-    >>> FL = fluxLimiter('SUPERBEE')
-    >>> RHS = convectionTvdRHSTerm(u, phi, FL)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> u = pf.createFaceVariable(m, 1.0)
+    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> FL = pf.fluxLimiter('SUPERBEE')
+    >>> RHS = pf.convectionTvdRHSTerm(u, phi, FL)
     """
     if (type(u.domain) is Mesh1D):
         return convectionTvdRHS1D(u, phi, FL, *args)

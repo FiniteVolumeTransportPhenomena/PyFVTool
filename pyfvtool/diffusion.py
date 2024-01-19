@@ -1,10 +1,13 @@
-# diffusion terms
+# Diffusion terms
+
 import numpy as np
 from scipy.sparse import csr_array
-from .mesh import *
-from .utilities import *
-from .cell import *
-from .face import *
+
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+from .face import FaceVariable
+
 
 
 class DiffusionTerm:
@@ -374,10 +377,10 @@ def diffusionTerm(D: FaceVariable) -> csr_array:
 
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> D = createFaceVariable(m, 1.0)
-    >>> M = diffusionTerm(D)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> D = pf.createFaceVariable(m, 1.0)
+    >>> M = pf.diffusionTerm(D)
     """
     if (type(D.domain) is Mesh1D):
         return diffusionTerm1D(D)

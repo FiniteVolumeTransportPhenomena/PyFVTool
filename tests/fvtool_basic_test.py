@@ -1,10 +1,29 @@
-from pyfvtool import *
 import numpy as np
 import matplotlib.pyplot as plt
-from importlib import reload
 from scipy.special import erf
-import pyfvtool
-reload(pyfvtool)
+
+
+# Instead of using the broad-spectrum `import pyfvtools as pf`,
+# we import each name explicitly in this particular script. This gives us
+# an idea of the coverage, and can also serve as a guide to writing more
+# elaborate documentation for PyFVTool functions and classes.
+
+from pyfvtool import createMesh1D, createMesh2D, createMesh3D
+from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
+from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
+from pyfvtool import createCellVariable, createFaceVariable
+from pyfvtool import createBC
+from pyfvtool import boundaryConditionTerm, diffusionTerm
+from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
+from pyfvtool import gradientTerm, divergenceTerm
+from pyfvtool import linearSourceTerm, constantSourceTerm
+from pyfvtool import transientTerm
+from pyfvtool import solvePDE, solveExplicitPDE
+from pyfvtool import harmonicMean, linearMean, arithmeticMean, geometricMean
+from pyfvtool import upwindMean
+from pyfvtool import fluxLimiter
+from pyfvtool import visualizeCells
+
 
 
 print('***** HELLO ******')
@@ -12,9 +31,15 @@ print('***** HELLO ******')
 
 # Test script, run this before committing changes & creating pull requests...
 
-#TODO: Include more visualizeCells testing
-#TODO: Futher organize this test script
-#TODO: Consider setting up pytest or other testing infrastructure
+#TODO: Further organize this test script
+#TODO: There is some overlap with test_runs.py => check and merge
+#TODO: Include more visualizeCells testing?
+
+
+# Start test
+# The only actual test is to see if this script terminates successfully.
+# More detailed tests (constraints on output, for example) could be added.
+successful_finish = False 
 
 
 Lx= 1.0
@@ -303,3 +328,12 @@ visualizeCells(vv)
 # interaction to close windows.
 #
 plt.pause(3) # show figures and pause for 3 seconds before continuing
+
+
+# end test (if the scripts run until here, it should be OK)
+successful_finish = True
+
+
+# pytest
+def test_success():
+    assert successful_finish

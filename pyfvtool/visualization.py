@@ -1,9 +1,14 @@
 import numpy as np
-from .mesh import *
-from .utilities import *
-from .cell import *
-from .face import *
+
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+from .cell import CellVariable
+from .cell import get_CellVariable_profile1D, get_CellVariable_profile2D
+from .cell import get_CellVariable_profile3D
+
 import matplotlib.pyplot as plt
+
 
 
 def visualizeCells(phi: CellVariable,
@@ -29,10 +34,10 @@ def visualizeCells(phi: CellVariable,
     
     Examples
     --------
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> phi = createCellVariable(m, 1.0)
-    >>> visualizeCells(phi)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> pf.visualizeCells(phi)
     """
     if issubclass(type(phi.domain), Mesh1D):
         x, phi0 = get_CellVariable_profile1D(phi)

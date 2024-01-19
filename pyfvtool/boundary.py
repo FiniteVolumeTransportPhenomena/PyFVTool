@@ -1,11 +1,14 @@
-"""
-Boundary condition classes
-"""
+# Boundary condition classes
+
 
 import numpy as np
 from scipy.sparse import csr_array
-from .mesh import *
-from .utilities import *
+
+from .mesh import MeshStructure
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+from .utilities import int_range
 
 
 class Boundary:

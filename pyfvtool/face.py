@@ -1,5 +1,10 @@
 import numpy as np
-from .mesh import *
+
+from .mesh import MeshStructure
+from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import MeshRadial2D, MeshCylindrical3D
+
 
 
 class FaceVariable:
@@ -196,9 +201,9 @@ def createFaceVariable(mesh, faceval):
     """
     Create a FaceVariable for the given mesh with the given value.
     Examples:
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> f = createFaceVariable(m, 1.0)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> f = pf.createFaceVariable(m, 1.0)
     """
     if issubclass(type(mesh), Mesh1D):
         Nx = mesh.dims
@@ -310,10 +315,10 @@ def faceeval(f, *args):
     """
     Evaluate a function f on a FaceVariable.
     Examples:
-    >>> from pyfvtool import *
-    >>> m = createMesh1D(10, 1.0)
-    >>> f = createFaceVariable(m, 1.0)
-    >>> g = faceeval(lambda x: x**2, f)
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> f = pf.createFaceVariable(m, 1.0)
+    >>> g = pf.faceeval(lambda x: x**2, f)
     """
     if len(args)==1:
         return FaceVariable(args[0].domain,
