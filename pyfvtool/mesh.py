@@ -810,9 +810,12 @@ def createMeshSpherical3D(*args) -> MeshSpherical3D:
     The mesh is created in spherical coordinates.
     """
     if args[4] > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
+        warn("Recreate the mesh with an upper bound of 2*pi for \\theta"\
+             " or there will be unknown consequences!")
     if args[5] > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for \phi or there will be unknown consequences!")
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_3d_param(
-        *args)
-    return MeshSpherical3D(dims, cellsize, cellcenters, facecenters, corners, edges)
+        warn("Recreate the mesh with an upper bound of 2*pi for \\phi"\
+             " or there will be unknown consequences!")
+    dims, cellsize, cellcenters, facecenters, corners, edges =\
+        _mesh_3d_param(*args)
+    return MeshSpherical3D(dims, cellsize, cellcenters,
+                           facecenters, corners, edges)
