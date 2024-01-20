@@ -25,8 +25,8 @@ from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
     if issubclass(type(m), Mesh1D):
-       dx = m.cellsize.x
-       return dx
+        dx = m.cellsize.x
+        return dx
     elif issubclass(type(m), Mesh2D):
         dx = m.cellsize.x[:,np.newaxis]
         dy = m.cellsize.y[np.newaxis,:]

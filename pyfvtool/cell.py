@@ -16,7 +16,8 @@ class CellVariable:
         if np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
             self.value = cell_value
         else:
-              raise Exception("The cell value is not valid. Check the size of the input array.")
+            raise ValueError("The cell value is not valid. "\
+                             "Check the size of the input array.")
 
         self.value = cell_value
 
@@ -27,7 +28,7 @@ class CellVariable:
             return self.value[1:-1, 1:-1]
         elif issubclass(type(self.domain), Mesh3D):
             return self.value[1:-1, 1:-1, 1:-1]
-    
+
     def update_bc_cells(self, BC: BoundaryCondition):
         phi_temp = createCellVariable(self.domain, self.internalCells(), BC)
         self.update_value(phi_temp)
@@ -316,7 +317,7 @@ def cellLocations(m: MeshStructure):
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
         Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
-        return X, Y, Z # added by MW 240118, double check if OK
+        return X, Y, Z
     raise TypeError('mesh type not implemented')
     return None 
 
