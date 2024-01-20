@@ -38,5 +38,5 @@ for t in np.arange(dt, final_t, dt):
 
 # analytical solution
 c_analytical = 1-erf(x/(2*np.sqrt(D_val*t)))
-plt.plot(x, c.internalCells(), x, c_analytical, 'r--')
+plt.plot(x, c.internalCellValues(), x, c_analytical, 'r--')
 plt.show()

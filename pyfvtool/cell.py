@@ -21,7 +21,7 @@ class CellVariable:
 
         self.value = cell_value
 
-    def internalCells(self):
+    def internalCellValues(self):
         if issubclass(type(self.domain), Mesh1D):
             return self.value[1:-1]
         elif issubclass(type(self.domain), Mesh2D):
@@ -30,7 +30,7 @@ class CellVariable:
             return self.value[1:-1, 1:-1, 1:-1]
 
     def update_bc_cells(self, BC: BoundaryCondition):
-        phi_temp = createCellVariable(self.domain, self.internalCells(), BC)
+        phi_temp = createCellVariable(self.domain, self.internalCellValues(), BC)
         self.update_value(phi_temp)
 
     def update_value(self, new_cell):
@@ -382,8 +382,8 @@ def domainInt(phi: CellVariable) -> float:
         Total finite-volume integral over entire domain.
 
     """
-    v = cellVolume(phi.domain).internalCells()
-    c = phi.internalCells()
+    v = cellVolume(phi.domain).internalCellValues()
+    c = phi.internalCellValues()
     return (v*c).flatten().sum()
 
 def domainIntegrate(phi: CellVariable) -> float:
