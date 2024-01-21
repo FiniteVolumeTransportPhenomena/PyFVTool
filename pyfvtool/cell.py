@@ -1,4 +1,4 @@
-# CellValue class definition and operator overloading
+# CellVariable class definition and operator overloading
 
 import numpy as np
 from typing import overload

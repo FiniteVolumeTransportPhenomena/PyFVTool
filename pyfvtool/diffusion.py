@@ -10,11 +10,6 @@ from .face import FaceVariable
 
 
 
-class DiffusionTerm:
-    def __init__(self, D: FaceVariable):
-        self.D = D
-
-
 def diffusionTerm1D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx = D.domain.dims[0]
