@@ -368,8 +368,6 @@ def createMesh1D(face_locations: np.ndarray) -> Mesh1D:
 
 
 def createMesh1D(*args) -> Mesh1D:
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
-        *args)
     """Create a Mesh1D object from a list of cell face locations or from
     number of cells and domain length.
 
@@ -394,6 +392,8 @@ def createMesh1D(*args) -> Mesh1D:
     >>> mesh = createMesh1D(10, 10.0)
     >>> print(mesh)
     """
+    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
+        *args)
     return Mesh1D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
