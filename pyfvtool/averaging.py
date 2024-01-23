@@ -25,8 +25,8 @@ from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
     if issubclass(type(m), Mesh1D):
-       dx = m.cellsize.x
-       return dx
+        dx = m.cellsize.x
+        return dx
     elif issubclass(type(m), Mesh2D):
         dx = m.cellsize.x[:,np.newaxis]
         dy = m.cellsize.y[np.newaxis,:]
@@ -99,7 +99,7 @@ def arithmeticMean(phi: CellVariable):
     Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by arithmetic averaging adjacent node values.   
     
     This function gets the value of the field variable phi defined over the MeshStructure and calculates the arithmetic average on the cell faces, for a uniform Mesh. 
-            phi[face] = 1/#_adjacent_nodes * \sum(phi[adjacent nodes]) 
+            phi[face] = 1/#_adjacent_nodes * \\sum(phi[adjacent nodes]) 
                 --> 
             phi[face] = 0.5 * (phi[face-0.5*dx] + phi[face+0.5*dx])
                 --> 
@@ -158,7 +158,7 @@ def geometricMean(phi: CellVariable):
     Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by geometric averaging adjacent node values.   
     
     This function gets the value of the field variable phi defined over the MeshStructure and calculates the geometric average on the cell faces, for a uniform Mesh. 
-            phi[face] = ( \prod(phi_nodes) )^(1/#_adjacent_nodes)
+            phi[face] = ( \\prod(phi_nodes) )^(1/#_adjacent_nodes)
                 --> 
             phi[face] = (phi[face-0.5*dx]*phi[face+0.5*dx])^(0.5)
                 --> 
@@ -185,7 +185,7 @@ def geometricMean(phi: CellVariable):
     Notes
     -----
     The geometric mean is equivalent to the arithmetic mean on a log-scale. 
-                phi_face = ( \prod(phi_nodes) )^(1/N_nodes)
+                phi_face = ( \\prod(phi_nodes) )^(1/N_nodes)
                          = exp( ln( arithmeticMean(...) ) )
 
     It is always intermediate to the harmonic or arithmetic means, and tends to the central value of th eset by 'weight'.
@@ -230,7 +230,7 @@ def harmonicMean(phi: CellVariable):
     Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by harmonic averaging adjacent node values.   
     
     This function gets the value of the field variable phi defined over the MeshStructure and calculates the harmonic average on the cell faces, for a uniform Mesh. 
-            phi[face] = \sum(1.0/phi_nodes)^(-1)
+            phi[face] = \\sum(1.0/phi_nodes)^(-1)
                 --> 
             phi[face] = (1/phi[face-0.5*dx] + 1/phi[face+0.5*dx])^(-1)
                 --> 

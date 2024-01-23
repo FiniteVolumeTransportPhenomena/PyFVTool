@@ -1076,7 +1076,7 @@ def cellBoundary1D(phi, BC):
     dx_1 = BC.domain.cellsize.x[1]
     dx_end = BC.domain.cellsize.x[-1]
 
-    # boundary condition (a d\phi/dx + b \phi = c, a column vector of [d a])
+    # boundary condition (a d\\phi/dx + b \\phi = c, a column vector of [d a])
     # a (phi(i)-phi(i-1))/dx + b (phi(i)+phi(i-1))/2 = c
     # phi(i) (a/dx+b/2) + phi(i-1) (-a/dx+b/2) = c
     # Right boundary, i=m+2
