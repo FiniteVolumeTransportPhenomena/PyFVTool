@@ -31,10 +31,10 @@ There are simple tricks to use the code for systems of nonlinear partial differe
 ## Installation
 An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
 
-For now, install it directly from the repo using pip. You will need `Python 3.8` or higher and `numpy`, `scipy`, and `matplotlib`:  
+For now, install it directly from the repo using pip. You will need `Python 3.9` or higher and `numpy`, `scipy`, and `matplotlib`:  
 
 ```
-pip install git+https://github.com/simulkade/PyFVTool.git
+pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
 ```
 
 ## Example
