@@ -2,16 +2,10 @@ import unittest
 import numpy as np
 from scipy.special import erf
 
-# provision for running this test script directly without pytest and
-# directly from the `pyfvtool` repository `tests` directory, without explicit
-# installation of the module
-try:
-    import pyfvtool as pf
-except ModuleNotFoundError:
-    import sys
-    sys.path.append('./..')
-    import pyfvtool as pf
+import pyfvtool as pf
+
     
+
 OUTPUT_DIAGNOSTICS = False
 
 
