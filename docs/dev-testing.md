@@ -7,7 +7,7 @@ For development, `git clone` the repository to a local directory, or unpack the 
 A suitable development and test Python environment can be created with conda/mamba:
 
 ```
-conda create --name pyfvtool_dev python numpy scipy matplotlib spyder jupyterlab pytest
+conda create --name pyfvtool_dev python numpy scipy matplotlib spyder jupyterlab pytest=7.4 pytest_notebook
 conda activate pyfvtool_dev
 ```
 
@@ -34,7 +34,7 @@ Running tests requires to have installed in your Python environment:
 - `pytest`
 - `pytest_notebook` (**mind the underscore**, *do not use a dash*!)
 
-The latter two can be installed, using `conda install pytest pytest_notebook` (**mind the underscore**, *do not use a dash*!). If you do not have `pytest_notebook` and Jupyter Notebook available, it should be possible to run `pytest` nevertheless by removing the lines starting with `nb_` from the `pytest.ini` file. **NOTE: Currently `pytest_notebook` is broken and will not be used in our test configuration, awaiting a fix.**
+The latter two can be installed, using `conda install pytest=7.4 pytest_notebook` (**mind the underscore**, *do not use a dash*!). If you do not have `pytest_notebook` and Jupyter Notebook available, it should be possible to run `pytest` nevertheless by removing the lines starting with `nb_` from the `pytest.ini` file. **NOTE: Currently `pytest_notebook` is broken and will not be used in our test configuration, awaiting a fix.**
 
 The present pytest configuration for PyFVTool scans all directories for files named `test_*.py` or `*_test.py`, or `*.ipynb` (Notebooks). These will be considered "tests". Several tests compare the finite-volume result to the known analytic result for textbook cases, and thus provide a rudimentary form of functional numerical testing as well.
 
