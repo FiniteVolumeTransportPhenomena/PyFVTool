@@ -36,6 +36,12 @@ For now, install PyFVTool directly from the GitHub repository using `pip`. You w
 pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
 ```
 
+If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.com/), you can enter the following in the first cell of a Colab Notebook:
+
+```
+!pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+```
+
 ### Working in a conda environment
 
 It is convenient to use the Anaconda/miniconda Python distributions and set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
