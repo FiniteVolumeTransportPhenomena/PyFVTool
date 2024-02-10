@@ -2,12 +2,12 @@
 
 ## Development environment
 
-For development, `git clone` the repository to a local directory, or unpack the downloaded ZIP.
+For development, `git clone` the repository to a local directory, or unpack the ZIP downloaded from GitHub.
 
-A suitable development and test Python environment can be created with conda/mamba:
+A suitable development and test Python environment can be created with conda:
 
 ```
-conda create --name pyfvtool_dev python numpy scipy matplotlib spyder jupyterlab pytest=7.4 pytest_notebook
+conda create --name pyfvtool_dev python numpy scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook
 conda activate pyfvtool_dev
 ```
 
@@ -16,6 +16,8 @@ Once the environment configured and activated, you can change your working direc
 ```
 pip install --editable .
 ```
+
+(Do not forget the trailing dot!)
 
 
 ## Testing
@@ -34,9 +36,6 @@ Running tests requires to have installed in your Python environment:
 - `pytest`
 - `pytest_notebook` (**mind the underscore**, *do not use a dash*!)
 
-The latter two can be installed, using `conda install pytest=7.4 pytest_notebook` (**mind the underscore**, *do not use a dash*!). If you do not have `pytest_notebook` and Jupyter Notebook available, it should be possible to run `pytest` nevertheless by removing the lines starting with `nb_` from the `pytest.ini` file. **NOTE: Currently `pytest_notebook` is broken and will not be used in our test configuration, awaiting a fix.**
+The latter two can be installed, using `conda install pytest=7.4 pytest_notebook` (**mind the underscore**, *do not use a dash*!). If you do not have `pytest_notebook` and Jupyter Notebook available, it should be possible to run `pytest` nevertheless by removing the lines starting with `nb_` from the `pytest.ini` file. **NOTE: Currently `pytest_notebook` does not work with the latest pytest 8.0. Therefore, pytest has been downgraded to 7.4, awaiting a fix.**
 
 The present pytest configuration for PyFVTool scans all directories for files named `test_*.py` or `*_test.py`, or `*.ipynb` (Notebooks). These will be considered "tests". Several tests compare the finite-volume result to the known analytic result for textbook cases, and thus provide a rudimentary form of functional numerical testing as well.
-
-**PLEASE NOTE!** If a script creates matplotlib graph windows, these windows need to be closed manually in order for test execution to continue.
-
