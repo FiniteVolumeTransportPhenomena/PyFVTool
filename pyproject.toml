@@ -1,13 +1,11 @@
 # minimalist pyproject.toml
-# former options commented out for future reference
-
 [project]
 name = "pyfvtool"
 version = "0.1"
 authors = [
     { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
     { name="Gavin M. Weir"},
-    { name="Martinus Werts"}
+    { name="Martinus H. V. Werts"}
 ]
 description = "Finite volume toolbox in Python"
 readme = "README.md"
@@ -21,10 +19,13 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Mathematics"
 ]
 
+[project.urls]
+"Homepage" = "https://github.com/FiniteVolumeTransportPhenomena/PyFVTool"
+"Bug Tracker" = "https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/issues"
+
 [build-system]
 requires = ["setuptools>=61.0", "numpy", "scipy>=1.8.0", "matplotlib"]
 build-backend = "setuptools.build_meta"
 
-# [project.urls]
-# "Homepage" = "https://github.com/simulkade/PyFVTool"
-# "Bug Tracker" = "https://github.com/simulkade/PyFVTool/issues"
+[tool.setuptools.packages.find]
+where = ["src"]
