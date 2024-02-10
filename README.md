@@ -1,18 +1,18 @@
 # PyFVTool: Python toolbox for the finite-volume method
 
-This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) with only a fraction of FiPy's features. Boundary conditions, however, are much easier (and perhaps more consistent) to implement in PyFVTool. 
+This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool). Inspired by [FiPy](http://www.ctcms.nist.gov/fipy/), it has only a fraction of FiPy's features. Boundary conditions, however, are much easier (and arguably more consistent) to implement in PyFVTool. 
 
-This package can discretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients and source terms:  
+PyFVTool can discretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients and source terms:  
 
 ```math
-\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla.\left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla \cdot (-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla \cdot \left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla \cdot (-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
 ```
 with the following general form of boundary conditions (specified by constants `a`, `b`, and `c`):
 
 ```math
 a\nabla\phi \cdot \mathbf{e}+b\phi=c
 ```
-PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool.  For fluid dynamics, other specialized finite-volume codes exist.
+PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool (ask [simulkade](https://github.com/simulkade)) .  For fluid dynamics, other specialized finite-volume codes exist.
 
 The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
   * 1D, 2D and 3D Cartesian and Cylindrical grids
