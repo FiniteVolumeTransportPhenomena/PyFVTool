@@ -1,4 +1,4 @@
-# PyFVTool: Python toolbox for the finite-volume method
+# PyFVTool: Python toolbox for the finite volume method
 
 This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool). Inspired by [FiPy](http://www.ctcms.nist.gov/fipy/), it has only a fraction of FiPy's features. Boundary conditions, however, are much easier (and arguably more consistent) to implement in PyFVTool. 
 
