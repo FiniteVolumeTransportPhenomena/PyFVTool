@@ -15,7 +15,7 @@ a\nabla\phi \cdot \mathbf{e}+b\phi=c
 PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
 
 The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
-  * 1D, 2D and 3D Cartesian and Cylindrical grids
+  * 1D, 2D and 3D Cartesian and cylindrical grids
   * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
   * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
   * Constant and linear source terms
@@ -41,6 +41,9 @@ If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.co
 ```
 !pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
 ```
+
+This will install PyFVTool in the current Colab instance, and make it available for import in the Notebook.
+
 
 ### Working in a conda environment
 
