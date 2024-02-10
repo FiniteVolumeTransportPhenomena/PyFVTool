@@ -12,7 +12,7 @@ with the following general form of boundary conditions (specified by constants `
 ```math
 a\nabla\phi \cdot \mathbf{e}+b\phi=c
 ```
-PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool (ask [simulkade](https://github.com/simulkade)) .  For fluid dynamics, other specialized finite-volume codes exist.
+PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
 
 The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
   * 1D, 2D and 3D Cartesian and Cylindrical grids
