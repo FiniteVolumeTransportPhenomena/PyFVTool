@@ -1,10 +1,9 @@
 # This test tests the basic working of most functions in PyFVTool
 
+import numpy as np
+
 import pyfvtool as pf
 
-import numpy as np
-import scipy.io
-# mat = scipy.io.loadmat('M_and_RHS.mat')
 # This script calls all the functions of the pyfvtool package
 ## Part I: creating an array of different mesh types:
 # domain size

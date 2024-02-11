@@ -1,20 +1,21 @@
-# PyFVTool: Python toolbox for the finite-volume method
+# PyFVTool: Python toolbox for the finite volume method
 
-This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool) heavily inspired by [FiPy](http://www.ctcms.nist.gov/fipy/) albeit with a fraction of FiPy features. The boundary conditions, however, are much easier (and perhaps more consistent) to implement in PyFVTool.   
+This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool). Inspired by [FiPy](http://www.ctcms.nist.gov/fipy/), it has only a fraction of FiPy's features. Boundary conditions, however, are much easier (and arguably more consistent) to implement in PyFVTool. 
 
-This package can discretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients:  
-
-```math
-\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla.\left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla.(-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
-```
-with the following general form of boundary conditions (by specifying constants `a`, `b`, and `c`):
+PyFVTool can discretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients and source terms:  
 
 ```math
-a\nabla\phi.\mathbf{e}+b\phi=c
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla \cdot \left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla \cdot (-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
 ```
+with the following general form of boundary conditions (specified by constants `a`, `b`, and `c`):
+
+```math
+a\nabla\phi \cdot \mathbf{e}+b\phi=c
+```
+PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
 
 The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
-  * 1D, 2D and 3D Cartesian and Cylindrical grids (only 1D spherical)
+  * 1D, 2D and 3D Cartesian and cylindrical grids
   * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
   * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
   * Constant and linear source terms
@@ -24,18 +25,47 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
   * Divergence and gradient terms
 
-The code is under active development. Preliminary simulations match analytical solutions. More validation is under way, and the use of this PyFVTool toolbox in ongoing research projects will further consolidate the code and verify its validity.  
-
-There are simple tricks to use the code for systems of nonlinear partial differential equations that take the form of advection-diffusion-reaction equations. There is not much documentation for the code yet (help wanted!) but the example folder is the best place to start. If you know the topic, there is a good chance you will never need any documentations.  
-
-## Installation
 An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
 
-For now, install it directly from the repo using pip. You will need `Python 3.8` or higher and `numpy`, `scipy`, and `matplotlib`:  
+The code is under active development. Preliminary simulations match analytical solutions. More validation is under way, and the use of this PyFVTool toolbox in ongoing research projects will further consolidate the code and verify its validity.   There is not much documentation for the code yet (help wanted!) but the example folder is the best place to start. If you know the topic, there is a good chance you will never need any documentations.  
+
+## Installation
+For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.9` or higher and `numpy`, `scipy`, and `matplotlib`:  
 
 ```
-pip install git+https://github.com/simulkade/PyFVTool.git
+pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
 ```
+
+If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.com/), you can enter the following in the first cell of a Colab Notebook:
+
+```
+!pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+```
+
+This will install PyFVTool in the current Colab instance, and make it available for import in the Notebook.
+
+
+### Working in a conda environment
+
+It is convenient to use the Anaconda/miniconda Python distributions and set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
+
+This requires three commands to be launched from the command-line prompt.
+```
+conda create --name pyfvtool_user numpy scipy matplotlib spyder jupyterlab
+
+conda activate pyfvtool_user
+
+pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+```
+
+Of course, do not forget to  `conda activate pyfvtool_user`  the environment every time you run Python code that uses PyFVTool.
+
+
+### Development installation
+If you would like to work on the source code, it is possible to install a development version using `pip`. See `CONTRIBUTING.md`
+
+
+
 
 ## Example
 Here is a simple example of a 1D transient diffusion equation:

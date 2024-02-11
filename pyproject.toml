@@ -1,16 +1,15 @@
-[build-system]
-requires = ["setuptools>=61.0", "numpy", "scipy>=1.8.0", "matplotlib"]
-build-backend = "setuptools.build_meta"
-
+# minimalist pyproject.toml
 [project]
 name = "pyfvtool"
 version = "0.1"
 authors = [
-  { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
+    { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
+    { name="Gavin M. Weir"},
+    { name="Martinus H. V. Werts"}
 ]
-description = "A finite volume tool in Python"
+description = "Finite volume toolbox in Python"
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -21,5 +20,12 @@ classifiers = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/simulkade/PyFVTool"
-"Bug Tracker" = "https://github.com/simulkade/PyFVTool/issues"
+"Homepage" = "https://github.com/FiniteVolumeTransportPhenomena/PyFVTool"
+"Bug Tracker" = "https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/issues"
+
+[build-system]
+requires = ["setuptools>=61.0", "numpy", "scipy>=1.8.0", "matplotlib"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
