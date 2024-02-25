@@ -11,6 +11,13 @@ from .mesh import MeshRadial2D, MeshCylindrical3D
 from .utilities import int_range
 
 
+
+#%%
+#
+# Classes handling definition of boundary conditions
+#
+
+
 class Boundary:
     """
     Boundary condition class
@@ -117,6 +124,376 @@ def createBC(mesh: MeshStructure):
         return BoundaryCondition2D(mesh)
     elif issubclass(type(mesh), Mesh3D):
         return BoundaryCondition3D(mesh)
+
+
+
+#%%
+#
+# Calculation of the values in the boundary cells, taking into account the 
+# boundary conditions
+#
+
+
+def cellValuesWithBoundaries1D(phi, BC):
+    # extract data from the mesh structure
+    # Nx = MeshStructure.numberofcells
+    dx_1 = BC.domain.cellsize.x[1]
+    dx_end = BC.domain.cellsize.x[-1]
+
+    # boundary condition (a d\\phi/dx + b \\phi = c, a column vector of [d a])
+    # a (phi(i)-phi(i-1))/dx + b (phi(i)+phi(i-1))/2 = c
+    # phi(i) (a/dx+b/2) + phi(i-1) (-a/dx+b/2) = c
+    # Right boundary, i=m+2
+    # phi(i) (a/dx+b/2) = c- phi(i-1) (-a/dx+b/2)
+    # Left boundary, i=2
+    #  phi(i-1) (-a/dx+b/2) = c - phi(i) (a/dx+b/2)
+    # define the new phi
+    if (not BC.left.periodic) and (not BC.right.periodic):
+        phiBC = np.hstack([(BC.left.c.item()-phi[0]*(BC.left.a.item()/dx_1+BC.left.b.item()/2))/(-BC.left.a.item()/dx_1+BC.left.b.item()/2), 
+        phi,
+        (BC.right.c.item()-phi[-1]*(-BC.right.a.item()/dx_end+BC.right.b.item()/2))/(BC.right.a.item()/dx_end+BC.right.b.item()/2)])
+    else:
+        phiBC = np.hstack([phi[-1], phi, phi[0]])
+    return phiBC
+
+
+def cellValuesWithBoundaries2D(phi, BC):
+    # extract data from the mesh structure
+    Nx, Ny = BC.domain.dims
+    dx_1 = BC.domain.cellsize.x[0]
+    dx_end = BC.domain.cellsize.x[-1]
+    dy_1 = BC.domain.cellsize.y[0]
+    dy_end = BC.domain.cellsize.y[-1]
+
+    # define the output matrix
+    phiBC = np.zeros((Nx+2, Ny+2))
+    phiBC[1:Nx+1, 1:Ny+1] = phi
+
+    # Assign values to the boundary values
+    if (not BC.top.periodic) and (not BC.bottom.periodic):
+        # top boundary
+        j=Ny+1
+        i = int_range(1, Nx)
+        phiBC[i,j]= (BC.top.c-phi[:,-1]*(-BC.top.a/dy_end+BC.top.b/2))/(BC.top.a/dy_end+BC.top.b/2)
+
+        # Bottom boundary
+        j=0
+        phiBC[i,j]= (BC.bottom.c-phi[:,0]*(BC.bottom.a/dy_1+BC.bottom.b/2))/(-BC.bottom.a/dy_1+BC.bottom.b/2)
+    else:
+        # top boundary
+        j=Ny+1
+        i = int_range(1, Nx)
+        phiBC[i,j]= phi[:,0]
+
+        # Bottom boundary
+        j=0
+        phiBC[i,j]= phi[:,-1]
+
+    if (not BC.left.periodic) and (not BC.right.periodic):
+        # Right boundary
+        i = Nx+1
+        j = int_range(1, Ny)
+        phiBC[i,j]= (BC.right.c-phi[-1,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
+
+        # Left boundary
+        i = 0
+        phiBC[i,j]= (BC.left.c-phi[0,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
+    else:
+        # Right boundary
+        i = Nx+1
+        j = int_range(1, Ny)
+        phiBC[i,j]= phi[0,:]
+
+        # Left boundary
+        i = 0
+        phiBC[i,j]= phi[-1,:]
+    return phiBC
+
+
+def cellValuesWithBoundaries3D(phi, BC):
+    Nx, Ny, Nz = BC.domain.dims
+    dx_1 = BC.domain.cellsize.x[0]
+    dx_end = BC.domain.cellsize.x[-1]
+    dy_1 = BC.domain.cellsize.y[0]
+    dy_end = BC.domain.cellsize.y[-1]
+    dz_1 = BC.domain.cellsize.z[0]
+    dz_end = BC.domain.cellsize.z[-1]
+
+    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
+    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
+    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
+    
+    # define the output matrix
+    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
+    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
+
+    # Assign values to the boundary values
+    if (not BC.top.periodic) and (not BC.bottom.periodic):
+        # top boundary
+        j=Ny+1
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/dy_end+BC.top.b/2))/(BC.top.a/dy_end+BC.top.b/2))[:, np.newaxis, :]
+
+        # Bottom boundary
+        j=0
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/dy_1+BC.bottom.b/2))/(-BC.bottom.a/dy_1+BC.bottom.b/2))[:, np.newaxis, :]
+    else:
+        # top boundary
+        j=Ny+1
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[:,0,:]
+
+        # Bottom boundary
+        j=0
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[:,-1,:]
+
+    if (not BC.left.periodic) and (not BC.right.periodic):
+        # Right boundary
+        i = Nx+1
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
+
+        # Left boundary
+        i = 0
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
+    else:
+        # Right boundary
+        i = Nx+1
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[0,:,:]
+
+        # Left boundary
+        i = 0
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[-1,:,:]
+
+    if (not BC.bottom.periodic) and (not BC.top.periodic):
+        # front boundary
+        i = i_ind
+        j = j_ind
+        k = Nz+1
+        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/dz_end+BC.front.b/2))/(BC.front.a/dz_end+BC.front.b/2))[:, :, np.newaxis]
+
+        # back boundary
+        i = i_ind
+        j = j_ind
+        k = 0
+        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/dz_1+BC.back.b/2))/(-BC.back.a/dz_1+BC.back.b/2))[:, :, np.newaxis]
+    else:
+        # front boundary
+        i = i_ind
+        j = j_ind
+        k = Nz+1
+        phiBC[i,j,k]= phi[:,:,0]
+
+        # back boundary
+        i = i_ind
+        j = j_ind
+        k = 0
+        phiBC[i,j,k]= phi[:,:,-1]
+    return phiBC
+
+
+def cellValuesWithBoundariesCylindrical3D(phi, BC):
+    Nx, Ny, Nz = BC.domain.dims
+    dx_1 = BC.domain.cellsize.x[0]
+    dx_end = BC.domain.cellsize.x[-1]
+    dy_1 = BC.domain.cellsize.y[0]
+    dy_end = BC.domain.cellsize.y[-1]
+    dz_1 = BC.domain.cellsize.z[0]
+    dz_end = BC.domain.cellsize.z[-1]
+    rp = BC.domain.cellcenters.x[:, np.newaxis]
+
+    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
+    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
+    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
+    
+    # define the output matrix
+    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
+    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
+
+    # Assign values to the boundary values
+    if (not BC.top.periodic) and (not BC.bottom.periodic):
+        # top boundary
+        j=Ny+1
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2))[:, np.newaxis, :]
+
+        # Bottom boundary
+        j=0
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))[:, np.newaxis, :]
+    else:
+        # top boundary
+        j=Ny+1
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[:,0,:]
+
+        # Bottom boundary
+        j=0
+        i = i_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[:,-1,:]
+
+    if (not BC.left.periodic) and (not BC.right.periodic):
+        # Right boundary
+        i = Nx+1
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
+
+        # Left boundary
+        i = 0
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
+    else:
+        # Right boundary
+        i = Nx+1
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[0,:,:]
+
+        # Left boundary
+        i = 0
+        j = j_ind
+        k = k_ind
+        phiBC[i,j,k]= phi[-1,:,:]
+
+    if (not BC.bottom.periodic) and (not BC.top.periodic):
+        # front boundary
+        i = i_ind
+        j = j_ind
+        k = Nz+1
+        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/dz_end+BC.front.b/2))/(BC.front.a/dz_end+BC.front.b/2))[:, :, np.newaxis]
+
+        # back boundary
+        i = i_ind
+        j = j_ind
+        k = 0
+        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/dz_1+BC.back.b/2))/(-BC.back.a/dz_1+BC.back.b/2))[:, :, np.newaxis]
+    else:
+        # front boundary
+        i = i_ind
+        j = j_ind
+        k = Nz+1
+        phiBC[i,j,k]= phi[:,:,0]
+
+        # back boundary
+        i = i_ind
+        j = j_ind
+        k = 0
+        phiBC[i,j,k]= phi[:,:,-1]
+    return phiBC
+
+
+def cellValuesWithBoundariesRadial2D(phi, BC):
+    # extract data from the mesh structure
+    Nx, Ny = BC.domain.dims
+    dx_1 = BC.domain.cellsize.x[0]
+    dx_end = BC.domain.cellsize.x[-1]
+    dy_1 = BC.domain.cellsize.y[0]
+    dy_end = BC.domain.cellsize.y[-1]
+    rp = BC.domain.cellcenters.x
+
+    # define the output matrix
+    phiBC = np.zeros((Nx+2, Ny+2))
+    phiBC[1:Nx+1, 1:Ny+1] = phi
+
+    # Assign values to the boundary values
+    if (not BC.top.periodic) and (not BC.bottom.periodic):
+        # top boundary
+        j=Ny+1
+        i = int_range(1, Nx)
+        phiBC[i,j]= (BC.top.c-phi[:,-1]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2)
+
+        # Bottom boundary
+        j=0
+        phiBC[i,j]= (BC.bottom.c-phi[:,0]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2)
+    else:
+        # top boundary
+        j=Ny+1
+        i = int_range(1, Nx)
+        phiBC[i,j]= phi[:,0]
+
+        # Bottom boundary
+        j=0
+        phiBC[i,j]= phi[:,-1]
+
+    if (not BC.left.periodic) and (not BC.right.periodic):
+        # Right boundary
+        i = Nx+1
+        j = int_range(1, Ny)
+        phiBC[i,j]= (BC.right.c-phi[-1,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
+
+        # Left boundary
+        i = 0
+        phiBC[i,j]= (BC.left.c-phi[0,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
+    else:
+        # Right boundary
+        i = Nx+1
+        j = int_range(1, Ny)
+        phiBC[i,j]= phi[0,:]
+
+        # Left boundary
+        i = 0
+        phiBC[i,j]= phi[-1,:]
+    return phiBC
+
+
+def cellValuesWithBoundaries(phi, BC) -> np.ndarray:
+    """
+    Calculate the boundary values of a variable given the boundary conditions.
+
+    Parameters
+    ----------
+    phi : array_like
+        internal cell values
+    BC : BoundaryCondition
+        Boundary condition object
+    
+    Returns
+    -------
+    phiBC : array_like
+        Boundary cell values
+    """
+    if issubclass(type(BC.domain), Mesh1D):
+        return cellValuesWithBoundaries1D(phi, BC)
+    elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
+        return cellValuesWithBoundaries2D(phi, BC)
+    elif (type(BC.domain) is MeshRadial2D):
+        return cellValuesWithBoundariesRadial2D(phi, BC)
+    elif (type(BC.domain) is Mesh3D):
+        return cellValuesWithBoundaries3D(phi, BC)
+    elif (type(BC.domain) is MeshCylindrical3D):
+        return cellValuesWithBoundariesCylindrical3D(phi, BC)
+    else:
+        raise Exception("The cellValuesWithBoundaries function is not defined for this mesh type.")
+
+
+
+
+
+
+
+#%%
+#
+# Calculation of matrix equation terms for the boundary conditions
+#
 
 
 """
@@ -1070,350 +1447,6 @@ def boundaryConditionCylindrical3D(BC: BoundaryCondition3D):
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
     return BCMatrix, BCRHS
 
-def cellBoundary1D(phi, BC):
-    # extract data from the mesh structure
-    # Nx = MeshStructure.numberofcells
-    dx_1 = BC.domain.cellsize.x[1]
-    dx_end = BC.domain.cellsize.x[-1]
-
-    # boundary condition (a d\\phi/dx + b \\phi = c, a column vector of [d a])
-    # a (phi(i)-phi(i-1))/dx + b (phi(i)+phi(i-1))/2 = c
-    # phi(i) (a/dx+b/2) + phi(i-1) (-a/dx+b/2) = c
-    # Right boundary, i=m+2
-    # phi(i) (a/dx+b/2) = c- phi(i-1) (-a/dx+b/2)
-    # Left boundary, i=2
-    #  phi(i-1) (-a/dx+b/2) = c - phi(i) (a/dx+b/2)
-    # define the new phi
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        phiBC = np.hstack([(BC.left.c.item()-phi[0]*(BC.left.a.item()/dx_1+BC.left.b.item()/2))/(-BC.left.a.item()/dx_1+BC.left.b.item()/2), 
-        phi,
-        (BC.right.c.item()-phi[-1]*(-BC.right.a.item()/dx_end+BC.right.b.item()/2))/(BC.right.a.item()/dx_end+BC.right.b.item()/2)])
-    else:
-        phiBC = np.hstack([phi[-1], phi, phi[0]])
-    return phiBC
-
-def cellBoundary2D(phi, BC):
-    # extract data from the mesh structure
-    Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2))
-    phiBC[1:Nx+1, 1:Ny+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= (BC.top.c-phi[:,-1]*(-BC.top.a/dy_end+BC.top.b/2))/(BC.top.a/dy_end+BC.top.b/2)
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= (BC.bottom.c-phi[:,0]*(BC.bottom.a/dy_1+BC.bottom.b/2))/(-BC.bottom.a/dy_1+BC.bottom.b/2)
-    else:
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= phi[:,0]
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= phi[:,-1]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= (BC.right.c-phi[-1,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= (BC.left.c-phi[0,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= phi[0,:]
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= phi[-1,:]
-    return phiBC
-
-def cellBoundary3D(phi, BC):
-    Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
-    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/dy_end+BC.top.b/2))/(BC.top.a/dy_end+BC.top.b/2))[:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/dy_1+BC.bottom.b/2))/(-BC.bottom.a/dy_1+BC.bottom.b/2))[:, np.newaxis, :]
-    else:
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,0,:]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[0,:,:]
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[-1,:,:]
-
-    if (not BC.bottom.periodic) and (not BC.top.periodic):
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/dz_end+BC.front.b/2))/(BC.front.a/dz_end+BC.front.b/2))[:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/dz_1+BC.back.b/2))/(-BC.back.a/dz_1+BC.back.b/2))[:, :, np.newaxis]
-    else:
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= phi[:,:,-1]
-    return phiBC
-
-def cellBoundaryCylindrical3D(phi, BC):
-    Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
-    rp = BC.domain.cellcenters.x[:, np.newaxis]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
-    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2))[:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))[:, np.newaxis, :]
-    else:
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,0,:]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[0,:,:]
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[-1,:,:]
-
-    if (not BC.bottom.periodic) and (not BC.top.periodic):
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/dz_end+BC.front.b/2))/(BC.front.a/dz_end+BC.front.b/2))[:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/dz_1+BC.back.b/2))/(-BC.back.a/dz_1+BC.back.b/2))[:, :, np.newaxis]
-    else:
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= phi[:,:,-1]
-    return phiBC
-
-def cellBoundaryRadial2D(phi, BC):
-    # extract data from the mesh structure
-    Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    rp = BC.domain.cellcenters.x
-
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2))
-    phiBC[1:Nx+1, 1:Ny+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= (BC.top.c-phi[:,-1]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2)
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= (BC.bottom.c-phi[:,0]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2)
-    else:
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= phi[:,0]
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= phi[:,-1]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= (BC.right.c-phi[-1,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= (BC.left.c-phi[0,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= phi[0,:]
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= phi[-1,:]
-    return phiBC
-
-def cellBoundary(phi, BC) -> np.ndarray:
-    """
-    Calculate the boundary values of a variable given the boundary conditions.
-
-    Parameters
-    ----------
-    phi : array_like
-        internal cell values
-    BC : BoundaryCondition
-        Boundary condition object
-    
-    Returns
-    -------
-    phiBC : array_like
-        Boundary cell values
-    """
-    if issubclass(type(BC.domain), Mesh1D):
-        return cellBoundary1D(phi, BC)
-    elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
-        return cellBoundary2D(phi, BC)
-    elif (type(BC.domain) is MeshRadial2D):
-        return cellBoundaryRadial2D(phi, BC)
-    elif (type(BC.domain) is Mesh3D):
-        return cellBoundary3D(phi, BC)
-    elif (type(BC.domain) is MeshCylindrical3D):
-        return cellBoundaryCylindrical3D(phi, BC)
-    else:
-        raise Exception("The cellBoundary function is not defined for this mesh type.")
 
 def boundaryConditionTerm(BC):
     if issubclass(type(BC.domain), Mesh1D):

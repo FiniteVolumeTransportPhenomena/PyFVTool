@@ -8,7 +8,7 @@ from .mesh import Mesh1D, Mesh2D, Mesh3D
 from .mesh import MeshCylindrical1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .boundary import BoundaryCondition, createBC
-from .boundary import cellBoundary
+from .boundary import cellValuesWithBoundaries
 
 class CellVariable:
     def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray):
@@ -221,9 +221,12 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
         raise ValueError(f"The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
     
     if len(arg)==1:
-        return CellVariable(mesh_struct, cellBoundary(phi_val, arg[0]))
+        return CellVariable(mesh_struct,
+                            cellValuesWithBoundaries(phi_val, arg[0]))
     else:
-        return CellVariable(mesh_struct, cellBoundary(phi_val, createBC(mesh_struct)))
+        return CellVariable(mesh_struct,
+                            cellValuesWithBoundaries(phi_val, 
+                                                     createBC(mesh_struct)))
 
 
 def copyCellVariable(phi: CellVariable) -> CellVariable:
