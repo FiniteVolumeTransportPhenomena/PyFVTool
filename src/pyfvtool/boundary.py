@@ -509,7 +509,7 @@ array([[1, 0, 2],
 """
 
 
-def boundaryCondition1D(BC: BoundaryCondition1D):
+def boundaryConditionTerm1D(BC: BoundaryCondition1D):
     Nx = BC.domain.dims[0]
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -591,7 +591,7 @@ def boundaryCondition1D(BC: BoundaryCondition1D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), shape=(Nx+2, Nx+2))
     return BCMatrix, BCRHS
 
-def boundaryCondition2D(BC: BoundaryCondition2D):
+def boundaryConditionTerm2D(BC: BoundaryCondition2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -754,7 +754,7 @@ def boundaryCondition2D(BC: BoundaryCondition2D):
                          shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
     return BCMatrix, BCRHS
 
-def boundaryCondition3D(BC: BoundaryCondition3D):
+def boundaryConditionTerm3D(BC: BoundaryCondition3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1018,7 +1018,7 @@ def boundaryCondition3D(BC: BoundaryCondition3D):
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
     return BCMatrix, BCRHS
 
-def boundaryConditionRadial2D(BC: BoundaryCondition2D):
+def boundaryConditionTermRadial2D(BC: BoundaryCondition2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -1182,7 +1182,7 @@ def boundaryConditionRadial2D(BC: BoundaryCondition2D):
                          shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
     return BCMatrix, BCRHS
 
-def boundaryConditionCylindrical3D(BC: BoundaryCondition3D):
+def boundaryConditionTermCylindrical3D(BC: BoundaryCondition3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1450,12 +1450,12 @@ def boundaryConditionCylindrical3D(BC: BoundaryCondition3D):
 
 def boundaryConditionTerm(BC):
     if issubclass(type(BC.domain), Mesh1D):
-        return boundaryCondition1D(BC)
+        return boundaryConditionTerm1D(BC)
     elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
-        return boundaryCondition2D(BC)
+        return boundaryConditionTerm2D(BC)
     elif (type(BC.domain) is MeshRadial2D):
-        return boundaryConditionRadial2D(BC)
+        return boundaryConditionTermRadial2D(BC)
     elif (type(BC.domain) is Mesh3D):
-        return boundaryCondition3D(BC)
+        return boundaryConditionTerm3D(BC)
     elif (type(BC.domain) is MeshCylindrical3D):
-        return boundaryConditionCylindrical3D(BC)
+        return boundaryConditionTermCylindrical3D(BC)
