@@ -7,7 +7,7 @@ from .mesh import MeshStructure
 from .mesh import Mesh1D, Mesh2D, Mesh3D
 from .mesh import MeshCylindrical1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
-from .boundary import BoundaryCondition, createBC
+from .boundary import BoundaryConditions, createBC
 from .boundary import cellValuesWithBoundaries
 
 class CellVariable:
@@ -29,7 +29,7 @@ class CellVariable:
         elif issubclass(type(self.domain), Mesh3D):
             return self.value[1:-1, 1:-1, 1:-1]
 
-    def update_bc_cells(self, BC: BoundaryCondition):
+    def update_bc_cells(self, BC: BoundaryConditions):
         phi_temp = createCellVariable(self.domain, self.internalCellValues(), BC)
         self.update_value(phi_temp)
 
@@ -165,7 +165,7 @@ class CellVariable:
         return CellVariable(self.domain, np.abs(self.value))
 
 @overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryCondition) -> CellVariable:
+def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryConditions) -> CellVariable:
     ...
 
 @overload
@@ -173,7 +173,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray) -> Ce
     ...
 
 @overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryCondition) -> CellVariable:
+def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryConditions) -> CellVariable:
     ...
 
 @overload

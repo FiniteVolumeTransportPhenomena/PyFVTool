@@ -35,6 +35,7 @@ class BoundaryFace:
     periodic : boolean
         True if the boundary is periodic
     """
+    
     def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, periodic=False):
         self.a = a
         self.b = b
@@ -54,7 +55,7 @@ class BoundaryFace:
         return ""
 
 
-class BoundaryCondition:
+class BoundaryConditions:
     """
     Base class for the boundary conditions
      
@@ -77,6 +78,7 @@ class BoundaryCondition:
     front : BoundaryFace
         boundary condition for the back face
     """
+    
     def __init__(self, mesh: MeshStructure,
                  left: BoundaryFace, right: BoundaryFace,
                  bottom: BoundaryFace, top: BoundaryFace,
@@ -102,7 +104,7 @@ class BoundaryCondition:
         return ""
 
 
-class BoundaryCondition1D(BoundaryCondition):
+class BoundaryConditions1D(BoundaryConditions):
     def __init__(self, mesh: Mesh1D):
         left = BoundaryFace(np.array([1.0]), np.array([0.0]), np.array([0.0]))
         right = BoundaryFace(np.array([1.0]), np.array([0.0]), np.array([0.0]))
@@ -110,11 +112,10 @@ class BoundaryCondition1D(BoundaryCondition):
         top = BoundaryFace(np.array([]), np.array([]), np.array([]))
         back = BoundaryFace(np.array([]), np.array([]), np.array([]))
         front = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        BoundaryCondition.__init__(
-            self, mesh, left, right, bottom, top, back, front)
+        super().__init__(mesh, left, right, bottom, top, back, front)
 
 
-class BoundaryCondition2D(BoundaryCondition):
+class BoundaryConditions2D(BoundaryConditions):
     def __init__(self, mesh: Mesh2D):
         Nx, Ny = mesh.dims
         left = BoundaryFace(np.ones(Ny), np.zeros(Ny), np.zeros((1, Ny)))
@@ -123,10 +124,10 @@ class BoundaryCondition2D(BoundaryCondition):
         top = BoundaryFace(np.ones(Nx), np.zeros(Nx), np.zeros(Nx))
         back = BoundaryFace(np.array([]), np.array([]), np.array([]))
         front = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        BoundaryCondition.__init__(self, mesh, left, right, bottom, top, back, front)
+        super().__init__(mesh, left, right, bottom, top, back, front)
 
 
-class BoundaryCondition3D(BoundaryCondition):
+class BoundaryConditions3D(BoundaryConditions):
     def __init__(self, mesh: Mesh3D):
         Nx, Ny, Nz = mesh.dims
         left = BoundaryFace(np.ones((Ny, Nz)), np.zeros((Ny, Nz)), np.zeros((Ny, Nz)))
@@ -135,16 +136,16 @@ class BoundaryCondition3D(BoundaryCondition):
         top = BoundaryFace(np.ones((Nx, Nz)), np.zeros((Nx, Nz)), np.zeros((Nx, Nz)))
         back = BoundaryFace(np.ones((Nx, Ny)), np.zeros((Nx, Ny)), np.zeros((Nx, Ny)))
         front = BoundaryFace(np.ones((Nx, Ny)), np.zeros((Nx, Ny)), np.zeros((Nx, Ny)))
-        BoundaryCondition.__init__(self, mesh, left, right, bottom, top, back, front)
+        super().__init__(mesh, left, right, bottom, top, back, front)
 
 
 def createBC(mesh: MeshStructure):
     if issubclass(type(mesh), Mesh1D):
-        return BoundaryCondition1D(mesh)
+        return BoundaryConditions1D(mesh)
     elif issubclass(type(mesh), Mesh2D):
-        return BoundaryCondition2D(mesh)
+        return BoundaryConditions2D(mesh)
     elif issubclass(type(mesh), Mesh3D):
-        return BoundaryCondition3D(mesh)
+        return BoundaryConditions3D(mesh)
 
 
 
@@ -548,7 +549,7 @@ array([[1, 0, 2],
 """
 
 
-def boundaryConditionTerm1D(BC: BoundaryCondition1D):
+def boundaryConditionTerm1D(BC: BoundaryConditions1D):
     Nx = BC.domain.dims[0]
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -630,7 +631,7 @@ def boundaryConditionTerm1D(BC: BoundaryCondition1D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), shape=(Nx+2, Nx+2))
     return BCMatrix, BCRHS
 
-def boundaryConditionTerm2D(BC: BoundaryCondition2D):
+def boundaryConditionTerm2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -794,7 +795,7 @@ def boundaryConditionTerm2D(BC: BoundaryCondition2D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTerm3D(BC: BoundaryCondition3D):
+def boundaryConditionTerm3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1059,7 +1060,7 @@ def boundaryConditionTerm3D(BC: BoundaryCondition3D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTermRadial2D(BC: BoundaryCondition2D):
+def boundaryConditionTermRadial2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -1224,7 +1225,7 @@ def boundaryConditionTermRadial2D(BC: BoundaryCondition2D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTermCylindrical3D(BC: BoundaryCondition3D):
+def boundaryConditionTermCylindrical3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1496,7 +1497,7 @@ def boundaryConditionTerm(BC):
 
     Parameters
     ----------
-    BC : instance of subclass of BoundaryCondition
+    BC : instance of subclass of BoundaryConditions
         Boundary conditions
 
     Returns
@@ -1507,6 +1508,7 @@ def boundaryConditionTerm(BC):
         RHS column vector representing the boundary conditions
 
     """
+    
     if issubclass(type(BC.domain), Mesh1D):
         return boundaryConditionTerm1D(BC)
     elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
