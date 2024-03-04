@@ -14,7 +14,7 @@ from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
 from .pdesolver import solvePDE, solveExplicitPDE
-from .cell import createCellVariable, cellVolume, BC2GhostCells 
+from .cell import CellVariable, cellVolume, BC2GhostCells 
 from .cell import copyCellVariable
 from .cell import funceval, celleval
 from .cell import domainInt, domainIntegrate
@@ -28,7 +28,8 @@ from .visualization import visualizeCells
 if ENABLE_LEGACY:
     from .legacy import boundaryConditionTerm
     from .legacy import createBC
-
+    from .legacy import createCellVariable
+    
 
 __author__ = (
     "Ali A. Eftekhari"

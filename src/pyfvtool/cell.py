@@ -11,15 +11,81 @@ from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
 
 class CellVariable:
+
+    @overload
+    def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray,
+                 BC: BoundaryConditionsBase):
+        ...
+
+    @overload
     def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, mesh_struct: MeshStructure, cell_value: float,
+                 BC: BoundaryConditionsBase):
+        ...
+
+    @overload
+    def __init__(self, mesh_struct: MeshStructure, cell_value: float):
+        ...
+
+    def __init__(self, mesh_struct: MeshStructure, cell_value, *arg):
+        """
+        Create a cell variable of class CellVariable
+
+        Parameters
+        ----------
+        mesh_struct : MeshStructure
+            Mesh describing the calculation domain.
+        cell_value : float or numpy.ndarray
+            Initialization value(s) of the CellVariable
+        BC: BoundaryConditions
+            Boundary conditions to be applied to the cell variable.
+            *Required if CellVariable represents a solution variable.* This
+            requirement also applies if default 'no-flux' boundary conditions are
+            desired, in which case the BoundaryCondition should be created without
+            further parameters (see .boundary.BoundaryConditions)
+            
+
+        Raises
+        ------
+        ValueError
+            The shape of cell_value does not correspond to the mesh shape.
+
+        Returns
+        -------
+        CellVariable
+            An initialized instance of CellVariable.
+
+        """
+                
         self.domain = mesh_struct
-        if np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
+        self.value = None
+
+        if np.isscalar(cell_value):
+            phi_val = cell_value*np.ones(mesh_struct.dims)
+        elif cell_value.size == 1:
+            phi_val = cell_value*np.ones(mesh_struct.dims)
+        elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
+            phi_val = cell_value
+        elif np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
+            # Values for boundary cells already included,
+            # simply fill
             self.value = cell_value
         else:
-            raise ValueError("The cell value is not valid. "\
-                             "Check the size of the input array.")
+            raise ValueError(f"The cell size {cell_value.shape} is not valid "\
+                             f"for a mesh of size {mesh_struct.dims}.")
+                
+        if self.value is None:
+            if len(arg)==1:
+                self.value = cellValuesWithBoundaries(phi_val, arg[0])
+            elif len(arg)==0:
+                self.value = cellValuesWithBoundaries(phi_val, 
+                                 BoundaryConditions(mesh_struct))
+            else:
+                raise Exception('Incorrect number of arguments')
 
-        self.value = cell_value
 
     def internalCellValues(self):
         if issubclass(type(self.domain), Mesh1D):
@@ -30,7 +96,7 @@ class CellVariable:
             return self.value[1:-1, 1:-1, 1:-1]
 
     def update_bc_cells(self, BC: BoundaryConditionsBase):
-        phi_temp = createCellVariable(self.domain, self.internalCellValues(), BC)
+        phi_temp = CellVariable(self.domain, self.internalCellValues(), BC)
         self.update_value(phi_temp)
 
     def update_value(self, new_cell):
@@ -164,69 +230,7 @@ class CellVariable:
     def __abs__(self):
         return CellVariable(self.domain, np.abs(self.value))
 
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryConditionsBase) -> CellVariable:
-    ...
 
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray) -> CellVariable:
-    ...
-
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryConditionsBase) -> CellVariable:
-    ...
-
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: float) -> CellVariable:
-    ...
-
-def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVariable:
-    """
-    Create a cell variable of class CellVariable
-
-    Parameters
-    ----------
-    mesh_struct : MeshStructure
-        Mesh describing the calculation domain.
-    cell_value : float or numpy.ndarray
-        Initialization value(s) of the CellVariable
-    BC: BoundaryCondition
-        Boundary conditions to be applied to the cell variable.
-        *Required if CellVariable represents a solution variable.* This
-        requirement also applies if default 'no-flux' boundary conditions are
-        desired, in which case the BoundaryCondition should be created without
-        further parameters (see .boundary.BoundaryConditions)
-        
-
-    Raises
-    ------
-    ValueError
-        The shape of cell_value does not correspond to the mesh shape.
-
-    Returns
-    -------
-    CellVariable
-        An initialized instance of CellVariable.
-
-    """
-    
-
-    if np.isscalar(cell_value):
-        phi_val = cell_value*np.ones(mesh_struct.dims)
-    elif cell_value.size == 1:
-        phi_val = cell_value*np.ones(mesh_struct.dims)
-    elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
-        phi_val = cell_value
-    else:
-        raise ValueError(f"The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
-    
-    if len(arg)==1:
-        return CellVariable(mesh_struct,
-                            cellValuesWithBoundaries(phi_val, arg[0]))
-    else:
-        return CellVariable(mesh_struct,
-                            cellValuesWithBoundaries(phi_val, 
-                                BoundaryConditions(mesh_struct)))
 
 
 def copyCellVariable(phi: CellVariable) -> CellVariable:
@@ -263,7 +267,7 @@ def cellVolume(m: MeshStructure):
         c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
     elif (type(m) is MeshCylindrical3D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
-    return createCellVariable(m, c, BC)
+    return CellVariable(m, c, BC)
 
 
 def cellLocations(m: MeshStructure):
@@ -305,21 +309,21 @@ def cellLocations(m: MeshStructure):
     
     if (type(m) is Mesh1D)\
      or (type(m) is MeshCylindrical1D):
-        X = createCellVariable(m, m.cellcenters.x)
+        X = CellVariable(m, m.cellcenters.x)
         return X
     elif (type(m) is Mesh2D)\
        or (type(m) is MeshCylindrical2D)\
        or (type(m) is MeshRadial2D): 
-        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
-        Y = createCellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
+        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
+        Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
     elif (type(m) is Mesh3D)\
        or (type(m) is MeshCylindrical3D): 
-        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
-        Y = createCellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
+        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
+        Y = CellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
-        Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
+        Z = CellVariable(m, np.tile(z, (N[0], N[1], 1)))
         return X, Y, Z
     raise TypeError('mesh type not implemented')
     return None 

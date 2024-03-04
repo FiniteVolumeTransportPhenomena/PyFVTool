@@ -3,7 +3,7 @@ from scipy.sparse import csr_array
 from scipy.sparse.linalg import spsolve
 
 from .mesh import MeshStructure
-from .cell import CellVariable, createCellVariable
+from .cell import CellVariable
 from .boundary import BoundaryConditions
 
 
@@ -64,7 +64,7 @@ def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray,
     
 
     x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
-    phi= createCellVariable(phi_old.domain, 0.0)
+    phi= CellVariable(phi_old.domain, 0.0)
     phi.value = x
     phi.update_bc_cells(BC)
     return phi

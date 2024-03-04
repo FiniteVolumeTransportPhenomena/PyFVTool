@@ -5,6 +5,7 @@
 
 from .boundary import boundaryConditionsTerm
 from .boundary import BoundaryConditions
+from .cell import CellVariable
 
 def boundaryConditionTerm(BC):
     """Redirects to boundaryConditionsTerm()"""
@@ -16,3 +17,9 @@ def createBC(mesh):
     """Redirects to BoundaryConditions() factory function"""
     
     return BoundaryConditions(mesh)
+
+
+def createCellVariable(*args, **kwargs):
+    """Returns a new CellVariable instance"""
+    
+    return CellVariable(*args, **kwargs)
