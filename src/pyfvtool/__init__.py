@@ -20,7 +20,7 @@ from .cell import funceval, celleval
 from .cell import domainInt, domainIntegrate
 from .cell import get_CellVariable_profile1D
 from .cell import cellLocations
-from .face import createFaceVariable, faceeval
+from .face import FaceVariable, faceeval
 from .face import faceLocations
 from .visualization import visualizeCells
 
@@ -29,6 +29,7 @@ if ENABLE_LEGACY:
     from .legacy import boundaryConditionTerm
     from .legacy import createBC
     from .legacy import createCellVariable
+    from .legacy import createFaceVariable
     
 
 __author__ = (

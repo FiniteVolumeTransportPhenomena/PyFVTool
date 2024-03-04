@@ -261,33 +261,6 @@ class FaceVariable:
                             np.abs(self.zvalue))
 
 
-def createFaceVariable(mesh, faceval):
-
-    if issubclass(type(mesh), Mesh1D):
-        Nx = mesh.dims
-        if np.isscalar(faceval):
-            return FaceVariable(mesh, faceval*np.ones(Nx+1), np.array([]), np.array([]))
-        else:
-            return FaceVariable(mesh, faceval[0]*np.ones(Nx+1), np.array([]), np.array([]))
-    elif issubclass(type(mesh), Mesh2D):
-        Nx, Ny = mesh.dims
-        if np.isscalar(faceval):
-            return FaceVariable(mesh, faceval*np.ones((Nx+1, Ny)),
-                            faceval*np.ones((Nx, Ny+1)), np.array([]))
-        else:
-            return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny)),
-                            faceval[1]*np.ones((Nx, Ny+1)), np.array([]))
-    elif issubclass(type(mesh), Mesh3D):
-        Nx, Ny, Nz = mesh.dims
-        if np.isscalar(faceval):
-            return FaceVariable(mesh, faceval*np.ones((Nx+1, Ny, Nz)),
-                            faceval*np.ones((Nx, Ny+1, Nz)),
-                            faceval*np.ones((Nx, Ny, Nz+1)))
-        else:
-            return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny, Nz)),
-                            faceval[1]*np.ones((Nx, Ny+1, Nz)),
-                            faceval[2]*np.ones((Nx, Ny, Nz+1)))
-
         
 def faceLocations(m: MeshStructure):
     """
@@ -328,15 +301,15 @@ def faceLocations(m: MeshStructure):
     
     if (type(m) is Mesh1D)\
      or (type(m) is MeshCylindrical1D):
-        X = createFaceVariable(m, 0)
+        X = FaceVariable(m, 0)
         X.xvalue = m.facecenters.x
         return X
         
     elif (type(m) is Mesh2D)\
        or (type(m) is MeshCylindrical2D)\
        or (type(m) is MeshRadial2D):
-        X = createFaceVariable(m, 0)
-        Y = createFaceVariable(m, 0)
+        X = FaceVariable(m, 0)
+        Y = FaceVariable(m, 0)
         X.xvalue = np.tile(m.facecenters.x[:, np.newaxis], (1, N[1]))
         X.yvalue = np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0]+1, 1))
         Y.xvalue = np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1]+1))
@@ -345,9 +318,9 @@ def faceLocations(m: MeshStructure):
         
     elif (type(m) is Mesh3D)\
        or (type(m) is MeshCylindrical3D):
-        X = createFaceVariable(m, 0)
-        Y = createFaceVariable(m, 0)
-        Z = createFaceVariable(m, 0)
+        X = FaceVariable(m, 0)
+        Y = FaceVariable(m, 0)
+        Z = FaceVariable(m, 0)
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
         
@@ -375,7 +348,7 @@ def faceeval(f, *args):
     Examples:
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
-    >>> f = pf.createFaceVariable(m, 1.0)
+    >>> f = pf.FaceVariable(m, 1.0)
     >>> g = pf.faceeval(lambda x: x**2, f)
     """
     if len(args)==1:

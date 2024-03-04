@@ -374,7 +374,7 @@ def diffusionTerm(D: FaceVariable) -> csr_array:
     --------
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
-    >>> D = pf.createFaceVariable(m, 1.0)
+    >>> D = pf.FaceVariable(m, 1.0)
     >>> M = pf.diffusionTerm(D)
     """
     if (type(D.domain) is Mesh1D):

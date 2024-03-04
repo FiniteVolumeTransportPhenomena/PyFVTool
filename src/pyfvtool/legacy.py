@@ -6,6 +6,7 @@
 from .boundary import boundaryConditionsTerm
 from .boundary import BoundaryConditions
 from .cell import CellVariable
+from .face import FaceVariable
 
 def boundaryConditionTerm(BC):
     """Redirects to boundaryConditionsTerm()"""
@@ -23,3 +24,7 @@ def createCellVariable(*args, **kwargs):
     """Returns a new CellVariable instance"""
     
     return CellVariable(*args, **kwargs)
+
+
+def createFaceVariable(mesh, faceval):
+    return FaceVariable(mesh, faceval)
