@@ -86,7 +86,7 @@ dt = 60.0 # [s] time step
 Nskip = 10 # plot every Nskip-th profile
 
 m1 = pf.createMesh1D(Nx, Lx) # mesh object
-bc = pf.createBC(m1) # Neumann boundary condition by default
+bc = pf.BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0

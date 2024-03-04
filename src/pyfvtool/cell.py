@@ -7,7 +7,7 @@ from .mesh import MeshStructure
 from .mesh import Mesh1D, Mesh2D, Mesh3D
 from .mesh import MeshCylindrical1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
-from .boundary import BoundaryConditions, createBC
+from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
 
 class CellVariable:
@@ -29,7 +29,7 @@ class CellVariable:
         elif issubclass(type(self.domain), Mesh3D):
             return self.value[1:-1, 1:-1, 1:-1]
 
-    def update_bc_cells(self, BC: BoundaryConditions):
+    def update_bc_cells(self, BC: BoundaryConditionsBase):
         phi_temp = createCellVariable(self.domain, self.internalCellValues(), BC)
         self.update_value(phi_temp)
 
@@ -165,7 +165,7 @@ class CellVariable:
         return CellVariable(self.domain, np.abs(self.value))
 
 @overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryConditions) -> CellVariable:
+def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryConditionsBase) -> CellVariable:
     ...
 
 @overload
@@ -173,7 +173,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray) -> Ce
     ...
 
 @overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryConditions) -> CellVariable:
+def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryConditionsBase) -> CellVariable:
     ...
 
 @overload
@@ -195,7 +195,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
         *Required if CellVariable represents a solution variable.* This
         requirement also applies if default 'no-flux' boundary conditions are
         desired, in which case the BoundaryCondition should be created without
-        further parameters (see boundary.createBC)
+        further parameters (see .boundary.BoundaryConditions)
         
 
     Raises
@@ -226,7 +226,7 @@ def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVari
     else:
         return CellVariable(mesh_struct,
                             cellValuesWithBoundaries(phi_val, 
-                                                     createBC(mesh_struct)))
+                                BoundaryConditions(mesh_struct)))
 
 
 def copyCellVariable(phi: CellVariable) -> CellVariable:
@@ -248,7 +248,7 @@ def copyCellVariable(phi: CellVariable) -> CellVariable:
 
 
 def cellVolume(m: MeshStructure):
-    BC = createBC(m)
+    BC = BoundaryConditions(m)
     if (type(m) is Mesh1D):
         c=m.cellsize.x[1:-1]
     elif (type(m) is MeshCylindrical1D):

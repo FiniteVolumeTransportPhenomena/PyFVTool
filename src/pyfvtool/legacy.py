@@ -4,6 +4,7 @@
 # suppress these redirections.
 
 from .boundary import boundaryConditionsTerm
+from .boundary import BoundaryConditions
 
 def boundaryConditionTerm(BC):
     """Redirects to boundaryConditionsTerm()"""
@@ -11,3 +12,7 @@ def boundaryConditionTerm(BC):
     return boundaryConditionsTerm(BC)
 
 
+def createBC(mesh):
+    """Redirects to BoundaryConditions() factory function"""
+    
+    return BoundaryConditions(mesh)

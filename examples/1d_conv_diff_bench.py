@@ -11,7 +11,7 @@ import numpy as np
 L = 1.0  # domain length
 Nx = 25 # number of cells
 meshstruct = pf.createMesh1D(Nx, L)
-BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
+BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:] = 1 
 BC.left.c[:] = 0 # left boundary
@@ -30,7 +30,7 @@ u_face = pf.createFaceVariable(meshstruct, u)
 Mconv = pf.convectionTerm(u_face)
 Mconvupwind = pf.convectionUpwindTerm(u_face)
 Mdiff = pf.diffusionTerm(Dave)
-[Mbc, RHSbc] = pf.boundaryConditionTerm(BC)
+[Mbc, RHSbc] = pf.boundaryConditionsTerm(BC)
 M = Mconv-Mdiff-Mbc
 Mupwind = Mconvupwind-Mdiff-Mbc
 RHS = -RHSbc

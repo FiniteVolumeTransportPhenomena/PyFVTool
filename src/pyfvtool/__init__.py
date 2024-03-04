@@ -1,3 +1,5 @@
+ENABLE_LEGACY = True # enable/disable backward compatibility
+
 from .mesh import createMesh1D, createMesh2D, createMesh3D,\
                   createMeshCylindrical1D, createMeshCylindrical2D,\
                   createMeshCylindrical3D, createMeshRadial2D,\
@@ -6,11 +8,11 @@ from .advection import convectionTerm, convectionTvdRHSTerm,\
                        convectionUpwindTerm
 from .diffusion import diffusionTerm
 from .source import linearSourceTerm, constantSourceTerm, transientTerm
-from .boundary import createBC, boundaryConditionsTerm
+from .boundary import BoundaryConditions, boundaryConditionsTerm
 from .utilities import fluxLimiter
 from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
-                               harmonicMean, geometricMean, tvdMean
+                       harmonicMean, geometricMean, tvdMean
 from .pdesolver import solvePDE, solveExplicitPDE
 from .cell import createCellVariable, cellVolume, BC2GhostCells 
 from .cell import copyCellVariable
@@ -23,7 +25,9 @@ from .face import faceLocations
 from .visualization import visualizeCells
 
 # legacy naming of certain functions and classes
-from .legacy import boundaryConditionTerm
+if ENABLE_LEGACY:
+    from .legacy import boundaryConditionTerm
+    from .legacy import createBC
 
 
 __author__ = (

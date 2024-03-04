@@ -20,7 +20,7 @@ Nx = 20 # number of cells
 m = pf.createMesh1D(Nx, L)
 left_bc = "Dirichlet"
 # Boundary condition
-BC = pf.createBC(m)
+BC = pf.BoundaryConditions(m)
 BC.left.a[:] = 0.0
 BC.left.b[:] = 1.0
 BC.right.a[:] = 0.0
@@ -31,7 +31,7 @@ T0 = np.cos(m.cellcenters.x) # cosine temperature profile, amplitude = 1.0 K
 T_init = pf.createCellVariable(m, T0, BC) # initial condition
 
 # physical parameters
-alfa_cell = pf.createCellVariable(m, alfa, pf.createBC(m))
+alfa_cell = pf.createCellVariable(m, alfa, pf.BoundaryConditions(m))
 alfa_face = pf.harmonicMean(alfa_cell)
 
 M_diff = pf.diffusionTerm(alfa_face)
@@ -43,7 +43,7 @@ while t<t_sim:
     [M_trans, RHS_trans] = pf.transientTerm(T_init, dt, 1.0)
     BC.left.c[:] = np.exp(-t)
     BC.right.c[:] = np.exp(-t)*np.cos(L)
-    [M_bc, RHS_bc] = pf.boundaryConditionTerm(BC)
+    [M_bc, RHS_bc] = pf.boundaryConditionsTerm(BC)
     T_val = pf.solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
     T_init.update_value(T_val)
 

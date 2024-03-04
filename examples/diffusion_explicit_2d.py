@@ -11,7 +11,7 @@ from scipy.special import erf
 L = 5.0  # domain length
 Nx = 100 # number of cells
 meshstruct = pf.createMeshCylindrical2D(Nx, Nx, L, L)
-BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
+BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.bottom.a[:] = 0.0 
 BC.bottom.b[:] = 1.0 
 BC.bottom.c[:] = 1.0 # bottom boundary

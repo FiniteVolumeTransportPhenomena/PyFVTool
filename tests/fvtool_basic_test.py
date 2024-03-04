@@ -12,7 +12,7 @@ from pyfvtool import createMesh1D, createMesh2D, createMesh3D
 from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import createCellVariable, createFaceVariable
-from pyfvtool import createBC
+from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
@@ -66,10 +66,10 @@ print("Non-uniform mesh created successfully!")
 c_val= 1.0
 D_val = 0.5
 # nonuniform
-c_n= [createCellVariable(m, c_val, createBC(m)) for m in mesh_nonuniform]
-D_n= [createCellVariable(m, D_val, createBC(m)) for m in mesh_nonuniform]
+c_n= [createCellVariable(m, c_val, BoundaryConditions(m)) for m in mesh_nonuniform]
+D_n= [createCellVariable(m, D_val, BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of fixed values over nonuniform mesh created successfully!")
-c_r= [createCellVariable(m, np.random.random_sample(m.dims), createBC(m)) for m in mesh_nonuniform]
+c_r= [createCellVariable(m, np.random.random_sample(m.dims), BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
@@ -79,7 +79,7 @@ print("Face variable over nonuniform mesh created successfully!")
 ## Part IV: Test boundary conditions
 BC_n = []
 for m in mesh_nonuniform:
-    BC=createBC(m)
+    BC=BoundaryConditions(m)
     BC.left.a[:]=0.0
     BC.left.b[:]=1.0
     BC.left.c[:]=1.0
@@ -109,7 +109,7 @@ meshstruct = createMesh1D(Nx, L)
 x = meshstruct.cellcenters.x # extract the cell center positions
 ##
 # The next step is to define the boundary condition:
-BC = createBC(meshstruct) # all Neumann boundary condition structure
+BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 # BC.left.a[:] = 0 
 # BC.left.b[:] = 1 # switch the left boundary to Dirichlet
 # BC.left.c[:] = 0 # value = 0 at the left boundary
@@ -119,7 +119,7 @@ BC.right.c[:] =1 # value = 1 at the right boundary
 ##
 # Now we define the transfer coefficients:
 D_val = 1.0 # diffusion coefficient value
-D = createCellVariable(meshstruct, D_val, createBC(meshstruct)) # assign dif. coef. to all the cells
+D = createCellVariable(meshstruct, D_val, BoundaryConditions(meshstruct)) # assign dif. coef. to all the cells
 Dave = harmonicMean(D) # convert a cell variable to face variable
 u = -10 # velocity value
 u_face = createFaceVariable(meshstruct, u) # assign velocity value to cell faces
@@ -229,7 +229,7 @@ print("Averaging functions run smoothly!")
 L = 5.0  # domain length
 Nx = 100 # number of cells
 meshstruct = createMesh1D(Nx, L)
-BC = createBC(meshstruct) # all Neumann boundary condition structure
+BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:]=1 
 BC.left.c[:]=1 # left boundary
@@ -277,7 +277,7 @@ t_simulation = 3600.0 # [s] simulation time
 dt = 60.0 # [s] time step
 
 m1 = createMesh1D(Nx, Lx) # mesh object
-bc = createBC(m1) # Neumann boundary condition by default
+bc = BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0

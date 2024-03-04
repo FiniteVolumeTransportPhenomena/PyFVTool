@@ -30,7 +30,7 @@ def T_numerical(left_bc: str) -> float:
     Nx = 50 # number of cells
     m = pf.createMesh1D(Nx, L)
     # Boundary condition
-    BC = pf.createBC(m)
+    BC = pf.BoundaryConditions(m)
     if left_bc == "Dirichlet":
         BC.left.a[:] = 0.0
         BC.left.b[:] = 1.0
@@ -45,7 +45,7 @@ def T_numerical(left_bc: str) -> float:
     # Initial condition
     T_init = pf.createCellVariable(m, T0, BC) # initial condition
     # physical parameters
-    alfa_cell = pf.createCellVariable(m, alfa, pf.createBC(m))
+    alfa_cell = pf.createCellVariable(m, alfa, pf.BoundaryConditions(m))
     alfa_face = pf.harmonicMean(alfa_cell)
 
     M_diff = pf.diffusionTerm(alfa_face)
@@ -70,7 +70,7 @@ def conv_numerical_1d() -> float:
     L = 1.0  # domain length
     Nx = 50 # number of cells
     meshstruct = pf.createMesh1D(Nx, L)
-    BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
+    BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
     BC.left.a[:] = 0 
     BC.left.b[:] = 1 
     BC.left.c[:] = 0 # left boundary

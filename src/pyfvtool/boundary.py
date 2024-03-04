@@ -55,7 +55,7 @@ class BoundaryFace:
         return ""
 
 
-class BoundaryConditions:
+class BoundaryConditionsBase:
     """
     Base class for the boundary conditions
      
@@ -104,7 +104,7 @@ class BoundaryConditions:
         return ""
 
 
-class BoundaryConditions1D(BoundaryConditions):
+class BoundaryConditions1D(BoundaryConditionsBase):
     def __init__(self, mesh: Mesh1D):
         left = BoundaryFace(np.array([1.0]), np.array([0.0]), np.array([0.0]))
         right = BoundaryFace(np.array([1.0]), np.array([0.0]), np.array([0.0]))
@@ -115,7 +115,7 @@ class BoundaryConditions1D(BoundaryConditions):
         super().__init__(mesh, left, right, bottom, top, back, front)
 
 
-class BoundaryConditions2D(BoundaryConditions):
+class BoundaryConditions2D(BoundaryConditionsBase):
     def __init__(self, mesh: Mesh2D):
         Nx, Ny = mesh.dims
         left = BoundaryFace(np.ones(Ny), np.zeros(Ny), np.zeros((1, Ny)))
@@ -127,7 +127,7 @@ class BoundaryConditions2D(BoundaryConditions):
         super().__init__(mesh, left, right, bottom, top, back, front)
 
 
-class BoundaryConditions3D(BoundaryConditions):
+class BoundaryConditions3D(BoundaryConditionsBase):
     def __init__(self, mesh: Mesh3D):
         Nx, Ny, Nz = mesh.dims
         left = BoundaryFace(np.ones((Ny, Nz)), np.zeros((Ny, Nz)), np.zeros((Ny, Nz)))
@@ -139,7 +139,22 @@ class BoundaryConditions3D(BoundaryConditions):
         super().__init__(mesh, left, right, bottom, top, back, front)
 
 
-def createBC(mesh: MeshStructure):
+def BoundaryConditions(mesh: MeshStructure):
+    """Create an object for holding boundary conditions (factory function)
+    
+
+    Parameters
+    ----------
+    mesh : MeshStructure
+        Mesh used for space discretization.
+
+    Returns
+    -------
+    Subclass instance of BoundaryConditionsBase class
+        Object holding all information defining boundary conditions.
+
+    """
+        
     if issubclass(type(mesh), Mesh1D):
         return BoundaryConditions1D(mesh)
     elif issubclass(type(mesh), Mesh2D):

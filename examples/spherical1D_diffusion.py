@@ -20,7 +20,7 @@ script:
 230418  **UNFINISHED PROGRAM. WORK IN PROGRESS**
 """
 
-from pyfvtool import createMeshSpherical1D, createBC
+from pyfvtool import createMeshSpherical1D, BoundaryConditions
 
 ## Define the domain and create a mesh structure
 # Here we work in a 1D spherical coordinate system (r coordinate)
@@ -29,7 +29,7 @@ Nr = 2000 # number of cells
 m = createMeshSpherical1D(Nr, L)
 
 ## Create the boundary condition structure
-BC = createBC(m) # all 'no flux' boundary condition structure
+BC = BoundaryConditions(m) # all 'no flux' boundary condition structure
 
 
 assert 1==0, '***break***'

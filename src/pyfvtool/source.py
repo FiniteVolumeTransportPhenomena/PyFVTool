@@ -3,7 +3,7 @@ from scipy.sparse import csr_array
 
 from .mesh import Mesh1D, Mesh2D, Mesh3D
 from .cell import CellVariable, createCellVariable
-from .boundary import createBC
+from .boundary import BoundaryConditions
 
 
 
@@ -133,7 +133,8 @@ def transientTerm(phi_old: CellVariable, dt, alfa):
     >>> M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)
     """
     if not (type(alfa) is CellVariable):
-        a = createCellVariable(phi_old.domain, alfa, createBC(phi_old.domain))
+        a = createCellVariable(phi_old.domain, alfa,
+                               BoundaryConditions(phi_old.domain))
     else:
         a = alfa
     return linearSourceTerm(a/dt), constantSourceTerm(a*phi_old/dt)

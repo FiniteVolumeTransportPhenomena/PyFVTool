@@ -13,7 +13,7 @@ from pyfvtool import createMesh1D, createMesh2D, createMesh3D
 from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import createCellVariable, createFaceVariable
-from pyfvtool import createBC
+from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
@@ -41,7 +41,7 @@ from pyfvtool import visualizeCells
 
 ### createFaceVariable
 
-### createBC
+### BoundaryConditions
 
 ### calculation of mean values
 

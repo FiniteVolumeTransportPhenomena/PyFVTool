@@ -25,7 +25,7 @@ Nx = 50 # number of cells
 m = pf.createMesh1D(Nx, L)
 left_bc = "Dirichlet"
 # Boundary condition
-BC = pf.createBC(m)
+BC = pf.BoundaryConditions(m)
 if left_bc == "Dirichlet":
     BC.left.a[:] = 0.0
     BC.left.b[:] = 1.0
@@ -40,11 +40,11 @@ else:
 # Initial condition
 T_init = pf.createCellVariable(m, T0, BC) # initial condition
 # physical parameters
-alfa_cell = pf.createCellVariable(m, alfa, pf.createBC(m))
+alfa_cell = pf.createCellVariable(m, alfa, pf.BoundaryConditions(m))
 alfa_face = pf.harmonicMean(alfa_cell)
 
 M_diff = pf.diffusionTerm(alfa_face)
-[M_bc, RHS_bc] = pf.boundaryConditionTerm(BC)
+[M_bc, RHS_bc] = pf.boundaryConditionsTerm(BC)
 
 t=0
 while t<t_sim:

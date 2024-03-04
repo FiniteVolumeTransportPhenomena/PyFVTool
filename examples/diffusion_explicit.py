@@ -11,7 +11,7 @@ from scipy.special import erf
 L = 5.0  # domain length
 Nx = 100 # number of cells
 meshstruct = pf.createMesh1D(Nx, L)
-BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
+BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:]=1 
 BC.left.c[:]=1 # left boundary

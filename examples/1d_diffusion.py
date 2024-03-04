@@ -12,7 +12,7 @@ t_simulation = 3600.0 # [s] simulation time
 dt = 60.0 # [s] time step
 
 m1 = pf.createMesh1D(Nx, Lx) # mesh object
-bc = pf.createBC(m1) # Neumann boundary condition by default
+bc = pf.BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0
@@ -28,7 +28,7 @@ D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfac
 
 # Discretization
 Mdiff = pf.diffusionTerm(D_face)
-Mbc, RHSbc = pf.boundaryConditionTerm(bc)
+Mbc, RHSbc = pf.boundaryConditionsTerm(bc)
 
 # time loop
 t = 0
