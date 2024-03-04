@@ -1,4 +1,5 @@
 import numpy as np
+from typing import overload
 
 from .mesh import MeshStructure
 from .mesh import Mesh1D, Mesh2D, Mesh3D
@@ -10,16 +11,79 @@ from .mesh import MeshRadial2D, MeshCylindrical3D
 class FaceVariable:
     """
     Face variable class
+    
+
+    Create a FaceVariable for the given mesh with the given value.
+    Examples:
+    >>> import pyfvtool as pf
+    >>> m = pf.createMesh1D(10, 1.0)
+    >>> f = pf.FaceVariable(m, 1.0)
+
     """
-    def __init__(self,
-                 mesh_struct: MeshStructure,
+    @overload
+    def __init__(self, mesh: MeshStructure, faceval : float):
+        ...
+     
+    @overload
+    def __init__(self, mesh: MeshStructure, faceval : np.ndarray):
+        ...
+        
+    @overload
+    def __init__(self, 
+                 mesh: MeshStructure,
                  xvalue: np.ndarray,
                  yvalue: np.ndarray,
                  zvalue: np.ndarray):
-        self.domain = mesh_struct
+        ...
+ 
+    
+    def __init__(self,
+                 mesh: MeshStructure,
+                 *args):
+        if len(args)==3:             
+            xvalue = args[0]
+            yvalue = args[1]
+            zvalue = args[2]
+        elif len(args)==1:
+            faceval = args[0]
+            if issubclass(type(mesh), Mesh1D):
+                Nx = mesh.dims
+                if np.isscalar(faceval):
+                    xvalue = faceval*np.ones(Nx+1)
+                    yvalue = np.array([])
+                    zvalue = np.array([])
+                else:
+                    xvalue = faceval[0]*np.ones(Nx+1)
+                    yvalue = np.array([])
+                    zvalue = np.array([])
+            elif issubclass(type(mesh), Mesh2D):
+                Nx, Ny = mesh.dims
+                if np.isscalar(faceval):
+                    xvalue = faceval*np.ones((Nx+1, Ny))
+                    yvalue = faceval*np.ones((Nx, Ny+1))
+                    zvalue = np.array([])
+                else:
+                    xvalue = faceval[0]*np.ones((Nx+1, Ny))
+                    yvalue = faceval[1]*np.ones((Nx, Ny+1))
+                    zvalue = np.array([])
+            elif issubclass(type(mesh), Mesh3D):
+                Nx, Ny, Nz = mesh.dims
+                if np.isscalar(faceval):
+                    xvalue = faceval*np.ones((Nx+1, Ny, Nz))
+                    yvalue = faceval*np.ones((Nx, Ny+1, Nz))
+                    zvalue = faceval*np.ones((Nx, Ny, Nz+1))
+                else:
+                    xvalue = faceval[0]*np.ones((Nx+1, Ny, Nz))
+                    yvalue = faceval[1]*np.ones((Nx, Ny+1, Nz))
+                    zvalue = faceval[2]*np.ones((Nx, Ny, Nz+1))
+        else:
+            raise TypeError('Unexpected number of arguments')
+            
+        self.domain = mesh
         self.xvalue = xvalue
         self.yvalue = yvalue
         self.zvalue = zvalue
+
 
     def __add__(self, other):
         if type(other) is FaceVariable:
@@ -198,13 +262,7 @@ class FaceVariable:
 
 
 def createFaceVariable(mesh, faceval):
-    """
-    Create a FaceVariable for the given mesh with the given value.
-    Examples:
-    >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> f = pf.createFaceVariable(m, 1.0)
-    """
+
     if issubclass(type(mesh), Mesh1D):
         Nx = mesh.dims
         if np.isscalar(faceval):
