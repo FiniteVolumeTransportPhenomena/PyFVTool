@@ -21,11 +21,11 @@ BC.top.c[:] = 0.0 # top boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
-alfa = pf.createCellVariable(meshstruct, 1.0)
+alfa = pf.CellVariable(meshstruct, 1.0)
 Dave = pf.createFaceVariable(meshstruct, D_val)
 ## define initial values
-c_old = pf.createCellVariable(meshstruct, 0.0, BC) # initial values
-c = pf.createCellVariable(meshstruct, 0.0, BC) # working values
+c_old = pf.CellVariable(meshstruct, 0.0, BC) # initial values
+c = pf.CellVariable(meshstruct, 0.0, BC) # working values
 ## loop
 dt = 0.001 # time step
 final_t = 100*dt

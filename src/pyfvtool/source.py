@@ -28,7 +28,7 @@ def constantSourceTerm(gamma: CellVariable):
     --------
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
-    >>> gamma = pf.createCellVariable(m, 1.0)
+    >>> gamma = pf.CellVariable(m, 1.0)
     >>> RHS = pf.constantSourceTerm(gamma)
     """
     m = gamma.domain
@@ -76,7 +76,7 @@ def linearSourceTerm(beta: CellVariable):
     --------
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
-    >>> beta = pf.createCellVariable(m, 1.0)
+    >>> beta = pf.CellVariable(m, 1.0)
     >>> RHS = pf.linearSourceTerm(beta)
     """
     m = beta.domain
@@ -129,7 +129,7 @@ def transientTerm(phi_old: CellVariable, dt, alfa):
     --------
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
-    >>> phi_old = pf.createCellVariable(m, 0.0)
+    >>> phi_old = pf.CellVariable(m, 0.0)
     >>> M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)
     """
     if not (type(alfa) is CellVariable):

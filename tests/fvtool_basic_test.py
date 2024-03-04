@@ -11,7 +11,7 @@ from scipy.special import erf
 from pyfvtool import createMesh1D, createMesh2D, createMesh3D
 from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
-from pyfvtool import createCellVariable, createFaceVariable
+from pyfvtool import CellVariable, createFaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
@@ -66,10 +66,10 @@ print("Non-uniform mesh created successfully!")
 c_val= 1.0
 D_val = 0.5
 # nonuniform
-c_n= [createCellVariable(m, c_val, BoundaryConditions(m)) for m in mesh_nonuniform]
-D_n= [createCellVariable(m, D_val, BoundaryConditions(m)) for m in mesh_nonuniform]
+c_n= [CellVariable(m, c_val, BoundaryConditions(m)) for m in mesh_nonuniform]
+D_n= [CellVariable(m, D_val, BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of fixed values over nonuniform mesh created successfully!")
-c_r= [createCellVariable(m, np.random.random_sample(m.dims), BoundaryConditions(m)) for m in mesh_nonuniform]
+c_r= [CellVariable(m, np.random.random_sample(m.dims), BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
@@ -119,7 +119,7 @@ BC.right.c[:] =1 # value = 1 at the right boundary
 ##
 # Now we define the transfer coefficients:
 D_val = 1.0 # diffusion coefficient value
-D = createCellVariable(meshstruct, D_val, BoundaryConditions(meshstruct)) # assign dif. coef. to all the cells
+D = CellVariable(meshstruct, D_val, BoundaryConditions(meshstruct)) # assign dif. coef. to all the cells
 Dave = harmonicMean(D) # convert a cell variable to face variable
 u = -10 # velocity value
 u_face = createFaceVariable(meshstruct, u) # assign velocity value to cell faces
@@ -239,11 +239,11 @@ BC.right.c[:]=0 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
-alfa = createCellVariable(meshstruct, 1)
+alfa = CellVariable(meshstruct, 1)
 Dave = createFaceVariable(meshstruct, D_val)
 ## define initial values
-c_old = createCellVariable(meshstruct, 0, BC) # initial values
-c = createCellVariable(meshstruct, 0, BC) # working values
+c_old = CellVariable(meshstruct, 0, BC) # initial values
+c = CellVariable(meshstruct, 0, BC) # working values
 ## loop
 dt = 0.001 # time step
 final_t = 0.5
@@ -285,10 +285,10 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = createCellVariable(m1, c_init, bc)
+c_old = CellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = createCellVariable(m1, D_val)
+D_cell = CellVariable(m1, D_val)
 D_face = geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization
@@ -311,7 +311,7 @@ visualizeCells(c_old)
 #
 mm = createMesh2D(50, 50, 5*np.pi, 5*np.pi)
 XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters.y)
-vv = createCellVariable(mm, np.cos(XX)*np.sin(YY))
+vv = CellVariable(mm, np.cos(XX)*np.sin(YY))
 plt.figure(3)
 plt.clf()
 visualizeCells(vv)

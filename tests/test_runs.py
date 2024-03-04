@@ -37,10 +37,10 @@ print("Non-uniform mesh created successfully!")
 c_val= 1.0
 D_val = 0.5
 # nonuniform
-c_n= [pf.createCellVariable(m, c_val, pf.BoundaryConditions(m)) for m in mesh_nonuniform]
-D_n= [pf.createCellVariable(m, D_val, pf.BoundaryConditions(m)) for m in mesh_nonuniform]
+c_n= [pf.CellVariable(m, c_val, pf.BoundaryConditions(m)) for m in mesh_nonuniform]
+D_n= [pf.CellVariable(m, D_val, pf.BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of fixed values over nonuniform mesh created successfully!")
-c_r= [pf.createCellVariable(m, np.random.random_sample(m.dims), pf.BoundaryConditions(m))\
+c_r= [pf.CellVariable(m, np.random.random_sample(m.dims), pf.BoundaryConditions(m))\
       for m in mesh_nonuniform]
 print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables

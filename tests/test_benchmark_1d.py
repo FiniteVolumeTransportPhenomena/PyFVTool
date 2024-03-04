@@ -43,9 +43,9 @@ def T_numerical(left_bc: str) -> float:
         T_analytic = lambda x,t: T_analytical_neuman(x, t, alfa, T0, k, qs)
 
     # Initial condition
-    T_init = pf.createCellVariable(m, T0, BC) # initial condition
+    T_init = pf.CellVariable(m, T0, BC) # initial condition
     # physical parameters
-    alfa_cell = pf.createCellVariable(m, alfa, pf.BoundaryConditions(m))
+    alfa_cell = pf.CellVariable(m, alfa, pf.BoundaryConditions(m))
     alfa_face = pf.harmonicMean(alfa_cell)
 
     M_diff = pf.diffusionTerm(alfa_face)
@@ -80,9 +80,9 @@ def conv_numerical_1d() -> float:
     x = meshstruct.cellcenters.x
     ## define the transfer coeffs
     D_val = -1
-    D = pf.createCellVariable(meshstruct, D_val)
+    D = pf.CellVariable(meshstruct, D_val)
     Dave = pf.harmonicMean(D) # convert a cell variable to face variable
-    # alfa = createCellVariable(meshstruct, 1)
+    # alfa = CellVariable(meshstruct, 1)
     u = -10
     u_face = pf.createFaceVariable(meshstruct, u)
     ## solve

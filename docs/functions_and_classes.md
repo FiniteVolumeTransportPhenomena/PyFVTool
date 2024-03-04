@@ -12,7 +12,7 @@ Taken from test script:
 from pyfvtool import createMesh1D, createMesh2D, createMesh3D
 from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
-from pyfvtool import createCellVariable, createFaceVariable
+from pyfvtool import CellVariable, createFaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
@@ -37,7 +37,7 @@ from pyfvtool import visualizeCells
 
 ## Variable definition and boundary conditions
 
-### createCellVariable
+### CellVariable
 
 ### createFaceVariable
 

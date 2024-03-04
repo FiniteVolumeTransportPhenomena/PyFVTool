@@ -1433,7 +1433,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
     >>> u = pf.createFaceVariable(m, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> FL = pf.fluxLimiter('SUPERBEE')
     >>> RHS = pf.convectionTvdRHSTerm(u, phi, FL)
     """

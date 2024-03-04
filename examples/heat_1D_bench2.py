@@ -28,10 +28,10 @@ BC.right.b[:] = 1.0
 
 # Initial condition
 T0 = np.cos(m.cellcenters.x) # cosine temperature profile, amplitude = 1.0 K
-T_init = pf.createCellVariable(m, T0, BC) # initial condition
+T_init = pf.CellVariable(m, T0, BC) # initial condition
 
 # physical parameters
-alfa_cell = pf.createCellVariable(m, alfa, pf.BoundaryConditions(m))
+alfa_cell = pf.CellVariable(m, alfa, pf.BoundaryConditions(m))
 alfa_face = pf.harmonicMean(alfa_cell)
 
 M_diff = pf.diffusionTerm(alfa_face)

@@ -21,9 +21,9 @@ BC.right.c[:] = 1 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = -1
-D = pf.createCellVariable(meshstruct, D_val)
+D = pf.CellVariable(meshstruct, D_val)
 Dave = pf.harmonicMean(D) # convert a cell variable to face variable
-alfa = pf.createCellVariable(meshstruct, 1)
+alfa = pf.CellVariable(meshstruct, 1)
 u = -10
 u_face = pf.createFaceVariable(meshstruct, u)
 ## solve

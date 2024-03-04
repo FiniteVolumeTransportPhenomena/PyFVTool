@@ -94,10 +94,10 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = pf.createCellVariable(m1, c_init, bc)
+c_old = pf.CellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = pf.createCellVariable(m1, D_val)
+D_cell = pf.CellVariable(m1, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization

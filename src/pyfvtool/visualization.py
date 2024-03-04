@@ -36,7 +36,7 @@ def visualizeCells(phi: CellVariable,
     --------
     >>> import pyfvtool as pf
     >>> m = pf.createMesh1D(10, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> pf.visualizeCells(phi)
     """
     if issubclass(type(phi.domain), Mesh1D):

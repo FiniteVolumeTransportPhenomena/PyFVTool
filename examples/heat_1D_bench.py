@@ -38,9 +38,9 @@ else:
     T_analytic = lambda x,t: T_analytical_neuman(x, t, alfa, T0, k, qs)
 
 # Initial condition
-T_init = pf.createCellVariable(m, T0, BC) # initial condition
+T_init = pf.CellVariable(m, T0, BC) # initial condition
 # physical parameters
-alfa_cell = pf.createCellVariable(m, alfa, pf.BoundaryConditions(m))
+alfa_cell = pf.CellVariable(m, alfa, pf.BoundaryConditions(m))
 alfa_face = pf.harmonicMean(alfa_cell)
 
 M_diff = pf.diffusionTerm(alfa_face)
