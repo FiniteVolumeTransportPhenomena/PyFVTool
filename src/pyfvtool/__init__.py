@@ -23,7 +23,7 @@ from .face import faceLocations
 from .visualization import visualizeCells
 
 # legacy naming of certain functions and classes
-# from .legacy import boundaryConditionTerm
+from .legacy import boundaryConditionTerm
 
 
 __author__ = (
