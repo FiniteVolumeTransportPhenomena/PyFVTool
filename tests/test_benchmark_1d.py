@@ -83,8 +83,8 @@ def conv_numerical_1d() -> float:
     D = pf.CellVariable(meshstruct, D_val)
     Dave = pf.harmonicMean(D) # convert a cell variable to face variable
     # alfa = CellVariable(meshstruct, 1)
-    u = -10
-    u_face = pf.createFaceVariable(meshstruct, u)
+    u = -10.0
+    u_face = pf.FaceVariable(meshstruct, u)
     ## solve
     Mconv =  pf.convectionTerm(u_face)
     # Mconvupwind =  convectionUpwindTerm(u_face)

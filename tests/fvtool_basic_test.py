@@ -11,7 +11,7 @@ from scipy.special import erf
 from pyfvtool import createMesh1D, createMesh2D, createMesh3D
 from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
-from pyfvtool import CellVariable, createFaceVariable
+from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
@@ -74,7 +74,7 @@ print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
 # nonuniform
-f_n = [createFaceVariable(m, [f_val,0.0,0.0]) for m in mesh_nonuniform]
+f_n = [FaceVariable(m, [f_val,0.0,0.0]) for m in mesh_nonuniform]
 print("Face variable over nonuniform mesh created successfully!")
 ## Part IV: Test boundary conditions
 BC_n = []
@@ -121,8 +121,8 @@ BC.right.c[:] =1 # value = 1 at the right boundary
 D_val = 1.0 # diffusion coefficient value
 D = CellVariable(meshstruct, D_val, BoundaryConditions(meshstruct)) # assign dif. coef. to all the cells
 Dave = harmonicMean(D) # convert a cell variable to face variable
-u = -10 # velocity value
-u_face = createFaceVariable(meshstruct, u) # assign velocity value to cell faces
+u = -10.0 # velocity value
+u_face = FaceVariable(meshstruct, u) # assign velocity value to cell faces
 
 Mconv =  convectionTerm(u_face) # convection term, central, second order
 Mconvupwind = convectionUpwindTerm(u_face) # convection term, upwind, first order
@@ -240,7 +240,7 @@ x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
 alfa = CellVariable(meshstruct, 1)
-Dave = createFaceVariable(meshstruct, D_val)
+Dave = FaceVariable(meshstruct, D_val)
 ## define initial values
 c_old = CellVariable(meshstruct, 0, BC) # initial values
 c = CellVariable(meshstruct, 0, BC) # working values

@@ -46,7 +46,7 @@ print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
 # nonuniform
-f_n = [pf.createFaceVariable(m, f_val) for m in mesh_nonuniform]
+f_n = [pf.FaceVariable(m, f_val) for m in mesh_nonuniform]
 print("Face variable over nonuniform mesh created successfully!")
 ## Part IV: Test boundary conditions
 BC_n = []
