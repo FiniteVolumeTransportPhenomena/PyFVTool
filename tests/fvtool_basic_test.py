@@ -13,7 +13,7 @@ from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import createCellVariable, createFaceVariable
 from pyfvtool import createBC
-from pyfvtool import boundaryConditionTerm, diffusionTerm
+from pyfvtool import boundaryConditionsTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
@@ -94,7 +94,7 @@ M_bc=[]
 M_dif=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    Mbc, RHSbc= boundaryConditionTerm(BC_n[i])
+    Mbc, RHSbc= boundaryConditionsTerm(BC_n[i])
     M_bc.append(Mbc)
     RHS_bc.append(RHSbc)
     Md = diffusionTerm(f_n[i])
@@ -127,7 +127,7 @@ u_face = createFaceVariable(meshstruct, u) # assign velocity value to cell faces
 Mconv =  convectionTerm(u_face) # convection term, central, second order
 Mconvupwind = convectionUpwindTerm(u_face) # convection term, upwind, first order
 Mdiff = diffusionTerm(Dave) # diffusion term
-Mbc, RHSbc = boundaryConditionTerm(BC) # boundary condition discretization
+Mbc, RHSbc = boundaryConditionsTerm(BC) # boundary condition discretization
 M = Mconv-Mdiff+Mbc # matrix of coefficient for central scheme
 Mupwind = Mconvupwind-Mdiff+Mbc # matrix of coefficient for upwind scheme
 RHS = RHSbc # right hand side vector
@@ -149,7 +149,7 @@ M_dif=[]
 M_conv=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= boundaryConditionTerm(BC_n[i])
+    M, RHS= boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=diffusionTerm(f_n[i])
@@ -186,7 +186,7 @@ M_ls=[]
 RHS_s=[]
 RHS_tvd=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= boundaryConditionTerm(BC_n[i])
+    M, RHS= boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=diffusionTerm(f_n[i])
@@ -293,7 +293,7 @@ D_face = geometricMean(D_cell) # average value of diffusivity at the interfaces 
 
 # Discretization
 Mdiff = diffusionTerm(D_face)
-Mbc, RHSbc = boundaryConditionTerm(bc)
+Mbc, RHSbc = boundaryConditionsTerm(bc)
 
 # time loop
 t = 0

@@ -1,9 +1,9 @@
 from .mesh import createMesh1D, createMesh2D, createMesh3D,\
-                          createMeshCylindrical1D, createMeshCylindrical2D,\
-                          createMeshCylindrical3D, createMeshRadial2D,\
-                          createMeshSpherical3D
+                  createMeshCylindrical1D, createMeshCylindrical2D,\
+                  createMeshCylindrical3D, createMeshRadial2D,\
+                  createMeshSpherical3D
 from .advection import convectionTerm, convectionTvdRHSTerm,\
-                               convectionUpwindTerm
+                       convectionUpwindTerm
 from .diffusion import diffusionTerm
 from .source import linearSourceTerm, constantSourceTerm, transientTerm
 from .boundary import createBC, boundaryConditionsTerm
@@ -23,7 +23,7 @@ from .face import faceLocations
 from .visualization import visualizeCells
 
 # legacy naming of certain functions and classes
-from .legacy import boundaryConditionTerm
+# from .legacy import boundaryConditionTerm
 
 
 __author__ = (

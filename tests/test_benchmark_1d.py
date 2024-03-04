@@ -49,7 +49,7 @@ def T_numerical(left_bc: str) -> float:
     alfa_face = pf.harmonicMean(alfa_cell)
 
     M_diff = pf.diffusionTerm(alfa_face)
-    [M_bc, RHS_bc] = pf.boundaryConditionTerm(BC)
+    [M_bc, RHS_bc] = pf.boundaryConditionsTerm(BC)
 
     t=0
     while t<t_sim:
@@ -89,7 +89,7 @@ def conv_numerical_1d() -> float:
     Mconv =  pf.convectionTerm(u_face)
     # Mconvupwind =  convectionUpwindTerm(u_face)
     Mdiff = pf.diffusionTerm(Dave)
-    [Mbc, RHSbc] = pf.boundaryConditionTerm(BC)
+    [Mbc, RHSbc] = pf.boundaryConditionsTerm(BC)
     M = Mconv-Mdiff-Mbc
     # Mupwind = Mconvupwind-Mdiff-Mbc
     RHS = -RHSbc

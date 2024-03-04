@@ -102,7 +102,7 @@ D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfac
 
 # Discretization
 Mdiff = pf.diffusionTerm(D_face)
-Mbc, RHSbc = pf.boundaryConditionTerm(bc)
+Mbc, RHSbc = pf.boundaryConditionsTerm(bc)
 
 # time loop
 t = 0

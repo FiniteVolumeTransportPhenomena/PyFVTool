@@ -66,7 +66,7 @@ M_bc=[]
 M_dif=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    Mbc, RHSbc= pf.boundaryConditionTerm(BC_n[i])
+    Mbc, RHSbc= pf.boundaryConditionsTerm(BC_n[i])
     M_bc.append(Mbc)
     RHS_bc.append(RHSbc)
     Md = pf.diffusionTerm(f_n[i])
@@ -85,7 +85,7 @@ M_dif=[]
 M_conv=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= pf.boundaryConditionTerm(BC_n[i])
+    M, RHS= pf.boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=pf.diffusionTerm(f_n[i])
@@ -124,7 +124,7 @@ M_ls=[]
 RHS_s=[]
 RHS_tvd=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= pf.boundaryConditionTerm(BC_n[i])
+    M, RHS= pf.boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=pf.diffusionTerm(f_n[i])
