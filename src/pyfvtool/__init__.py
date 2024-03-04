@@ -1,4 +1,4 @@
-ENABLE_LEGACY = False # enable/disable backward compatibility
+ENABLE_LEGACY = True # enable/disable backward compatibility
 
 from .mesh import createMesh1D, createMesh2D, createMesh3D,\
                   createMeshCylindrical1D, createMeshCylindrical2D,\
