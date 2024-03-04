@@ -549,7 +549,7 @@ array([[1, 0, 2],
 """
 
 
-def boundaryConditionTerm1D(BC: BoundaryConditions1D):
+def boundaryConditionsTerm1D(BC: BoundaryConditions1D):
     Nx = BC.domain.dims[0]
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -631,7 +631,7 @@ def boundaryConditionTerm1D(BC: BoundaryConditions1D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), shape=(Nx+2, Nx+2))
     return BCMatrix, BCRHS
 
-def boundaryConditionTerm2D(BC: BoundaryConditions2D):
+def boundaryConditionsTerm2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -795,7 +795,7 @@ def boundaryConditionTerm2D(BC: BoundaryConditions2D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTerm3D(BC: BoundaryConditions3D):
+def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1060,7 +1060,7 @@ def boundaryConditionTerm3D(BC: BoundaryConditions3D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTermRadial2D(BC: BoundaryConditions2D):
+def boundaryConditionsTermRadial2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -1225,7 +1225,7 @@ def boundaryConditionTermRadial2D(BC: BoundaryConditions2D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTermCylindrical3D(BC: BoundaryConditions3D):
+def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1491,7 +1491,7 @@ def boundaryConditionTermCylindrical3D(BC: BoundaryConditions3D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionTerm(BC):
+def boundaryConditionsTerm(BC):
     """
     Generate the terms of the matrix equation representing the boundary conditions
 
@@ -1510,12 +1510,12 @@ def boundaryConditionTerm(BC):
     """
     
     if issubclass(type(BC.domain), Mesh1D):
-        return boundaryConditionTerm1D(BC)
+        return boundaryConditionsTerm1D(BC)
     elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
-        return boundaryConditionTerm2D(BC)
+        return boundaryConditionsTerm2D(BC)
     elif (type(BC.domain) is MeshRadial2D):
-        return boundaryConditionTermRadial2D(BC)
+        return boundaryConditionsTermRadial2D(BC)
     elif (type(BC.domain) is Mesh3D):
-        return boundaryConditionTerm3D(BC)
+        return boundaryConditionsTerm3D(BC)
     elif (type(BC.domain) is MeshCylindrical3D):
-        return boundaryConditionTermCylindrical3D(BC)
+        return boundaryConditionsTermCylindrical3D(BC)
