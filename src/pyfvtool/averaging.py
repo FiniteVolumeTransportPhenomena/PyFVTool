@@ -19,12 +19,12 @@ import numpy as np
 
 
 from .mesh import MeshStructure
-from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Mesh2D, Mesh3D
 from .cell import CellVariable
 from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
-    if issubclass(type(m), Mesh1D):
+    if issubclass(type(m), Grid1D):
         dx = m.cellsize.x
         return dx
     elif issubclass(type(m), Mesh2D):
@@ -68,7 +68,7 @@ def linearMean(phi: CellVariable) -> FaceVariable:
     >>>     
     
     """    
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
                      (dx[1:]*phi.value[0:-1]+dx[0:-1] *
@@ -133,7 +133,7 @@ def arithmeticMean(phi: CellVariable):
     >>>     
     
     """
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             (dx[0:-1]*phi.value[0:-1]+dx[1:]*phi.value[1:])/(dx[1:]+dx[0:-1]),
@@ -197,7 +197,7 @@ def geometricMean(phi: CellVariable):
     >>>     
     
     """
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         n= phi.domain.dims[0]
         phix=np.zeros(n+1)
@@ -265,7 +265,7 @@ def harmonicMean(phi: CellVariable):
     # calculates the average values of a cell variable. The output is a
     # face variable
 
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         n=phi.domain.dims[0]
         phix=np.zeros(n+1)
@@ -334,7 +334,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
     # TBD: needs to be fixed. It must be a linear mean, adjusted for velocity
     # currently, it assumes a uniform mesh.
     phi_tmp = np.copy(phi.value)
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         ux = u.xvalue
         # assign the value of the left boundary to the left ghost cell
         phi_tmp[0] = 0.5*(phi.value[0]+phi.value[1])

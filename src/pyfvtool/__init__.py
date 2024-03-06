@@ -1,6 +1,7 @@
 ENABLE_LEGACY = True # enable/disable backward compatibility
 
-from .mesh import createMesh1D, createMesh2D, createMesh3D,\
+from .mesh import Grid1D
+from .mesh import createMesh2D, createMesh3D,\
                   createMeshCylindrical1D, createMeshCylindrical2D,\
                   createMeshCylindrical3D, createMeshRadial2D,\
                   createMeshSpherical3D
@@ -30,6 +31,7 @@ if ENABLE_LEGACY:
     from .legacy import createBC
     from .legacy import createCellVariable
     from .legacy import createFaceVariable
+    from .legacy import createMesh1D
     
 
 __author__ = (

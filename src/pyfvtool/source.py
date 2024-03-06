@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Mesh2D, Mesh3D
 from .cell import CellVariable
 from .boundary import BoundaryConditions
 
@@ -32,7 +32,7 @@ def constantSourceTerm(gamma: CellVariable):
     >>> RHS = pf.constantSourceTerm(gamma)
     """
     m = gamma.domain
-    if issubclass(type(m), Mesh1D):
+    if issubclass(type(m), Grid1D):
         Nx = m.dims[0]
         G = m.cell_numbers()
         row_index = G[1:Nx+1]  # main diagonal (only internal cells)
@@ -80,7 +80,7 @@ def linearSourceTerm(beta: CellVariable):
     >>> RHS = pf.linearSourceTerm(beta)
     """
     m = beta.domain
-    if issubclass(type(m), Mesh1D):
+    if issubclass(type(m), Grid1D):
         Nx = m.dims[0]
         G = m.cell_numbers()
         AP_diag = beta.value[1:-1]

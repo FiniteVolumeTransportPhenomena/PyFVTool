@@ -1,6 +1,6 @@
 import numpy as np
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Mesh2D, Mesh3D
 from .mesh import MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
@@ -39,7 +39,7 @@ def visualizeCells(phi: CellVariable,
     >>> phi = pf.CellVariable(m, 1.0)
     >>> pf.visualizeCells(phi)
     """
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         x, phi0 = get_CellVariable_profile1D(phi)
         plt.plot(x, phi0)
         # plt.show()

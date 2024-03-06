@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Mesh2D, Mesh3D
 from .mesh import MeshCylindrical1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
@@ -12,7 +12,7 @@ from .face import FaceVariable
 
 
 def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
-    if issubclass(type(u.domain), Mesh1D):
+    if issubclass(type(u.domain), Grid1D):
         ux_min = np.copy(u.xvalue)
         ux_max = np.copy(u.xvalue)
         ux_min[u_upwind.xvalue > 0.0] = 0.0
@@ -1348,7 +1348,7 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     >>> u = pf.FaceVariable(m, 1.0)
     >>> M = pf.convectionTerm(u)
     """
-    if (type(u.domain) is Mesh1D):
+    if (type(u.domain) is Grid1D):
         return convectionTerm1D(u)
     elif (type(u.domain) is MeshCylindrical1D):
         return convectionTermCylindrical1D(u)
@@ -1391,7 +1391,7 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     >>> u = pf.FaceVariable(m, 1.0)
     >>> M = pf.convectionUpwindTerm(u)
     """
-    if (type(u.domain) is Mesh1D):
+    if (type(u.domain) is Grid1D):
         return convectionUpwindTerm1D(u, *args)
     elif (type(u.domain) is MeshCylindrical1D):
         return convectionUpwindTermCylindrical1D(u, *args)
@@ -1437,7 +1437,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     >>> FL = pf.fluxLimiter('SUPERBEE')
     >>> RHS = pf.convectionTvdRHSTerm(u, phi, FL)
     """
-    if (type(u.domain) is Mesh1D):
+    if (type(u.domain) is Grid1D):
         return convectionTvdRHS1D(u, phi, FL, *args)
     elif (type(u.domain) is MeshCylindrical1D):
         return convectionTvdRHSCylindrical1D(u, phi, FL, *args)

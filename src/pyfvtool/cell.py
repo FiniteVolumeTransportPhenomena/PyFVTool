@@ -4,7 +4,7 @@ import numpy as np
 from typing import overload
 
 from .mesh import MeshStructure
-from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Mesh2D, Mesh3D
 from .mesh import MeshCylindrical1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
@@ -88,7 +88,7 @@ class CellVariable:
 
 
     def internalCellValues(self):
-        if issubclass(type(self.domain), Mesh1D):
+        if issubclass(type(self.domain), Grid1D):
             return self.value[1:-1]
         elif issubclass(type(self.domain), Mesh2D):
             return self.value[1:-1, 1:-1]
@@ -106,7 +106,7 @@ class CellVariable:
         """
         assign the boundary values to the ghost cells
         """
-        if issubclass(type(self.domain), Mesh1D):
+        if issubclass(type(self.domain), Grid1D):
             self.value[0] = 0.5*(self.value[1]+self.value[0])
             self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
         elif issubclass(type(self.domain), Mesh2D):
@@ -253,7 +253,7 @@ def copyCellVariable(phi: CellVariable) -> CellVariable:
 
 def cellVolume(m: MeshStructure):
     BC = BoundaryConditions(m)
-    if (type(m) is Mesh1D):
+    if (type(m) is Grid1D):
         c=m.cellsize.x[1:-1]
     elif (type(m) is MeshCylindrical1D):
         c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
@@ -307,7 +307,7 @@ def cellLocations(m: MeshStructure):
     N = m.dims
    
     
-    if (type(m) is Mesh1D)\
+    if (type(m) is Grid1D)\
      or (type(m) is MeshCylindrical1D):
         X = CellVariable(m, m.cellcenters.x)
         return X
@@ -547,7 +547,7 @@ def BC2GhostCells(phi0):
     assign the boundary values to the ghost cells and returns the new cell variable
     """
     phi = copyCellVariable(phi0)
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
         phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
     elif issubclass(type(phi.domain), Mesh2D):

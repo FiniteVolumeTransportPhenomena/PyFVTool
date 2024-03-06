@@ -65,7 +65,7 @@ class FaceLocation:
 
 class MeshStructure:
     def __init__(self, dims, cellsize,
-                 cellcenters, facecenters, corners, edges) -> None:
+                 cellcenters, facecenters, corners, edges):
         self.dims = dims
         self.cellsize = cellsize
         self.cellcenters = cellcenters
@@ -97,10 +97,54 @@ class MeshStructure:
         return ""
 
 
-class Mesh1D(MeshStructure):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class Grid1D(MeshStructure):
+    @overload
+    def __init__(self, Nx: int, Lx: float):
+        ...
+    
+    @overload
+    def __init__(self, face_locations: np.ndarray):
+        ...
+        
+    @overload
+    def __init__(self, dims, cellsize,
+                 cellcenters, facecenters, corners, edges):
+            ...
+    
+    def __init__(self, *args):
+        """Create a Grid1D mesh object from a list of cell face locations or from
+        number of cells and domain length.
+    
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Lx : float
+            Length of the domain in the x direction.
+        face_locations : ndarray
+            Locations of the cell faces in the x direction.
+    
+        Returns
+        -------
+        Grid1D
+            A 1D mesh object.
+    
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import createMesh1D
+        >>> mesh = createMesh1D(10, 10.0)
+        >>> print(mesh)
+        """
+        if (len(args)==6):
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_1d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
+
 
     def cell_numbers(self):
         Nx = self.dims[0]
@@ -142,7 +186,7 @@ class Mesh3D(MeshStructure):
         return ""
 
 
-class MeshCylindrical1D(Mesh1D):
+class MeshCylindrical1D(Grid1D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -152,7 +196,7 @@ class MeshCylindrical1D(Mesh1D):
         return ""
 
 
-class MeshSpherical1D(Mesh1D):
+class MeshSpherical1D(Grid1D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -356,45 +400,6 @@ def _mesh_3d_param(*args):
                        G[1:-1, -1, [0, -1]].flatten()])
     return dims, cellsize, cellcenters, facecenters, corners, edges
 
-
-@overload
-def createMesh1D(Nx: int, Lx: float) -> Mesh1D:
-    ...
-
-
-@overload
-def createMesh1D(face_locations: np.ndarray) -> Mesh1D:
-    ...
-
-
-def createMesh1D(*args) -> Mesh1D:
-    """Create a Mesh1D object from a list of cell face locations or from
-    number of cells and domain length.
-
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Lx : float
-        Length of the domain in the x direction.
-    face_locations : ndarray
-        Locations of the cell faces in the x direction.
-
-    Returns
-    -------
-    Mesh1D
-        A 1D mesh object.
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMesh1D
-    >>> mesh = createMesh1D(10, 10.0)
-    >>> print(mesh)
-    """
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
-        *args)
-    return Mesh1D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 @overload
