@@ -35,7 +35,7 @@ def visualizeCells(phi: CellVariable,
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> pf.visualizeCells(phi)
     """

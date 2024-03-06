@@ -1344,7 +1344,7 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> u = pf.FaceVariable(m, 1.0)
     >>> M = pf.convectionTerm(u)
     """
@@ -1387,7 +1387,7 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> u = pf.FaceVariable(m, 1.0)
     >>> M = pf.convectionUpwindTerm(u)
     """
@@ -1431,7 +1431,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> u = pf.FaceVariable(m, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> FL = pf.fluxLimiter('SUPERBEE')

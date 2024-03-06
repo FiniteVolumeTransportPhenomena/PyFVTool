@@ -25,7 +25,7 @@ def gradientTerm(phi: CellVariable):
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> gradPhi = pf.gradientTerm(phi)
     >>> gradPhi.xvalue
@@ -311,7 +311,7 @@ def divergenceTerm(F: FaceVariable):
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> gradPhi = pf.gradientTerm(phi)
     >>> RHSdiv = pf.divergenceTerm(gradPhi)
@@ -361,7 +361,7 @@ def gradientTermFixedBC(phi):
     --------
     >>> import pyfvtool as pf
     >>> import numpy as np
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> sin_phi = pf.celleval(np.sin, BC2GhostCells(sw))
     >>> gradPhi = pf.gradientTermFixedBC(sin_phi)

@@ -16,7 +16,7 @@ class FaceVariable:
     Create a FaceVariable for the given mesh with the given value.
     Examples:
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> f = pf.FaceVariable(m, 1.0)
 
     """
@@ -347,7 +347,7 @@ def faceeval(f, *args):
     Evaluate a function f on a FaceVariable.
     Examples:
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> f = pf.FaceVariable(m, 1.0)
     >>> g = pf.faceeval(lambda x: x**2, f)
     """

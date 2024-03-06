@@ -373,7 +373,7 @@ def diffusionTerm(D: FaceVariable) -> csr_array:
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
     >>> D = pf.FaceVariable(m, 1.0)
     >>> M = pf.diffusionTerm(D)
     """

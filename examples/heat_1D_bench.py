@@ -22,7 +22,7 @@ t_sim = L**2/(20*alfa) # [s]
 time_steps = 50
 dt = t_sim/time_steps # 
 Nx = 50 # number of cells
-m = pf.createMesh1D(Nx, L)
+m = pf.Grid1D(Nx, L)
 left_bc = "Dirichlet"
 # Boundary condition
 BC = pf.BoundaryConditions(m)

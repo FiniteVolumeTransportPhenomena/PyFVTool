@@ -8,7 +8,7 @@ from scipy.special import erf
 # an idea of the coverage, and can also serve as a guide to writing more
 # elaborate documentation for PyFVTool functions and classes.
 
-from pyfvtool import createMesh1D, createMesh2D, createMesh3D
+from pyfvtool import Grid1D, createMesh2D, createMesh3D
 from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import CellVariable, FaceVariable
@@ -54,7 +54,7 @@ Z= np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
 N_mesh=7
 # create nonuniform mesh
 mesh_nonuniform= []
-mesh_nonuniform.append(createMesh1D(X))
+mesh_nonuniform.append(Grid1D(X))
 mesh_nonuniform.append(createMesh2D(X, Y))
 mesh_nonuniform.append(createMesh3D(X, Y, Z))
 mesh_nonuniform.append(createMeshCylindrical1D(X))
@@ -105,7 +105,7 @@ for i in range(len(mesh_nonuniform)):
 
 L = 1.0  # domain length
 Nx = 25 # number of cells
-meshstruct = createMesh1D(Nx, L)
+meshstruct = Grid1D(Nx, L)
 x = meshstruct.cellcenters.x # extract the cell center positions
 ##
 # The next step is to define the boundary condition:
@@ -228,7 +228,7 @@ print("Averaging functions run smoothly!")
 # define the domain
 L = 5.0  # domain length
 Nx = 100 # number of cells
-meshstruct = createMesh1D(Nx, L)
+meshstruct = Grid1D(Nx, L)
 BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:]=1 
@@ -276,7 +276,7 @@ D_val = 1e-5 # diffusion coefficient (gas phase)
 t_simulation = 3600.0 # [s] simulation time
 dt = 60.0 # [s] time step
 
-m1 = createMesh1D(Nx, Lx) # mesh object
+m1 = Grid1D(Nx, Lx) # mesh object
 bc = BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration

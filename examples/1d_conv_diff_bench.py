@@ -10,7 +10,7 @@ import numpy as np
 ## define the domain
 L = 1.0  # domain length
 Nx = 25 # number of cells
-meshstruct = pf.createMesh1D(Nx, L)
+meshstruct = pf.Grid1D(Nx, L)
 BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0.0 
 BC.left.b[:] = 1.0 

@@ -28,7 +28,7 @@ def T_numerical(left_bc: str) -> float:
     time_steps = 50
     dt = t_sim/time_steps # 
     Nx = 50 # number of cells
-    m = pf.createMesh1D(Nx, L)
+    m = pf.Grid1D(Nx, L)
     # Boundary condition
     BC = pf.BoundaryConditions(m)
     if left_bc == "Dirichlet":
@@ -69,7 +69,7 @@ def conv_numerical_1d() -> float:
     global OUTPUT_DIAGNOSTICS
     L = 1.0  # domain length
     Nx = 50 # number of cells
-    meshstruct = pf.createMesh1D(Nx, L)
+    meshstruct = pf.Grid1D(Nx, L)
     BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
     BC.left.a[:] = 0 
     BC.left.b[:] = 1 

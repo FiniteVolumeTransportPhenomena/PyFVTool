@@ -25,7 +25,7 @@ Z= np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
 N_mesh=7
 # create nonuniform mesh
 mesh_nonuniform= []
-mesh_nonuniform.append(pf.createMesh1D(X))
+mesh_nonuniform.append(pf.Grid1D(X))
 mesh_nonuniform.append(pf.createMesh2D(X, Y))
 mesh_nonuniform.append(pf.createMesh3D(X, Y, Z))
 mesh_nonuniform.append(pf.createMeshCylindrical1D(X))

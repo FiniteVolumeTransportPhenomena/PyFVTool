@@ -10,7 +10,7 @@ from scipy.special import erf
 # define the domain
 L = 5.0  # domain length
 Nx = 100 # number of cells
-meshstruct = pf.createMesh1D(Nx, L)
+meshstruct = pf.Grid1D(Nx, L)
 BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:]=1 

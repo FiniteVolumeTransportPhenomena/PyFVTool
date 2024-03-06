@@ -85,7 +85,7 @@ t_simulation = 7200.0 # [s] simulation time
 dt = 60.0 # [s] time step
 Nskip = 10 # plot every Nskip-th profile
 
-m1 = pf.createMesh1D(Nx, Lx) # mesh object
+m1 = pf.Grid1D(Nx, Lx) # mesh object
 bc = pf.BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration

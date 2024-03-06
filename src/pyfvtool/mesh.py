@@ -132,8 +132,8 @@ class Grid1D(MeshStructure):
         Examples
         --------
         >>> import numpy as np
-        >>> from pyfvtool import createMesh1D
-        >>> mesh = createMesh1D(10, 10.0)
+        >>> from pyfvtool import Grid1D
+        >>> mesh = Grid1D(10, 10.0)
         >>> print(mesh)
         """
         if (len(args)==6):
