@@ -3,7 +3,7 @@ import numpy as np
 from scipy.sparse import csr_array
 
 from .mesh import Grid1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import CylindricalGrid1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
 from .face import FaceVariable
@@ -1350,7 +1350,7 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     """
     if (type(u.domain) is Grid1D):
         return convectionTerm1D(u)
-    elif (type(u.domain) is MeshCylindrical1D):
+    elif (type(u.domain) is CylindricalGrid1D):
         return convectionTermCylindrical1D(u)
     elif (type(u.domain) is Mesh2D):
         return convectionTerm2D(u)[0]
@@ -1393,7 +1393,7 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     """
     if (type(u.domain) is Grid1D):
         return convectionUpwindTerm1D(u, *args)
-    elif (type(u.domain) is MeshCylindrical1D):
+    elif (type(u.domain) is CylindricalGrid1D):
         return convectionUpwindTermCylindrical1D(u, *args)
     elif (type(u.domain) is Mesh2D):
         return convectionUpwindTerm2D(u, *args)[0]
@@ -1439,7 +1439,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     """
     if (type(u.domain) is Grid1D):
         return convectionTvdRHS1D(u, phi, FL, *args)
-    elif (type(u.domain) is MeshCylindrical1D):
+    elif (type(u.domain) is CylindricalGrid1D):
         return convectionTvdRHSCylindrical1D(u, phi, FL, *args)
     elif (type(u.domain) is Mesh2D):
         # raise Exception("Not implemented yet. Work in progress")

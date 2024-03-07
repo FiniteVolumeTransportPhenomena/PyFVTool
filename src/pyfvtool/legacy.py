@@ -7,7 +7,7 @@ from .boundary import boundaryConditionsTerm
 from .boundary import BoundaryConditions
 from .cell import CellVariable
 from .face import FaceVariable
-from .mesh import Grid1D
+from .mesh import Grid1D, CylindricalGrid1D
 
 def boundaryConditionTerm(BC):
     """Redirects to boundaryConditionsTerm()"""
@@ -34,3 +34,8 @@ def createFaceVariable(mesh, faceval):
 def createMesh1D(*args) -> Grid1D:
     """Legacy factory function for Grid1D"""
     return Grid1D(*args)
+
+
+def createMeshCylindrical1D(*args) -> CylindricalGrid1D:
+    """Legacy factory function for CylindricalGrid1D"""
+    return CylindricalGrid1D(*args)

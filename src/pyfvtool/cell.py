@@ -5,7 +5,7 @@ from typing import overload
 
 from .mesh import MeshStructure
 from .mesh import Grid1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import CylindricalGrid1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
@@ -264,7 +264,7 @@ def cellVolume(m: MeshStructure):
     BC = BoundaryConditions(m)
     if (type(m) is Grid1D):
         c=m.cellsize.x[1:-1]
-    elif (type(m) is MeshCylindrical1D):
+    elif (type(m) is CylindricalGrid1D):
         c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
     elif (type(m) is Mesh2D):
         c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
@@ -317,7 +317,7 @@ def cellLocations(m: MeshStructure):
    
     
     if (type(m) is Grid1D)\
-     or (type(m) is MeshCylindrical1D):
+     or (type(m) is CylindricalGrid1D):
         X = CellVariable(m, m.cellcenters.x)
         return X
     elif (type(m) is Mesh2D)\

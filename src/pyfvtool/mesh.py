@@ -186,10 +186,54 @@ class Mesh3D(MeshStructure):
         return ""
 
 
-class MeshCylindrical1D(Grid1D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class CylindricalGrid1D(Grid1D):
+    @overload
+    def __init__(self, Nx: int, Lx: float):
+        ...
+    
+    @overload
+    def __init__(self, face_locations: np.ndarray):
+        ...
+            
+    @overload
+    def __init__(self, dims, cellsize,
+                 cellcenters, facecenters, corners, edges):
+        ...
+
+    def __init__(self, *args):
+        """Create a CylindricalGrid1D object from a list of cell face locations or from
+        number of cells and domain length.
+        
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Lx : float
+            Length of the domain in the x direction.
+        face_locations : ndarray
+            Locations of the cell faces in the x direction.
+            
+        Returns
+        -------
+        CylindricalGrid1D
+            A 1D cylindrical mesh object.
+        
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import CylindricalGrid1D
+        >>> mesh = CylindricalGrid1D(10, 10.0)
+        >>> print(mesh)
+        """
+        if (len(args)==6):
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_1d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
+
 
     def __repr__(self):
         print(f"1D Cylindrical (radial) mesh with Nr={self.dims[0]} cells")
@@ -504,44 +548,6 @@ def createMesh3D(*args) -> Mesh3D:
     return Mesh3D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
-@overload
-def createMeshCylindrical1D(Nx: int, Lx: float) -> MeshCylindrical1D:
-    ...
-
-
-@overload
-def createMeshCylindrical1D(face_locations: np.ndarray) -> MeshCylindrical1D:
-    ...
-
-
-def createMeshCylindrical1D(*args) -> MeshCylindrical1D:
-    """Create a MeshCylindrical1D object from a list of cell face locations or from
-    number of cells and domain length.
-    
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Lx : float
-        Length of the domain in the x direction.
-    face_locations : ndarray
-        Locations of the cell faces in the x direction.
-        
-    Returns
-    -------
-    MeshCylindrical1D
-        A 1D cylindrical mesh object.
-    
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshCylindrical1D
-    >>> mesh = createMeshCylindrical1D(10, 10.0)
-    >>> print(mesh)
-    """
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
-        *args)
-    return MeshCylindrical1D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 @overload

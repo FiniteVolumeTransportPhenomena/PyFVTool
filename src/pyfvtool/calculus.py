@@ -1,7 +1,7 @@
 import numpy as np
 
 from .mesh import Grid1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
+from .mesh import CylindricalGrid1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
 from .face import FaceVariable
@@ -318,7 +318,7 @@ def divergenceTerm(F: FaceVariable):
     """
     if (type(F.domain) is Grid1D):
         RHSdiv = divergenceTerm1D(F)
-    elif (type(F.domain) is MeshCylindrical1D):
+    elif (type(F.domain) is CylindricalGrid1D):
         RHSdiv = divergenceTermCylindrical1D(F)
     elif (type(F.domain) is Mesh2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTerm2D(F)
