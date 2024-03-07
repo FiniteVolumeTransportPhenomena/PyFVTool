@@ -135,8 +135,8 @@ c = solvePDE(meshstruct, M, RHS) # solve for the central scheme
 c_upwind = solvePDE(meshstruct, Mupwind, RHS) # solve for the upwind scheme
 c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val)) # analytical solution
 # plt.figure(5)
-# plt.plot(x, c.value[1:Nx+1]) 
-# plt.plot(x, c_upwind.value[1:Nx+1], '--')
+# plt.plot(x, c.internalCellValues) 
+# plt.plot(x, c_upwind.internalCellValues, '--')
 # plt.plot(x, c_analytical, '.')
 # plt.show()
 # plt.legend('central', 'upwind', 'analytical')

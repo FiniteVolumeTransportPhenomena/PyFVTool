@@ -40,7 +40,7 @@ alfa = pf.CellVariable(m, 1.0)
 c_init = 0.0
 c_old = pf.CellVariable(m, c_init, BC)
 r = c_old.domain.cellcenters.x
-c_old.value[1:-1][r<1.0] = 1.0   # TO DO: find a better syntax for this
+c_old.internalCellValues[r<1.0] = 1.0   # TO DO: find a better syntax for this
 
 # calculate volumes of FV cellslices
 #  We use this for demonstrating mass conservation
@@ -53,7 +53,7 @@ t = 0.0 # overall time
 deltat = 0.0625/20 #  time step
 
 # output total mass in the system
-m_tot = np.sum(c_old.value[1:-1] * cellvol)
+m_tot = np.sum(c_old.internalCellValues * cellvol)
 print(t,m_tot)
 
 # loop for "time-stepping" the solution
@@ -72,7 +72,7 @@ for s in [20,60,240]:
       c = pf.solvePDE(m,M, RHS)
       t += deltat
       c_old.update_value(c)
-  m_tot = np.sum(c.value[1:-1] * cellvol)
+  m_tot = np.sum(c.internalCellValues * cellvol)
   print(n,t,m_tot)
   
   # TO DO: output result, compare to analytic solution?
