@@ -86,7 +86,7 @@ class CellVariable:
             else:
                 raise Exception('Incorrect number of arguments')
 
-
+    @property
     def internalCellValues(self):
         if issubclass(type(self.domain), Grid1D):
             return self.value[1:-1]
@@ -96,7 +96,7 @@ class CellVariable:
             return self.value[1:-1, 1:-1, 1:-1]
 
     def update_bc_cells(self, BC: BoundaryConditionsBase):
-        phi_temp = CellVariable(self.domain, self.internalCellValues(), BC)
+        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
         self.update_value(phi_temp)
 
     def update_value(self, new_cell):
@@ -389,8 +389,8 @@ def domainInt(phi: CellVariable) -> float:
         Total finite-volume integral over entire domain.
 
     """
-    v = cellVolume(phi.domain).internalCellValues()
-    c = phi.internalCellValues()
+    v = cellVolume(phi.domain).internalCellValues
+    c = phi.internalCellValues
     return (v*c).flatten().sum()
 
 def domainIntegrate(phi: CellVariable) -> float:
