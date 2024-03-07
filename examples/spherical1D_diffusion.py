@@ -27,7 +27,7 @@ import pyfvtool as pf
 # Here we work in a 1D spherical coordinate system (r coordinate)
 L = 10.0  # domain length
 Nr = 2000 # number of cells
-m = pf.createMeshSpherical1D(Nr, L)
+m = pf.SphericalGrid1D(Nr, L)
 
 ## Create the boundary condition structure
 BC = pf.BoundaryConditions(m) # all 'no flux' boundary condition structure

@@ -10,7 +10,7 @@ Taken from test script:
 
 ```python
 from pyfvtool import Grid1D, createMesh2D, createMesh3D
-from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
+from pyfvtool import CylindricalGrid1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
@@ -30,7 +30,7 @@ from pyfvtool import visualizeCells
 
 ### Cartesian grids: Grid1D, createMesh2D, createMesh3D
 
-### Cylindrical grids: createMeshCylindrical1D, createMeshCylindrical2D, createMeshCylindrical3D
+### Cylindrical grids: CylindricalGrid1D, createMeshCylindrical2D, createMeshCylindrical3D
 
 ### Radial grid: createMeshRadial2D
 

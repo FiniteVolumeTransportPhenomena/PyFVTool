@@ -9,7 +9,7 @@ from scipy.special import erf
 # elaborate documentation for PyFVTool functions and classes.
 
 from pyfvtool import Grid1D, createMesh2D, createMesh3D
-from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
+from pyfvtool import CylindricalGrid1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
@@ -57,7 +57,7 @@ mesh_nonuniform= []
 mesh_nonuniform.append(Grid1D(X))
 mesh_nonuniform.append(createMesh2D(X, Y))
 mesh_nonuniform.append(createMesh3D(X, Y, Z))
-mesh_nonuniform.append(createMeshCylindrical1D(X))
+mesh_nonuniform.append(CylindricalGrid1D(X))
 mesh_nonuniform.append(createMeshCylindrical2D(X, Y))
 mesh_nonuniform.append(createMeshCylindrical3D(X, Y, Z))
 mesh_nonuniform.append(createMeshRadial2D(X, Y))
