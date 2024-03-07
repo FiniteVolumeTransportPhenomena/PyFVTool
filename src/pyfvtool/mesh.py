@@ -240,10 +240,59 @@ class CylindricalGrid1D(Grid1D):
         return ""
 
 
-class MeshSpherical1D(Grid1D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class SphericalGrid1D(Grid1D):
+    @overload
+    def __init__(self, Nx: int, Lx: float):
+        ...
+    
+    @overload
+    def __init__(self, face_locations: np.ndarray):
+        ...
+    
+    @overload
+    def __init__(self, dims, cellsize,
+                 cellcenters, facecenters, corners, edges):
+        ...
+
+    def __init__(self, *args):
+        """
+        Create a SphericalGrid1D object from a list of cell face locations or from
+        number of cells and domain length.
+    
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Lx : float
+            Length of the domain in the x direction.
+        face_locations : ndarray
+            Locations of the cell faces in the x direction.
+        
+        Returns
+        -------
+        SphericalGrid1D
+            A 1D spherical mesh object.
+    
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import SphericalGrid1D
+        >>> mesh = SphericalGrid1D(10, 10.0)
+        >>> print(mesh)
+    
+        Notes
+        -----
+        The mesh is created in spherical coordinates.
+        """
+        if (len(args)==6):
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_1d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
+
 
     def __repr__(self):
         print(f"1D Spherical mesh with Nr={self.dims[0]} cells")
@@ -663,50 +712,6 @@ def createMeshCylindrical3D(*args) -> MeshCylindrical3D:
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_3d_param(
         *args)
     return MeshCylindrical3D(dims, cellsize, cellcenters, facecenters, corners, edges)
-
-
-@overload
-def createMeshSpherical1D(Nx: int, Lx: float) -> MeshSpherical1D:
-    ...
-
-@overload
-def createMeshSpherical1D(face_locations: np.ndarray) -> MeshSpherical1D:
-    ...
-
-
-def createMeshSpherical1D(*args) -> MeshSpherical1D:
-    """
-    Create a MeshSpherical1D object from a list of cell face locations or from
-    number of cells and domain length.
-
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Lx : float
-        Length of the domain in the x direction.
-    face_locations : ndarray
-        Locations of the cell faces in the x direction.
-    
-    Returns
-    -------
-    MeshSpherical1D
-        A 1D spherical mesh object.
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshSpherical1D
-    >>> mesh = createMeshSpherical1D(10, 10.0)
-    >>> print(mesh)
-
-    Notes
-    -----
-    The mesh is created in spherical coordinates.
-    """
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_1d_param(
-        *args)
-    return MeshSpherical1D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 @overload
