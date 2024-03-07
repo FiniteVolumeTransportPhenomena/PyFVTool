@@ -97,6 +97,10 @@ class MeshStructure:
         return ""
 
 
+#%%
+#   1D Grids
+
+
 class Grid1D(MeshStructure):
     @overload
     def __init__(self, Nx: int, Lx: float):
@@ -141,49 +145,54 @@ class Grid1D(MeshStructure):
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = _mesh_1d_param(*args)
+                = self._mesh_1d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
-
-    def cell_numbers(self):
-        Nx = self.dims[0]
-        return int_range(0, Nx+1)
+    def _mesh_1d_param(self, *args):
+        if len(args) == 1:
+            # Use face locations
+            facelocationX = args[0]
+            Nx = facelocationX.size-1
+            cell_size_x = np.hstack([facelocationX[1]-facelocationX[0],
+                                     facelocationX[1:]-facelocationX[0:-1],
+                                     facelocationX[-1]-facelocationX[-2]])
+            cell_size = CellSize(cell_size_x, np.array([0.0]), np.array([0.0]))
+            cell_location = CellLocation(
+                0.5*(facelocationX[1:]+facelocationX[0:-1]), np.array([0.0]), np.array([0.0]))
+            face_location = FaceLocation(
+                facelocationX, np.array([0.0]), np.array([0.0]))
+        elif len(args) == 2:
+            # Use number of cells and domain length
+            Nx = args[0]
+            Width = args[1]
+            dx = Width/Nx
+            cell_size = CellSize(
+                dx*np.ones(Nx+2), np.array([0.0]), np.array([0.0]))
+            cell_location = CellLocation(
+                int_range(1, Nx)*dx-dx/2,
+                np.array([0.0]),
+                np.array([0.0]))
+            face_location = FaceLocation(
+                int_range(0, Nx)*dx,
+                np.array([0.0]),
+                np.array([0.0]))
+        dims = np.array([Nx], dtype=int)
+        cellsize = cell_size
+        cellcenters = cell_location
+        facecenters = face_location
+        corners = np.array([1], dtype=int)
+        edges = np.array([1], dtype=int)
+        return dims, cellsize, cellcenters, facecenters, corners, edges
 
     def __repr__(self):
         print(f"1D Cartesian mesh with {self.dims[0]} cells")
         return ""
 
-
-class Mesh2D(MeshStructure):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        super().__init__(dims, cell_size, cell_location,
-                         face_location, corners, edges)
-
     def cell_numbers(self):
-        Nx, Ny = self.dims
-        G = int_range(0, (Nx+2)*(Ny+2)-1)
-        return G.reshape(Nx+2, Ny+2)
+        Nx = self.dims[0]
+        return int_range(0, Nx+1)
 
-    def __repr__(self):
-        print(f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells")
-        return ""
-
-
-class Mesh3D(MeshStructure):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        super().__init__(dims, cell_size, cell_location,
-                         face_location, corners, edges)
-
-    def cell_numbers(self):
-        Nx, Ny, Nz = self.dims
-        G = int_range(0, (Nx+2)*(Ny+2)*(Nz+2)-1)
-        return G.reshape(Nx+2, Ny+2, Nz+2)
-
-    def __repr__(self):
-        print(
-            f"3D Cartesian mesh with Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells")
-        return ""
 
 
 class CylindricalGrid1D(Grid1D):
@@ -230,14 +239,14 @@ class CylindricalGrid1D(Grid1D):
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = _mesh_1d_param(*args)
+                = self._mesh_1d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
-
 
     def __repr__(self):
         print(f"1D Cylindrical (radial) mesh with Nr={self.dims[0]} cells")
         return ""
+
 
 
 class SphericalGrid1D(Grid1D):
@@ -289,7 +298,7 @@ class SphericalGrid1D(Grid1D):
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = _mesh_1d_param(*args)
+                = self._mesh_1d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -297,6 +306,45 @@ class SphericalGrid1D(Grid1D):
     def __repr__(self):
         print(f"1D Spherical mesh with Nr={self.dims[0]} cells")
         return ""
+
+
+
+
+
+#%% 
+#   2D and 3D Grids
+
+class Mesh2D(MeshStructure):
+    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+        super().__init__(dims, cell_size, cell_location,
+                         face_location, corners, edges)
+
+    def cell_numbers(self):
+        Nx, Ny = self.dims
+        G = int_range(0, (Nx+2)*(Ny+2)-1)
+        return G.reshape(Nx+2, Ny+2)
+
+    def __repr__(self):
+        print(f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells")
+        return ""
+
+
+class Mesh3D(MeshStructure):
+    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+        super().__init__(dims, cell_size, cell_location,
+                         face_location, corners, edges)
+
+    def cell_numbers(self):
+        Nx, Ny, Nz = self.dims
+        G = int_range(0, (Nx+2)*(Ny+2)*(Nz+2)-1)
+        return G.reshape(Nx+2, Ny+2, Nz+2)
+
+    def __repr__(self):
+        print(
+            f"3D Cartesian mesh with Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells")
+        return ""
+
+
 
 
 class MeshCylindrical2D(Mesh2D):
@@ -344,46 +392,13 @@ class MeshSpherical3D(Mesh3D):
 
 
 def _facelocation_to_cellsize(facelocation):
+    # When _mesh_2d_param and _mesh_3d_param become methods of Grid2D and Grid3D
+    # classes respectively, this function should logically become a method
+    # of MeshStructure
     return np.hstack([facelocation[1]-facelocation[0],
                       facelocation[1:]-facelocation[0:-1],
                       facelocation[-1]-facelocation[-2]])
 
-
-def _mesh_1d_param(*args):
-    if len(args) == 1:
-        # Use face locations
-        facelocationX = args[0]
-        Nx = facelocationX.size-1
-        cell_size_x = np.hstack([facelocationX[1]-facelocationX[0],
-                                 facelocationX[1:]-facelocationX[0:-1],
-                                 facelocationX[-1]-facelocationX[-2]])
-        cell_size = CellSize(cell_size_x, np.array([0.0]), np.array([0.0]))
-        cell_location = CellLocation(
-            0.5*(facelocationX[1:]+facelocationX[0:-1]), np.array([0.0]), np.array([0.0]))
-        face_location = FaceLocation(
-            facelocationX, np.array([0.0]), np.array([0.0]))
-    elif len(args) == 2:
-        # Use number of cells and domain length
-        Nx = args[0]
-        Width = args[1]
-        dx = Width/Nx
-        cell_size = CellSize(
-            dx*np.ones(Nx+2), np.array([0.0]), np.array([0.0]))
-        cell_location = CellLocation(
-            int_range(1, Nx)*dx-dx/2,
-            np.array([0.0]),
-            np.array([0.0]))
-        face_location = FaceLocation(
-            int_range(0, Nx)*dx,
-            np.array([0.0]),
-            np.array([0.0]))
-    dims = np.array([Nx], dtype=int)
-    cellsize = cell_size
-    cellcenters = cell_location
-    facecenters = face_location
-    corners = np.array([1], dtype=int)
-    edges = np.array([1], dtype=int)
-    return dims, cellsize, cellcenters, facecenters, corners, edges
 
 
 def _mesh_2d_param(*args):
