@@ -2,7 +2,7 @@ import numpy as np
 from typing import overload
 
 from .mesh import MeshStructure
-from .mesh import Grid1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 
@@ -56,7 +56,7 @@ class FaceVariable:
                     xvalue = faceval[0]*np.ones(Nx+1)
                     yvalue = np.array([])
                     zvalue = np.array([])
-            elif issubclass(type(mesh), Mesh2D):
+            elif issubclass(type(mesh), Grid2D):
                 Nx, Ny = mesh.dims
                 if np.isscalar(faceval):
                     xvalue = faceval*np.ones((Nx+1, Ny))
@@ -305,7 +305,7 @@ def faceLocations(m: MeshStructure):
         X.xvalue = m.facecenters.x
         return X
         
-    elif (type(m) is Mesh2D)\
+    elif (type(m) is Grid2D)\
        or (type(m) is MeshCylindrical2D)\
        or (type(m) is MeshRadial2D):
         X = FaceVariable(m, 0)

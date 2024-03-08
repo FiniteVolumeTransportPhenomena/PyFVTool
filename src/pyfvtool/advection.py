@@ -2,7 +2,7 @@
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Grid1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
@@ -18,7 +18,7 @@ def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
         ux_min[u_upwind.xvalue > 0.0] = 0.0
         ux_max[u_upwind.xvalue < 0.0] = 0.0
         return ux_min, ux_max
-    elif issubclass(type(u.domain), Mesh2D):
+    elif issubclass(type(u.domain), Grid2D):
         ux_min = np.copy(u.xvalue)
         ux_max = np.copy(u.xvalue)
         uy_min = np.copy(u.yvalue)
@@ -1352,7 +1352,7 @@ def convectionTerm(u: FaceVariable) -> csr_array:
         return convectionTerm1D(u)
     elif (type(u.domain) is CylindricalGrid1D):
         return convectionTermCylindrical1D(u)
-    elif (type(u.domain) is Mesh2D):
+    elif (type(u.domain) is Grid2D):
         return convectionTerm2D(u)[0]
     elif (type(u.domain) is MeshCylindrical2D):
         # raise Exception("Not implemented yet. Work in progress")
@@ -1395,7 +1395,7 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
         return convectionUpwindTerm1D(u, *args)
     elif (type(u.domain) is CylindricalGrid1D):
         return convectionUpwindTermCylindrical1D(u, *args)
-    elif (type(u.domain) is Mesh2D):
+    elif (type(u.domain) is Grid2D):
         return convectionUpwindTerm2D(u, *args)[0]
     elif (type(u.domain) is MeshCylindrical2D):
         # raise Exception("Not implemented yet. Work in progress")
@@ -1441,7 +1441,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
         return convectionTvdRHS1D(u, phi, FL, *args)
     elif (type(u.domain) is CylindricalGrid1D):
         return convectionTvdRHSCylindrical1D(u, phi, FL, *args)
-    elif (type(u.domain) is Mesh2D):
+    elif (type(u.domain) is Grid2D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHS2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is MeshCylindrical2D):

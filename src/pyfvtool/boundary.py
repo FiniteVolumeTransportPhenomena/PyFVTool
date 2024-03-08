@@ -5,7 +5,7 @@ import numpy as np
 from scipy.sparse import csr_array
 
 from .mesh import MeshStructure
-from .mesh import Grid1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .utilities import int_range
@@ -116,7 +116,7 @@ class BoundaryConditions1D(BoundaryConditionsBase):
 
 
 class BoundaryConditions2D(BoundaryConditionsBase):
-    def __init__(self, mesh: Mesh2D):
+    def __init__(self, mesh: Grid2D):
         Nx, Ny = mesh.dims
         left = BoundaryFace(np.ones(Ny), np.zeros(Ny), np.zeros((1, Ny)))
         right = BoundaryFace(np.ones(Ny), np.zeros(Ny), np.zeros(Ny))
@@ -157,7 +157,7 @@ def BoundaryConditions(mesh: MeshStructure):
         
     if issubclass(type(mesh), Grid1D):
         return BoundaryConditions1D(mesh)
-    elif issubclass(type(mesh), Mesh2D):
+    elif issubclass(type(mesh), Grid2D):
         return BoundaryConditions2D(mesh)
     elif issubclass(type(mesh), Mesh3D):
         return BoundaryConditions3D(mesh)
@@ -532,7 +532,7 @@ def cellValuesWithBoundaries(phi, BC) -> np.ndarray:
     
     if issubclass(type(BC.domain), Grid1D):
         return cellValuesWithBoundaries1D(phi, BC)
-    elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
+    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is MeshCylindrical2D):
         return cellValuesWithBoundaries2D(phi, BC)
     elif (type(BC.domain) is MeshRadial2D):
         return cellValuesWithBoundariesRadial2D(phi, BC)
@@ -1526,7 +1526,7 @@ def boundaryConditionsTerm(BC):
     
     if issubclass(type(BC.domain), Grid1D):
         return boundaryConditionsTerm1D(BC)
-    elif (type(BC.domain) is Mesh2D) or (type(BC.domain) is MeshCylindrical2D):
+    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is MeshCylindrical2D):
         return boundaryConditionsTerm2D(BC)
     elif (type(BC.domain) is MeshRadial2D):
         return boundaryConditionsTermRadial2D(BC)

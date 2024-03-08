@@ -4,7 +4,7 @@ import numpy as np
 from typing import overload
 
 from .mesh import MeshStructure
-from .mesh import Grid1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid1D, MeshCylindrical2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
@@ -90,7 +90,7 @@ class CellVariable:
     def internalCellValues(self):
         if issubclass(type(self.domain), Grid1D):
             return self.value[1:-1]
-        elif issubclass(type(self.domain), Mesh2D):
+        elif issubclass(type(self.domain), Grid2D):
             return self.value[1:-1, 1:-1]
         elif issubclass(type(self.domain), Mesh3D):
             return self.value[1:-1, 1:-1, 1:-1]
@@ -99,7 +99,7 @@ class CellVariable:
     def internalCellValues(self, values):
         if issubclass(type(self.domain), Grid1D):
             self.value[1:-1] = values
-        elif issubclass(type(self.domain), Mesh2D):
+        elif issubclass(type(self.domain), Grid2D):
             self.value[1:-1, 1:-1] = values
         elif issubclass(type(self.domain), Mesh3D):
             self.value[1:-1, 1:-1, 1:-1] = values
@@ -118,7 +118,7 @@ class CellVariable:
         if issubclass(type(self.domain), Grid1D):
             self.value[0] = 0.5*(self.value[1]+self.value[0])
             self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
-        elif issubclass(type(self.domain), Mesh2D):
+        elif issubclass(type(self.domain), Grid2D):
             self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
             self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
             self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
@@ -266,7 +266,7 @@ def cellVolume(m: MeshStructure):
         c=m.cellsize.x[1:-1]
     elif (type(m) is CylindricalGrid1D):
         c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
-    elif (type(m) is Mesh2D):
+    elif (type(m) is Grid2D):
         c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
     elif (type(m) is MeshCylindrical2D):
         c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
@@ -320,7 +320,7 @@ def cellLocations(m: MeshStructure):
      or (type(m) is CylindricalGrid1D):
         X = CellVariable(m, m.cellcenters.x)
         return X
-    elif (type(m) is Mesh2D)\
+    elif (type(m) is Grid2D)\
        or (type(m) is MeshCylindrical2D)\
        or (type(m) is MeshRadial2D): 
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
@@ -559,7 +559,7 @@ def BC2GhostCells(phi0):
     if issubclass(type(phi.domain), Grid1D):
         phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
         phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
         phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
         phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])

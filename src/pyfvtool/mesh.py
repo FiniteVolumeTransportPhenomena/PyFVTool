@@ -102,6 +102,10 @@ class MeshStructure:
 
 
 class Grid1D(MeshStructure):
+    """Mesh based on a 1D Cartesian grid
+    
+    """
+    
     @overload
     def __init__(self, Nx: int, Lx: float):
         ...
@@ -196,6 +200,10 @@ class Grid1D(MeshStructure):
 
 
 class CylindricalGrid1D(Grid1D):
+    """Mesh based on a 1D cylindrical grid
+    
+    The volume elements are cylindrical shells around a central axis
+    """
     @overload
     def __init__(self, Nx: int, Lx: float):
         ...
@@ -250,6 +258,12 @@ class CylindricalGrid1D(Grid1D):
 
 
 class SphericalGrid1D(Grid1D):
+    """Mesh based on a 1D spherical grid
+    
+    The volume elements are concentric spherical shells
+    """
+
+
     @overload
     def __init__(self, Nx: int, Lx: float):
         ...
@@ -314,10 +328,65 @@ class SphericalGrid1D(Grid1D):
 #%% 
 #   2D and 3D Grids
 
-class Mesh2D(MeshStructure):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class Grid2D(MeshStructure):
+    """Mesh based on a 2D Cartesian grid
+    
+    """
+    @overload
+    def __init__(self, Nx: int, Ny: int, Lx: float, Ly: float):
+        ...
+    
+    
+    @overload
+    def __init__(self, face_locationsX: np.ndarray,
+                     face_locationsY: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, dims, cellsize,
+                 cellcenters, facecenters, corners, edges):
+        ...
+
+    def __init__(self, *args):
+        """Create a Grid2D object from a list of cell face locations or from
+        number of cells and domain length.
+    
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+    
+        Returns
+        -------
+        Grid2D
+            A 2D mesh object.
+    
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import Grid2D
+        >>> mesh = Grid2D(10, 10, 10.0, 10.0)
+        >>> print(mesh)
+        """
+        if (len(args)==6):
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_2d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
+
 
     def cell_numbers(self):
         Nx, Ny = self.dims
@@ -347,7 +416,7 @@ class Mesh3D(MeshStructure):
 
 
 
-class MeshCylindrical2D(Mesh2D):
+class MeshCylindrical2D(Grid2D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -358,7 +427,7 @@ class MeshCylindrical2D(Mesh2D):
         return ""
 
 
-class MeshRadial2D(Mesh2D):
+class MeshRadial2D(Grid2D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -510,51 +579,6 @@ def _mesh_3d_param(*args):
 
 
 
-@overload
-def createMesh2D(Nx: int, Ny: int, Lx: float, Ly: float) -> Mesh2D:
-    ...
-
-
-@overload
-def createMesh2D(face_locationsX: np.ndarray,
-                 face_locationsY: np.ndarray) -> Mesh2D:
-    ...
-
-
-def createMesh2D(*args) -> Mesh2D:
-    """Create a Mesh2D object from a list of cell face locations or from
-    number of cells and domain length.
-
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Ny : int
-        Number of cells in the y direction.
-    Lx : float
-        Length of the domain in the x direction.
-    Ly : float
-        Length of the domain in the y direction.
-    face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-    face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-
-    Returns
-    -------
-    Mesh2D
-        A 2D mesh object.
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMesh2D
-    >>> mesh = createMesh2D(10, 10, 10.0, 10.0)
-    >>> print(mesh)
-    """
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
-        *args)
-    return Mesh2D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 @overload
