@@ -1,4 +1,4 @@
-ENABLE_LEGACY = True # enable/disable backward compatibility
+ENABLE_LEGACY = False # enable/disable backward compatibility
 
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
 from .mesh import Grid2D, createMesh3D,\

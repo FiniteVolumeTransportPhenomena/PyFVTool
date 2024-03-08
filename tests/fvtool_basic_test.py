@@ -8,7 +8,7 @@ from scipy.special import erf
 # an idea of the coverage, and can also serve as a guide to writing more
 # elaborate documentation for PyFVTool functions and classes.
 
-from pyfvtool import Grid1D, createMesh2D, createMesh3D
+from pyfvtool import Grid1D, Grid2D, createMesh3D
 from pyfvtool import CylindricalGrid1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import CellVariable, FaceVariable
@@ -55,7 +55,7 @@ N_mesh=7
 # create nonuniform mesh
 mesh_nonuniform= []
 mesh_nonuniform.append(Grid1D(X))
-mesh_nonuniform.append(createMesh2D(X, Y))
+mesh_nonuniform.append(Grid2D(X, Y))
 mesh_nonuniform.append(createMesh3D(X, Y, Z))
 mesh_nonuniform.append(CylindricalGrid1D(X))
 mesh_nonuniform.append(createMeshCylindrical2D(X, Y))
@@ -309,7 +309,7 @@ visualizeCells(c_old)
 
 # Testing 2D visualization
 #
-mm = createMesh2D(50, 50, 5*np.pi, 5*np.pi)
+mm = Grid2D(50, 50, 5*np.pi, 5*np.pi)
 XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters.y)
 vv = CellVariable(mm, np.cos(XX)*np.sin(YY))
 plt.figure(3)

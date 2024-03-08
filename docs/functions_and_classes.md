@@ -9,7 +9,7 @@ See also `__init__.py` in the `pyfvtool` module directory.
 Taken from test script:
 
 ```python
-from pyfvtool import Grid1D, createMesh2D, createMesh3D
+from pyfvtool import Grid1D, Grid2D, createMesh3D
 from pyfvtool import CylindricalGrid1D, createMeshCylindrical2D
 from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
 from pyfvtool import CellVariable, FaceVariable
@@ -28,7 +28,7 @@ from pyfvtool import visualizeCells
 
 ## Mesh definition
 
-### Cartesian grids: Grid1D, createMesh2D, createMesh3D
+### Cartesian grids: Grid1D, Grid2D, createMesh3D
 
 ### Cylindrical grids: CylindricalGrid1D, createMeshCylindrical2D, createMeshCylindrical3D
 
