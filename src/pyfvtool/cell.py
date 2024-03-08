@@ -5,7 +5,7 @@ from typing import overload
 
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Mesh3D
-from .mesh import CylindricalGrid1D, MeshCylindrical2D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
@@ -268,7 +268,7 @@ def cellVolume(m: MeshStructure):
         c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
     elif (type(m) is Grid2D):
         c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is MeshCylindrical2D):
+    elif (type(m) is CylindricalGrid2D):
         c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
     elif (type(m) is MeshRadial2D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
@@ -321,7 +321,7 @@ def cellLocations(m: MeshStructure):
         X = CellVariable(m, m.cellcenters.x)
         return X
     elif (type(m) is Grid2D)\
-       or (type(m) is MeshCylindrical2D)\
+       or (type(m) is CylindricalGrid2D)\
        or (type(m) is MeshRadial2D): 
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
         Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))

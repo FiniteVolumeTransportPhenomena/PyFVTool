@@ -323,10 +323,8 @@ class SphericalGrid1D(Grid1D):
 
 
 
-
-
 #%% 
-#   2D and 3D Grids
+#   2D Grids
 
 class Grid2D(MeshStructure):
     """Mesh based on a 2D Cartesian grid
@@ -398,28 +396,67 @@ class Grid2D(MeshStructure):
         return ""
 
 
-class Mesh3D(MeshStructure):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class CylindricalGrid2D(Grid2D):
+    """Mesh based on a 2D cylindrical grid
+
+    """
+    
+    @overload
+    def __init__(self, Nx: int, Ny: int,
+                 Lx: float, Ly: float):
+        ...
+        
+    @overload
+    def __init__(self, face_locationsX: np.ndarray,
+                 face_locationsY: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, dims, cellsize,
+                 cellcenters, facecenters, corners, edges):
+        ...
+    
+
+    def __init__(self, *args):
+        """Create a CylindricalGrid2D object from a list of cell face locations or from
+        number of cells and domain length.
+        
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+        
+        Returns
+        -------
+        CylindricalGrid2D
+            A 2D cylindrical mesh object.
+            
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import CylindricalGrid2D
+        >>> mesh = CylindricalGrid2D(10, 10, 10.0, 10.0)
+        >>> print(mesh)
+        """
+        if (len(args)==6):
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_2d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
-    def cell_numbers(self):
-        Nx, Ny, Nz = self.dims
-        G = int_range(0, (Nx+2)*(Ny+2)*(Nz+2)-1)
-        return G.reshape(Nx+2, Ny+2, Nz+2)
-
-    def __repr__(self):
-        print(
-            f"3D Cartesian mesh with Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells")
-        return ""
-
-
-
-
-class MeshCylindrical2D(Grid2D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        super().__init__(dims, cell_size, cell_location,
-                         face_location, corners, edges)
 
     def __repr__(self):
         print(
@@ -436,38 +473,6 @@ class MeshRadial2D(Grid2D):
         print(
             f"2D Radial mesh with Nr={self.dims[0]}xN_theta={self.dims[1]} cells")
         return ""
-
-
-class MeshCylindrical3D(Mesh3D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        super().__init__(dims, cell_size, cell_location,
-                         face_location, corners, edges)
-
-    def __repr__(self):
-        print(
-            f"3D Cylindrical mesh with Nr={self.dims[0]}xN_theta={self.dims[1]}xNz={self.dims[1]} cells")
-        return ""
-
-
-class MeshSpherical3D(Mesh3D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
-        super().__init__(dims, cell_size, cell_location,
-                         face_location, corners, edges)
-
-    def __repr__(self):
-        print(
-            f"3D Shperical mesh with Nr={self.dims[0]}xN_theta={self.dims[1]}xN_phi={self.dims[1]} cells")
-        return ""
-
-
-def _facelocation_to_cellsize(facelocation):
-    # When _mesh_2d_param and _mesh_3d_param become methods of Grid2D and Grid3D
-    # classes respectively, this function should logically become a method
-    # of MeshStructure
-    return np.hstack([facelocation[1]-facelocation[0],
-                      facelocation[1:]-facelocation[0:-1],
-                      facelocation[-1]-facelocation[-2]])
-
 
 
 def _mesh_2d_param(*args):
@@ -517,6 +522,118 @@ def _mesh_2d_param(*args):
     corners = G.reshape(Nx+2, Ny+2)[[0, -1, 0, -1], [0, 0, -1, -1]]
     edges = np.array([1], dtype=int)
     return dims, cellsize, cellcenters, facecenters, corners, edges
+
+
+@overload
+def createMeshRadial2D(Nx: int, Ny: int, Lx: float, Ly: float) -> MeshRadial2D:
+    ...
+
+
+@overload
+def createMeshRadial2D(face_locationsX: np.ndarray,
+                       face_locationsY: np.ndarray) -> MeshRadial2D:
+    ...
+
+
+def createMeshRadial2D(*args) -> MeshRadial2D:
+    """
+    Create a MeshRadial2D object from a list of cell face locations or from
+    number of cells and domain length.
+    
+    Parameters
+    ----------
+    Nx : int
+        Number of cells in the x direction.
+    Ny : int
+        Number of cells in the y direction.
+    Lx : float
+        Length of the domain in the x direction.
+    Ly : float
+        Length of the domain in the y direction.
+    face_locationsX : ndarray
+        Locations of the cell faces in the x direction.
+    face_locationsY : ndarray
+        Locations of the cell faces in the y direction.
+    
+    Returns
+    -------
+    MeshRadial2D
+        A 2D radial mesh object.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import createMeshRadial2D
+    >>> mesh = createMeshRadial2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
+
+    Notes
+    -----
+    The mesh is created in radial (cylindrical) coordinates.
+    """
+    if len(args) == 2:
+        theta_max = args[1][-1]
+    else:
+        theta_max = args[3]
+    if theta_max > 2*np.pi:
+        warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
+    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
+        *args)
+    return MeshRadial2D(dims, cellsize, cellcenters, facecenters, corners, edges)
+
+
+
+
+#%%
+#   3D Grids
+
+
+class Mesh3D(MeshStructure):
+    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+        super().__init__(dims, cell_size, cell_location,
+                         face_location, corners, edges)
+
+    def cell_numbers(self):
+        Nx, Ny, Nz = self.dims
+        G = int_range(0, (Nx+2)*(Ny+2)*(Nz+2)-1)
+        return G.reshape(Nx+2, Ny+2, Nz+2)
+
+    def __repr__(self):
+        print(
+            f"3D Cartesian mesh with Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells")
+        return ""
+
+
+class MeshCylindrical3D(Mesh3D):
+    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+        super().__init__(dims, cell_size, cell_location,
+                         face_location, corners, edges)
+
+    def __repr__(self):
+        print(
+            f"3D Cylindrical mesh with Nr={self.dims[0]}xN_theta={self.dims[1]}xNz={self.dims[1]} cells")
+        return ""
+
+
+class MeshSpherical3D(Mesh3D):
+    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+        super().__init__(dims, cell_size, cell_location,
+                         face_location, corners, edges)
+
+    def __repr__(self):
+        print(
+            f"3D Shperical mesh with Nr={self.dims[0]}xN_theta={self.dims[1]}xN_phi={self.dims[1]} cells")
+        return ""
+
+
+def _facelocation_to_cellsize(facelocation):
+    # When _mesh_2d_param and _mesh_3d_param become methods of Grid2D and Grid3D
+    # classes respectively, this function should logically become a method
+    # of MeshStructure
+    return np.hstack([facelocation[1]-facelocation[0],
+                      facelocation[1:]-facelocation[0:-1],
+                      facelocation[-1]-facelocation[-2]])
+
 
 
 def _mesh_3d_param(*args):
@@ -638,53 +755,6 @@ def createMesh3D(*args) -> Mesh3D:
 
 
 
-@overload
-def createMeshCylindrical2D(Nx: int, Ny: int,
-                            Lx: float, Ly: float) -> MeshCylindrical2D:
-    ...
-
-
-@overload
-def createMeshCylindrical2D(face_locationsX: np.ndarray,
-                            face_locationsY: np.ndarray) -> MeshCylindrical2D:
-    ...
-
-
-def createMeshCylindrical2D(*args) -> MeshCylindrical2D:
-    """Create a MeshCylindrical2D object from a list of cell face locations or from
-    number of cells and domain length.
-    
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Ny : int
-        Number of cells in the y direction.
-    Lx : float
-        Length of the domain in the x direction.
-    Ly : float
-        Length of the domain in the y direction.
-    face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-    face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-    
-    Returns
-    -------
-    MeshCylindrical2D
-        A 2D cylindrical mesh object.
-        
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshCylindrical2D
-    >>> mesh = createMeshCylindrical2D(10, 10, 10.0, 10.0)
-    >>> print(mesh)
-    """
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
-        *args)
-    return MeshCylindrical2D(dims, cellsize, cellcenters, facecenters, corners, edges)
-
 
 @overload
 def createMeshCylindrical3D(Nx: int, Ny: int,
@@ -751,64 +821,6 @@ def createMeshCylindrical3D(*args) -> MeshCylindrical3D:
     dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_3d_param(
         *args)
     return MeshCylindrical3D(dims, cellsize, cellcenters, facecenters, corners, edges)
-
-
-@overload
-def createMeshRadial2D(Nx: int, Ny: int, Lx: float, Ly: float) -> MeshRadial2D:
-    ...
-
-
-@overload
-def createMeshRadial2D(face_locationsX: np.ndarray,
-                       face_locationsY: np.ndarray) -> MeshRadial2D:
-    ...
-
-
-def createMeshRadial2D(*args) -> MeshRadial2D:
-    """
-    Create a MeshRadial2D object from a list of cell face locations or from
-    number of cells and domain length.
-    
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Ny : int
-        Number of cells in the y direction.
-    Lx : float
-        Length of the domain in the x direction.
-    Ly : float
-        Length of the domain in the y direction.
-    face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-    face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-    
-    Returns
-    -------
-    MeshRadial2D
-        A 2D radial mesh object.
-    
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshRadial2D
-    >>> mesh = createMeshRadial2D(10, 10, 10.0, 10.0)
-    >>> print(mesh)
-
-    Notes
-    -----
-    The mesh is created in radial (cylindrical) coordinates.
-    """
-    if len(args) == 2:
-        theta_max = args[1][-1]
-    else:
-        theta_max = args[3]
-    if theta_max > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
-        *args)
-    return MeshRadial2D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 @overload

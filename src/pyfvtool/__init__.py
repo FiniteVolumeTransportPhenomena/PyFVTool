@@ -1,9 +1,8 @@
 ENABLE_LEGACY = False # enable/disable backward compatibility
 
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
-from .mesh import Grid2D, createMesh3D,\
-                  createMeshCylindrical2D,\
-                  createMeshCylindrical3D, createMeshRadial2D,\
+from .mesh import Grid2D, CylindricalGrid2D, createMeshRadial2D 
+from .mesh import createMesh3D, createMeshCylindrical3D,\
                   createMeshSpherical3D
 from .advection import convectionTerm, convectionTvdRHSTerm,\
                        convectionUpwindTerm
@@ -35,6 +34,8 @@ if ENABLE_LEGACY:
     from .legacy import createMeshCylindrical1D
     from .legacy import createMeshSpherical1D
     from .legacy import createMesh2D
+    from .legacy import createMeshCylindrical2D
+
 
 __author__ = (
     "Ali A. Eftekhari"

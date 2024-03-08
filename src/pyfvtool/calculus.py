@@ -1,7 +1,7 @@
 import numpy as np
 
 from .mesh import Grid1D, Grid2D, Mesh3D
-from .mesh import CylindricalGrid1D, MeshCylindrical2D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
 from .face import FaceVariable
@@ -38,7 +38,7 @@ def gradientTerm(phi: CellVariable):
                      (phi.value[1:]-phi.value[0:-1])/dx,
                      np.array([]),
                      np.array([]))
-    elif (type(phi.domain) is Grid2D) or (type(phi.domain) is MeshCylindrical2D):
+    elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         return FaceVariable(phi.domain,
@@ -322,7 +322,7 @@ def divergenceTerm(F: FaceVariable):
         RHSdiv = divergenceTermCylindrical1D(F)
     elif (type(F.domain) is Grid2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTerm2D(F)
-    elif (type(F.domain) is MeshCylindrical2D):
+    elif (type(F.domain) is CylindricalGrid2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermCylindrical2D(F)
     elif (type(F.domain) is MeshRadial2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermRadial2D(F)

@@ -1,7 +1,7 @@
 import numpy as np
 
 from .mesh import Grid1D, Grid2D, Mesh3D
-from .mesh import MeshCylindrical2D
+from .mesh import CylindricalGrid2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .cell import CellVariable
 from .cell import get_CellVariable_profile1D, get_CellVariable_profile2D
@@ -44,7 +44,7 @@ def visualizeCells(phi: CellVariable,
         plt.plot(x, phi0)
         # plt.show()
 
-    elif (type(phi.domain) is Grid2D) or (type(phi.domain) is MeshCylindrical2D):
+    elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],

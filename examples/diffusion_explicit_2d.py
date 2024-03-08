@@ -10,7 +10,7 @@ from scipy.special import erf
 # define the domain
 L = 5.0  # domain length
 Nx = 100 # number of cells
-meshstruct = pf.createMeshCylindrical2D(Nx, Nx, L, L)
+meshstruct = pf.CylindricalGrid2D(Nx, Nx, L, L)
 BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.bottom.a[:] = 0.0 
 BC.bottom.b[:] = 1.0 

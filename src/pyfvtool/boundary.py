@@ -6,7 +6,7 @@ from scipy.sparse import csr_array
 
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Mesh3D
-from .mesh import MeshCylindrical2D
+from .mesh import CylindricalGrid2D
 from .mesh import MeshRadial2D, MeshCylindrical3D
 from .utilities import int_range
 
@@ -532,7 +532,7 @@ def cellValuesWithBoundaries(phi, BC) -> np.ndarray:
     
     if issubclass(type(BC.domain), Grid1D):
         return cellValuesWithBoundaries1D(phi, BC)
-    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is MeshCylindrical2D):
+    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is CylindricalGrid2D):
         return cellValuesWithBoundaries2D(phi, BC)
     elif (type(BC.domain) is MeshRadial2D):
         return cellValuesWithBoundariesRadial2D(phi, BC)
@@ -1526,7 +1526,7 @@ def boundaryConditionsTerm(BC):
     
     if issubclass(type(BC.domain), Grid1D):
         return boundaryConditionsTerm1D(BC)
-    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is MeshCylindrical2D):
+    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is CylindricalGrid2D):
         return boundaryConditionsTerm2D(BC)
     elif (type(BC.domain) is MeshRadial2D):
         return boundaryConditionsTermRadial2D(BC)
