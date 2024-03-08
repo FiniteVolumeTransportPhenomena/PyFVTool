@@ -6,6 +6,9 @@ from typing import overload
 from .utilities import int_range
 
 
+#%%
+#   General data structures for describing meshes
+
 class CellSize:
     def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray):
         self.x = x
@@ -154,6 +157,14 @@ class Grid1D(MeshStructure):
                          face_location, corners, edges)
 
     def _mesh_1d_param(self, *args):
+        # In the future, when implementing specific coordinate labels (e.g. (r,z) for 2D
+        # cylindrical), we may create subclasses for CellSize, CellLocation,
+        # FaceLocation, and pass the suitable subclasses as the first three positional
+        # arguments to this _mesh_2d_param method, before *args. This will
+        # allow this method to apply the suitable subclass handling the
+        # coordinate labels. Of course, we should start with renaming the existing
+        # 'internal' x,y,z to _x,_y,_z (same for xvalues, yvalues, zvalues)
+
         if len(args) == 1:
             # Use face locations
             facelocationX = args[0]
@@ -381,26 +392,82 @@ class Grid2D(MeshStructure):
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = _mesh_2d_param(*args)
+                = self._mesh_2d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
+    def _mesh_2d_param(self, *args):
+        # In the future, when implementing specific coordinate labels (e.g. (r,z) for 2D
+        # cylindrical), we may create subclasses for CellSize, CellLocation,
+        # FaceLocation, and pass the suitable subclasses as the first three positional
+        # arguments to this _mesh_2d_param method, before *args. This will
+        # allow this method to apply the suitable subclass handling the
+        # coordinate labels. Of course, we should start with renaming the existing
+        # 'internal' x,y,z to _x,_y,_z (same for xvalues, yvalues, zvalues)
+
+        if len(args) == 2:
+            # Use face locations
+            facelocationX = args[0]
+            facelocationY = args[1]
+            Nx = facelocationX.size-1
+            Ny = facelocationY.size-1
+            cell_size = CellSize(_facelocation_to_cellsize(facelocationX),
+                                 _facelocation_to_cellsize(facelocationY),
+                                 np.array([0.0]))
+            cell_location = CellLocation(
+                0.5*(facelocationX[1:]+facelocationX[0:-1]),
+                0.5*(facelocationY[1:]+facelocationY[0:-1]),
+                np.array([0.0]))
+            face_location = FaceLocation(
+                facelocationX,
+                facelocationY,
+                np.array([0.0]))
+        elif len(args) == 4:
+            # Use number of cells and domain length
+            Nx = args[0]
+            Ny = args[1]
+            Width = args[2]
+            Height = args[3]
+            dx = Width/Nx
+            dy = Height/Ny
+            cell_size = CellSize(
+                dx*np.ones(Nx+2),
+                dy*np.ones(Ny+2),
+                np.array([0.0]))
+            cell_location = CellLocation(
+                int_range(1, Nx)*dx-dx/2,
+                int_range(1, Ny)*dy-dy/2,
+                np.array([0.0]))
+            face_location = FaceLocation(
+                int_range(0, Nx)*dx,
+                int_range(0, Ny)*dy,
+                np.array([0.0]))
+    
+        dims = np.array([Nx, Ny], dtype=int)
+        cellsize = cell_size
+        cellcenters = cell_location
+        facecenters = face_location
+        G = int_range(1, (Nx+2)*(Ny+2))-1
+        corners = G.reshape(Nx+2, Ny+2)[[0, -1, 0, -1], [0, 0, -1, -1]]
+        edges = np.array([1], dtype=int)
+        return dims, cellsize, cellcenters, facecenters, corners, edges
+
+    def __repr__(self):
+        print(f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells")
+        return ""
+    
 
     def cell_numbers(self):
         Nx, Ny = self.dims
         G = int_range(0, (Nx+2)*(Ny+2)-1)
         return G.reshape(Nx+2, Ny+2)
 
-    def __repr__(self):
-        print(f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells")
-        return ""
 
 
 class CylindricalGrid2D(Grid2D):
     """Mesh based on a 2D cylindrical grid (r, z)
 
     """
-    
     @overload
     def __init__(self, Nx: int, Ny: int,
                  Lx: float, Ly: float):
@@ -415,7 +482,6 @@ class CylindricalGrid2D(Grid2D):
     def __init__(self, dims, cellsize,
                  cellcenters, facecenters, corners, edges):
         ...
-    
 
     def __init__(self, *args):
         """Create a CylindricalGrid2D object from a list of cell face locations or from
@@ -453,7 +519,7 @@ class CylindricalGrid2D(Grid2D):
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = _mesh_2d_param(*args)
+                = self._mesh_2d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -464,11 +530,11 @@ class CylindricalGrid2D(Grid2D):
         return ""
 
 
+
 class PolarGrid2D(Grid2D):
     """Mesh based on a 2D polar grid (r, theta)
 
     """
-    
     @overload
     def __init__(self, Nx: int, Ny: int, Lx: float, Ly: float):
         ...
@@ -532,7 +598,7 @@ class PolarGrid2D(Grid2D):
             if (theta_max > 2*np.pi):
                 warn("Recreate the mesh with an upper bound of 2*pi for \\theta or there will be unknown consequences!")
             dims, cell_size, cell_location, face_location, corners, edges\
-                = _mesh_2d_param(*args)
+                = self._mesh_2d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -540,56 +606,6 @@ class PolarGrid2D(Grid2D):
         print(
             f"2D Polar mesh with Nr={self.dims[0]}xN_theta={self.dims[1]} cells")
         return ""
-
-
-def _mesh_2d_param(*args):
-    if len(args) == 2:
-        # Use face locations
-        facelocationX = args[0]
-        facelocationY = args[1]
-        Nx = facelocationX.size-1
-        Ny = facelocationY.size-1
-        cell_size = CellSize(_facelocation_to_cellsize(facelocationX),
-                             _facelocation_to_cellsize(facelocationY),
-                             np.array([0.0]))
-        cell_location = CellLocation(
-            0.5*(facelocationX[1:]+facelocationX[0:-1]),
-            0.5*(facelocationY[1:]+facelocationY[0:-1]),
-            np.array([0.0]))
-        face_location = FaceLocation(
-            facelocationX,
-            facelocationY,
-            np.array([0.0]))
-    elif len(args) == 4:
-        # Use number of cells and domain length
-        Nx = args[0]
-        Ny = args[1]
-        Width = args[2]
-        Height = args[3]
-        dx = Width/Nx
-        dy = Height/Ny
-        cell_size = CellSize(
-            dx*np.ones(Nx+2),
-            dy*np.ones(Ny+2),
-            np.array([0.0]))
-        cell_location = CellLocation(
-            int_range(1, Nx)*dx-dx/2,
-            int_range(1, Ny)*dy-dy/2,
-            np.array([0.0]))
-        face_location = FaceLocation(
-            int_range(0, Nx)*dx,
-            int_range(0, Ny)*dy,
-            np.array([0.0]))
-
-    dims = np.array([Nx, Ny], dtype=int)
-    cellsize = cell_size
-    cellcenters = cell_location
-    facecenters = face_location
-    G = int_range(1, (Nx+2)*(Ny+2))-1
-    corners = G.reshape(Nx+2, Ny+2)[[0, -1, 0, -1], [0, 0, -1, -1]]
-    edges = np.array([1], dtype=int)
-    return dims, cellsize, cellcenters, facecenters, corners, edges
-
 
 
 
@@ -646,8 +662,15 @@ def _facelocation_to_cellsize(facelocation):
                       facelocation[-1]-facelocation[-2]])
 
 
-
 def _mesh_3d_param(*args):
+    # In the future, when implementing specific coordinate labels (e.g. (r,z) for 2D
+    # cylindrical), we may create subclasses for CellSize, CellLocation,
+    # FaceLocation, and pass the suitable subclasses as the first three positional
+    # arguments to this _mesh_3d_param method, before *args. This will
+    # allow this method to apply the suitable subclass handling the
+    # coordinate labels. Of course, we should start with renaming the existing
+    # 'internal' x,y,z to _x,_y,_z (same for xvalues, yvalues, zvalues)
+
     if len(args) == 3:
         # Use face locations
         facelocationX = args[0]
