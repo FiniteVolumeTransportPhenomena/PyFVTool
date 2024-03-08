@@ -102,7 +102,7 @@ class MeshStructure:
 
 
 class Grid1D(MeshStructure):
-    """Mesh based on a 1D Cartesian grid
+    """Mesh based on a 1D Cartesian grid (x)
     
     """
     
@@ -200,7 +200,7 @@ class Grid1D(MeshStructure):
 
 
 class CylindricalGrid1D(Grid1D):
-    """Mesh based on a 1D cylindrical grid
+    """Mesh based on a 1D cylindrical grid (r)
     
     The volume elements are cylindrical shells around a central axis
     """
@@ -258,7 +258,7 @@ class CylindricalGrid1D(Grid1D):
 
 
 class SphericalGrid1D(Grid1D):
-    """Mesh based on a 1D spherical grid
+    """Mesh based on a 1D spherical grid (r)
     
     The volume elements are concentric spherical shells
     """
@@ -327,7 +327,7 @@ class SphericalGrid1D(Grid1D):
 #   2D Grids
 
 class Grid2D(MeshStructure):
-    """Mesh based on a 2D Cartesian grid
+    """Mesh based on a 2D Cartesian grid (x, y)
     
     """
     @overload
@@ -397,7 +397,7 @@ class Grid2D(MeshStructure):
 
 
 class CylindricalGrid2D(Grid2D):
-    """Mesh based on a 2D cylindrical grid
+    """Mesh based on a 2D cylindrical grid (r, z)
 
     """
     
@@ -464,14 +464,81 @@ class CylindricalGrid2D(Grid2D):
         return ""
 
 
-class MeshRadial2D(Grid2D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class PolarGrid2D(Grid2D):
+    """Mesh based on a 2D polar grid (r, theta)
+
+    """
+    
+    @overload
+    def __init__(self, Nx: int, Ny: int, Lx: float, Ly: float):
+        ...
+    
+    
+    @overload
+    def __init__(self,  face_locationsX: np.ndarray,
+                        face_locationsY: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, dims, cellsize,
+                 cellcenters, facecenters, corners, edges):
+        ...
+
+
+    def __init__(self, *args):
+        """
+        Create a PolarGrid2D object from a list of cell face locations or from
+        number of cells and domain length.
+        
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+        
+        Returns
+        -------
+        PolarGrid2D
+            A 2D radial mesh object.
+        
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import PolarGrid2D
+        >>> mesh = PolarGrid2D(10, 10, 10.0, 10.0)
+        >>> print(mesh)
+    
+        Notes
+        -----
+        The mesh is created in radial (cylindrical) coordinates.
+        """
+        if (len(args)==6):
+            dims, cell_size, cell_location,\
+                  face_location, corners, edges= args
+        else:
+            if len(args) == 2:
+                theta_max = args[1][-1]
+            else:
+                theta_max = args[3]
+            if (theta_max > 2*np.pi):
+                warn("Recreate the mesh with an upper bound of 2*pi for \\theta or there will be unknown consequences!")
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_2d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
     def __repr__(self):
         print(
-            f"2D Radial mesh with Nr={self.dims[0]}xN_theta={self.dims[1]} cells")
+            f"2D Polar mesh with Nr={self.dims[0]}xN_theta={self.dims[1]} cells")
         return ""
 
 
@@ -524,62 +591,6 @@ def _mesh_2d_param(*args):
     return dims, cellsize, cellcenters, facecenters, corners, edges
 
 
-@overload
-def createMeshRadial2D(Nx: int, Ny: int, Lx: float, Ly: float) -> MeshRadial2D:
-    ...
-
-
-@overload
-def createMeshRadial2D(face_locationsX: np.ndarray,
-                       face_locationsY: np.ndarray) -> MeshRadial2D:
-    ...
-
-
-def createMeshRadial2D(*args) -> MeshRadial2D:
-    """
-    Create a MeshRadial2D object from a list of cell face locations or from
-    number of cells and domain length.
-    
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Ny : int
-        Number of cells in the y direction.
-    Lx : float
-        Length of the domain in the x direction.
-    Ly : float
-        Length of the domain in the y direction.
-    face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-    face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-    
-    Returns
-    -------
-    MeshRadial2D
-        A 2D radial mesh object.
-    
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshRadial2D
-    >>> mesh = createMeshRadial2D(10, 10, 10.0, 10.0)
-    >>> print(mesh)
-
-    Notes
-    -----
-    The mesh is created in radial (cylindrical) coordinates.
-    """
-    if len(args) == 2:
-        theta_max = args[1][-1]
-    else:
-        theta_max = args[3]
-    if theta_max > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for \theta or there will be unknown consequences!")
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_2d_param(
-        *args)
-    return MeshRadial2D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 

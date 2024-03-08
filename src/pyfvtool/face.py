@@ -4,7 +4,7 @@ from typing import overload
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, MeshCylindrical3D
 
 
 
@@ -307,7 +307,7 @@ def faceLocations(m: MeshStructure):
         
     elif (type(m) is Grid2D)\
        or (type(m) is CylindricalGrid2D)\
-       or (type(m) is MeshRadial2D):
+       or (type(m) is PolarGrid2D):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
         X.xvalue = np.tile(m.facecenters.x[:, np.newaxis], (1, N[1]))

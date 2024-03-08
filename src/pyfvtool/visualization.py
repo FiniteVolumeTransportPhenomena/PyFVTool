@@ -2,7 +2,7 @@ import numpy as np
 
 from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, MeshCylindrical3D
 from .cell import CellVariable
 from .cell import get_CellVariable_profile1D, get_CellVariable_profile2D
 from .cell import get_CellVariable_profile3D
@@ -72,7 +72,7 @@ def visualizeCells(phi: CellVariable,
                        cmap=cmap, shading=shading)
         # plt.show()
 
-    elif (type(phi.domain) is MeshRadial2D):
+    elif (type(phi.domain) is PolarGrid2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],

@@ -2,7 +2,7 @@ import numpy as np
 
 from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, MeshCylindrical3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -45,7 +45,7 @@ def gradientTerm(phi: CellVariable):
                      (phi.value[1:, 1:-1]-phi.value[0:-1, 1:-1])/dx[:,np.newaxis],
                      (phi.value[1:-1, 1:]-phi.value[1:-1, 0:-1])/dy,
                      np.array([]))
-    elif (type(phi.domain) is MeshRadial2D):
+    elif (type(phi.domain) is PolarGrid2D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dtheta = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         rp = phi.domain.cellcenters.x
@@ -189,8 +189,8 @@ def divergenceTermCylindrical2D(F:FaceVariable):
     return RHSdiv, RHSdivx, RHSdivy
 
 
-# =============== Divergence 2D Radial Term ============================
-def divergenceTermRadial2D(F:FaceVariable):
+# =============== Divergence 2D Polar Term ============================
+def divergenceTermPolar2D(F:FaceVariable):
     # This def calculates the divergence of a field
     # using its face
     # extract data from the mesh structure
@@ -324,8 +324,8 @@ def divergenceTerm(F: FaceVariable):
         RHSdiv, RHSdivx, RHSdivy = divergenceTerm2D(F)
     elif (type(F.domain) is CylindricalGrid2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermCylindrical2D(F)
-    elif (type(F.domain) is MeshRadial2D):
-        RHSdiv, RHSdivx, RHSdivy = divergenceTermRadial2D(F)
+    elif (type(F.domain) is PolarGrid2D):
+        RHSdiv, RHSdivx, RHSdivy = divergenceTermPolar2D(F)
     elif (type(F.domain) is Mesh3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTerm3D(F)
     elif (type(F.domain) is MeshCylindrical3D):

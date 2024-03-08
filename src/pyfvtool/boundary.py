@@ -7,7 +7,7 @@ from scipy.sparse import csr_array
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Mesh3D
 from .mesh import CylindricalGrid2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, MeshCylindrical3D
 from .utilities import int_range
 
 
@@ -454,9 +454,9 @@ def cellValuesWithBoundariesCylindrical3D(phi, BC):
     return phiBC
 
 
-def cellValuesWithBoundariesRadial2D(phi, BC):
+def cellValuesWithBoundariesPolar2D(phi, BC):
     """
-    cellValuesWithBoundaries for Radial2D mesh
+    cellValuesWithBoundaries for Polar2D mesh
     """
     
     # extract data from the mesh structure
@@ -534,8 +534,8 @@ def cellValuesWithBoundaries(phi, BC) -> np.ndarray:
         return cellValuesWithBoundaries1D(phi, BC)
     elif (type(BC.domain) is Grid2D) or (type(BC.domain) is CylindricalGrid2D):
         return cellValuesWithBoundaries2D(phi, BC)
-    elif (type(BC.domain) is MeshRadial2D):
-        return cellValuesWithBoundariesRadial2D(phi, BC)
+    elif (type(BC.domain) is PolarGrid2D):
+        return cellValuesWithBoundariesPolar2D(phi, BC)
     elif (type(BC.domain) is Mesh3D):
         return cellValuesWithBoundaries3D(phi, BC)
     elif (type(BC.domain) is MeshCylindrical3D):
@@ -1075,7 +1075,7 @@ def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
     return BCMatrix, BCRHS
 
 
-def boundaryConditionsTermRadial2D(BC: BoundaryConditions2D):
+def boundaryConditionsTermPolar2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
@@ -1528,8 +1528,8 @@ def boundaryConditionsTerm(BC):
         return boundaryConditionsTerm1D(BC)
     elif (type(BC.domain) is Grid2D) or (type(BC.domain) is CylindricalGrid2D):
         return boundaryConditionsTerm2D(BC)
-    elif (type(BC.domain) is MeshRadial2D):
-        return boundaryConditionsTermRadial2D(BC)
+    elif (type(BC.domain) is PolarGrid2D):
+        return boundaryConditionsTermPolar2D(BC)
     elif (type(BC.domain) is Mesh3D):
         return boundaryConditionsTerm3D(BC)
     elif (type(BC.domain) is MeshCylindrical3D):
