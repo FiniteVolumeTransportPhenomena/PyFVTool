@@ -17,7 +17,8 @@ https://github.com/simulkade/FVTool/tree/master/Examples/External/Diffusion1DSph
 script:
     diffusion1Dspherical_FVTool.m
     
-230418  **UNFINISHED PROGRAM. WORK IN PROGRESS**
+240309  **UNFINISHED PROGRAM. WORK IN PROGRESS.** Awaiting implementation of
+        terms for SphericalGrid1D.
 """
 import numpy as np
 from numpy import pi
