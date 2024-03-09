@@ -855,10 +855,95 @@ class CylindricalGrid3D(Grid3D):
         return ""
 
 
-class MeshSpherical3D(Grid3D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class SphericalGrid3D(Grid3D):
+    """Mesh based on a 3D spherical grid (r, theta, phi)"""
+    
+    @overload
+    def __init__(self, Nx: int, Ny: int, Nz: int,
+                       Lx: float, Ly: float, Lz: float):
+        ...
+    
+    @overload
+    def __init__(self, face_locationsX: np.ndarray,
+                       face_locationsY: np.ndarray,
+                       face_locationsZ: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, dims, cellsize,
+                       cellcenters, facecenters, corners, edges):
+        ...
+
+
+    def __init__(self, *args):
+        """
+        Create a SphericalGrid3D object from a list of cell face locations or from
+        number of cells and domain length.
+    
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Nz : int
+            Number of cells in the z direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        Lz : float
+            Length of the domain in the z direction.
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+        face_locationsZ : ndarray
+            Locations of the cell faces in the z direction.
+        
+        Returns
+        -------
+        SphericalGrid3D
+            A 3D spherical mesh object.
+        
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import SphericalGrid3D
+        >>> mesh = SphericalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)
+        >>> print(mesh)
+    
+        Notes
+        -----
+        The mesh is created in spherical coordinates.
+        """
+        direct_init = False # Flag to indicate if this is a 'direct' __init__
+                            # not requiring any parsing of arguments.
+                            # These 'direct' instantiantions are used
+                            # internally.
+        if len(args)==6:
+            # Resolve ambiguous @overload situation for 3D meshes
+            # not very elegant, but it works
+            if isinstance(args[0], np.ndarray):    
+                direct_init = True
+                
+        if direct_init:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            if args[4] > 2*np.pi:
+                warn("Recreate the mesh with an upper bound of 2*pi for \\theta"\
+                     " or there will be unknown consequences!")
+            if args[5] > 2*np.pi:
+                warn("Recreate the mesh with an upper bound of 2*pi for \\phi"\
+                     " or there will be unknown consequences!")
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_3d_param(*args)
+
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
+
+
 
     def __repr__(self):
         print(
@@ -940,69 +1025,3 @@ def _mesh_3d_param(*args):
                        G[1:-1, 0, [0, -1]].flatten(),
                        G[1:-1, -1, [0, -1]].flatten()])
     return dims, cellsize, cellcenters, facecenters, corners, edges
-
-
-
-@overload
-def createMeshSpherical3D(Nx: int, Ny: int, Nz: int,
-                          Lx: float, Ly: float, Lz: float) -> MeshSpherical3D:
-    ...
-
-@overload
-def createMeshSpherical3D(face_locationsX: np.ndarray, face_locationsY: np.ndarray,
-                          face_locationsZ: np.ndarray) -> MeshSpherical3D:
-    ...
-
-
-def createMeshSpherical3D(*args) -> MeshSpherical3D:
-    """
-    Create a MeshSpherical3D object from a list of cell face locations or from
-    number of cells and domain length.
-
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Ny : int
-        Number of cells in the y direction.
-    Nz : int
-        Number of cells in the z direction.
-    Lx : float
-        Length of the domain in the x direction.
-    Ly : float
-        Length of the domain in the y direction.
-    Lz : float
-        Length of the domain in the z direction.
-    face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-    face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-    face_locationsZ : ndarray
-        Locations of the cell faces in the z direction.
-    
-    Returns
-    -------
-    MeshSpherical3D
-        A 3D spherical mesh object.
-    
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshSpherical3D
-    >>> mesh = createMeshSpherical3D(10, 10, 10, 10.0, 10.0, 10.0)
-    >>> print(mesh)
-
-    Notes
-    -----
-    The mesh is created in spherical coordinates.
-    """
-    if args[4] > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for \\theta"\
-             " or there will be unknown consequences!")
-    if args[5] > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for \\phi"\
-             " or there will be unknown consequences!")
-    dims, cellsize, cellcenters, facecenters, corners, edges =\
-        _mesh_3d_param(*args)
-    return MeshSpherical3D(dims, cellsize, cellcenters,
-                           facecenters, corners, edges)

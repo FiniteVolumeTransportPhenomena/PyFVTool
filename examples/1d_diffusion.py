@@ -1,6 +1,6 @@
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
-
+import matplotlib.pyplot as plt
 import pyfvtool as pf
 
 Nx = 20 # number of finite volume cells
@@ -38,5 +38,7 @@ while t<t_simulation:
     c_new = pf.solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
     c_old.update_value(c_new)
 
+plt.figure(1)
+plt.clf()
 pf.visualizeCells(c_old)
 

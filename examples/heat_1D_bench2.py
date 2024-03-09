@@ -53,6 +53,9 @@ T_num = T_face.xvalue
 T_an = T_analytic(x, t_sim)
 er = np.sum(np.abs(T_num-T_an)/T_an)/Nx
 print(er)
+
+plt.figure(1)
+plt.clf()
 plt.plot(x, T_an, x, T_num, 'o')
 plt.legend({'Analytical', 'Numerical'})
 plt.xlabel('x [m]')
