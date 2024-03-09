@@ -111,16 +111,75 @@ class Grid1D(MeshStructure):
     
     @overload
     def __init__(self, Nx: int, Lx: float):
+        """
+        TODO: docstring (multiple dispatch)
+        These @overload docstrings do NOT show up in help(pf.Grid1D). Therefore,
+        put all versions in the main __init__ docstring 
+
+        Parameters
+        ----------
+        Nx : int
+            DESCRIPTION.
+        Lx : float
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
         ...
     
     @overload
     def __init__(self, face_locations: np.ndarray):
+        """
+        TODO: docstring (multiple dispatch)
+        These @overload docstrings do NOT show up in help(pf.Grid1D). Therefore,
+        put all versions in the main __init__ docstring 
+
+
+        Parameters
+        ----------
+        face_locations : np.ndarray
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
         ...
         
     @overload
     def __init__(self, dims, cellsize,
                  cellcenters, facecenters, corners, edges):
-            ...
+        """
+        TODO: docstring (multiple dispatch)
+        These @overload docstrings do NOT show up in help(pf.Grid1D). Therefore,
+        put all versions in the main __init__ docstring 
+
+
+        Parameters
+        ----------
+        dims : TYPE
+            DESCRIPTION.
+        cellsize : TYPE
+            DESCRIPTION.
+        cellcenters : TYPE
+            DESCRIPTION.
+        facecenters : TYPE
+            DESCRIPTION.
+        corners : TYPE
+            DESCRIPTION.
+        edges : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        None.
+
+        """
+        ...
     
     def __init__(self, *args):
         """Create a Grid1D mesh object from a list of cell face locations or from
