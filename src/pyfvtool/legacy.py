@@ -9,7 +9,7 @@ from .cell import CellVariable
 from .face import FaceVariable
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
 from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D
-from .mesh import Grid3D
+from .mesh import Grid3D, CylindricalGrid3D
 
 
 def boundaryConditionTerm(BC):
@@ -62,6 +62,10 @@ def createMeshRadial2D(*args) -> PolarGrid2D:
 
 
 def createMesh3D(*args) -> Grid3D:
-    """Legacy factory function for PolarGrid2D"""
+    """Legacy factory function for Grid3D"""
     return Grid3D(*args)
 
+
+def createMeshCylindrical3D(*args) -> CylindricalGrid3D:
+    """Legacy factory function for CylindricalGrid3D"""
+    return CylindricalGrid3D(*args)

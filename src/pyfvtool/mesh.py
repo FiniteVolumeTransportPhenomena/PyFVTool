@@ -675,7 +675,7 @@ class PolarGrid2D(Grid2D):
 
 
 class Grid3D(MeshStructure):
-    """Mesh based on a 3D Cartesian grid"""
+    """Mesh based on a 3D Cartesian grid (x, y, z)"""
     @overload
     def __init__(self, Nx: int, Ny: int, Nz: int,
                        Lx: float, Ly: float, Lz: float):
@@ -759,8 +759,93 @@ class Grid3D(MeshStructure):
         return ""
 
 
-class MeshCylindrical3D(Grid3D):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class CylindricalGrid3D(Grid3D):
+    """Mesh based on a 3D cylindrical grid (r, theta, z)"""
+    @overload
+    def __init__(self, Nx: int, Ny: int, Nz: int,
+                       Lx: float, Ly: float, Lz: float):
+        ...
+    
+    @overload
+    def __init__(self, face_locationsX: np.ndarray,
+                       face_locationsY: np.ndarray,
+                       face_locationsZ: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, dims, cellsize,
+                       cellcenters, facecenters, corners, edges):
+        ...
+
+
+    def __init__(self, *args):
+        """
+        Create a CylindricalGrid3D object from a list of cell face locations or from
+        number of cells and domain length.
+
+        TO DO: docstring (and coordinate labels) -> r, theta, z
+    
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Nz : int
+            Number of cells in the z direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        Lz : float
+            Length of the domain in the z direction.
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+        face_locationsZ : ndarray
+            Locations of the cell faces in the z direction.
+        
+        Returns
+        -------
+        CylindricalGrid3D
+            A 3D cylindrical mesh object.
+    
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import CylindricalGrid3D
+        >>> mesh = CylindricalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)
+        >>> print(mesh)
+    
+        Notes
+        -----
+        The mesh is created in cylindrical coordinates.
+        """
+        direct_init = False # Flag to indicate if this is a 'direct' __init__
+                            # not requiring any parsing of arguments.
+                            # These 'direct' instantiantions are used
+                            # internally.
+        if len(args)==6:
+            # Resolve ambiguous @overload situation for 3D meshes
+            # not very elegant, but it works
+            if isinstance(args[0], np.ndarray):    
+                direct_init = True
+                
+        if direct_init:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            if len(args) == 3:
+                theta_max = args[1][-1]
+            else:
+                theta_max = args[4]
+            if theta_max > 2*np.pi:
+                warn("Recreate the mesh with an upper bound of 2*pi for theta or there will be unknown consequences!")
+
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_3d_param(*args)
+
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -856,73 +941,6 @@ def _mesh_3d_param(*args):
                        G[1:-1, -1, [0, -1]].flatten()])
     return dims, cellsize, cellcenters, facecenters, corners, edges
 
-
-
-@overload
-def createMeshCylindrical3D(Nx: int, Ny: int,
-                            Nz: int, Lx: float,
-                            Ly: float, Lz: float) -> MeshCylindrical3D:
-    ...
-
-
-@overload
-def createMeshCylindrical3D(face_locationsX: np.ndarray,
-                            face_locationsY: np.ndarray,
-                            face_locationsZ: np.ndarray) -> MeshCylindrical3D:
-    ...
-
-
-def createMeshCylindrical3D(*args) -> MeshCylindrical3D:
-    """
-    Create a MeshCylindrical3D object from a list of cell face locations or from
-    number of cells and domain length.
-
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-    Ny : int
-        Number of cells in the y direction.
-    Nz : int
-        Number of cells in the z direction.
-    Lx : float
-        Length of the domain in the x direction.
-    Ly : float
-        Length of the domain in the y direction.
-    Lz : float
-        Length of the domain in the z direction.
-    face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-    face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-    face_locationsZ : ndarray
-        Locations of the cell faces in the z direction.
-    
-    Returns
-    -------
-    MeshCylindrical3D
-        A 3D cylindrical mesh object.
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> from pyfvtool import createMeshCylindrical3D
-    >>> mesh = createMeshCylindrical3D(10, 10, 10, 10.0, 10.0, 10.0)
-    >>> print(mesh)
-
-    Notes
-    -----
-    The mesh is created in cylindrical coordinates.
-    """
-    if len(args) == 3:
-        theta_max = args[1][-1]
-    else:
-        theta_max = args[4]
-    if theta_max > 2*np.pi:
-        warn("Recreate the mesh with an upper bound of 2*pi for theta or there will be unknown consequences!")
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_3d_param(
-        *args)
-    return MeshCylindrical3D(dims, cellsize, cellcenters, facecenters, corners, edges)
 
 
 @overload

@@ -4,7 +4,7 @@ from typing import overload
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 
 
 
@@ -317,7 +317,7 @@ def faceLocations(m: MeshStructure):
         return X, Y
         
     elif (type(m) is Grid3D)\
-       or (type(m) is MeshCylindrical3D):
+       or (type(m) is CylindricalGrid3D):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
         Z = FaceVariable(m, 0)

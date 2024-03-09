@@ -6,7 +6,7 @@ from typing import overload
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
 
@@ -274,7 +274,7 @@ def cellVolume(m: MeshStructure):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
     elif (type(m) is Grid3D):
         c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
-    elif (type(m) is MeshCylindrical3D):
+    elif (type(m) is CylindricalGrid3D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
     return CellVariable(m, c, BC)
 
@@ -327,7 +327,7 @@ def cellLocations(m: MeshStructure):
         Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
     elif (type(m) is Grid3D)\
-       or (type(m) is MeshCylindrical3D): 
+       or (type(m) is CylindricalGrid3D): 
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
         Y = CellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))

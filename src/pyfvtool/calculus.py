@@ -2,7 +2,7 @@ import numpy as np
 
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -64,7 +64,7 @@ def gradientTerm(phi: CellVariable):
                       phi.value[1:-1, 0:-1, 1:-1])/dy[np.newaxis,:,np.newaxis],
                      (phi.value[1:-1, 1:-1, 1:] -
                      phi.value[1:-1, 1:-1, 0:-1])/dz[np.newaxis,np.newaxis,:])
-    elif (type(phi.domain) is MeshCylindrical3D):
+    elif (type(phi.domain) is CylindricalGrid3D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         dz = 0.5*(phi.domain.cellsize.z[0:-1]+phi.domain.cellsize.z[1:])
@@ -328,7 +328,7 @@ def divergenceTerm(F: FaceVariable):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermPolar2D(F)
     elif (type(F.domain) is Grid3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTerm3D(F)
-    elif (type(F.domain) is MeshCylindrical3D):
+    elif (type(F.domain) is CylindricalGrid3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTermCylindrical3D(F)
     else:
         raise Exception("DivergenceTerm is not defined for this Mesh type.")

@@ -30,7 +30,7 @@ mesh_nonuniform.append(pf.Grid2D(X, Y))
 mesh_nonuniform.append(pf.Grid3D(X, Y, Z))
 mesh_nonuniform.append(pf.CylindricalGrid1D(X))
 mesh_nonuniform.append(pf.CylindricalGrid2D(X, Y))
-mesh_nonuniform.append(pf.createMeshCylindrical3D(X, Y, Z))
+mesh_nonuniform.append(pf.CylindricalGrid3D(X, Y, Z))
 mesh_nonuniform.append(pf.PolarGrid2D(X, Y))
 print("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables

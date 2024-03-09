@@ -7,7 +7,7 @@ from scipy.sparse import csr_array
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
-from .mesh import PolarGrid2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .utilities import int_range
 
 
@@ -538,7 +538,7 @@ def cellValuesWithBoundaries(phi, BC) -> np.ndarray:
         return cellValuesWithBoundariesPolar2D(phi, BC)
     elif (type(BC.domain) is Grid3D):
         return cellValuesWithBoundaries3D(phi, BC)
-    elif (type(BC.domain) is MeshCylindrical3D):
+    elif (type(BC.domain) is CylindricalGrid3D):
         return cellValuesWithBoundariesCylindrical3D(phi, BC)
     else:
         raise Exception("The cellValuesWithBoundaries function is not defined for this mesh type.")
@@ -1532,5 +1532,5 @@ def boundaryConditionsTerm(BC):
         return boundaryConditionsTermPolar2D(BC)
     elif (type(BC.domain) is Grid3D):
         return boundaryConditionsTerm3D(BC)
-    elif (type(BC.domain) is MeshCylindrical3D):
+    elif (type(BC.domain) is CylindricalGrid3D):
         return boundaryConditionsTermCylindrical3D(BC)

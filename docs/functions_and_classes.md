@@ -11,7 +11,7 @@ Taken from test script:
 ```python
 from pyfvtool import Grid1D, Grid2D, Grid3D
 from pyfvtool import CylindricalGrid1D, CylindricalGrid2D
-from pyfvtool import createMeshCylindrical3D, PolarGrid2D
+from pyfvtool import CylindricalGrid3D, PolarGrid2D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionTerm, diffusionTerm
@@ -30,7 +30,7 @@ from pyfvtool import visualizeCells
 
 ### Cartesian grids: Grid1D, Grid2D, PolarGrid2D
 
-### Cylindrical grids: CylindricalGrid1D, CylindricalGrid2D, createMeshCylindrical3D
+### Cylindrical grids: CylindricalGrid1D, CylindricalGrid2D, CylindricalGrid3D
 
 ### Polar grid: PolarGrid2D
 

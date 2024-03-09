@@ -10,7 +10,7 @@ from scipy.special import erf
 
 from pyfvtool import Grid1D, Grid2D, Grid3D
 from pyfvtool import CylindricalGrid1D, CylindricalGrid2D, PolarGrid2D
-from pyfvtool import createMeshCylindrical3D
+from pyfvtool import CylindricalGrid3D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
@@ -59,7 +59,7 @@ mesh_nonuniform.append(Grid2D(X, Y))
 mesh_nonuniform.append(Grid3D(X, Y, Z))
 mesh_nonuniform.append(CylindricalGrid1D(X))
 mesh_nonuniform.append(CylindricalGrid2D(X, Y))
-mesh_nonuniform.append(createMeshCylindrical3D(X, Y, Z))
+mesh_nonuniform.append(CylindricalGrid3D(X, Y, Z))
 mesh_nonuniform.append(PolarGrid2D(X, Y))
 print("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables

@@ -4,7 +4,7 @@ from scipy.sparse import csr_array
 
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -1363,7 +1363,7 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     elif (type(u.domain) is Grid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTerm3D(u)[0]
-    elif (type(u.domain) is MeshCylindrical3D):
+    elif (type(u.domain) is CylindricalGrid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTermCylindrical3D(u)[0]
     else:
@@ -1406,7 +1406,7 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     elif (type(u.domain) is Grid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTerm3D(u)[0]
-    elif (type(u.domain) is MeshCylindrical3D):
+    elif (type(u.domain) is CylindricalGrid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTermCylindrical3D(u)[0]
     else:
@@ -1453,7 +1453,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     elif (type(u.domain) is Grid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHS3D(u, phi, FL, *args)[0]
-    elif (type(u.domain) is MeshCylindrical3D):
+    elif (type(u.domain) is CylindricalGrid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHSCylindrical3D(u, phi, FL, *args)[0]
     else:

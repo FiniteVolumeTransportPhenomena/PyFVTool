@@ -2,7 +2,7 @@ import numpy as np
 
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
-from .mesh import PolarGrid2D, MeshCylindrical3D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .cell import get_CellVariable_profile1D, get_CellVariable_profile2D
 from .cell import get_CellVariable_profile3D
@@ -166,7 +166,7 @@ def visualizeCells(phi: CellVariable,
                         alpha=0.8)
         # plt.show()
 
-    elif (type(phi.domain) is MeshCylindrical3D):
+    elif (type(phi.domain) is CylindricalGrid3D):
         r, theta, z, phi0 = get_CellVariable_profile3D(phi)
         ## Kept old code below for reference. Can be removed.
         # r = np.hstack([phi.domain.facecenters.x[0],
