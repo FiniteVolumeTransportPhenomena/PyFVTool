@@ -72,3 +72,5 @@ while (t < t_simulation):
     nplot+=1
     
 # TO DO: provide a test result for pytest
+# e.g. based of D_coeff, sg we can have a value for the amplitude of the 
+# steady state exponential 

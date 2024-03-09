@@ -7,6 +7,7 @@ from .cell import CellVariable
 from .boundary import BoundaryConditions
 
 
+# to do: multiple dispatch (@overload) merge solvePDE solvePDE2 (_solvePDE2)
 
 def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
              externalsolver = None) -> CellVariable:
@@ -145,6 +146,8 @@ def solvePDE2(phi: CellVariable, bcterm: tuple, eqnterms: list,
     phi_new_values = solver(M, RHS)
     phi.value[:] = phi_new_values
     return phi
+
+
 
 def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray, 
                      BC: BoundaryConditions) -> CellVariable:
