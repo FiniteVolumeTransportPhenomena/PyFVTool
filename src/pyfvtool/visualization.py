@@ -1,6 +1,6 @@
 import numpy as np
 
-from .mesh import Grid1D, Grid2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, MeshCylindrical3D
 from .cell import CellVariable
@@ -41,11 +41,17 @@ def visualizeCells(phi: CellVariable,
     """
     if issubclass(type(phi.domain), Grid1D):
         x, phi0 = get_CellVariable_profile1D(phi)
+        # TODO:
+        # get_CellVariable_profile1D can become a method of CellVariable
+        #    (shared with 2D and 3D versions)
         plt.plot(x, phi0)
         # plt.show()
 
     elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
+        # TODO:
+        # get_CellVariable_profile2D can become a method of CellVariable
+        #    (shared with 1D and 3D versions)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],
         #                phi.domain.cellcenters.x,
@@ -74,6 +80,9 @@ def visualizeCells(phi: CellVariable,
 
     elif (type(phi.domain) is PolarGrid2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
+        # TODO:
+        # get_CellVariable_profile2D can become a method of CellVariable
+        #    (shared with 1D and 3D versions)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],
         #                phi.domain.cellcenters.x,
@@ -95,8 +104,11 @@ def visualizeCells(phi: CellVariable,
         plt.pcolor(y, x, phi0)
         # plt.show()
 
-    elif (type(phi.domain) is Mesh3D):
+    elif (type(phi.domain) is Grid3D):
         x, y, z, phi0 = get_CellVariable_profile3D(phi)
+        # TODO:
+        # get_CellVariable_profile3D can become a method of CellVariable
+        #    (shared with 1D and 2D versions)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],
         #                phi.domain.cellcenters.x,

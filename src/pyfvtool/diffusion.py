@@ -3,7 +3,7 @@
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Grid1D, Grid2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import PolarGrid2D, MeshCylindrical3D
 from .face import FaceVariable
@@ -387,7 +387,7 @@ def diffusionTerm(D: FaceVariable) -> csr_array:
         return diffusionTermCylindrical2D(D)[0]
     elif (type(D.domain) is PolarGrid2D):
         return diffusionTermPolar2D(D)[0]
-    elif (type(D.domain) is Mesh3D):
+    elif (type(D.domain) is Grid3D):
         return diffusionTerm3D(D)[0]
     elif (type(D.domain) is MeshCylindrical3D):
         return diffusionTermCylindrical3D(D)[0]

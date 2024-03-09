@@ -348,12 +348,12 @@ class Grid2D(MeshStructure):
     
     @overload
     def __init__(self, face_locationsX: np.ndarray,
-                     face_locationsY: np.ndarray):
+                       face_locationsY: np.ndarray):
         ...
 
     @overload
     def __init__(self, dims, cellsize,
-                 cellcenters, facecenters, corners, edges):
+                       cellcenters, facecenters, corners, edges):
         ...
 
     def __init__(self, *args):
@@ -615,8 +615,77 @@ class PolarGrid2D(Grid2D):
 #   3D Grids
 
 
-class Mesh3D(MeshStructure):
-    def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
+class Grid3D(MeshStructure):
+    """Mesh based on a 3D Cartesian grid"""
+    @overload
+    def __init__(self, Nx: int, Ny: int, Nz: int,
+                       Lx: float, Ly: float, Lz: float):
+        ...
+        
+    @overload
+    def _init__(self, face_locationsX: np.ndarray,
+                      face_locationsY: np.ndarray,
+                      face_locationsZ: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, dims, cellsize,
+                       cellcenters, facecenters, corners, edges):
+        ...
+
+    def __init__(self, *args):
+        """
+        Create a Grid3D object from a list of cell face locations or from
+        number of cells and domain length.
+        
+        Parameters
+        ----------
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Nz : int
+            Number of cells in the z direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        Lz : float
+            Length of the domain in the z direction.
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+        face_locationsZ : ndarray
+            Locations of the cell faces in the z direction.
+        
+        Returns
+        -------
+        Grid3D
+        A 3D mesh object.
+            
+        Examples
+        --------
+        >>> import numpy as np
+        >>> from pyfvtool import Grid3D
+        >>> mesh = Grid3D(10, 10, 10, 10.0, 10.0, 10.0)
+        >>> print(mesh)
+        """
+        direct_init = False # Flag to indicate if this is a 'direct' __init__
+                            # not requiring any parsing of arguments.
+                            # These 'direct' instantiantions are used
+                            # internally.
+        if len(args)==6:
+            # Resolve ambiguous @overload situation for 3D meshes
+            # not very elegant, but it works
+            if isinstance(args[0], np.ndarray):    
+                direct_init = True
+        if direct_init:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = args
+        else:
+            dims, cell_size, cell_location, face_location, corners, edges\
+                = _mesh_3d_param(*args)
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -631,7 +700,7 @@ class Mesh3D(MeshStructure):
         return ""
 
 
-class MeshCylindrical3D(Mesh3D):
+class MeshCylindrical3D(Grid3D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -642,7 +711,7 @@ class MeshCylindrical3D(Mesh3D):
         return ""
 
 
-class MeshSpherical3D(Mesh3D):
+class MeshSpherical3D(Grid3D):
     def __init__(self, dims, cell_size, cell_location, face_location, corners, edges):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -727,66 +796,6 @@ def _mesh_3d_param(*args):
                        G[1:-1, 0, [0, -1]].flatten(),
                        G[1:-1, -1, [0, -1]].flatten()])
     return dims, cellsize, cellcenters, facecenters, corners, edges
-
-
-
-
-
-@overload
-def createMesh3D(Nx: int, Ny: int, Nz: int,
-                 Lx: float, Ly: float, Lz: float) -> Mesh3D:
-    ...
-
-
-@overload
-def createMesh3D(face_locationsX: np.ndarray,
-                 face_locationsY: np.ndarray, face_locationsZ: np.ndarray) -> Mesh3D:
-    ...
-
-
-def createMesh3D(*args) -> Mesh3D:
-    """
-    Create a Mesh3D object from a list of cell face locations or from
-    number of cells and domain length.
-    
-    Parameters
-    ----------
-    Nx : int
-        Number of cells in the x direction.
-        Ny : int
-        Number of cells in the y direction.
-        Nz : int
-        Number of cells in the z direction.
-        Lx : float
-        Length of the domain in the x direction.
-        Ly : float
-        Length of the domain in the y direction.
-        Lz : float
-        Length of the domain in the z direction.
-        face_locationsX : ndarray
-        Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-        Locations of the cell faces in the y direction.
-        face_locationsZ : ndarray
-        Locations of the cell faces in the z direction.
-        
-        Returns
-        -------
-        Mesh3D
-        A 3D mesh object.
-            
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import createMesh3D
-        >>> mesh = createMesh3D(10, 10, 10, 10.0, 10.0, 10.0)
-        >>> print(mesh)
-        """
-    dims, cellsize, cellcenters, facecenters, corners, edges = _mesh_3d_param(
-        *args)
-    return Mesh3D(dims, cellsize, cellcenters, facecenters, corners, edges)
-
-
 
 
 

@@ -1,6 +1,6 @@
 import numpy as np
 
-from .mesh import Grid1D, Grid2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import PolarGrid2D, MeshCylindrical3D
 from .cell import CellVariable
@@ -53,7 +53,7 @@ def gradientTerm(phi: CellVariable):
                      (phi.value[1:, 1:-1]-phi.value[0:-1, 1:-1])/dx[:,np.newaxis],
                      (phi.value[1:-1, 1:]-phi.value[1:-1, 0:-1])/(dtheta[np.newaxis,:]*rp[:,np.newaxis]),
                      np.array([]))
-    elif (type(phi.domain) is Mesh3D):
+    elif (type(phi.domain) is Grid3D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         dz = 0.5*(phi.domain.cellsize.z[0:-1]+phi.domain.cellsize.z[1:])
@@ -326,7 +326,7 @@ def divergenceTerm(F: FaceVariable):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermCylindrical2D(F)
     elif (type(F.domain) is PolarGrid2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermPolar2D(F)
-    elif (type(F.domain) is Mesh3D):
+    elif (type(F.domain) is Grid3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTerm3D(F)
     elif (type(F.domain) is MeshCylindrical3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTermCylindrical3D(F)
@@ -375,7 +375,7 @@ def gradientTermFixedBC(phi):
         faceGrad.xvalue[-1, :] = 2*faceGrad.xvalue[-1, :]
         faceGrad.yvalue[:, 0] = 2*faceGrad.yvalue[:, 0]
         faceGrad.yvalue[:, -1] = 2*faceGrad.yvalue[:, -1]
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         faceGrad.xvalue[0, :, :] = 2*faceGrad.xvalue[0, :, :]
         faceGrad.xvalue[-1, :, :] = 2*faceGrad.xvalue[-1, :, :]
         faceGrad.yvalue[:, 0, :] = 2*faceGrad.yvalue[:, 0, :]

@@ -27,7 +27,7 @@ N_mesh=7
 mesh_nonuniform= []
 mesh_nonuniform.append(pf.Grid1D(X))
 mesh_nonuniform.append(pf.Grid2D(X, Y))
-mesh_nonuniform.append(pf.createMesh3D(X, Y, Z))
+mesh_nonuniform.append(pf.Grid3D(X, Y, Z))
 mesh_nonuniform.append(pf.CylindricalGrid1D(X))
 mesh_nonuniform.append(pf.CylindricalGrid2D(X, Y))
 mesh_nonuniform.append(pf.createMeshCylindrical3D(X, Y, Z))

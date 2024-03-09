@@ -4,7 +4,7 @@ import numpy as np
 from typing import overload
 
 from .mesh import MeshStructure
-from .mesh import Grid1D, Grid2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import PolarGrid2D, MeshCylindrical3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
@@ -92,7 +92,7 @@ class CellVariable:
             return self.value[1:-1]
         elif issubclass(type(self.domain), Grid2D):
             return self.value[1:-1, 1:-1]
-        elif issubclass(type(self.domain), Mesh3D):
+        elif issubclass(type(self.domain), Grid3D):
             return self.value[1:-1, 1:-1, 1:-1]
         
     @internalCellValues.setter
@@ -101,7 +101,7 @@ class CellVariable:
             self.value[1:-1] = values
         elif issubclass(type(self.domain), Grid2D):
             self.value[1:-1, 1:-1] = values
-        elif issubclass(type(self.domain), Mesh3D):
+        elif issubclass(type(self.domain), Grid3D):
             self.value[1:-1, 1:-1, 1:-1] = values
 
     def update_bc_cells(self, BC: BoundaryConditionsBase):
@@ -123,7 +123,7 @@ class CellVariable:
             self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
             self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
             self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
-        elif issubclass(type(self.domain), Mesh3D):
+        elif issubclass(type(self.domain), Grid3D):
             self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
             self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
             self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
@@ -272,7 +272,7 @@ def cellVolume(m: MeshStructure):
         c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
     elif (type(m) is PolarGrid2D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is Mesh3D):
+    elif (type(m) is Grid3D):
         c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
     elif (type(m) is MeshCylindrical3D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
@@ -326,7 +326,7 @@ def cellLocations(m: MeshStructure):
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
         Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
-    elif (type(m) is Mesh3D)\
+    elif (type(m) is Grid3D)\
        or (type(m) is MeshCylindrical3D): 
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
         Y = CellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
@@ -411,7 +411,9 @@ def domainIntegrate(phi: CellVariable) -> float:
     return domainInt(phi)
 
 
-
+# TODO:
+# get_CellVariable_profile1D can become a method of CellVariable
+#    (shared with 2D and 3D versions)
 def get_CellVariable_profile1D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (1D).
@@ -453,7 +455,9 @@ def get_CellVariable_profile1D(phi: CellVariable):
     return (x, phi0)
 
 
-
+# TODO:
+# get_CellVariable_profile2D can become a method of CellVariable
+#    (shared with 1D and 3D versions)
 def get_CellVariable_profile2D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (2D).
@@ -502,6 +506,9 @@ def get_CellVariable_profile2D(phi: CellVariable):
 
 
 
+# TODO:
+# get_CellVariable_profile3D can become a method of CellVariable
+#    (shared with 1D and 2D versions)
 def get_CellVariable_profile3D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (3D).
@@ -564,7 +571,7 @@ def BC2GhostCells(phi0):
         phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
         phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
         phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
         phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
         phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])

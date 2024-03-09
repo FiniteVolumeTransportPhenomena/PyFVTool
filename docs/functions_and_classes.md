@@ -9,7 +9,7 @@ See also `__init__.py` in the `pyfvtool` module directory.
 Taken from test script:
 
 ```python
-from pyfvtool import Grid1D, Grid2D, createMesh3D
+from pyfvtool import Grid1D, Grid2D, Grid3D
 from pyfvtool import CylindricalGrid1D, CylindricalGrid2D
 from pyfvtool import createMeshCylindrical3D, PolarGrid2D
 from pyfvtool import CellVariable, FaceVariable
