@@ -63,9 +63,9 @@ while (t < t_simulation):
            -pf.diffusionTerm(D),
            pf.convectionTerm(u)]
 
-    pf.solvePDE2(c,
-                 bcterm,
-                 eqn)
+    pf.solvePDE(c,
+                bcterm,
+                eqn)
 
     if (nplot % Nskip == 0):
         pf.visualizeCells(c)
