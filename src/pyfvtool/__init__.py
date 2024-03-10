@@ -1,3 +1,19 @@
+__version__ = "0.2.1"
+
+__author__ = [
+    "Ali A. Eftekhari",
+    "Gavin M. Weir",
+    "Martinus H. V. Werts"
+]
+
+__contact__ = "e.eftekhari@gmail.com"
+
+__copyright__ = "Copyright 2023-2024, The Authors"
+
+__license__ = "MIT License"
+
+
+
 ENABLE_LEGACY = False # enable/disable backward compatibility
 
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
@@ -39,11 +55,3 @@ if ENABLE_LEGACY:
     from .legacy import createMeshCylindrical3D
     from .legacy import createMeshSpherical3D
     
-
-__author__ = (
-    "Ali A. Eftekhari"
-)
-__copyright__ = (
-    "Copyright 2023 Ali A. Eftekhari,"
-    "MIT License"
-)
