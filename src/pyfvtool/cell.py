@@ -414,6 +414,13 @@ def domainIntegrate(phi: CellVariable) -> float:
 # TODO:
 # get_CellVariable_profile1D can become a method of CellVariable
 #    (shared with 2D and 3D versions)
+# TODO:
+#    Add a keyword that specifies how the outer FaceValues will be estimated
+#    Currently, this is just the average of the last inner cell and the boundary
+#    (ghost) cell.
+#    In certain cases it may be visually desirable to use an extrapolation of
+#    the last inner cell values.
+
 def get_CellVariable_profile1D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (1D).
@@ -458,6 +465,15 @@ def get_CellVariable_profile1D(phi: CellVariable):
 # TODO:
 # get_CellVariable_profile2D can become a method of CellVariable
 #    (shared with 1D and 3D versions)
+# TODO:
+#    Add a keyword that specifies how the outer FaceValues will be estimated
+#    Currently, this is just the average of the last inner cell and the boundary
+#    (ghost) cell.
+#    In certain cases it may be visually desirable to use an extrapolation of
+#    the last inner cell values.
+# Perhaps for 2D and 3D visualization it is perhaps best to only use the 
+# innervalues (e.g. for a false color map à la plt.pcolormesh)
+
 def get_CellVariable_profile2D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (2D).
@@ -509,6 +525,15 @@ def get_CellVariable_profile2D(phi: CellVariable):
 # TODO:
 # get_CellVariable_profile3D can become a method of CellVariable
 #    (shared with 1D and 2D versions)
+# TODO:
+#    Add a keyword that specifies how the outer FaceValues will be estimated
+#    Currently, this is just the average of the last inner cell and the boundary
+#    (ghost) cell.
+#    In certain cases it may be visually desirable to use an extrapolation of
+#    the last inner cell values.
+# Perhaps for 2D and 3D visualization it is perhaps best to only use the 
+# innervalues (e.g. for a false color map à la plt.pcolormesh)
+
 def get_CellVariable_profile3D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (3D).
