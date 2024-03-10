@@ -10,8 +10,8 @@ from scipy.special import erf
 # define the domain
 L = 5.0  # domain length
 Nx = 100 # number of cells
-meshstruct = pf.createMesh1D(Nx, L)
-BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
+meshstruct = pf.Grid1D(Nx, L)
+BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:]=1 
 BC.left.c[:]=1 # left boundary
@@ -21,11 +21,11 @@ BC.right.c[:]=0 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
-alfa = pf.createCellVariable(meshstruct, 1)
-Dave = pf.createFaceVariable(meshstruct, D_val)
+alfa = pf.CellVariable(meshstruct, 1)
+Dave = pf.FaceVariable(meshstruct, D_val)
 ## define initial values
-c_old = pf.createCellVariable(meshstruct, 0, BC) # initial values
-c = pf.createCellVariable(meshstruct, 0, BC) # working values
+c_old = pf.CellVariable(meshstruct, 0, BC) # initial values
+c = pf.CellVariable(meshstruct, 0, BC) # working values
 ## loop
 dt = 0.001 # time step
 final_t = 0.5
@@ -38,5 +38,10 @@ for t in np.arange(dt, final_t, dt):
 
 # analytical solution
 c_analytical = 1-erf(x/(2*np.sqrt(D_val*t)))
-plt.plot(x, c.internalCellValues(), x, c_analytical, 'r--')
+
+plt.figure(1)
+plt.clf()
+plt.plot(x, c.internalCellValues, 'k', label = 'PyFVTool')
+plt.plot(x, c_analytical, 'r--', label = 'analytic')
+plt.legend()
 plt.show()

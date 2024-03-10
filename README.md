@@ -85,8 +85,8 @@ t_simulation = 7200.0 # [s] simulation time
 dt = 60.0 # [s] time step
 Nskip = 10 # plot every Nskip-th profile
 
-m1 = pf.createMesh1D(Nx, Lx) # mesh object
-bc = pf.createBC(m1) # Neumann boundary condition by default
+m1 = pf.Grid1D(Nx, Lx) # mesh object
+bc = pf.BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0
@@ -94,15 +94,15 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = pf.createCellVariable(m1, c_init, bc)
+c_old = pf.CellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = pf.createCellVariable(m1, D_val)
+D_cell = pf.CellVariable(m1, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization
 Mdiff = pf.diffusionTerm(D_face)
-Mbc, RHSbc = pf.boundaryConditionTerm(bc)
+Mbc, RHSbc = pf.boundaryConditionsTerm(bc)
 
 # time loop
 t = 0

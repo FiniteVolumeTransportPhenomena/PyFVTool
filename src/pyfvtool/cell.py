@@ -4,33 +4,108 @@ import numpy as np
 from typing import overload
 
 from .mesh import MeshStructure
-from .mesh import Mesh1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
-from .boundary import BoundaryCondition, createBC
-from .boundary import cellBoundary
+from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
+from .mesh import PolarGrid2D, CylindricalGrid3D
+from .boundary import BoundaryConditionsBase, BoundaryConditions
+from .boundary import cellValuesWithBoundaries
 
 class CellVariable:
+
+    @overload
+    def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray,
+                 BC: BoundaryConditionsBase):
+        ...
+
+    @overload
     def __init__(self, mesh_struct: MeshStructure, cell_value: np.ndarray):
+        ...
+
+    @overload
+    def __init__(self, mesh_struct: MeshStructure, cell_value: float,
+                 BC: BoundaryConditionsBase):
+        ...
+
+    @overload
+    def __init__(self, mesh_struct: MeshStructure, cell_value: float):
+        ...
+
+    def __init__(self, mesh_struct: MeshStructure, cell_value, *arg):
+        """
+        Create a cell variable of class CellVariable
+
+        Parameters
+        ----------
+        mesh_struct : MeshStructure
+            Mesh describing the calculation domain.
+        cell_value : float or numpy.ndarray
+            Initialization value(s) of the CellVariable
+        BC: BoundaryConditions
+            Boundary conditions to be applied to the cell variable.
+            *Required if CellVariable represents a solution variable.* This
+            requirement also applies if default 'no-flux' boundary conditions are
+            desired, in which case the BoundaryCondition should be created without
+            further parameters (see .boundary.BoundaryConditions)
+            
+
+        Raises
+        ------
+        ValueError
+            The shape of cell_value does not correspond to the mesh shape.
+
+        Returns
+        -------
+        CellVariable
+            An initialized instance of CellVariable.
+
+        """
+                
         self.domain = mesh_struct
-        if np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
+        self.value = None
+
+        if np.isscalar(cell_value):
+            phi_val = cell_value*np.ones(mesh_struct.dims)
+        elif cell_value.size == 1:
+            phi_val = cell_value*np.ones(mesh_struct.dims)
+        elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
+            phi_val = cell_value
+        elif np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
+            # Values for boundary cells already included,
+            # simply fill
             self.value = cell_value
         else:
-            raise ValueError("The cell value is not valid. "\
-                             "Check the size of the input array.")
+            raise ValueError(f"The cell size {cell_value.shape} is not valid "\
+                             f"for a mesh of size {mesh_struct.dims}.")
+                
+        if self.value is None:
+            if len(arg)==1:
+                self.value = cellValuesWithBoundaries(phi_val, arg[0])
+            elif len(arg)==0:
+                self.value = cellValuesWithBoundaries(phi_val, 
+                                 BoundaryConditions(mesh_struct))
+            else:
+                raise Exception('Incorrect number of arguments')
 
-        self.value = cell_value
-
+    @property
     def internalCellValues(self):
-        if issubclass(type(self.domain), Mesh1D):
+        if issubclass(type(self.domain), Grid1D):
             return self.value[1:-1]
-        elif issubclass(type(self.domain), Mesh2D):
+        elif issubclass(type(self.domain), Grid2D):
             return self.value[1:-1, 1:-1]
-        elif issubclass(type(self.domain), Mesh3D):
+        elif issubclass(type(self.domain), Grid3D):
             return self.value[1:-1, 1:-1, 1:-1]
+        
+    @internalCellValues.setter
+    def internalCellValues(self, values):
+        if issubclass(type(self.domain), Grid1D):
+            self.value[1:-1] = values
+        elif issubclass(type(self.domain), Grid2D):
+            self.value[1:-1, 1:-1] = values
+        elif issubclass(type(self.domain), Grid3D):
+            self.value[1:-1, 1:-1, 1:-1] = values
 
-    def update_bc_cells(self, BC: BoundaryCondition):
-        phi_temp = createCellVariable(self.domain, self.internalCellValues(), BC)
+    def update_bc_cells(self, BC: BoundaryConditionsBase):
+        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
         self.update_value(phi_temp)
 
     def update_value(self, new_cell):
@@ -40,15 +115,15 @@ class CellVariable:
         """
         assign the boundary values to the ghost cells
         """
-        if issubclass(type(self.domain), Mesh1D):
+        if issubclass(type(self.domain), Grid1D):
             self.value[0] = 0.5*(self.value[1]+self.value[0])
             self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
-        elif issubclass(type(self.domain), Mesh2D):
+        elif issubclass(type(self.domain), Grid2D):
             self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
             self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
             self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
             self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
-        elif issubclass(type(self.domain), Mesh3D):
+        elif issubclass(type(self.domain), Grid3D):
             self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
             self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
             self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
@@ -164,66 +239,7 @@ class CellVariable:
     def __abs__(self):
         return CellVariable(self.domain, np.abs(self.value))
 
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray, BC: BoundaryCondition) -> CellVariable:
-    ...
 
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: np.ndarray) -> CellVariable:
-    ...
-
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: float, BC: BoundaryCondition) -> CellVariable:
-    ...
-
-@overload
-def createCellVariable(mesh_struct: MeshStructure, cell_value: float) -> CellVariable:
-    ...
-
-def createCellVariable(mesh_struct: MeshStructure, cell_value, *arg) -> CellVariable:
-    """
-    Create a cell variable of class CellVariable
-
-    Parameters
-    ----------
-    mesh_struct : MeshStructure
-        Mesh describing the calculation domain.
-    cell_value : float or numpy.ndarray
-        Initialization value(s) of the CellVariable
-    BC: BoundaryCondition
-        Boundary conditions to be applied to the cell variable.
-        *Required if CellVariable represents a solution variable.* This
-        requirement also applies if default 'no-flux' boundary conditions are
-        desired, in which case the BoundaryCondition should be created without
-        further parameters (see boundary.createBC)
-        
-
-    Raises
-    ------
-    ValueError
-        The shape of cell_value does not correspond to the mesh shape.
-
-    Returns
-    -------
-    CellVariable
-        An initialized instance of CellVariable.
-
-    """
-    
-
-    if np.isscalar(cell_value):
-        phi_val = cell_value*np.ones(mesh_struct.dims)
-    elif cell_value.size == 1:
-        phi_val = cell_value*np.ones(mesh_struct.dims)
-    elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
-        phi_val = cell_value
-    else:
-        raise ValueError(f"The cell size {cell_value.shape} is not valid for a mesh of size {mesh_struct.dims}.")
-    
-    if len(arg)==1:
-        return CellVariable(mesh_struct, cellBoundary(phi_val, arg[0]))
-    else:
-        return CellVariable(mesh_struct, cellBoundary(phi_val, createBC(mesh_struct)))
 
 
 def copyCellVariable(phi: CellVariable) -> CellVariable:
@@ -245,22 +261,22 @@ def copyCellVariable(phi: CellVariable) -> CellVariable:
 
 
 def cellVolume(m: MeshStructure):
-    BC = createBC(m)
-    if (type(m) is Mesh1D):
+    BC = BoundaryConditions(m)
+    if (type(m) is Grid1D):
         c=m.cellsize.x[1:-1]
-    elif (type(m) is MeshCylindrical1D):
+    elif (type(m) is CylindricalGrid1D):
         c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
-    elif (type(m) is Mesh2D):
+    elif (type(m) is Grid2D):
         c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is MeshCylindrical2D):
+    elif (type(m) is CylindricalGrid2D):
         c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is MeshRadial2D):
+    elif (type(m) is PolarGrid2D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is Mesh3D):
+    elif (type(m) is Grid3D):
         c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
-    elif (type(m) is MeshCylindrical3D):
+    elif (type(m) is CylindricalGrid3D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
-    return createCellVariable(m, c, BC)
+    return CellVariable(m, c, BC)
 
 
 def cellLocations(m: MeshStructure):
@@ -300,23 +316,23 @@ def cellLocations(m: MeshStructure):
     N = m.dims
    
     
-    if (type(m) is Mesh1D)\
-     or (type(m) is MeshCylindrical1D):
-        X = createCellVariable(m, m.cellcenters.x)
+    if (type(m) is Grid1D)\
+     or (type(m) is CylindricalGrid1D):
+        X = CellVariable(m, m.cellcenters.x)
         return X
-    elif (type(m) is Mesh2D)\
-       or (type(m) is MeshCylindrical2D)\
-       or (type(m) is MeshRadial2D): 
-        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
-        Y = createCellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
+    elif (type(m) is Grid2D)\
+       or (type(m) is CylindricalGrid2D)\
+       or (type(m) is PolarGrid2D): 
+        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
+        Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
-    elif (type(m) is Mesh3D)\
-       or (type(m) is MeshCylindrical3D): 
-        X = createCellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
-        Y = createCellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
+    elif (type(m) is Grid3D)\
+       or (type(m) is CylindricalGrid3D): 
+        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
+        Y = CellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
-        Z = createCellVariable(m, np.tile(z, (N[0], N[1], 1)))
+        Z = CellVariable(m, np.tile(z, (N[0], N[1], 1)))
         return X, Y, Z
     raise TypeError('mesh type not implemented')
     return None 
@@ -382,8 +398,8 @@ def domainInt(phi: CellVariable) -> float:
         Total finite-volume integral over entire domain.
 
     """
-    v = cellVolume(phi.domain).internalCellValues()
-    c = phi.internalCellValues()
+    v = cellVolume(phi.domain).internalCellValues
+    c = phi.internalCellValues
     return (v*c).flatten().sum()
 
 def domainIntegrate(phi: CellVariable) -> float:
@@ -395,7 +411,9 @@ def domainIntegrate(phi: CellVariable) -> float:
     return domainInt(phi)
 
 
-
+# TODO:
+# get_CellVariable_profile1D can become a method of CellVariable
+#    (shared with 2D and 3D versions)
 def get_CellVariable_profile1D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (1D).
@@ -437,7 +455,9 @@ def get_CellVariable_profile1D(phi: CellVariable):
     return (x, phi0)
 
 
-
+# TODO:
+# get_CellVariable_profile2D can become a method of CellVariable
+#    (shared with 1D and 3D versions)
 def get_CellVariable_profile2D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (2D).
@@ -486,6 +506,9 @@ def get_CellVariable_profile2D(phi: CellVariable):
 
 
 
+# TODO:
+# get_CellVariable_profile3D can become a method of CellVariable
+#    (shared with 1D and 2D versions)
 def get_CellVariable_profile3D(phi: CellVariable):
     """
     Create a profile of a cell variable for plotting, export, etc. (3D).
@@ -540,15 +563,15 @@ def BC2GhostCells(phi0):
     assign the boundary values to the ghost cells and returns the new cell variable
     """
     phi = copyCellVariable(phi0)
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
         phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
         phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
         phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
         phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
         phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
         phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])

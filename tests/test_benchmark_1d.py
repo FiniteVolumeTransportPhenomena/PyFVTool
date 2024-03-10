@@ -28,9 +28,9 @@ def T_numerical(left_bc: str) -> float:
     time_steps = 50
     dt = t_sim/time_steps # 
     Nx = 50 # number of cells
-    m = pf.createMesh1D(Nx, L)
+    m = pf.Grid1D(Nx, L)
     # Boundary condition
-    BC = pf.createBC(m)
+    BC = pf.BoundaryConditions(m)
     if left_bc == "Dirichlet":
         BC.left.a[:] = 0.0
         BC.left.b[:] = 1.0
@@ -43,13 +43,13 @@ def T_numerical(left_bc: str) -> float:
         T_analytic = lambda x,t: T_analytical_neuman(x, t, alfa, T0, k, qs)
 
     # Initial condition
-    T_init = pf.createCellVariable(m, T0, BC) # initial condition
+    T_init = pf.CellVariable(m, T0, BC) # initial condition
     # physical parameters
-    alfa_cell = pf.createCellVariable(m, alfa, pf.createBC(m))
+    alfa_cell = pf.CellVariable(m, alfa, pf.BoundaryConditions(m))
     alfa_face = pf.harmonicMean(alfa_cell)
 
     M_diff = pf.diffusionTerm(alfa_face)
-    [M_bc, RHS_bc] = pf.boundaryConditionTerm(BC)
+    [M_bc, RHS_bc] = pf.boundaryConditionsTerm(BC)
 
     t=0
     while t<t_sim:
@@ -69,8 +69,8 @@ def conv_numerical_1d() -> float:
     global OUTPUT_DIAGNOSTICS
     L = 1.0  # domain length
     Nx = 50 # number of cells
-    meshstruct = pf.createMesh1D(Nx, L)
-    BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
+    meshstruct = pf.Grid1D(Nx, L)
+    BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
     BC.left.a[:] = 0 
     BC.left.b[:] = 1 
     BC.left.c[:] = 0 # left boundary
@@ -80,25 +80,25 @@ def conv_numerical_1d() -> float:
     x = meshstruct.cellcenters.x
     ## define the transfer coeffs
     D_val = -1
-    D = pf.createCellVariable(meshstruct, D_val)
+    D = pf.CellVariable(meshstruct, D_val)
     Dave = pf.harmonicMean(D) # convert a cell variable to face variable
-    # alfa = createCellVariable(meshstruct, 1)
-    u = -10
-    u_face = pf.createFaceVariable(meshstruct, u)
+    # alfa = CellVariable(meshstruct, 1)
+    u = -10.0
+    u_face = pf.FaceVariable(meshstruct, u)
     ## solve
     Mconv =  pf.convectionTerm(u_face)
     # Mconvupwind =  convectionUpwindTerm(u_face)
     Mdiff = pf.diffusionTerm(Dave)
-    [Mbc, RHSbc] = pf.boundaryConditionTerm(BC)
+    [Mbc, RHSbc] = pf.boundaryConditionsTerm(BC)
     M = Mconv-Mdiff-Mbc
     # Mupwind = Mconvupwind-Mdiff-Mbc
     RHS = -RHSbc
     c = pf.solvePDE(meshstruct, M, RHS)
     # c_upwind = solvePDE(meshstruct, Mupwind, RHS)
     c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
-    er = np.sum(np.abs(c_analytical-c.value[1:-1]))/Nx
+    er = np.sum(np.abs(c_analytical-c.internalCellValues))/Nx
     if OUTPUT_DIAGNOSTICS:
-        return er, x, c_analytical, c.value[1:-1]
+        return er, x, c_analytical, c.internalCellValues
     else:
         return er
 

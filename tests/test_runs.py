@@ -25,33 +25,33 @@ Z= np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
 N_mesh=7
 # create nonuniform mesh
 mesh_nonuniform= []
-mesh_nonuniform.append(pf.createMesh1D(X))
-mesh_nonuniform.append(pf.createMesh2D(X, Y))
-mesh_nonuniform.append(pf.createMesh3D(X, Y, Z))
-mesh_nonuniform.append(pf.createMeshCylindrical1D(X))
-mesh_nonuniform.append(pf.createMeshCylindrical2D(X, Y))
-mesh_nonuniform.append(pf.createMeshCylindrical3D(X, Y, Z))
-mesh_nonuniform.append(pf.createMeshRadial2D(X, Y))
+mesh_nonuniform.append(pf.Grid1D(X))
+mesh_nonuniform.append(pf.Grid2D(X, Y))
+mesh_nonuniform.append(pf.Grid3D(X, Y, Z))
+mesh_nonuniform.append(pf.CylindricalGrid1D(X))
+mesh_nonuniform.append(pf.CylindricalGrid2D(X, Y))
+mesh_nonuniform.append(pf.CylindricalGrid3D(X, Y, Z))
+mesh_nonuniform.append(pf.PolarGrid2D(X, Y))
 print("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables
 c_val= 1.0
 D_val = 0.5
 # nonuniform
-c_n= [pf.createCellVariable(m, c_val, pf.createBC(m)) for m in mesh_nonuniform]
-D_n= [pf.createCellVariable(m, D_val, pf.createBC(m)) for m in mesh_nonuniform]
+c_n= [pf.CellVariable(m, c_val, pf.BoundaryConditions(m)) for m in mesh_nonuniform]
+D_n= [pf.CellVariable(m, D_val, pf.BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of fixed values over nonuniform mesh created successfully!")
-c_r= [pf.createCellVariable(m, np.random.random_sample(m.dims), pf.createBC(m))\
+c_r= [pf.CellVariable(m, np.random.random_sample(m.dims), pf.BoundaryConditions(m))\
       for m in mesh_nonuniform]
 print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
 # nonuniform
-f_n = [pf.createFaceVariable(m, f_val) for m in mesh_nonuniform]
+f_n = [pf.FaceVariable(m, f_val) for m in mesh_nonuniform]
 print("Face variable over nonuniform mesh created successfully!")
 ## Part IV: Test boundary conditions
 BC_n = []
 for m in mesh_nonuniform:
-    BC=pf.createBC(m)
+    BC = pf.BoundaryConditions(m)
     # BC.left.a[:]=0.0
     # BC.left.b[:]=1.0
     # BC.left.c[:]=1.0
@@ -66,7 +66,7 @@ M_bc=[]
 M_dif=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    Mbc, RHSbc= pf.boundaryConditionTerm(BC_n[i])
+    Mbc, RHSbc= pf.boundaryConditionsTerm(BC_n[i])
     M_bc.append(Mbc)
     RHS_bc.append(RHSbc)
     Md = pf.diffusionTerm(f_n[i])
@@ -85,7 +85,7 @@ M_dif=[]
 M_conv=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= pf.boundaryConditionTerm(BC_n[i])
+    M, RHS= pf.boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=pf.diffusionTerm(f_n[i])
@@ -124,7 +124,7 @@ M_ls=[]
 RHS_s=[]
 RHS_tvd=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= pf.boundaryConditionTerm(BC_n[i])
+    M, RHS= pf.boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=pf.diffusionTerm(f_n[i])

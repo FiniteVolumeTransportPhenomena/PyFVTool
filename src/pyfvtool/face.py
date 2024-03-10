@@ -1,25 +1,89 @@
 import numpy as np
+from typing import overload
 
 from .mesh import MeshStructure
-from .mesh import Mesh1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 
 
 
 class FaceVariable:
     """
     Face variable class
+    
+
+    Create a FaceVariable for the given mesh with the given value.
+    Examples:
+    >>> import pyfvtool as pf
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> f = pf.FaceVariable(m, 1.0)
+
     """
-    def __init__(self,
-                 mesh_struct: MeshStructure,
+    @overload
+    def __init__(self, mesh: MeshStructure, faceval : float):
+        ...
+     
+    @overload
+    def __init__(self, mesh: MeshStructure, faceval : np.ndarray):
+        ...
+        
+    @overload
+    def __init__(self, 
+                 mesh: MeshStructure,
                  xvalue: np.ndarray,
                  yvalue: np.ndarray,
                  zvalue: np.ndarray):
-        self.domain = mesh_struct
+        ...
+ 
+    
+    def __init__(self,
+                 mesh: MeshStructure,
+                 *args):
+        if len(args)==3:             
+            xvalue = args[0]
+            yvalue = args[1]
+            zvalue = args[2]
+        elif len(args)==1:
+            faceval = args[0]
+            if issubclass(type(mesh), Grid1D):
+                Nx = mesh.dims
+                if np.isscalar(faceval):
+                    xvalue = faceval*np.ones(Nx+1)
+                    yvalue = np.array([])
+                    zvalue = np.array([])
+                else:
+                    xvalue = faceval[0]*np.ones(Nx+1)
+                    yvalue = np.array([])
+                    zvalue = np.array([])
+            elif issubclass(type(mesh), Grid2D):
+                Nx, Ny = mesh.dims
+                if np.isscalar(faceval):
+                    xvalue = faceval*np.ones((Nx+1, Ny))
+                    yvalue = faceval*np.ones((Nx, Ny+1))
+                    zvalue = np.array([])
+                else:
+                    xvalue = faceval[0]*np.ones((Nx+1, Ny))
+                    yvalue = faceval[1]*np.ones((Nx, Ny+1))
+                    zvalue = np.array([])
+            elif issubclass(type(mesh), Grid3D):
+                Nx, Ny, Nz = mesh.dims
+                if np.isscalar(faceval):
+                    xvalue = faceval*np.ones((Nx+1, Ny, Nz))
+                    yvalue = faceval*np.ones((Nx, Ny+1, Nz))
+                    zvalue = faceval*np.ones((Nx, Ny, Nz+1))
+                else:
+                    xvalue = faceval[0]*np.ones((Nx+1, Ny, Nz))
+                    yvalue = faceval[1]*np.ones((Nx, Ny+1, Nz))
+                    zvalue = faceval[2]*np.ones((Nx, Ny, Nz+1))
+        else:
+            raise TypeError('Unexpected number of arguments')
+            
+        self.domain = mesh
         self.xvalue = xvalue
         self.yvalue = yvalue
         self.zvalue = zvalue
+
 
     def __add__(self, other):
         if type(other) is FaceVariable:
@@ -197,39 +261,6 @@ class FaceVariable:
                             np.abs(self.zvalue))
 
 
-def createFaceVariable(mesh, faceval):
-    """
-    Create a FaceVariable for the given mesh with the given value.
-    Examples:
-    >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> f = pf.createFaceVariable(m, 1.0)
-    """
-    if issubclass(type(mesh), Mesh1D):
-        Nx = mesh.dims
-        if np.isscalar(faceval):
-            return FaceVariable(mesh, faceval*np.ones(Nx+1), np.array([]), np.array([]))
-        else:
-            return FaceVariable(mesh, faceval[0]*np.ones(Nx+1), np.array([]), np.array([]))
-    elif issubclass(type(mesh), Mesh2D):
-        Nx, Ny = mesh.dims
-        if np.isscalar(faceval):
-            return FaceVariable(mesh, faceval*np.ones((Nx+1, Ny)),
-                            faceval*np.ones((Nx, Ny+1)), np.array([]))
-        else:
-            return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny)),
-                            faceval[1]*np.ones((Nx, Ny+1)), np.array([]))
-    elif issubclass(type(mesh), Mesh3D):
-        Nx, Ny, Nz = mesh.dims
-        if np.isscalar(faceval):
-            return FaceVariable(mesh, faceval*np.ones((Nx+1, Ny, Nz)),
-                            faceval*np.ones((Nx, Ny+1, Nz)),
-                            faceval*np.ones((Nx, Ny, Nz+1)))
-        else:
-            return FaceVariable(mesh, faceval[0]*np.ones((Nx+1, Ny, Nz)),
-                            faceval[1]*np.ones((Nx, Ny+1, Nz)),
-                            faceval[2]*np.ones((Nx, Ny, Nz+1)))
-
         
 def faceLocations(m: MeshStructure):
     """
@@ -268,28 +299,28 @@ def faceLocations(m: MeshStructure):
     
     N = m.dims
     
-    if (type(m) is Mesh1D)\
-     or (type(m) is MeshCylindrical1D):
-        X = createFaceVariable(m, 0)
+    if (type(m) is Grid1D)\
+     or (type(m) is CylindricalGrid1D):
+        X = FaceVariable(m, 0)
         X.xvalue = m.facecenters.x
         return X
         
-    elif (type(m) is Mesh2D)\
-       or (type(m) is MeshCylindrical2D)\
-       or (type(m) is MeshRadial2D):
-        X = createFaceVariable(m, 0)
-        Y = createFaceVariable(m, 0)
+    elif (type(m) is Grid2D)\
+       or (type(m) is CylindricalGrid2D)\
+       or (type(m) is PolarGrid2D):
+        X = FaceVariable(m, 0)
+        Y = FaceVariable(m, 0)
         X.xvalue = np.tile(m.facecenters.x[:, np.newaxis], (1, N[1]))
         X.yvalue = np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0]+1, 1))
         Y.xvalue = np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1]+1))
         Y.yvalue = np.tile(m.facecenters.y[:, np.newaxis].T, (N[0], 1))
         return X, Y
         
-    elif (type(m) is Mesh3D)\
-       or (type(m) is MeshCylindrical3D):
-        X = createFaceVariable(m, 0)
-        Y = createFaceVariable(m, 0)
-        Z = createFaceVariable(m, 0)
+    elif (type(m) is Grid3D)\
+       or (type(m) is CylindricalGrid3D):
+        X = FaceVariable(m, 0)
+        Y = FaceVariable(m, 0)
+        Z = FaceVariable(m, 0)
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters.z
         
@@ -316,8 +347,8 @@ def faceeval(f, *args):
     Evaluate a function f on a FaceVariable.
     Examples:
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> f = pf.createFaceVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> f = pf.FaceVariable(m, 1.0)
     >>> g = pf.faceeval(lambda x: x**2, f)
     """
     if len(args)==1:

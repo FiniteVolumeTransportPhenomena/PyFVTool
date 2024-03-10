@@ -1,8 +1,8 @@
 import numpy as np
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import CylindricalGrid2D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .cell import get_CellVariable_profile1D, get_CellVariable_profile2D
 from .cell import get_CellVariable_profile3D
@@ -35,17 +35,23 @@ def visualizeCells(phi: CellVariable,
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> pf.visualizeCells(phi)
     """
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         x, phi0 = get_CellVariable_profile1D(phi)
+        # TODO:
+        # get_CellVariable_profile1D can become a method of CellVariable
+        #    (shared with 2D and 3D versions)
         plt.plot(x, phi0)
         # plt.show()
 
-    elif (type(phi.domain) is Mesh2D) or (type(phi.domain) is MeshCylindrical2D):
+    elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
+        # TODO:
+        # get_CellVariable_profile2D can become a method of CellVariable
+        #    (shared with 1D and 3D versions)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],
         #                phi.domain.cellcenters.x,
@@ -72,8 +78,11 @@ def visualizeCells(phi: CellVariable,
                        cmap=cmap, shading=shading)
         # plt.show()
 
-    elif (type(phi.domain) is MeshRadial2D):
+    elif (type(phi.domain) is PolarGrid2D):
         x, y, phi0 = get_CellVariable_profile2D(phi)
+        # TODO:
+        # get_CellVariable_profile2D can become a method of CellVariable
+        #    (shared with 1D and 3D versions)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],
         #                phi.domain.cellcenters.x,
@@ -95,8 +104,11 @@ def visualizeCells(phi: CellVariable,
         plt.pcolor(y, x, phi0)
         # plt.show()
 
-    elif (type(phi.domain) is Mesh3D):
+    elif (type(phi.domain) is Grid3D):
         x, y, z, phi0 = get_CellVariable_profile3D(phi)
+        # TODO:
+        # get_CellVariable_profile3D can become a method of CellVariable
+        #    (shared with 1D and 2D versions)
         ## Kept old code below for reference. Can be removed.
         # x = np.hstack([phi.domain.facecenters.x[0],
         #                phi.domain.cellcenters.x,
@@ -154,7 +166,7 @@ def visualizeCells(phi: CellVariable,
                         alpha=0.8)
         # plt.show()
 
-    elif (type(phi.domain) is MeshCylindrical3D):
+    elif (type(phi.domain) is CylindricalGrid3D):
         r, theta, z, phi0 = get_CellVariable_profile3D(phi)
         ## Kept old code below for reference. Can be removed.
         # r = np.hstack([phi.domain.facecenters.x[0],

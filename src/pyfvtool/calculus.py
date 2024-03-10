@@ -1,8 +1,8 @@
 import numpy as np
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -25,27 +25,27 @@ def gradientTerm(phi: CellVariable):
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> gradPhi = pf.gradientTerm(phi)
     >>> gradPhi.xvalue
     """
     # calculates the gradient of a variable
     # the output is a face variable
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         return FaceVariable(phi.domain,
                      (phi.value[1:]-phi.value[0:-1])/dx,
                      np.array([]),
                      np.array([]))
-    elif (type(phi.domain) is Mesh2D) or (type(phi.domain) is MeshCylindrical2D):
+    elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         return FaceVariable(phi.domain,
                      (phi.value[1:, 1:-1]-phi.value[0:-1, 1:-1])/dx[:,np.newaxis],
                      (phi.value[1:-1, 1:]-phi.value[1:-1, 0:-1])/dy,
                      np.array([]))
-    elif (type(phi.domain) is MeshRadial2D):
+    elif (type(phi.domain) is PolarGrid2D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dtheta = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         rp = phi.domain.cellcenters.x
@@ -53,7 +53,7 @@ def gradientTerm(phi: CellVariable):
                      (phi.value[1:, 1:-1]-phi.value[0:-1, 1:-1])/dx[:,np.newaxis],
                      (phi.value[1:-1, 1:]-phi.value[1:-1, 0:-1])/(dtheta[np.newaxis,:]*rp[:,np.newaxis]),
                      np.array([]))
-    elif (type(phi.domain) is Mesh3D):
+    elif (type(phi.domain) is Grid3D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         dz = 0.5*(phi.domain.cellsize.z[0:-1]+phi.domain.cellsize.z[1:])
@@ -64,7 +64,7 @@ def gradientTerm(phi: CellVariable):
                       phi.value[1:-1, 0:-1, 1:-1])/dy[np.newaxis,:,np.newaxis],
                      (phi.value[1:-1, 1:-1, 1:] -
                      phi.value[1:-1, 1:-1, 0:-1])/dz[np.newaxis,np.newaxis,:])
-    elif (type(phi.domain) is MeshCylindrical3D):
+    elif (type(phi.domain) is CylindricalGrid3D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
         dz = 0.5*(phi.domain.cellsize.z[0:-1]+phi.domain.cellsize.z[1:])
@@ -189,8 +189,8 @@ def divergenceTermCylindrical2D(F:FaceVariable):
     return RHSdiv, RHSdivx, RHSdivy
 
 
-# =============== Divergence 2D Radial Term ============================
-def divergenceTermRadial2D(F:FaceVariable):
+# =============== Divergence 2D Polar Term ============================
+def divergenceTermPolar2D(F:FaceVariable):
     # This def calculates the divergence of a field
     # using its face
     # extract data from the mesh structure
@@ -311,24 +311,24 @@ def divergenceTerm(F: FaceVariable):
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> gradPhi = pf.gradientTerm(phi)
     >>> RHSdiv = pf.divergenceTerm(gradPhi)
     """
-    if (type(F.domain) is Mesh1D):
+    if (type(F.domain) is Grid1D):
         RHSdiv = divergenceTerm1D(F)
-    elif (type(F.domain) is MeshCylindrical1D):
+    elif (type(F.domain) is CylindricalGrid1D):
         RHSdiv = divergenceTermCylindrical1D(F)
-    elif (type(F.domain) is Mesh2D):
+    elif (type(F.domain) is Grid2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTerm2D(F)
-    elif (type(F.domain) is MeshCylindrical2D):
+    elif (type(F.domain) is CylindricalGrid2D):
         RHSdiv, RHSdivx, RHSdivy = divergenceTermCylindrical2D(F)
-    elif (type(F.domain) is MeshRadial2D):
-        RHSdiv, RHSdivx, RHSdivy = divergenceTermRadial2D(F)
-    elif (type(F.domain) is Mesh3D):
+    elif (type(F.domain) is PolarGrid2D):
+        RHSdiv, RHSdivx, RHSdivy = divergenceTermPolar2D(F)
+    elif (type(F.domain) is Grid3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTerm3D(F)
-    elif (type(F.domain) is MeshCylindrical3D):
+    elif (type(F.domain) is CylindricalGrid3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTermCylindrical3D(F)
     else:
         raise Exception("DivergenceTerm is not defined for this Mesh type.")
@@ -361,21 +361,21 @@ def gradientTermFixedBC(phi):
     --------
     >>> import pyfvtool as pf
     >>> import numpy as np
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> sin_phi = pf.celleval(np.sin, BC2GhostCells(sw))
     >>> gradPhi = pf.gradientTermFixedBC(sin_phi)
     """
     faceGrad = gradientTerm(phi)
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         faceGrad.xvalue[0] = 2*faceGrad.xvalue[0]
         faceGrad.xvalue[-1] = 2*faceGrad.xvalue[-1]
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         faceGrad.xvalue[0, :] = 2*faceGrad.xvalue[0, :]
         faceGrad.xvalue[-1, :] = 2*faceGrad.xvalue[-1, :]
         faceGrad.yvalue[:, 0] = 2*faceGrad.yvalue[:, 0]
         faceGrad.yvalue[:, -1] = 2*faceGrad.yvalue[:, -1]
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         faceGrad.xvalue[0, :, :] = 2*faceGrad.xvalue[0, :, :]
         faceGrad.xvalue[-1, :, :] = 2*faceGrad.xvalue[-1, :, :]
         faceGrad.yvalue[:, 0, :] = 2*faceGrad.yvalue[:, 0, :]

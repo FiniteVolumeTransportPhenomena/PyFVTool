@@ -1,6 +1,6 @@
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
-
+import matplotlib.pyplot as plt
 import pyfvtool as pf
 
 Nx = 20 # number of finite volume cells
@@ -11,8 +11,8 @@ D_val = 1e-5 # diffusion coefficient (gas phase)
 t_simulation = 3600.0 # [s] simulation time
 dt = 60.0 # [s] time step
 
-m1 = pf.createMesh1D(Nx, Lx) # mesh object
-bc = pf.createBC(m1) # Neumann boundary condition by default
+m1 = pf.Grid1D(Nx, Lx) # mesh object
+bc = pf.BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0
@@ -20,15 +20,15 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = pf.createCellVariable(m1, c_init, bc)
+c_old = pf.CellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = pf.createCellVariable(m1, D_val)
+D_cell = pf.CellVariable(m1, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization
 Mdiff = pf.diffusionTerm(D_face)
-Mbc, RHSbc = pf.boundaryConditionTerm(bc)
+Mbc, RHSbc = pf.boundaryConditionsTerm(bc)
 
 # time loop
 t = 0
@@ -38,5 +38,7 @@ while t<t_simulation:
     c_new = pf.solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
     c_old.update_value(c_new)
 
+plt.figure(1)
+plt.clf()
 pf.visualizeCells(c_old)
 

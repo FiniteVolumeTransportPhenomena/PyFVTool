@@ -9,11 +9,11 @@ See also `__init__.py` in the `pyfvtool` module directory.
 Taken from test script:
 
 ```python
-from pyfvtool import createMesh1D, createMesh2D, createMesh3D
-from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
-from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
-from pyfvtool import createCellVariable, createFaceVariable
-from pyfvtool import createBC
+from pyfvtool import Grid1D, Grid2D, Grid3D
+from pyfvtool import CylindricalGrid1D, CylindricalGrid2D
+from pyfvtool import CylindricalGrid3D, PolarGrid2D
+from pyfvtool import CellVariable, FaceVariable
+from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
@@ -28,20 +28,20 @@ from pyfvtool import visualizeCells
 
 ## Mesh definition
 
-### Cartesian grids: createMesh1D, createMesh2D, createMesh3D
+### Cartesian grids: Grid1D, Grid2D, PolarGrid2D
 
-### Cylindrical grids: createMeshCylindrical1D, createMeshCylindrical2D, createMeshCylindrical3D
+### Cylindrical grids: CylindricalGrid1D, CylindricalGrid2D, CylindricalGrid3D
 
-### Radial grid: createMeshRadial2D
+### Polar grid: PolarGrid2D
 
 
 ## Variable definition and boundary conditions
 
-### createCellVariable
+### CellVariable
 
-### createFaceVariable
+### FaceVariable
 
-### createBC
+### BoundaryConditions
 
 ### calculation of mean values
 

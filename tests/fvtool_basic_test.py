@@ -8,12 +8,12 @@ from scipy.special import erf
 # an idea of the coverage, and can also serve as a guide to writing more
 # elaborate documentation for PyFVTool functions and classes.
 
-from pyfvtool import createMesh1D, createMesh2D, createMesh3D
-from pyfvtool import createMeshCylindrical1D, createMeshCylindrical2D
-from pyfvtool import createMeshCylindrical3D, createMeshRadial2D
-from pyfvtool import createCellVariable, createFaceVariable
-from pyfvtool import createBC
-from pyfvtool import boundaryConditionTerm, diffusionTerm
+from pyfvtool import Grid1D, Grid2D, Grid3D
+from pyfvtool import CylindricalGrid1D, CylindricalGrid2D, PolarGrid2D
+from pyfvtool import CylindricalGrid3D
+from pyfvtool import CellVariable, FaceVariable
+from pyfvtool import BoundaryConditions
+from pyfvtool import boundaryConditionsTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
@@ -54,32 +54,32 @@ Z= np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
 N_mesh=7
 # create nonuniform mesh
 mesh_nonuniform= []
-mesh_nonuniform.append(createMesh1D(X))
-mesh_nonuniform.append(createMesh2D(X, Y))
-mesh_nonuniform.append(createMesh3D(X, Y, Z))
-mesh_nonuniform.append(createMeshCylindrical1D(X))
-mesh_nonuniform.append(createMeshCylindrical2D(X, Y))
-mesh_nonuniform.append(createMeshCylindrical3D(X, Y, Z))
-mesh_nonuniform.append(createMeshRadial2D(X, Y))
+mesh_nonuniform.append(Grid1D(X))
+mesh_nonuniform.append(Grid2D(X, Y))
+mesh_nonuniform.append(Grid3D(X, Y, Z))
+mesh_nonuniform.append(CylindricalGrid1D(X))
+mesh_nonuniform.append(CylindricalGrid2D(X, Y))
+mesh_nonuniform.append(CylindricalGrid3D(X, Y, Z))
+mesh_nonuniform.append(PolarGrid2D(X, Y))
 print("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables
 c_val= 1.0
 D_val = 0.5
 # nonuniform
-c_n= [createCellVariable(m, c_val, createBC(m)) for m in mesh_nonuniform]
-D_n= [createCellVariable(m, D_val, createBC(m)) for m in mesh_nonuniform]
+c_n= [CellVariable(m, c_val, BoundaryConditions(m)) for m in mesh_nonuniform]
+D_n= [CellVariable(m, D_val, BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of fixed values over nonuniform mesh created successfully!")
-c_r= [createCellVariable(m, np.random.random_sample(m.dims), createBC(m)) for m in mesh_nonuniform]
+c_r= [CellVariable(m, np.random.random_sample(m.dims), BoundaryConditions(m)) for m in mesh_nonuniform]
 print("Cells of random values over nonuniform mesh created successfully!")
 ## Part III: create face variables
 f_val= 0.5
 # nonuniform
-f_n = [createFaceVariable(m, [f_val,0.0,0.0]) for m in mesh_nonuniform]
+f_n = [FaceVariable(m, [f_val,0.0,0.0]) for m in mesh_nonuniform]
 print("Face variable over nonuniform mesh created successfully!")
 ## Part IV: Test boundary conditions
 BC_n = []
 for m in mesh_nonuniform:
-    BC=createBC(m)
+    BC=BoundaryConditions(m)
     BC.left.a[:]=0.0
     BC.left.b[:]=1.0
     BC.left.c[:]=1.0
@@ -94,7 +94,7 @@ M_bc=[]
 M_dif=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    Mbc, RHSbc= boundaryConditionTerm(BC_n[i])
+    Mbc, RHSbc= boundaryConditionsTerm(BC_n[i])
     M_bc.append(Mbc)
     RHS_bc.append(RHSbc)
     Md = diffusionTerm(f_n[i])
@@ -105,11 +105,11 @@ for i in range(len(mesh_nonuniform)):
 
 L = 1.0  # domain length
 Nx = 25 # number of cells
-meshstruct = createMesh1D(Nx, L)
+meshstruct = Grid1D(Nx, L)
 x = meshstruct.cellcenters.x # extract the cell center positions
 ##
 # The next step is to define the boundary condition:
-BC = createBC(meshstruct) # all Neumann boundary condition structure
+BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 # BC.left.a[:] = 0 
 # BC.left.b[:] = 1 # switch the left boundary to Dirichlet
 # BC.left.c[:] = 0 # value = 0 at the left boundary
@@ -119,15 +119,15 @@ BC.right.c[:] =1 # value = 1 at the right boundary
 ##
 # Now we define the transfer coefficients:
 D_val = 1.0 # diffusion coefficient value
-D = createCellVariable(meshstruct, D_val, createBC(meshstruct)) # assign dif. coef. to all the cells
+D = CellVariable(meshstruct, D_val, BoundaryConditions(meshstruct)) # assign dif. coef. to all the cells
 Dave = harmonicMean(D) # convert a cell variable to face variable
-u = -10 # velocity value
-u_face = createFaceVariable(meshstruct, u) # assign velocity value to cell faces
+u = -10.0 # velocity value
+u_face = FaceVariable(meshstruct, u) # assign velocity value to cell faces
 
 Mconv =  convectionTerm(u_face) # convection term, central, second order
 Mconvupwind = convectionUpwindTerm(u_face) # convection term, upwind, first order
 Mdiff = diffusionTerm(Dave) # diffusion term
-Mbc, RHSbc = boundaryConditionTerm(BC) # boundary condition discretization
+Mbc, RHSbc = boundaryConditionsTerm(BC) # boundary condition discretization
 M = Mconv-Mdiff+Mbc # matrix of coefficient for central scheme
 Mupwind = Mconvupwind-Mdiff+Mbc # matrix of coefficient for upwind scheme
 RHS = RHSbc # right hand side vector
@@ -135,8 +135,8 @@ c = solvePDE(meshstruct, M, RHS) # solve for the central scheme
 c_upwind = solvePDE(meshstruct, Mupwind, RHS) # solve for the upwind scheme
 c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val)) # analytical solution
 # plt.figure(5)
-# plt.plot(x, c.value[1:Nx+1]) 
-# plt.plot(x, c_upwind.value[1:Nx+1], '--')
+# plt.plot(x, c.internalCellValues) 
+# plt.plot(x, c_upwind.internalCellValues, '--')
 # plt.plot(x, c_analytical, '.')
 # plt.show()
 # plt.legend('central', 'upwind', 'analytical')
@@ -149,7 +149,7 @@ M_dif=[]
 M_conv=[]
 RHS_bc=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= boundaryConditionTerm(BC_n[i])
+    M, RHS= boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=diffusionTerm(f_n[i])
@@ -186,7 +186,7 @@ M_ls=[]
 RHS_s=[]
 RHS_tvd=[]
 for i in range(len(mesh_nonuniform)):
-    M, RHS= boundaryConditionTerm(BC_n[i])
+    M, RHS= boundaryConditionsTerm(BC_n[i])
     M_bc.append(M)
     RHS_bc.append(RHS)
     M=diffusionTerm(f_n[i])
@@ -228,8 +228,8 @@ print("Averaging functions run smoothly!")
 # define the domain
 L = 5.0  # domain length
 Nx = 100 # number of cells
-meshstruct = createMesh1D(Nx, L)
-BC = createBC(meshstruct) # all Neumann boundary condition structure
+meshstruct = Grid1D(Nx, L)
+BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.left.a[:] = 0 
 BC.left.b[:]=1 
 BC.left.c[:]=1 # left boundary
@@ -239,11 +239,11 @@ BC.right.c[:]=0 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
-alfa = createCellVariable(meshstruct, 1)
-Dave = createFaceVariable(meshstruct, D_val)
+alfa = CellVariable(meshstruct, 1)
+Dave = FaceVariable(meshstruct, D_val)
 ## define initial values
-c_old = createCellVariable(meshstruct, 0, BC) # initial values
-c = createCellVariable(meshstruct, 0, BC) # working values
+c_old = CellVariable(meshstruct, 0, BC) # initial values
+c = CellVariable(meshstruct, 0, BC) # working values
 ## loop
 dt = 0.001 # time step
 final_t = 0.5
@@ -258,7 +258,7 @@ for t in np.arange(dt, final_t, dt):
 c_analytical = 1-erf(x/(2*np.sqrt(D_val*t)))
 plt.figure(1)
 plt.clf()
-plt.plot(x, c.internalCellValues(), x, c_analytical, 'r--')
+plt.plot(x, c.internalCellValues, x, c_analytical, 'r--')
 # plt.show()
 
 
@@ -276,8 +276,8 @@ D_val = 1e-5 # diffusion coefficient (gas phase)
 t_simulation = 3600.0 # [s] simulation time
 dt = 60.0 # [s] time step
 
-m1 = createMesh1D(Nx, Lx) # mesh object
-bc = createBC(m1) # Neumann boundary condition by default
+m1 = Grid1D(Nx, Lx) # mesh object
+bc = BoundaryConditions(m1) # Neumann boundary condition by default
 
 # switch the left boundary to Dirichlet: fixed concentration
 bc.left.a[:] = 0.0
@@ -285,15 +285,15 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = createCellVariable(m1, c_init, bc)
+c_old = CellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
-D_cell = createCellVariable(m1, D_val)
+D_cell = CellVariable(m1, D_val)
 D_face = geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
 # Discretization
 Mdiff = diffusionTerm(D_face)
-Mbc, RHSbc = boundaryConditionTerm(bc)
+Mbc, RHSbc = boundaryConditionsTerm(bc)
 
 # time loop
 t = 0
@@ -309,9 +309,9 @@ visualizeCells(c_old)
 
 # Testing 2D visualization
 #
-mm = createMesh2D(50, 50, 5*np.pi, 5*np.pi)
+mm = Grid2D(50, 50, 5*np.pi, 5*np.pi)
 XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters.y)
-vv = createCellVariable(mm, np.cos(XX)*np.sin(YY))
+vv = CellVariable(mm, np.cos(XX)*np.sin(YY))
 plt.figure(3)
 plt.clf()
 visualizeCells(vv)

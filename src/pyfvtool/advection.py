@@ -2,9 +2,9 @@
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -12,13 +12,13 @@ from .face import FaceVariable
 
 
 def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
-    if issubclass(type(u.domain), Mesh1D):
+    if issubclass(type(u.domain), Grid1D):
         ux_min = np.copy(u.xvalue)
         ux_max = np.copy(u.xvalue)
         ux_min[u_upwind.xvalue > 0.0] = 0.0
         ux_max[u_upwind.xvalue < 0.0] = 0.0
         return ux_min, ux_max
-    elif issubclass(type(u.domain), Mesh2D):
+    elif issubclass(type(u.domain), Grid2D):
         ux_min = np.copy(u.xvalue)
         ux_max = np.copy(u.xvalue)
         uy_min = np.copy(u.yvalue)
@@ -28,7 +28,7 @@ def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
         uy_min[u_upwind.yvalue > 0.0] = 0.0
         uy_max[u_upwind.yvalue < 0.0] = 0.0
         return ux_min, ux_max, uy_min, uy_max
-    elif issubclass(type(u.domain), Mesh3D):
+    elif issubclass(type(u.domain), Grid3D):
         ux_min = np.copy(u.xvalue)
         ux_max = np.copy(u.xvalue)
         uy_min = np.copy(u.yvalue)
@@ -616,7 +616,7 @@ def convectionTvdRHSCylindrical2D(u: FaceVariable, phi: CellVariable, FL, *args)
     return RHS, RHSx, RHSy
 
 
-def convectionTermRadial2D(u: FaceVariable):
+def convectionTermPolar2D(u: FaceVariable):
     # u is a face variable
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
@@ -665,7 +665,7 @@ def convectionTermRadial2D(u: FaceVariable):
     return M, Mx, My
 
 
-def convectionUpwindTermRadial2D(u: FaceVariable, *args):
+def convectionUpwindTermPolar2D(u: FaceVariable, *args):
     # u is a face variable
     # extract data from the mesh structure
     if len(args) > 0:
@@ -728,7 +728,7 @@ def convectionUpwindTermRadial2D(u: FaceVariable, *args):
     return M, Mx, My
 
 
-def convectionTvdRHSRadial2D(u: FaceVariable, phi: CellVariable, FL, *args):
+def convectionTvdRHSPolar2D(u: FaceVariable, phi: CellVariable, FL, *args):
     # u is a face variable
     # phi is a cell variable
     if len(args) > 0:
@@ -1344,26 +1344,26 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> u = pf.createFaceVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> u = pf.FaceVariable(m, 1.0)
     >>> M = pf.convectionTerm(u)
     """
-    if (type(u.domain) is Mesh1D):
+    if (type(u.domain) is Grid1D):
         return convectionTerm1D(u)
-    elif (type(u.domain) is MeshCylindrical1D):
+    elif (type(u.domain) is CylindricalGrid1D):
         return convectionTermCylindrical1D(u)
-    elif (type(u.domain) is Mesh2D):
+    elif (type(u.domain) is Grid2D):
         return convectionTerm2D(u)[0]
-    elif (type(u.domain) is MeshCylindrical2D):
+    elif (type(u.domain) is CylindricalGrid2D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTermCylindrical2D(u)[0]
-    elif (type(u.domain) is MeshRadial2D):
+    elif (type(u.domain) is PolarGrid2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTermRadial2D(u)[0]
-    elif (type(u.domain) is Mesh3D):
+        return convectionTermPolar2D(u)[0]
+    elif (type(u.domain) is Grid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTerm3D(u)[0]
-    elif (type(u.domain) is MeshCylindrical3D):
+    elif (type(u.domain) is CylindricalGrid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTermCylindrical3D(u)[0]
     else:
@@ -1387,26 +1387,26 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> u = pf.createFaceVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> u = pf.FaceVariable(m, 1.0)
     >>> M = pf.convectionUpwindTerm(u)
     """
-    if (type(u.domain) is Mesh1D):
+    if (type(u.domain) is Grid1D):
         return convectionUpwindTerm1D(u, *args)
-    elif (type(u.domain) is MeshCylindrical1D):
+    elif (type(u.domain) is CylindricalGrid1D):
         return convectionUpwindTermCylindrical1D(u, *args)
-    elif (type(u.domain) is Mesh2D):
+    elif (type(u.domain) is Grid2D):
         return convectionUpwindTerm2D(u, *args)[0]
-    elif (type(u.domain) is MeshCylindrical2D):
+    elif (type(u.domain) is CylindricalGrid2D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTermCylindrical2D(u)[0]
-    elif (type(u.domain) is MeshRadial2D):
+    elif (type(u.domain) is PolarGrid2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionUpwindTermRadial2D(u)[0]
-    elif (type(u.domain) is Mesh3D):
+        return convectionUpwindTermPolar2D(u)[0]
+    elif (type(u.domain) is Grid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTerm3D(u)[0]
-    elif (type(u.domain) is MeshCylindrical3D):
+    elif (type(u.domain) is CylindricalGrid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTermCylindrical3D(u)[0]
     else:
@@ -1431,29 +1431,29 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> u = pf.createFaceVariable(m, 1.0)
-    >>> phi = pf.createCellVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> u = pf.FaceVariable(m, 1.0)
+    >>> phi = pf.CellVariable(m, 1.0)
     >>> FL = pf.fluxLimiter('SUPERBEE')
     >>> RHS = pf.convectionTvdRHSTerm(u, phi, FL)
     """
-    if (type(u.domain) is Mesh1D):
+    if (type(u.domain) is Grid1D):
         return convectionTvdRHS1D(u, phi, FL, *args)
-    elif (type(u.domain) is MeshCylindrical1D):
+    elif (type(u.domain) is CylindricalGrid1D):
         return convectionTvdRHSCylindrical1D(u, phi, FL, *args)
-    elif (type(u.domain) is Mesh2D):
+    elif (type(u.domain) is Grid2D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHS2D(u, phi, FL, *args)[0]
-    elif (type(u.domain) is MeshCylindrical2D):
+    elif (type(u.domain) is CylindricalGrid2D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHSCylindrical2D(u, phi, FL, *args)[0]
-    elif (type(u.domain) is MeshRadial2D):
+    elif (type(u.domain) is PolarGrid2D):
         # raise Exception("Not implemented yet. Work in progress")
-        return convectionTvdRHSRadial2D(u, phi, FL, *args)[0]
-    elif (type(u.domain) is Mesh3D):
+        return convectionTvdRHSPolar2D(u, phi, FL, *args)[0]
+    elif (type(u.domain) is Grid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHS3D(u, phi, FL, *args)[0]
-    elif (type(u.domain) is MeshCylindrical3D):
+    elif (type(u.domain) is CylindricalGrid3D):
         # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHSCylindrical3D(u, phi, FL, *args)[0]
     else:

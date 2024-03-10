@@ -3,9 +3,9 @@
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Mesh1D, Mesh2D, Mesh3D
-from .mesh import MeshCylindrical1D, MeshCylindrical2D
-from .mesh import MeshRadial2D, MeshCylindrical3D
+from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import CylindricalGrid1D, CylindricalGrid2D
+from .mesh import PolarGrid2D, CylindricalGrid3D
 from .face import FaceVariable
 
 
@@ -171,7 +171,7 @@ def diffusionTermCylindrical2D(D: FaceVariable) -> csr_array:
     return M, Mx, My
 
 
-def diffusionTermRadial2D(D: FaceVariable) -> csr_array:
+def diffusionTermPolar2D(D: FaceVariable) -> csr_array:
     # D is a face variable
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
@@ -373,23 +373,23 @@ def diffusionTerm(D: FaceVariable) -> csr_array:
     Examples
     --------
     >>> import pyfvtool as pf
-    >>> m = pf.createMesh1D(10, 1.0)
-    >>> D = pf.createFaceVariable(m, 1.0)
+    >>> m = pf.Grid1D(10, 1.0)
+    >>> D = pf.FaceVariable(m, 1.0)
     >>> M = pf.diffusionTerm(D)
     """
-    if (type(D.domain) is Mesh1D):
+    if (type(D.domain) is Grid1D):
         return diffusionTerm1D(D)
-    elif (type(D.domain) is MeshCylindrical1D):
+    elif (type(D.domain) is CylindricalGrid1D):
         return diffusionTermCylindrical1D(D)
-    elif (type(D.domain) is Mesh2D):
+    elif (type(D.domain) is Grid2D):
         return diffusionTerm2D(D)[0]
-    elif (type(D.domain) is MeshCylindrical2D):
+    elif (type(D.domain) is CylindricalGrid2D):
         return diffusionTermCylindrical2D(D)[0]
-    elif (type(D.domain) is MeshRadial2D):
-        return diffusionTermRadial2D(D)[0]
-    elif (type(D.domain) is Mesh3D):
+    elif (type(D.domain) is PolarGrid2D):
+        return diffusionTermPolar2D(D)[0]
+    elif (type(D.domain) is Grid3D):
         return diffusionTerm3D(D)[0]
-    elif (type(D.domain) is MeshCylindrical3D):
+    elif (type(D.domain) is CylindricalGrid3D):
         return diffusionTermCylindrical3D(D)[0]
     else:
         raise Exception("DiffusionTerm is not defined for this Mesh type.")

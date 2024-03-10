@@ -10,35 +10,38 @@ import numpy as np
 ## define the domain
 L = 1.0  # domain length
 Nx = 25 # number of cells
-meshstruct = pf.createMesh1D(Nx, L)
-BC = pf.createBC(meshstruct) # all Neumann boundary condition structure
-BC.left.a[:] = 0 
-BC.left.b[:] = 1 
-BC.left.c[:] = 0 # left boundary
-BC.right.a[:] = 0 
-BC.right.b[:] = 1 
-BC.right.c[:] = 1 # right boundary
+meshstruct = pf.Grid1D(Nx, L)
+BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
+BC.left.a[:] = 0.0 
+BC.left.b[:] = 1.0 
+BC.left.c[:] = 0.0 # left boundary
+BC.right.a[:] = 0.0 
+BC.right.b[:] = 1.0 
+BC.right.c[:] = 1.0 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
-D_val = -1
-D = pf.createCellVariable(meshstruct, D_val)
+D_val = -1.0
+D = pf.CellVariable(meshstruct, D_val)
 Dave = pf.harmonicMean(D) # convert a cell variable to face variable
-alfa = pf.createCellVariable(meshstruct, 1)
-u = -10
-u_face = pf.createFaceVariable(meshstruct, u)
+alfa = pf.CellVariable(meshstruct, 1.0)
+u = -10.0
+u_face = pf.FaceVariable(meshstruct, u)
 ## solve
 Mconv = pf.convectionTerm(u_face)
 Mconvupwind = pf.convectionUpwindTerm(u_face)
 Mdiff = pf.diffusionTerm(Dave)
-[Mbc, RHSbc] = pf.boundaryConditionTerm(BC)
+[Mbc, RHSbc] = pf.boundaryConditionsTerm(BC)
 M = Mconv-Mdiff-Mbc
 Mupwind = Mconvupwind-Mdiff-Mbc
 RHS = -RHSbc
 c = pf.solvePDE(meshstruct, M, RHS)
 c_upwind = pf.solvePDE(meshstruct, Mupwind, RHS)
 c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
-plt.plot(x, c.value[1:Nx+1], label="Central")
-plt.plot(x, c_upwind.value[1:Nx+1], label="Upwind")
+
+plt.figure(1)
+plt.clf()
+plt.plot(x, c.internalCellValues, label="Central")
+plt.plot(x, c_upwind.internalCellValues, label="Upwind")
 plt.plot(x, c_analytical, '^', label = "Analytical")
 plt.legend()
 plt.show()

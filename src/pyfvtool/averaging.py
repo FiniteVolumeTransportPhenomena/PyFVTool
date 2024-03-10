@@ -19,19 +19,19 @@ import numpy as np
 
 
 from .mesh import MeshStructure
-from .mesh import Mesh1D, Mesh2D, Mesh3D
+from .mesh import Grid1D, Grid2D, Grid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
-    if issubclass(type(m), Mesh1D):
+    if issubclass(type(m), Grid1D):
         dx = m.cellsize.x
         return dx
-    elif issubclass(type(m), Mesh2D):
+    elif issubclass(type(m), Grid2D):
         dx = m.cellsize.x[:,np.newaxis]
         dy = m.cellsize.y[np.newaxis,:]
         return dx, dy
-    elif issubclass(type(m), Mesh3D):
+    elif issubclass(type(m), Grid3D):
         dx = m.cellsize.x[:,np.newaxis,np.newaxis]
         dy = m.cellsize.y[np.newaxis,:,np.newaxis]
         dz = m.cellsize.z[np.newaxis,np.newaxis,:]
@@ -68,14 +68,14 @@ def linearMean(phi: CellVariable) -> FaceVariable:
     >>>     
     
     """    
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
                      (dx[1:]*phi.value[0:-1]+dx[0:-1] *
                       phi.value[1:])/(dx[1:]+dx[0:-1]),
                      np.array([]),
                      np.array([]))
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         dx, dy = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
                      (dx[1:]*phi.value[0:-1, 1:-1]+dx[0:-1] *
@@ -83,7 +83,7 @@ def linearMean(phi: CellVariable) -> FaceVariable:
                      (dy[:,1:]*phi.value[1:-1, 0:-1]+dy[:,0:-1] *
                       phi.value[1:-1, 1:])/(dy[:,1:]+dy[:,0:-1]),
                      np.array([]))
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         dx, dy, dz = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
                      (dx[1:]*phi.value[0:-1, 1:-1, 1:-1]+dx[0:-1] *
@@ -133,19 +133,19 @@ def arithmeticMean(phi: CellVariable):
     >>>     
     
     """
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             (dx[0:-1]*phi.value[0:-1]+dx[1:]*phi.value[1:])/(dx[1:]+dx[0:-1]),
             np.array([]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         dx, dy = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             (dx[0:-1]*phi.value[0:-1,1:-1]+dx[1:]*phi.value[1:,1:-1])/(dx[1:]+dx[0:-1]),
             (dy[:,0:-1]*phi.value[1:-1,0:-1]+dy[:,1:]*phi.value[1:-1,1:])/(dy[:,1:]+dy[:,0:-1]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         dx, dy, dz = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             (dx[0:-1]*phi.value[0:-1,1:-1,1:-1]+dx[1:]*phi.value[1:,1:-1,1:-1])/(dx[1:]+dx[0:-1]),
@@ -197,7 +197,7 @@ def geometricMean(phi: CellVariable):
     >>>     
     
     """
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         n= phi.domain.dims[0]
         phix=np.zeros(n+1)
@@ -210,13 +210,13 @@ def geometricMean(phi: CellVariable):
             phix,
             np.array([]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         dx, dy = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             np.exp((dx[0:-1]*np.log(phi.value[0:-1,1:-1])+dx[1:]*np.log(phi.value[1:,1:-1]))/(dx[1:]+dx[0:-1])),
             np.exp((dy[:,0:-1]*np.log(phi.value[1:-1,0:-1])+dy[:,1:]*np.log(phi.value[1:-1,1:]))/(dy[:,1:]+dy[:,0:-1])),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         dx, dy, dz = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             np.exp((dx[0:-1]*np.log(phi.value[0:-1,1:-1,1:-1])+dx[1:]*np.log(phi.value[1:,1:-1,1:-1]))/(dx[1:]+dx[0:-1])),
@@ -265,7 +265,7 @@ def harmonicMean(phi: CellVariable):
     # calculates the average values of a cell variable. The output is a
     # face variable
 
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         n=phi.domain.dims[0]
         phix=np.zeros(n+1)
@@ -278,13 +278,13 @@ def harmonicMean(phi: CellVariable):
             phix,
             np.array([]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         dx, dy = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             phi.value[1:,1:-1]*phi.value[0:-1,1:-1]*(dx[1:]+dx[0:-1])/(dx[1:]*phi.value[0:-1,1:-1]+dx[0:-1]*phi.value[1:,1:-1]),
             phi.value[1:-1,1:]*phi.value[1:-1,0:-1]*(dy[:,1:]+dy[:,0:-1])/(dy[:,1:]*phi.value[1:-1,0:-1]+dy[:,0:-1]*phi.value[1:-1,1:]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         dx, dy, dz = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
             phi.value[1:,1:-1,1:-1]*phi.value[0:-1,1:-1,1:-1]*(dx[1:]+dx[0:-1])/(dx[1:]*phi.value[0:-1,1:-1,1:-1]+dx[0:-1]*phi.value[1:,1:-1,1:-1]),
@@ -334,7 +334,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
     # TBD: needs to be fixed. It must be a linear mean, adjusted for velocity
     # currently, it assumes a uniform mesh.
     phi_tmp = np.copy(phi.value)
-    if issubclass(type(phi.domain), Mesh1D):
+    if issubclass(type(phi.domain), Grid1D):
         ux = u.xvalue
         # assign the value of the left boundary to the left ghost cell
         phi_tmp[0] = 0.5*(phi.value[0]+phi.value[1])
@@ -345,7 +345,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
             0.5*(ux==0)*(phi.value[0:-1]+phi.value[1:]),
             np.array([]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh2D):
+    elif issubclass(type(phi.domain), Grid2D):
         ux = u.xvalue
         uy = u.yvalue
         # assign the value of the left boundary to the left ghost cells
@@ -364,7 +364,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
             (uy<0.0)*phi_tmp[1:-1,1:]+
             0.5*(uy==0.0)*(phi.value[1:-1,0:-1]+phi.value[1:-1,1:]),
             np.array([]))
-    elif issubclass(type(phi.domain), Mesh3D):
+    elif issubclass(type(phi.domain), Grid3D):
         ux = u.xvalue
         uy = u.yvalue
         uz = u.zvalue
@@ -461,7 +461,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #             0.5*(ux==0)*(phi.value[0:-1]+phi.value[1:]),
 #             np.array([]),
 #             np.array([]))
-#     elif issubclass(type(phi.domain), Mesh2D):
+#     elif issubclass(type(phi.domain), Grid2D):
 #         # extract data from the mesh structure
 #         Nx = u.domain.dims[0]
 #         Ny = u.domain.dims[2]
@@ -512,7 +512,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #                 0.5*(uy==0.0)*(phi.value[1:Nx+1,0:Ny+1]+phi.value[1:Nx+1,1:Ny+2]),
 #             np.array([]))
 
-#     elif issubclass(type(phi.domain), Mesh3D):
+#     elif issubclass(type(phi.domain), Grid3D):
 #         # extract data from the mesh structure
 #         Nx = u.domain.dims[0]
 #         Ny = u.domain.dims[2]

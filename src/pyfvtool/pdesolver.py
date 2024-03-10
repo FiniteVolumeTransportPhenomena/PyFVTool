@@ -3,8 +3,8 @@ from scipy.sparse import csr_array
 from scipy.sparse.linalg import spsolve
 
 from .mesh import MeshStructure
-from .cell import CellVariable, createCellVariable
-from .boundary import BoundaryCondition
+from .cell import CellVariable
+from .boundary import BoundaryConditions
 
 
 
@@ -41,7 +41,7 @@ def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
     
 
 def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray, 
-                     BC: BoundaryCondition) -> CellVariable:
+                     BC: BoundaryConditions) -> CellVariable:
     """
     Solve the PDE using the finite volume method.
 
@@ -53,8 +53,8 @@ def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray,
         Time step
     RHS: np.ndarray
         Right hand side of the linear system
-    BC: BoundaryCondition
-        Boundary condition
+    BC: BoundaryConditions
+        Boundary conditions
     
     Returns
     -------
@@ -64,7 +64,7 @@ def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray,
     
 
     x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
-    phi= createCellVariable(phi_old.domain, 0.0)
+    phi= CellVariable(phi_old.domain, 0.0)
     phi.value = x
     phi.update_bc_cells(BC)
     return phi

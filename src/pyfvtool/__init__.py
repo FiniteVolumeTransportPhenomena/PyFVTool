@@ -1,23 +1,44 @@
-from pyfvtool.mesh import createMesh1D, createMesh2D, createMesh3D,\
-                          createMeshCylindrical1D, createMeshCylindrical2D,\
-                          createMeshCylindrical3D, createMeshRadial2D,\
-                          createMeshSpherical3D
-from pyfvtool.advection import convectionTerm, convectionTvdRHSTerm, convectionUpwindTerm
-from pyfvtool.diffusion import diffusionTerm
-from pyfvtool.source import linearSourceTerm, constantSourceTerm, transientTerm
-from pyfvtool.boundary import createBC, boundaryConditionTerm
-from pyfvtool.utilities import fluxLimiter
-from pyfvtool.calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
-from pyfvtool.averaging import linearMean, arithmeticMean, upwindMean, harmonicMean, geometricMean, tvdMean
-from pyfvtool.pdesolver import solvePDE, solveExplicitPDE
-from pyfvtool.cell import createCellVariable, cellVolume, BC2GhostCells, copyCellVariable
-from pyfvtool.cell import funceval, celleval
-from pyfvtool.cell import domainInt, domainIntegrate
-from pyfvtool.cell import get_CellVariable_profile1D
-from pyfvtool.cell import cellLocations
-from pyfvtool.face import createFaceVariable, faceeval
-from pyfvtool.face import faceLocations
-from pyfvtool.visualization import visualizeCells
+ENABLE_LEGACY = False # enable/disable backward compatibility
+
+from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
+from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D 
+from .mesh import Grid3D, CylindricalGrid3D, SphericalGrid3D
+from .advection import convectionTerm, convectionTvdRHSTerm,\
+                       convectionUpwindTerm
+from .diffusion import diffusionTerm
+from .source import linearSourceTerm, constantSourceTerm, transientTerm
+from .boundary import BoundaryConditions, boundaryConditionsTerm
+from .utilities import fluxLimiter
+from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
+from .averaging import linearMean, arithmeticMean, upwindMean,\
+                       harmonicMean, geometricMean, tvdMean
+from .pdesolver import solvePDE, solveExplicitPDE
+from .cell import CellVariable, cellVolume, BC2GhostCells 
+from .cell import copyCellVariable
+from .cell import funceval, celleval
+from .cell import domainInt, domainIntegrate
+from .cell import get_CellVariable_profile1D
+from .cell import cellLocations
+from .face import FaceVariable, faceeval
+from .face import faceLocations
+from .visualization import visualizeCells
+
+# legacy naming of certain functions and classes
+if ENABLE_LEGACY:
+    from .legacy import boundaryConditionTerm
+    from .legacy import createBC
+    from .legacy import createCellVariable
+    from .legacy import createFaceVariable
+    from .legacy import createMesh1D
+    from .legacy import createMeshCylindrical1D
+    from .legacy import createMeshSpherical1D
+    from .legacy import createMesh2D
+    from .legacy import createMeshCylindrical2D
+    from .legacy import createMeshRadial2D
+    from .legacy import createMesh3D
+    from .legacy import createMeshCylindrical3D
+    from .legacy import createMeshSpherical3D
+    
 
 __author__ = (
     "Ali A. Eftekhari"
