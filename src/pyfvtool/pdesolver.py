@@ -91,7 +91,6 @@ def solvePDE(p1, p2 , p3, externalsolver = None):
     """
     # Dispatcher
     
-    # add more explicit type checking for user-friendliness?
     if isinstance(p1, CellVariable):
         return _solvePDE2(p1, p2, p3, externalsolver = externalsolver)    
     elif isinstance(p1, MeshStructure):
@@ -113,7 +112,8 @@ def _solvePDE1(m: MeshStructure, M:csr_array, RHS: np.ndarray,
 def _solvePDE2(phi: CellVariable, bcterm: tuple, eqnterms: list, 
               externalsolver = None) -> CellVariable:
     # TODO: Presently the bcterm and the eqnterms are simply the objects
-    #       returned by the respective xxxTerm routines. We could consider
+    #       returned by the respective xxxTerm routines. This is done for
+    #       simplicity. Later, we could consider
     #       a specific `Term` class, with properties M, RHS and arithmetic
     #       magic methods defined suitably. Certain terms will have `None`
     #       for either M or RHS etc.
@@ -170,7 +170,6 @@ def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray,
         Solution of the PDE
     """
     
-
     x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
     phi= CellVariable(phi_old.domain, 0.0)
     phi.value = x
