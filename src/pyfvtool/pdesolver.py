@@ -112,6 +112,14 @@ def _solvePDE1(m: MeshStructure, M:csr_array, RHS: np.ndarray,
 
 def _solvePDE2(phi: CellVariable, bcterm: tuple, eqnterms: list, 
               externalsolver = None) -> CellVariable:
+    # TODO: Presently the bcterm and the eqnterms are simply the objects
+    #       returned by the respective xxxTerm routines. We could consider
+    #       a specific `Term` class, with properties M, RHS and arithmetic
+    #       magic methods defined suitably. Certain terms will have `None`
+    #       for either M or RHS etc.
+    #       A first version may simply be a 'signed tuple' class. (tuple with
+    #       additional sign property such that we can write `-Term` in all
+    #       cases)
     if externalsolver is None:
         solver = spsolve
     else:

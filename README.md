@@ -94,25 +94,29 @@ bc.left.b[:] = 1.0
 bc.left.c[:] = c_left
 
 # create a cell variable with initial concentration
-c_old = pf.CellVariable(m1, c_init, bc)
+c = pf.CellVariable(m1, c_init, bc)
 
 # assign diffusivity to cells
 D_cell = pf.CellVariable(m1, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
-# Discretization
-Mdiff = pf.diffusionTerm(D_face)
-Mbc, RHSbc = pf.boundaryConditionsTerm(bc)
-
 # time loop
 t = 0
 nplot = 0
 while t<t_simulation:
+    # compose discretized terms for matrix equation
+    bcterm = pf.boundaryConditionsTerm(bc)
+
+    eqn = [ pf.transientTerm(c, dt, 1.0),
+           -pf.diffusionTerm(D_face)]
+
+    # solve PDE
+    pf.solvePDE(c,
+                bcterm,
+                eqn)
     t+=dt
-    Mt, RHSt = pf.transientTerm(c_old, dt, 1.0)
-    c_new = pf.solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
-    c_old.update_value(c_new)
+
     if (nplot % Nskip == 0):
-        pf.visualizeCells(c_old)
+        pf.visualizeCells(c)
     nplot+=1
 ```
