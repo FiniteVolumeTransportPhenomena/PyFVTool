@@ -10,7 +10,7 @@ from .boundary import BoundaryConditions
 
 
 
-def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
+def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
              externalsolver = None) -> CellVariable:
     """
     Solve the PDE discretized according to the finite volume method    

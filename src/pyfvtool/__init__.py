@@ -28,7 +28,7 @@ from .utilities import fluxLimiter
 from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
-from .pdesolver import solvePDE, solvePDE2, solveExplicitPDE
+from .pdesolver import solveMatrixPDE, solvePDE2, solveExplicitPDE
 from .cell import CellVariable, cellVolume, BC2GhostCells 
 from .cell import copyCellVariable
 from .cell import funceval, celleval

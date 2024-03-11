@@ -7,7 +7,7 @@ see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.;
      Part. Part. Syst. Charact. 2017, 34, 1700095. doi:10.1002/ppsc.201700095.
 
 
-using solvePDE variant #2
+using solvePDE v0.2.1  
 """
 import numpy as np
 import matplotlib.pyplot as plt

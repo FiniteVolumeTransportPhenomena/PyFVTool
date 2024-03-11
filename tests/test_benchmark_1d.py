@@ -55,7 +55,7 @@ def T_numerical(left_bc: str) -> float:
     while t<t_sim:
         t +=dt
         [M_trans, RHS_trans] = pf.transientTerm(T_init, dt, 1.0)
-        T_val = pf.solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
+        T_val = pf.solveMatrixPDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
         T_init.update_value(T_val)
 
     x = m.facecenters.x
@@ -93,8 +93,8 @@ def conv_numerical_1d() -> float:
     M = Mconv-Mdiff-Mbc
     # Mupwind = Mconvupwind-Mdiff-Mbc
     RHS = -RHSbc
-    c = pf.solvePDE(meshstruct, M, RHS)
-    # c_upwind = solvePDE(meshstruct, Mupwind, RHS)
+    c = pf.solveMatrixPDE(meshstruct, M, RHS)
+    # c_upwind = solveMatrixPDE(meshstruct, Mupwind, RHS)
     c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
     er = np.sum(np.abs(c_analytical-c.internalCellValues))/Nx
     if OUTPUT_DIAGNOSTICS:

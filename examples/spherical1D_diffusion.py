@@ -70,7 +70,7 @@ for s in [20,60,240]:
       Mbc, RHSbc = pf.boundaryConditionsTerm(BC)
       M = M_trans-Mdiff+Mbc
       RHS = RHS_trans+RHSbc
-      c = pf.solvePDE(m,M, RHS)
+      c = pf.solveMatrixPDE(m,M, RHS)
       t += deltat
       c_old.update_value(c)
   m_tot = np.sum(c.internalCellValues * cellvol)
