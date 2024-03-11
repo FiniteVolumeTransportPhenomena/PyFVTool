@@ -50,7 +50,7 @@ t=0
 while t<t_sim:
     t +=dt
     [M_trans, RHS_trans] = pf.transientTerm(T_init, dt, 1.0)
-    T_val = pf.solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
+    T_val = pf.solveMatrixPDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
     T_init.update_value(T_val)
 
 x = m.facecenters.x

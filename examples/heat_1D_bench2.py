@@ -44,7 +44,7 @@ while t<t_sim:
     BC.left.c[:] = np.exp(-t)
     BC.right.c[:] = np.exp(-t)*np.cos(L)
     [M_bc, RHS_bc] = pf.boundaryConditionsTerm(BC)
-    T_val = pf.solvePDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
+    T_val = pf.solveMatrixPDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
     T_init.update_value(T_val)
 
 x = m.facecenters.x

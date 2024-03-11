@@ -19,7 +19,7 @@ from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
 from pyfvtool import transientTerm
-from pyfvtool import solvePDE, solveExplicitPDE
+from pyfvtool import solvePDE, solveMatrixPDE, solveExplicitPDE
 from pyfvtool import harmonicMean, linearMean, arithmeticMean, geometricMean
 from pyfvtool import upwindMean
 from pyfvtool import fluxLimiter
@@ -63,6 +63,8 @@ from pyfvtool import visualizeCells
 ## Solving the discretized PDE (sparse matrix equation)
 
 ### solvePDE
+
+### solveMatrixPDE
 
 ### solveExplicitPDE
 

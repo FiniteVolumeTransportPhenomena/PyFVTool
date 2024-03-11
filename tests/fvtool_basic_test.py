@@ -18,7 +18,7 @@ from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
 from pyfvtool import transientTerm
-from pyfvtool import solvePDE, solveExplicitPDE
+from pyfvtool import solveMatrixPDE, solveExplicitPDE
 from pyfvtool import harmonicMean, linearMean, arithmeticMean, geometricMean
 from pyfvtool import upwindMean
 from pyfvtool import fluxLimiter
@@ -100,7 +100,7 @@ for i in range(len(mesh_nonuniform)):
     Md = diffusionTerm(f_n[i])
     M_dif.append(Md)
     print(i)
-    c_dif.append(solvePDE(mesh_nonuniform[i], -M_dif[i]+M_bc[i], RHS_bc[i]))
+    c_dif.append(solveMatrixPDE(mesh_nonuniform[i], -M_dif[i]+M_bc[i], RHS_bc[i]))
 
 
 L = 1.0  # domain length
@@ -131,8 +131,8 @@ Mbc, RHSbc = boundaryConditionsTerm(BC) # boundary condition discretization
 M = Mconv-Mdiff+Mbc # matrix of coefficient for central scheme
 Mupwind = Mconvupwind-Mdiff+Mbc # matrix of coefficient for upwind scheme
 RHS = RHSbc # right hand side vector
-c = solvePDE(meshstruct, M, RHS) # solve for the central scheme
-c_upwind = solvePDE(meshstruct, Mupwind, RHS) # solve for the upwind scheme
+c = solveMatrixPDE(meshstruct, M, RHS) # solve for the central scheme
+c_upwind = solveMatrixPDE(meshstruct, Mupwind, RHS) # solve for the upwind scheme
 c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val)) # analytical solution
 # plt.figure(5)
 # plt.plot(x, c.internalCellValues) 
@@ -155,7 +155,7 @@ for i in range(len(mesh_nonuniform)):
     M=diffusionTerm(f_n[i])
     M_dif.append(M)
     M_conv.append(convectionTerm(0.1*f_n[i]))
-    c_conv.append(solvePDE(mesh_nonuniform[i], M_conv[i]-M_dif[i]+M_bc[i], RHS_bc[i]))
+    c_conv.append(solveMatrixPDE(mesh_nonuniform[i], M_conv[i]-M_dif[i]+M_bc[i], RHS_bc[i]))
     # print(c_conv[i].value)
 # # visualize
 # # figure(2)
@@ -199,7 +199,7 @@ for i in range(len(mesh_nonuniform)):
 for i in range(len(mesh_nonuniform)):
     for j in range(1,10):
         M_t, RHS_t=transientTerm(c_old[i], dt, 1.0)
-        c_new=solvePDE(mesh_nonuniform[i],
+        c_new=solveMatrixPDE(mesh_nonuniform[i],
             M_t+M_ls[i]+M_conv[i]-M_dif[i]+M_bc[i], RHS_t+RHS_s[i]+RHS_bc[i])
         c_old[i].update_value(c_new)
     c_trans.append(c_old[i])
@@ -300,7 +300,7 @@ t = 0
 while t<t_simulation:
     t+=dt
     Mt, RHSt = transientTerm(c_old, dt, 1.0)
-    c_new = solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
+    c_new = solveMatrixPDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
     c_old.update_value(c_new)
 
 plt.figure(2)

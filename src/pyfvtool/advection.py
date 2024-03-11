@@ -8,6 +8,7 @@ from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
+
 # ------------------- Utility functions ---------------------
 
 
@@ -46,6 +47,8 @@ def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
 
 def _fsign(phi_in, eps1=1e-16):
     return (np.abs(phi_in) >= eps1)*phi_in+eps1*(phi_in == 0.0)+eps1*(np.abs(phi_in) < eps1)*np.sign(phi_in)
+
+
 
 # ------------------- 1D functions ---------------------
 
@@ -144,6 +147,8 @@ def convectionTvdRHS1D(u: FaceVariable, phi: CellVariable,
     RHS[1:Nx+1] = -(1.0/DXp)*((ue_max*psi_p[1:Nx+1]+ue_min*psi_m[1:Nx+1]) -
                               (uw_max*psi_p[0:Nx]+uw_min*psi_m[0:Nx]))
     return RHS
+
+
 
 # ------------------- 1D Cylindrical functions ---------------------
 
@@ -253,7 +258,9 @@ def convectionTvdRHSCylindrical1D(u: FaceVariable, phi: CellVariable,
                                   rf[0:Nx]*(uw_max*psi_p[0:Nx]+uw_min*psi_m[0:Nx]))
     return RHS
 
-    # ------------------------- 2D functions ------------------------
+
+
+# ------------------------- 2D functions ------------------------
 
 
 def convectionTerm2D(u: FaceVariable):
@@ -431,7 +438,9 @@ def convectionTvdRHS2D(u: FaceVariable, phi: CellVariable, FL, *args):
 
     return RHS, RHSx, RHSy
 
-    # ----------------------- User call ----------------------
+
+
+# ----------------------- User call ----------------------
 
 
 def convectionTermCylindrical2D(u: FaceVariable):
@@ -1355,16 +1364,12 @@ def convectionTerm(u: FaceVariable) -> csr_array:
     elif (type(u.domain) is Grid2D):
         return convectionTerm2D(u)[0]
     elif (type(u.domain) is CylindricalGrid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTermCylindrical2D(u)[0]
     elif (type(u.domain) is PolarGrid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTermPolar2D(u)[0]
     elif (type(u.domain) is Grid3D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTerm3D(u)[0]
     elif (type(u.domain) is CylindricalGrid3D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTermCylindrical3D(u)[0]
     else:
         raise Exception("convectionTerm is not defined for this Mesh type.")
@@ -1398,16 +1403,12 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
     elif (type(u.domain) is Grid2D):
         return convectionUpwindTerm2D(u, *args)[0]
     elif (type(u.domain) is CylindricalGrid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTermCylindrical2D(u)[0]
     elif (type(u.domain) is PolarGrid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTermPolar2D(u)[0]
     elif (type(u.domain) is Grid3D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTerm3D(u)[0]
     elif (type(u.domain) is CylindricalGrid3D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionUpwindTermCylindrical3D(u)[0]
     else:
         raise Exception(
@@ -1416,7 +1417,8 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
 
 def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.ndarray:
     """
-    Returns the discretized correction vector fot the convection term, :math:`\\nabla \\cdot (u \\phi)`.
+    Returns the discretized correction vector fot the convection term, 
+    :math:`\\nabla \\cdot (u \\phi)`.
     The convection term is evaluated based on the TVD scheme.
 
     Parameters
@@ -1442,19 +1444,14 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     elif (type(u.domain) is CylindricalGrid1D):
         return convectionTvdRHSCylindrical1D(u, phi, FL, *args)
     elif (type(u.domain) is Grid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHS2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is CylindricalGrid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHSCylindrical2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is PolarGrid2D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHSPolar2D(u, phi, FL, *args)[0]
     elif (type(u.domain) is Grid3D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHS3D(u, phi, FL, *args)[0]
     elif (type(u.domain) is CylindricalGrid3D):
-        # raise Exception("Not implemented yet. Work in progress")
         return convectionTvdRHSCylindrical3D(u, phi, FL, *args)[0]
     else:
         raise Exception(

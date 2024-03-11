@@ -89,9 +89,6 @@ class MeshStructure:
         return ""
 
     def _facelocation_to_cellsize(self, facelocation):
-        # When _mesh_2d_param and _mesh_3d_param become methods of Grid2D and Grid3D
-        # classes respectively, this function should logically become a method
-        # of MeshStructure
         return np.hstack([facelocation[1]-facelocation[0],
                           facelocation[1:]-facelocation[0:-1],
                           facelocation[-1]-facelocation[-2]])

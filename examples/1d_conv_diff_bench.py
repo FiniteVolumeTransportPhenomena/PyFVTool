@@ -34,8 +34,8 @@ Mdiff = pf.diffusionTerm(Dave)
 M = Mconv-Mdiff-Mbc
 Mupwind = Mconvupwind-Mdiff-Mbc
 RHS = -RHSbc
-c = pf.solvePDE(meshstruct, M, RHS)
-c_upwind = pf.solvePDE(meshstruct, Mupwind, RHS)
+c = pf.solveMatrixPDE(meshstruct, M, RHS)
+c_upwind = pf.solveMatrixPDE(meshstruct, Mupwind, RHS)
 c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
 
 plt.figure(1)

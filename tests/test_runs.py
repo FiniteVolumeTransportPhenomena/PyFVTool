@@ -75,7 +75,7 @@ for i in range(len(mesh_nonuniform)):
     else:
         M_dif.append(Md)
     print(i)
-    c_dif.append(pf.solvePDE(mesh_nonuniform[i], -M_dif[i]+M_bc[i], RHS_bc[i]))
+    c_dif.append(pf.solveMatrixPDE(mesh_nonuniform[i], -M_dif[i]+M_bc[i], RHS_bc[i]))
 
 ## Part VI: solve convection diffucion equation
 # nonuniform
@@ -91,9 +91,9 @@ for i in range(len(mesh_nonuniform)):
     M=pf.diffusionTerm(f_n[i])
     M_dif.append(M)
     M_conv.append(pf.convectionTerm(0.1*f_n[i]))
-    c_conv.append(pf.solvePDE(mesh_nonuniform[i], 
-                           M_conv[i]-M_dif[i]+M_bc[i],
-                           RHS_bc[i]))
+    c_conv.append(pf.solveMatrixPDE(mesh_nonuniform[i], 
+                                    M_conv[i]-M_dif[i]+M_bc[i],
+                                    RHS_bc[i]))
     # print(c_conv[i].value)
 # # visualize
 # # figure(2)
@@ -137,9 +137,9 @@ for i in range(len(mesh_nonuniform)):
 for i in range(len(mesh_nonuniform)):
     for j in range(1,10):
         M_t, RHS_t=pf.transientTerm(c_old[i], dt, 1.0)
-        c_new=pf.solvePDE(mesh_nonuniform[i],
-                          M_t+M_ls[i]+M_conv[i]-M_dif[i]+M_bc[i],
-                          RHS_t+RHS_s[i]+RHS_bc[i])
+        c_new=pf.solveMatrixPDE(mesh_nonuniform[i],
+                                M_t+M_ls[i]+M_conv[i]-M_dif[i]+M_bc[i],
+                                RHS_t+RHS_s[i]+RHS_bc[i])
         c_old[i].update_value(c_new)
     c_trans.append(c_old[i])
 # # visualize

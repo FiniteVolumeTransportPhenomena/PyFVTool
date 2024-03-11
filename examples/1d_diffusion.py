@@ -35,7 +35,7 @@ t = 0
 while t<t_simulation:
     t+=dt
     Mt, RHSt = pf.transientTerm(c_old, dt, 1.0)
-    c_new = pf.solvePDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
+    c_new = pf.solveMatrixPDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
     c_old.update_value(c_new)
 
 plt.figure(1)
