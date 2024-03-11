@@ -51,7 +51,7 @@ def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
 
 
 
-def solvePDE2(phi: CellVariable, bcterm: tuple, eqnterms: list, 
+def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list, 
               externalsolver = None) -> CellVariable:
     """
     Solve a PDE using the finite volume method

@@ -66,7 +66,7 @@ while (it*dt < t_simulation):
            -pf.diffusionTerm(D),
            pf.convectionTerm(u)]
 
-    pf.solvePDE2(c,
+    pf.solvePDE(c,
                 bcterm,
                 eqn)
     it+=1
