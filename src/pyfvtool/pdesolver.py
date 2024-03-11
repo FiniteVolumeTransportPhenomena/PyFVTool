@@ -9,25 +9,16 @@ from .cell import CellVariable
 from .boundary import BoundaryConditions
 
 
-@overload
+
 def solvePDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
              externalsolver = None) -> CellVariable:
-    ...
-    
-@overload
-def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list, 
-              externalsolver = None) -> CellVariable:
-    ...
-    
-def solvePDE(p1, p2 , p3, externalsolver = None):
     """
-    Solve the PDE using the finite volume method.
-    
-    
-    Variant 1
-    =========
-    
-    Uses the M matrix and RHS right-hand side vector directly.
+    Solve the PDE discretized according to the finite volume method    
+        
+    This solver routine uses the M matrix and RHS right-hand side vector 
+    directly. These matrices should be constructed beforehand by combining 
+    the different M matrices and RHS vectors generated using the
+    xxxTerm routines.
     
     Returns a new CellVariable without changing the input ('old') CellVariable.
     
@@ -47,16 +38,35 @@ def solvePDE(p1, p2 , p3, externalsolver = None):
     Returns
     -------
     phi: CellVariable
-        Solution of the PDE
-        
-        
-    Variant 2
-    =========
-
-    Constructs the matrix equation based on provided terms (each term being
-    the output of a call to the appropriate xxxTerm() function) 
+        Solution of the PDE (newly created CellVariable instance)
     
-    The provided CellVariable is updated with the solution values.
+    """
+
+    if externalsolver is None:
+        solver = spsolve
+    else:
+        solver = externalsolver
+    phi = solver(M, RHS)
+    return CellVariable(m, np.reshape(phi, m.dims+2))
+
+
+
+def solvePDE2(phi: CellVariable, bcterm: tuple, eqnterms: list, 
+              externalsolver = None) -> CellVariable:
+    """
+    Solve a PDE using the finite volume method
+    
+
+    This solver routine constructs the matrix equation based on the terms
+    provided, each term being the output of a call to the appropriate
+    xxxTerm() function. It requires the matrix equation terms for the
+    boundary conditions applied to the solution variable, and the terms
+    of the equation are provided as a lists ("sum of the terms = 0")
+    
+    The provided CellVariable is updated with the solution values, and a
+    reference to this one and the same variable is returned. If the 'old' 
+    input CellVariable is to be conserved, it should be copied beforehand to
+    a separate instance.
 
     Parameters
     ----------
@@ -87,30 +97,7 @@ def solvePDE(p1, p2 , p3, externalsolver = None):
     CellVariable
         The updated CellVariable.
 
-    
     """
-    # Dispatcher
-    
-    if isinstance(p1, CellVariable):
-        return _solvePDE2(p1, p2, p3, externalsolver = externalsolver)    
-    elif isinstance(p1, MeshStructure):
-        return _solvePDE1(p1, p2, p3, externalsolver = externalsolver)    
-    else:
-        raise TypeError('Unknown parameter type')           
-
-
-def _solvePDE1(m: MeshStructure, M:csr_array, RHS: np.ndarray,
-             externalsolver = None) -> CellVariable:
-    if externalsolver is None:
-        solver = spsolve
-    else:
-        solver = externalsolver
-    phi = solver(M, RHS)
-    return CellVariable(m, np.reshape(phi, m.dims+2))
-
-
-def _solvePDE2(phi: CellVariable, bcterm: tuple, eqnterms: list, 
-              externalsolver = None) -> CellVariable:
     # TODO: Presently the bcterm and the eqnterms are simply the objects
     #       returned by the respective xxxTerm routines. This is done for
     #       simplicity. Later, we could consider
