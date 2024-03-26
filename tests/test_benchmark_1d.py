@@ -60,7 +60,7 @@ def T_numerical(left_bc: str) -> float:
 
     x = m.facecenters.x
     T_face = pf.linearMean(T_val)
-    T_num = T_face.xvalue
+    T_num = T_face._xvalue
     T_an = T_analytic(x, t_sim)
     er = np.sum(np.abs(T_num-T_an)/T_an)/Nx
     return er

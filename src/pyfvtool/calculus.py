@@ -28,7 +28,7 @@ def gradientTerm(phi: CellVariable):
     >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> gradPhi = pf.gradientTerm(phi)
-    >>> gradPhi.xvalue
+    >>> gradPhi._xvalue
     """
     # calculates the gradient of a variable
     # the output is a face variable
@@ -88,7 +88,7 @@ def divergenceTerm1D(F: FaceVariable):
     # define the vector of cell index
     row_index = G[1:Nx+1] # main diagonal
     # compute the divergence
-    div_x = (F.xvalue[1:Nx+1]-F.xvalue[0:Nx])/DX
+    div_x = (F._xvalue[1:Nx+1]-F._xvalue[0:Nx])/DX
     # define the RHS Vector
     RHSdiv = np.zeros(Nx+2)
     # assign the values of the RHS vector
@@ -110,8 +110,8 @@ def divergenceTermCylindrical1D(F: FaceVariable):
     row_index = G[1:Nx+1] # main diagonal
     # reassign the east, west, north, and south flux vectors for the
     # code readability
-    Fe = F.xvalue[1:Nx+1]
-    Fw = F.xvalue[0:Nx]
+    Fe = F._xvalue[1:Nx+1]
+    Fw = F._xvalue[0:Nx]
     re = rf[1:Nx+1]
     rw = rf[0:Nx]
     # compute the divergence
@@ -135,10 +135,10 @@ def divergenceTerm2D(F: FaceVariable):
     row_index = G[1:Nx+1,1:Ny+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
     # code readability
-    Fe = F.xvalue[1:Nx+1,:]
-    Fw = F.xvalue[0:Nx,:]
-    Fn = F.yvalue[:,1:Ny+1]
-    Fs = F.yvalue[:,0:Ny]
+    Fe = F._xvalue[1:Nx+1,:]
+    Fw = F._xvalue[0:Nx,:]
+    Fn = F._yvalue[:,1:Ny+1]
+    Fs = F._yvalue[:,0:Ny]
     # compute the divergence
     div_x = (Fe - Fw)/DX
     div_y = (Fn - Fs)/DY
@@ -169,10 +169,10 @@ def divergenceTermCylindrical2D(F:FaceVariable):
     row_index = G[1:Nr+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
     # code readability
-    Fe = F.xvalue[1:Nr+1,:]
-    Fw = F.xvalue[0:Nr,:]
-    Fn = F.yvalue[:,1:Nz+1]
-    Fs = F.yvalue[:,0:Nz]
+    Fe = F._xvalue[1:Nr+1,:]
+    Fw = F._xvalue[0:Nr,:]
+    Fn = F._yvalue[:,1:Nz+1]
+    Fs = F._yvalue[:,0:Nz]
     re = rf[1:Nr+1]
     rw = rf[0:Nr]
     # compute the divergence
@@ -204,10 +204,10 @@ def divergenceTermPolar2D(F:FaceVariable):
     row_index = G[1:Nr+1,1:Ntheta+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
     # code readability
-    Fe = F.xvalue[1:Nr+1,:]
-    Fw = F.xvalue[0:Nr,:]
-    Fn = F.yvalue[:,1:Ntheta+1]
-    Fs = F.yvalue[:,0:Ntheta]
+    Fe = F._xvalue[1:Nr+1,:]
+    Fw = F._xvalue[0:Nr,:]
+    Fn = F._yvalue[:,1:Ntheta+1]
+    Fs = F._yvalue[:,0:Ntheta]
     re = rf[1:Nr+1]
     rw = rf[0:Nr]
     # compute the divergence
@@ -237,12 +237,12 @@ def divergenceTerm3D(F:FaceVariable):
     row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
     # code readability
-    Fe = F.xvalue[1:Nx+1,:,:]
-    Fw = F.xvalue[0:Nx,:,:]
-    Fn = F.yvalue[:,1:Ny+1,:]
-    Fs = F.yvalue[:,0:Ny,:]
-    Ff = F.zvalue[:,:,1:Nz+1]
-    Fb = F.zvalue[:,:,0:Nz]
+    Fe = F._xvalue[1:Nx+1,:,:]
+    Fw = F._xvalue[0:Nx,:,:]
+    Fn = F._yvalue[:,1:Ny+1,:]
+    Fs = F._yvalue[:,0:Ny,:]
+    Ff = F._zvalue[:,:,1:Nz+1]
+    Fb = F._zvalue[:,:,0:Nz]
     # compute the divergence
     div_x = (Fe - Fw)/dx
     div_y = (Fn - Fs)/dy
@@ -274,12 +274,12 @@ def divergenceTermCylindrical3D(F:FaceVariable):
     row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
     # code readability
-    Fe = F.xvalue[1:Nx+1,:,:]
-    Fw = F.xvalue[0:Nx,:,:]
-    Fn = F.yvalue[:,1:Ny+1,:]
-    Fs = F.yvalue[:,0:Ny,:]
-    Ff = F.zvalue[:,:,1:Nz+1]
-    Fb = F.zvalue[:,:,0:Nz]
+    Fe = F._xvalue[1:Nx+1,:,:]
+    Fw = F._xvalue[0:Nx,:,:]
+    Fn = F._yvalue[:,1:Ny+1,:]
+    Fs = F._yvalue[:,0:Ny,:]
+    Ff = F._zvalue[:,:,1:Nz+1]
+    Fb = F._zvalue[:,:,0:Nz]
     # compute the divergence
     div_x = (Fe - Fw)/dx
     div_y = (Fn - Fs)/(dy*rp)
@@ -368,18 +368,18 @@ def gradientTermFixedBC(phi):
     """
     faceGrad = gradientTerm(phi)
     if issubclass(type(phi.domain), Grid1D):
-        faceGrad.xvalue[0] = 2*faceGrad.xvalue[0]
-        faceGrad.xvalue[-1] = 2*faceGrad.xvalue[-1]
+        faceGrad._xvalue[0] = 2*faceGrad._xvalue[0]
+        faceGrad._xvalue[-1] = 2*faceGrad._xvalue[-1]
     elif issubclass(type(phi.domain), Grid2D):
-        faceGrad.xvalue[0, :] = 2*faceGrad.xvalue[0, :]
-        faceGrad.xvalue[-1, :] = 2*faceGrad.xvalue[-1, :]
-        faceGrad.yvalue[:, 0] = 2*faceGrad.yvalue[:, 0]
-        faceGrad.yvalue[:, -1] = 2*faceGrad.yvalue[:, -1]
+        faceGrad._xvalue[0, :] = 2*faceGrad._xvalue[0, :]
+        faceGrad._xvalue[-1, :] = 2*faceGrad._xvalue[-1, :]
+        faceGrad._yvalue[:, 0] = 2*faceGrad._yvalue[:, 0]
+        faceGrad._yvalue[:, -1] = 2*faceGrad._yvalue[:, -1]
     elif issubclass(type(phi.domain), Grid3D):
-        faceGrad.xvalue[0, :, :] = 2*faceGrad.xvalue[0, :, :]
-        faceGrad.xvalue[-1, :, :] = 2*faceGrad.xvalue[-1, :, :]
-        faceGrad.yvalue[:, 0, :] = 2*faceGrad.yvalue[:, 0, :]
-        faceGrad.yvalue[:, -1, :] = 2*faceGrad.yvalue[:, -1, :]
-        faceGrad.zvalue[:, :, 0] = 2*faceGrad.zvalue[:, :, 0]
-        faceGrad.zvalue[:, :, -1] = 2*faceGrad.zvalue[:, :, -1]
+        faceGrad._xvalue[0, :, :] = 2*faceGrad._xvalue[0, :, :]
+        faceGrad._xvalue[-1, :, :] = 2*faceGrad._xvalue[-1, :, :]
+        faceGrad._yvalue[:, 0, :] = 2*faceGrad._yvalue[:, 0, :]
+        faceGrad._yvalue[:, -1, :] = 2*faceGrad._yvalue[:, -1, :]
+        faceGrad._zvalue[:, :, 0] = 2*faceGrad._zvalue[:, :, 0]
+        faceGrad._zvalue[:, :, -1] = 2*faceGrad._zvalue[:, :, -1]
     return faceGrad

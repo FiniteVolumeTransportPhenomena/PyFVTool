@@ -335,7 +335,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
     # currently, it assumes a uniform mesh.
     phi_tmp = np.copy(phi.value)
     if issubclass(type(phi.domain), Grid1D):
-        ux = u.xvalue
+        ux = u._xvalue
         # assign the value of the left boundary to the left ghost cell
         phi_tmp[0] = 0.5*(phi.value[0]+phi.value[1])
         # assign the value of the right boundary to the right ghost cell
@@ -346,8 +346,8 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
             np.array([]),
             np.array([]))
     elif issubclass(type(phi.domain), Grid2D):
-        ux = u.xvalue
-        uy = u.yvalue
+        ux = u._xvalue
+        uy = u._yvalue
         # assign the value of the left boundary to the left ghost cells
         phi_tmp[0,:] = 0.5*(phi.value[0,:]+phi.value[1,:])
         # assign the value of the right boundary to the right ghost cells
@@ -365,9 +365,9 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
             0.5*(uy==0.0)*(phi.value[1:-1,0:-1]+phi.value[1:-1,1:]),
             np.array([]))
     elif issubclass(type(phi.domain), Grid3D):
-        ux = u.xvalue
-        uy = u.yvalue
-        uz = u.zvalue
+        ux = u._xvalue
+        uy = u._yvalue
+        uz = u._zvalue
         # assign the value of the left boundary to the left ghost cells
         phi_tmp[0,:,:] = 0.5*(phi.value[0,:,:]+phi.value[1,:,:])
         # assign the value of the right boundary to the right ghost cells
@@ -443,7 +443,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         phi_m = np.zeros(Float64, Nx+1)
 
 #         # extract the velocity data
-#         ux = u.xvalue
+#         ux = u._xvalue
 
 #         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 #         dphi_p = (phi.value[1:Nx+2]-phi.value[0:Nx+1])/dx
@@ -476,8 +476,8 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         phiY_m = np.zeros(Float64, Nx,Ny+1)
 
 #         # extract the velocity data
-#         ux = u.xvalue
-#         uy = u.yvalue
+#         ux = u._xvalue
+#         uy = u._yvalue
 
 #         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 #         # x direction
@@ -523,9 +523,9 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         dz=np.zeros( 1, 1, Nz+1)
 #         dz[:]=0.5*(u.domain.cellsize.z[0:-1]+u.domain.cellsize.z[1:])
 #         # extract the velocity data
-#         ux = u.xvalue
-#         uy = u.yvalue
-#         uz = u.zvalue
+#         ux = u._xvalue
+#         uy = u._yvalue
+#         uz = u._zvalue
 
 #         # define the tvd face vectors
 #         phiX_p = np.zeros(Float64, Nx+1,Ny,Nz)

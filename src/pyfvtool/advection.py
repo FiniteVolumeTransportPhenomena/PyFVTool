@@ -14,34 +14,34 @@ from .face import FaceVariable
 
 def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
     if issubclass(type(u.domain), Grid1D):
-        ux_min = np.copy(u.xvalue)
-        ux_max = np.copy(u.xvalue)
-        ux_min[u_upwind.xvalue > 0.0] = 0.0
-        ux_max[u_upwind.xvalue < 0.0] = 0.0
+        ux_min = np.copy(u._xvalue)
+        ux_max = np.copy(u._xvalue)
+        ux_min[u_upwind._xvalue > 0.0] = 0.0
+        ux_max[u_upwind._xvalue < 0.0] = 0.0
         return ux_min, ux_max
     elif issubclass(type(u.domain), Grid2D):
-        ux_min = np.copy(u.xvalue)
-        ux_max = np.copy(u.xvalue)
-        uy_min = np.copy(u.yvalue)
-        uy_max = np.copy(u.yvalue)
-        ux_min[u_upwind.xvalue > 0.0] = 0.0
-        ux_max[u_upwind.xvalue < 0.0] = 0.0
-        uy_min[u_upwind.yvalue > 0.0] = 0.0
-        uy_max[u_upwind.yvalue < 0.0] = 0.0
+        ux_min = np.copy(u._xvalue)
+        ux_max = np.copy(u._xvalue)
+        uy_min = np.copy(u._yvalue)
+        uy_max = np.copy(u._yvalue)
+        ux_min[u_upwind._xvalue > 0.0] = 0.0
+        ux_max[u_upwind._xvalue < 0.0] = 0.0
+        uy_min[u_upwind._yvalue > 0.0] = 0.0
+        uy_max[u_upwind._yvalue < 0.0] = 0.0
         return ux_min, ux_max, uy_min, uy_max
     elif issubclass(type(u.domain), Grid3D):
-        ux_min = np.copy(u.xvalue)
-        ux_max = np.copy(u.xvalue)
-        uy_min = np.copy(u.yvalue)
-        uy_max = np.copy(u.yvalue)
-        uz_min = np.copy(u.zvalue)
-        uz_max = np.copy(u.zvalue)
-        ux_min[u_upwind.xvalue > 0.0] = 0.0
-        ux_max[u_upwind.xvalue < 0.0] = 0.0
-        uy_min[u_upwind.yvalue > 0.0] = 0.0
-        uy_max[u_upwind.yvalue < 0.0] = 0.0
-        uz_min[u_upwind.zvalue > 0.0] = 0.0
-        uz_max[u_upwind.zvalue < 0.0] = 0.0
+        ux_min = np.copy(u._xvalue)
+        ux_max = np.copy(u._xvalue)
+        uy_min = np.copy(u._yvalue)
+        uy_max = np.copy(u._yvalue)
+        uz_min = np.copy(u._zvalue)
+        uz_max = np.copy(u._zvalue)
+        ux_min[u_upwind._xvalue > 0.0] = 0.0
+        ux_max[u_upwind._xvalue < 0.0] = 0.0
+        uy_min[u_upwind._yvalue > 0.0] = 0.0
+        uy_max[u_upwind._yvalue < 0.0] = 0.0
+        uz_min[u_upwind._zvalue > 0.0] = 0.0
+        uz_max[u_upwind._zvalue < 0.0] = 0.0
         return ux_min, ux_max, uy_min, uy_max, uz_min, uz_max
 
 
@@ -63,8 +63,8 @@ def convectionTerm1D(u: FaceVariable):
     DXw = u.domain.cellsize.x[0:-2]
     DXp = u.domain.cellsize.x[1:-1]
     # reassign the east, west for code readability
-    ue = u.xvalue[1:Nx+1]/(DXp+DXe)
-    uw = u.xvalue[0:Nx]/(DXp+DXw)
+    ue = u._xvalue[1:Nx+1]/(DXp+DXe)
+    uw = u._xvalue[0:Nx]/(DXp+DXw)
     # build the sparse matrix based on the numbering system
     iix = np.tile(G[1:Nx+1].ravel(), 3)
     jjx = np.hstack([G[0:Nx], G[1:Nx+1], G[2:Nx+2]])
@@ -165,8 +165,8 @@ def convectionTermCylindrical1D(u: FaceVariable):
     rp = u.domain.cellcenters.x
     rf = u.domain.facecenters.x
     # reassign the east, west for code readability
-    ue = rf[1:Nx+1]*u.xvalue[1:Nx+1]/(rp*(DXp+DXe))
-    uw = rf[0:Nx]*u.xvalue[0:Nx]/(rp*(DXp+DXw))
+    ue = rf[1:Nx+1]*u._xvalue[1:Nx+1]/(rp*(DXp+DXe))
+    uw = rf[0:Nx]*u._xvalue[0:Nx]/(rp*(DXp+DXw))
     # calculate the coefficients for the internal cells
     AE = ue
     AW = -uw
@@ -277,10 +277,10 @@ def convectionTerm2D(u: FaceVariable):
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # reassign the east, west for code readability
-    ue = u.xvalue[1:Nx+1, :]/(DXp+DXe)
-    uw = u.xvalue[0:Nx, :]/(DXp+DXw)
-    vn = u.yvalue[:, 1:Ny+1]/(DYp+DYn)
-    vs = u.yvalue[:, 0:Ny]/(DYp+DYs)
+    ue = u._xvalue[1:Nx+1, :]/(DXp+DXe)
+    uw = u._xvalue[0:Nx, :]/(DXp+DXw)
+    vn = u._yvalue[:, 1:Ny+1]/(DYp+DYn)
+    vs = u._yvalue[:, 0:Ny]/(DYp+DYs)
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -459,10 +459,10 @@ def convectionTermCylindrical2D(u: FaceVariable):
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # reassign the east, west for code readability
-    ue = rf[1:Nx+1, :]*u.xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
-    uw = rf[0:Nx, :]*u.xvalue[0:Nx, :]/(rp*(DXp+DXe))
-    vn = u.yvalue[:, 1:Ny+1]/(DYp+DYn)
-    vs = u.yvalue[:, 0:Ny]/(DYp+DYs)
+    ue = rf[1:Nx+1, :]*u._xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
+    uw = rf[0:Nx, :]*u._xvalue[0:Nx, :]/(rp*(DXp+DXe))
+    vn = u._yvalue[:, 1:Ny+1]/(DYp+DYn)
+    vs = u._yvalue[:, 0:Ny]/(DYp+DYs)
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -641,10 +641,10 @@ def convectionTermPolar2D(u: FaceVariable):
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # reassign the east, west for code readability
-    ue = rf[1:Nx+1, :]*u.xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
-    uw = rf[0:Nx, :]*u.xvalue[0:Nx, :]/(rp*(DXp+DXe))
-    vn = u.yvalue[:, 1:Ny+1]/(rp*(DYp+DYn))
-    vs = u.yvalue[:, 0:Ny]/(rp*(DYp+DYs))
+    ue = rf[1:Nx+1, :]*u._xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
+    uw = rf[0:Nx, :]*u._xvalue[0:Nx, :]/(rp*(DXp+DXe))
+    vn = u._yvalue[:, 1:Ny+1]/(rp*(DYp+DYn))
+    vs = u._yvalue[:, 0:Ny]/(rp*(DYp+DYs))
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -825,12 +825,12 @@ def convectionTerm3D(u: FaceVariable):
     mn = Nx*Ny*Nz
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
-    ue = u.xvalue[1:Nx+1, :, :]/(DXp+DXe)
-    uw = u.xvalue[0:Nx, :, :]/(DXp+DXw)
-    vn = u.yvalue[:, 1:Ny+1, :]/(DYp+DYn)
-    vs = u.yvalue[:, 0:Ny, :]/(DYp+DYs)
-    wf = u.zvalue[:, :, 1:Nz+1]/(DZp+DZf)
-    wb = u.zvalue[:, :, 0:Nz]/(DZp+DZb)
+    ue = u._xvalue[1:Nx+1, :, :]/(DXp+DXe)
+    uw = u._xvalue[0:Nx, :, :]/(DXp+DXw)
+    vn = u._yvalue[:, 1:Ny+1, :]/(DYp+DYn)
+    vs = u._yvalue[:, 0:Ny, :]/(DYp+DYs)
+    wf = u._zvalue[:, :, 1:Nz+1]/(DZp+DZf)
+    wb = u._zvalue[:, :, 0:Nz]/(DZp+DZb)
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -1080,12 +1080,12 @@ def convectionTermCylindrical3D(u: FaceVariable):
     mn = Nr*Ntheta*Nz
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
-    ue = rf[1:Nr+1]*u.xvalue[1:Nr+1, :, :]/(rp*(DRp+DRe))
-    uw = rf[0:Nr]*u.xvalue[0:Nr, :, :]/(rp*(DRp+DRw))
-    vn = u.yvalue[:, 1:Ntheta+1, :]/(rp*(DTHETAp+DTHETAn))
-    vs = u.yvalue[:, 0:Ntheta, :]/(rp*(DTHETAp+DTHETAs))
-    wf = u.zvalue[:, :, 1:Nz+1]/(DZp+DZf)
-    wb = u.zvalue[:, :, 0:Nz]/(DZp+DZb)
+    ue = rf[1:Nr+1]*u._xvalue[1:Nr+1, :, :]/(rp*(DRp+DRe))
+    uw = rf[0:Nr]*u._xvalue[0:Nr, :, :]/(rp*(DRp+DRw))
+    vn = u._yvalue[:, 1:Ntheta+1, :]/(rp*(DTHETAp+DTHETAn))
+    vs = u._yvalue[:, 0:Ntheta, :]/(rp*(DTHETAp+DTHETAs))
+    wf = u._zvalue[:, :, 1:Nz+1]/(DZp+DZf)
+    wb = u._zvalue[:, :, 0:Nz]/(DZp+DZb)
 
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
