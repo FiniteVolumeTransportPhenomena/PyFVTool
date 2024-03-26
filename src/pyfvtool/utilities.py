@@ -10,6 +10,8 @@ def int_range(a:int, b:int) -> np.ndarray:
     """
     return np.linspace(a, b, b-a+1, dtype=int)
 
+
+
 def fluxLimiter(flName: str, eps =2e-16):
     """
     returns a flux limiter function
@@ -84,5 +86,44 @@ def fluxLimiter(flName: str, eps =2e-16):
         def FL(r):
             return (np.maximum(0.0, np.maximum(np.minimum(2.0*r,1.0), np.minimum(r,2.0))))
     return FL
+
+
+
+class SignedTuple(tuple):
+    """Just like a tuple, but supporting negation and unary positive operations
+    
+    Can only contain objects that support negation. It does nothing when
+    the unary positive operator is applied.
+
+    This class is intended for returning matrix equation terms (M and RHS)
+    such that they can be used with solvePDE without reserve. At present, 
+    no such signed tuples are needed, however. In the cases where tuples of
+    M and RHS are returned, a negation operation makes no sense (e.g. on
+    the boundaryConditionsTerm). All other cases, only use pure RHS or pure
+    M, which already support negation.
+    """
+    def __init__(self, ii):
+        # When this tuple-subclass object has been created (__new__),
+        # it is already initialized with the tuple values.
+        #
+        # for xx in self:
+        #      print(xx)
+        #
+        # So, here, in this __init__ we only need to check if the SignedTuple
+        # object only contains 'negatable' objects. No need to call super()
+        #
+        for i in ii:
+            if not hasattr(i,'__neg__'):
+                raise ValueError('Object incompatible with SignedTuple')
+
+    def __pos__(self):
+        return self
+
+    def __neg__(self):
+        l = []
+        for x in self:
+            l.append(-x)
+        return type(self)(l)
+
 
 
