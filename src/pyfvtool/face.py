@@ -85,6 +85,44 @@ class FaceVariable:
         self._zvalue = _zvalue
 
 
+    @property
+    def xvalue(self):
+        # TO DO: only if cartesian grid
+        return self._xvalue
+    
+    @xvalue.setter
+    def xvalue(self, value):
+        # TO DO: only if cartesian grid
+        self._xvalue = value
+    
+    @property
+    def yvalue(self):
+        # TO DO: only if cartesian grid
+        return self._yvalue
+    
+    @yvalue.setter
+    def yvalue(self, value):
+        # TO DO: only if cartesian grid
+        self._yvalue = value
+        
+    @property
+    def zvalue(self):
+        # TO DO: only if cartesian or cylindrical grid
+        # in the case of 2D cylindrical return self._yvalue !!
+        return self._zvalue
+    
+    @zvalue.setter
+    def zvalue(self, value):
+        # TO DO: only if cartesian or cylindrical grid
+        # in the case of 2D cylindrical self._yvalue = value !!
+        self._zvalue = value
+        
+    
+
+
+
+
+
     def __add__(self, other):
         if type(other) is FaceVariable:
             return FaceVariable(self.domain,

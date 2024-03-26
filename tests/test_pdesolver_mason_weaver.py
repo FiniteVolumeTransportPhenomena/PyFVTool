@@ -36,8 +36,8 @@ total_c = [pf.domainInt(c)]
 # advection field
 u = pf.FaceVariable(msh, (sg,))
 # closed boundaries
-u._xvalue[0] = 0.0
-u._xvalue[-1] = 0.0
+u.xvalue[0] = 0.0
+u.xvalue[-1] = 0.0
 
 # diffusion field
 D = pf.FaceVariable(msh, D_coeff)
