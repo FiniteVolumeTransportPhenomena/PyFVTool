@@ -88,4 +88,7 @@ def get_CellVariable_profile2D(phi: CellVariable):
 def get_CellVariable_profile3D(phi: CellVariable):
     return phi.plotprofile()
 
+def domainInt(phi: CellVariable) -> float:
+    return phi.domainIntegral()
+
 

@@ -336,16 +336,26 @@ def divergenceTerm(F: FaceVariable):
 
 def gradientTermFixedBC(phi):
     """
-    Warning: unless you know for sure that you need this function, do not use it!
-    This function calculates the gradient of parameter phi in x,y, and z directions. It takes care of the often nonphysical
-    values of the ghost cells. Note that phi is not a variable but a parameter calculated with a function over a domain. 
-    Make sure that phi is calculated by BC2GhostCells (usually but not necessarily in combination with celleval); 
-    otherwise, do not use this function as it leads to wrong values at the boundaries.
-    It checks for the availability of the ghost variables and use them, otherwise estimate them, assuming a zero gradient 
-    on the boundaries.
-    Note: I'm not happy with this implementation but it was the fastest solution that came into my mind while onboard the Geilo-Oslo train.
-    I have to find a better way to do this. The problem is that it is almost always used for a cell variable calculated as f(phi) so having a boundary condition
-    does not really help. I have to think about it.
+    Warning: 
+        
+    Unless you know for sure that you need this function, do not use it!
+    This function calculates the gradient of parameter phi in x,y, and z 
+    directions. It takes care of the often nonphysical values of the ghost
+    cells. Note that phi is not a variable but a parameter calculated with a
+    function over a domain. 
+    
+    Make sure that phi is calculated by BC2GhostCells (usually but not
+    necessarily in combination with celleval);  otherwise, do not use this
+    function as it leads to wrong values at the boundaries.
+    
+    It checks for the availability of the ghost variables and use them, 
+    otherwise estimate them, assuming a zero gradient  on the boundaries.
+    
+    Note: I'm not happy with this implementation but it was the fastest 
+    solution that came into my mind while onboard the Geilo-Oslo train.
+    I have to find a better way to do this. The problem is that it is almost 
+    always used for a cell variable calculated as f(phi) so having a boundary
+    condition does not really help. I have to think about it.
 
     parameters
     ----------
@@ -363,7 +373,7 @@ def gradientTermFixedBC(phi):
     >>> import numpy as np
     >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
-    >>> sin_phi = pf.celleval(np.sin, BC2GhostCells(sw))
+    >>> sin_phi = pf.celleval(np.sin, sw.BC2GhostCells())
     >>> gradPhi = pf.gradientTermFixedBC(sin_phi)
     """
     faceGrad = gradientTerm(phi)

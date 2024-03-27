@@ -368,7 +368,62 @@ class CellVariable:
         else:
             raise NotImplementedError("plotprofile() not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
+    
+    
+    def domainIntegral(self) -> float:
+        """
+        Calculate the finite-volume integral of a CellVariable over entire domain
+        
+        The finite-volume integral over the entire mesh domain gives the total
+        amount of `CellVariable` present in the system. Calculation of this
+        integral is useful for checking conservation of the quantity concerned
+        (in case of 'no-flux' BCs), or for monitoring its evolution due to 
+        exchanges via the boundaries (other BCs) or to the presence of source
+        terms.
+    
+        May later become a built-in method of the CellVariable class, but for now 
+        this implementation as a function is chosen for consistency with FVTool. 
+    
+    
+        Returns
+        -------
+        float
+            Total finite-volume integral over entire domain.
+    
+        """
+        v = cellVolume(self.domain).internalCellValues
+        c = self.internalCellValues
+        return (v*c).flatten().sum()
 
+
+
+
+    def BC2GhostCells(self):
+        """
+        assign the boundary values to the ghost cells 
+        
+        Returns
+        -------
+        CellVariable
+            the new cell variable
+        """
+        phi = self.copy()
+        if issubclass(type(phi.domain), Grid1D):
+            phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
+            phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
+        elif issubclass(type(phi.domain), Grid2D):
+            phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
+            phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
+            phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
+            phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
+        elif issubclass(type(phi.domain), Grid3D):
+            phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
+            phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
+            phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
+            phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
+            phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
+            phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
+        return phi
 
 
 
@@ -485,66 +540,3 @@ def celleval(f, *args):
 
 
 
-def domainInt(phi: CellVariable) -> float:
-    """
-    Calculate the finite-volume integral of a CellVariable over entire domain
-    
-    The finite-volume integral over the entire mesh domain gives the total
-    amount of `CellVariable` present in the system. Calculation of this
-    integral is useful for checking conservation of the quantity concerned
-    (in case of 'no-flux' BCs), or for monitoring its evolution due to 
-    exchanges via the boundaries (other BCs) or to the presence of source
-    terms.
-
-    May later become a built-in method of the CellVariable class, but for now 
-    this implementation as a function is chosen for consistency with FVTool. 
-    An alias `domainIntegrate`has been added that sounds better than
-    `domainInt`.
-
-    Parameters
-    ----------
-    phi : CellVariable
-        Variable whose finite-volume integral will calculated.
-
-    Returns
-    -------
-    float
-        Total finite-volume integral over entire domain.
-
-    """
-    v = cellVolume(phi.domain).internalCellValues
-    c = phi.internalCellValues
-    return (v*c).flatten().sum()
-
-
-def domainIntegrate(phi: CellVariable) -> float:
-    """
-    Alias for `domainInt()`
-    
-    See `domainInt()`
-    """
-    return domainInt(phi)
-
-
-
-def BC2GhostCells(phi0):
-    """
-    assign the boundary values to the ghost cells and returns the new cell variable
-    """
-    phi = phi0.copy()
-    if issubclass(type(phi.domain), Grid1D):
-        phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
-        phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
-    elif issubclass(type(phi.domain), Grid2D):
-        phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
-        phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
-        phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
-        phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
-    elif issubclass(type(phi.domain), Grid3D):
-        phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
-        phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
-        phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
-        phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
-        phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
-        phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
-    return phi

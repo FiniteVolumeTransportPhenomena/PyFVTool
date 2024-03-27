@@ -29,9 +29,8 @@ from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
 from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE
-from .cell import CellVariable, cellVolume, BC2GhostCells
+from .cell import CellVariable, cellVolume
 from .cell import funceval, celleval
-from .cell import domainInt, domainIntegrate
 from .cell import cellLocations
 from .face import FaceVariable, faceeval
 from .face import faceLocations
@@ -55,4 +54,6 @@ if ENABLE_LEGACY:
     from .legacy import get_CellVariable_profile1D
     from .legacy import get_CellVariable_profile2D
     from .legacy import get_CellVariable_profile3D    
+    from .legacy import domainInt
+    
     
