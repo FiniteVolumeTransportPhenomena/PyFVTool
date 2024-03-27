@@ -81,3 +81,6 @@ def createMeshSpherical3D(*args) -> SphericalGrid3D:
 def get_CellVariable_profile1D(phi: CellVariable):
     """Legacy function"""
     return phi.plotprofile()
+
+def get_CellVariable_profile2D(phi: CellVariable):
+    return phi.plotprofile()

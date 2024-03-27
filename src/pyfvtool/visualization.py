@@ -4,7 +4,6 @@ from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
-from .cell import get_CellVariable_profile2D
 from .cell import get_CellVariable_profile3D
 
 import matplotlib.pyplot as plt
@@ -39,33 +38,13 @@ def visualizeCells(phi: CellVariable,
     >>> phi = pf.CellVariable(m, 1.0)
     >>> pf.visualizeCells(phi)
     """
-    if issubclass(type(phi.domain), Grid1D):
+    if isinstance(phi.domain, Grid1D):
         x, phi0 = phi.plotprofile()
         plt.plot(x, phi0)
         # plt.show()
 
     elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
-        x, y, phi0 = get_CellVariable_profile2D(phi)
-        # TODO:
-        # get_CellVariable_profile2D can become a method of CellVariable
-        #    (shared with 1D and 3D versions)
-        ## Kept old code below for reference. Can be removed.
-        # x = np.hstack([phi.domain.facecenters.x[0],
-        #                phi.domain.cellcenters.x,
-        #                phi.domain.facecenters.x[-1]])
-        # y = np.hstack([phi.domain.facecenters.y[0],
-        #                phi.domain.cellcenters.y,
-        #                phi.domain.facecenters.y[-1]])
-        # phi0 = np.copy(phi.value)
-        # phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
-        # phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
-        # phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
-        # phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
-        # phi0[0, 0] = phi0[0, 1]
-        # phi0[0, -1] = phi0[0, -2]
-        # phi0[-1, 0] = phi0[-1, 1]
-        # phi0[-1, -1] = phi0[-1, -2]
-        ## 
+        x, y, phi0 = phi.plotprofile()
         if vmin is None:
             vmin = phi0.min()
         if vmax is None:
@@ -76,27 +55,7 @@ def visualizeCells(phi: CellVariable,
         # plt.show()
 
     elif (type(phi.domain) is PolarGrid2D):
-        x, y, phi0 = get_CellVariable_profile2D(phi)
-        # TODO:
-        # get_CellVariable_profile2D can become a method of CellVariable
-        #    (shared with 1D and 3D versions)
-        ## Kept old code below for reference. Can be removed.
-        # x = np.hstack([phi.domain.facecenters.x[0],
-        #                phi.domain.cellcenters.x,
-        #                phi.domain.facecenters.x[-1]])
-        # y = np.hstack([phi.domain.facecenters.y[0],
-        #                phi.domain.cellcenters.y,
-        #                phi.domain.facecenters.y[-1]])
-        # phi0 = np.copy(phi.value)
-        # phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
-        # phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
-        # phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
-        # phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
-        # phi0[0, 0] = phi0[0, 1]
-        # phi0[0, -1] = phi0[0, -2]
-        # phi0[-1, 0] = phi0[-1, 1]
-        # phi0[-1, -1] = phi0[-1, -2]
-        ## 
+        x, y, phi0 = phi.plotprofile()
         plt.subplot(111, polar="true")
         plt.pcolor(y, x, phi0)
         # plt.show()

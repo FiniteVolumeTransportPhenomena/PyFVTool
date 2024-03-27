@@ -250,8 +250,33 @@ class CellVariable:
         """
         Create a profile of a cell variable for plotting, export, etc. 
         
-        1D:
+        It generates sets of arrays that contain the axes' coordinates,
+        cell values, including the values at the boundaries.
+        
+        For 2D and 3D visualization, it is perhaps best to only use the 
+        internalCellValues for plotting (e.g. for a false color map à la 
+        plt.pcolormesh)
+        
+
+        1D meshes
+        =========
         This generates a pair of vectors containing the abscissa and ordinates
+        for plotting the values of the cell variable over the entire calculation
+        domain. It includes the values at the outer faces of the domain, by 
+        taking into account the values of the ghost cells.
+        
+        Returns
+        -------
+        x : np.ndarray
+            x (or r) coordinates.
+        phi0 : np.ndarray
+            Value of the CellVariables at those points.
+
+
+        2D meshes
+        =========
+        This generates a set of vectors containing the (x, y) or (r, z)  
+        coordinates and the values of the cell variable at those coordinates
         for plotting the values of the cell variable over the entire calculation
         domain. It includes the values at the outer faces of the domain, by 
         taking into account the values of the ghost cells.
@@ -262,9 +287,10 @@ class CellVariable:
         -------
         x : np.ndarray
             x (or r) coordinates.
+        y : np.ndarray
+            y (or z) coordinates.
         phi0 : np.ndarray
-            Value of the CellVariables at those points.
-
+            Value of the CellVariables at those coordinates.
         """
         #
         # TODO:
@@ -286,6 +312,23 @@ class CellVariable:
             # boundary can therefore be obtained by direct averaging with a
             # weight factor of 0.5.
             return (x, phi0)
+        elif isinstance(self.domain, Grid2D):
+            x = np.hstack([self.domain.facecenters.x[0],
+                           self.domain.cellcenters.x,
+                           self.domain.facecenters.x[-1]])
+            y = np.hstack([self.domain.facecenters.y[0],
+                           self.domain.cellcenters.y,
+                           self.domain.facecenters.y[-1]])
+            phi0 = np.copy(self.value)
+            phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
+            phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
+            phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
+            phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
+            phi0[0, 0] = phi0[0, 1]
+            phi0[0, -1] = phi0[0, -2]
+            phi0[-1, 0] = phi0[-1, 1]
+            phi0[-1, -1] = phi0[-1, -2]
+            return (x, y, phi0)
         else:
             raise NotImplementedError("plotprofile() not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
@@ -445,65 +488,6 @@ def domainIntegrate(phi: CellVariable) -> float:
     """
     return domainInt(phi)
 
-
-
-# TODO:
-# get_CellVariable_profile2D can become a method of CellVariable
-#    (shared with 1D and 3D versions)
-# TODO:
-#    Add a keyword that specifies how the outer FaceValues will be estimated
-#    Currently, this is just the average of the last inner cell and the boundary
-#    (ghost) cell.
-#    In certain cases it may be visually desirable to use an extrapolation of
-#    the last inner cell values.
-# Perhaps for 2D and 3D visualization it is perhaps best to only use the 
-# innervalues (e.g. for a false color map à la plt.pcolormesh)
-
-def get_CellVariable_profile2D(phi: CellVariable):
-    """
-    Create a profile of a cell variable for plotting, export, etc. (2D).
-    
-    This generates a set of vectors containing the (x, y) or (r, z)  
-    coordinates and the values of the cell variable at those coordinates
-    for plotting the values of the cell variable over the entire calculation
-    domain. It includes the values at the outer faces of the domain, by 
-    taking into account the values of the ghost cells.
-    
-    This function may later become a method of the CellVariable class, but
-    is a function now for simplicity and consistency with other CellVariable
-    utility functions (e.g. `domainIntegrate`).
-
-    Parameters
-    ----------
-    phi : CellVariable
-
-
-    Returns
-    -------
-    x : np.ndarray
-        x (or r) coordinates.
-    y : np.ndarray
-        y (or z) coordinates.
-    phi0 : np.ndarray
-        Value of the CellVariables at those coordinates.
-
-    """
-    x = np.hstack([phi.domain.facecenters.x[0],
-                   phi.domain.cellcenters.x,
-                   phi.domain.facecenters.x[-1]])
-    y = np.hstack([phi.domain.facecenters.y[0],
-                   phi.domain.cellcenters.y,
-                   phi.domain.facecenters.y[-1]])
-    phi0 = np.copy(phi.value)
-    phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
-    phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
-    phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
-    phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
-    phi0[0, 0] = phi0[0, 1]
-    phi0[0, -1] = phi0[0, -2]
-    phi0[-1, 0] = phi0[-1, 1]
-    phi0[-1, -1] = phi0[-1, -2]
-    return (x, y, phi0)
 
 
 

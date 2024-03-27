@@ -53,4 +53,6 @@ if ENABLE_LEGACY:
     from .legacy import createMeshCylindrical3D
     from .legacy import createMeshSpherical3D
     from .legacy import get_CellVariable_profile1D
+    from .legacy import get_CellVariable_profile2D
+    
     
