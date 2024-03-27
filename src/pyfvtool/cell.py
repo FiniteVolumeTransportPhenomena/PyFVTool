@@ -245,6 +245,51 @@ class CellVariable:
             Copy of the CellVariable.
         """
         return CellVariable(self.domain, np.copy(self.value))
+    
+    def plotprofile(self):
+        """
+        Create a profile of a cell variable for plotting, export, etc. 
+        
+        1D:
+        This generates a pair of vectors containing the abscissa and ordinates
+        for plotting the values of the cell variable over the entire calculation
+        domain. It includes the values at the outer faces of the domain, by 
+        taking into account the values of the ghost cells.
+        
+
+
+        Returns
+        -------
+        x : np.ndarray
+            x (or r) coordinates.
+        phi0 : np.ndarray
+            Value of the CellVariables at those points.
+
+        """
+        #
+        # TODO:
+        #    Add a keyword that specifies how the outer FaceValues will be estimated
+        #    Currently, this is just the average of the last inner cell and the boundary
+        #    (ghost) cell.
+        #    In certain cases it may be visually desirable to use an extrapolation of
+        #    the last inner cell values.
+        #
+        if isinstance(self.domain, Grid1D):
+            x = np.hstack([self.domain.facecenters.x[0],
+                           self.domain.cellcenters.x,
+                           self.domain.facecenters.x[-1]])
+            phi0 = np.hstack([0.5*(self.value[0]+self.value[1]),
+                              self.value[1:-1],
+                              0.5*(self.value[-2]+self.value[-1])])
+            # The size of the ghost cell is always equal to the size of the 
+            # first (or last) cell within the domain. The value at the
+            # boundary can therefore be obtained by direct averaging with a
+            # weight factor of 0.5.
+            return (x, phi0)
+        else:
+            raise NotImplementedError("plotprofile() not implemented for mesh type '{0:s}'".\
+                            format(self.domain.__class__.__name__))
+
 
 
 
@@ -265,6 +310,7 @@ def cellVolume(m: MeshStructure):
     elif (type(m) is CylindricalGrid3D):
         c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
     return CellVariable(m, c, BC)
+
 
 
 def cellLocations(m: MeshStructure):
@@ -390,6 +436,7 @@ def domainInt(phi: CellVariable) -> float:
     c = phi.internalCellValues
     return (v*c).flatten().sum()
 
+
 def domainIntegrate(phi: CellVariable) -> float:
     """
     Alias for `domainInt()`
@@ -398,56 +445,6 @@ def domainIntegrate(phi: CellVariable) -> float:
     """
     return domainInt(phi)
 
-
-# TODO:
-# get_CellVariable_profile1D can become a method of CellVariable
-#    (shared with 2D and 3D versions)
-# TODO:
-#    Add a keyword that specifies how the outer FaceValues will be estimated
-#    Currently, this is just the average of the last inner cell and the boundary
-#    (ghost) cell.
-#    In certain cases it may be visually desirable to use an extrapolation of
-#    the last inner cell values.
-
-def get_CellVariable_profile1D(phi: CellVariable):
-    """
-    Create a profile of a cell variable for plotting, export, etc. (1D).
-    
-    This generates a pair of vectors containing the abscissa and ordinates
-    for plotting the values of the cell variable over the entire calculation
-    domain. It includes the values at the outer faces of the domain, by 
-    taking into account the values of the ghost cells.
-    
-    This function may later become a method of the CellVariable class, but
-    is a function now for simplicity and consistency with other CellVariable
-    utility functions (e.g. `domainIntegrate`).
-
-
-    Parameters
-    ----------
-    phi : CellVariable
-
-
-    Returns
-    -------
-    x : np.ndarray
-        x (or r) coordinates.
-    phi0 : np.ndarray
-        Value of the CellVariables at those points.
-
-    """
-
-    x = np.hstack([phi.domain.facecenters.x[0],
-                   phi.domain.cellcenters.x,
-                   phi.domain.facecenters.x[-1]])
-    phi0 = np.hstack([0.5*(phi.value[0]+phi.value[1]),
-                      phi.value[1:-1],
-                      0.5*(phi.value[-2]+phi.value[-1])])
-    # The size of the ghost cell is always equal to the size of the 
-    # first (or last) cell within the domain. The value at the
-    # boundary can therefore be obtained by direct averaging with a
-    # weight factor of 0.5.
-    return (x, phi0)
 
 
 # TODO:
@@ -575,7 +572,7 @@ def BC2GhostCells(phi0):
     """
     assign the boundary values to the ghost cells and returns the new cell variable
     """
-    phi = copyCellVariable(phi0)
+    phi = phi0.copy()
     if issubclass(type(phi.domain), Grid1D):
         phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
         phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])

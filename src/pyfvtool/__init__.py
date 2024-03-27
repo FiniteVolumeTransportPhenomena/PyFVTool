@@ -32,7 +32,6 @@ from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE
 from .cell import CellVariable, cellVolume, BC2GhostCells
 from .cell import funceval, celleval
 from .cell import domainInt, domainIntegrate
-from .cell import get_CellVariable_profile1D
 from .cell import cellLocations
 from .face import FaceVariable, faceeval
 from .face import faceLocations
@@ -53,4 +52,5 @@ if ENABLE_LEGACY:
     from .legacy import createMesh3D
     from .legacy import createMeshCylindrical3D
     from .legacy import createMeshSpherical3D
+    from .legacy import get_CellVariable_profile1D
     

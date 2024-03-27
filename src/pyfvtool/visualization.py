@@ -4,7 +4,7 @@ from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
-from .cell import get_CellVariable_profile1D, get_CellVariable_profile2D
+from .cell import get_CellVariable_profile2D
 from .cell import get_CellVariable_profile3D
 
 import matplotlib.pyplot as plt
@@ -40,10 +40,7 @@ def visualizeCells(phi: CellVariable,
     >>> pf.visualizeCells(phi)
     """
     if issubclass(type(phi.domain), Grid1D):
-        x, phi0 = get_CellVariable_profile1D(phi)
-        # TODO:
-        # get_CellVariable_profile1D can become a method of CellVariable
-        #    (shared with 2D and 3D versions)
+        x, phi0 = phi.plotprofile()
         plt.plot(x, phi0)
         # plt.show()
 
