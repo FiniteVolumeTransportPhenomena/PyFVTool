@@ -435,7 +435,8 @@ def cellLocations(m: MeshStructure):
     
     It can later be used in defining properties that are variable in space.
     
-    Incompletely tested
+    Incompletely tested, and there may be other, more direct, ways to 
+    calculate properties that vary in space, e.g. using cellcenters directly?
     
     Parameters
     ----------
