@@ -237,31 +237,15 @@ class CellVariable:
     def copy(self):
         """
         Create a copy of the CellVariable
+        
+        
+        Returns
+        -------
+        CellVariable
+            Copy of the CellVariable.
         """
         return CellVariable(self.domain, np.copy(self.value))
 
-
-
-
-
-
-
-def copyCellVariable(phi: CellVariable) -> CellVariable:
-    """
-    Create a copy of a CellVariable
-
-    Parameters
-    ----------
-    phi : CellVariable
-        CellVariable to be copied.
-
-    Returns
-    -------
-    CellVariable
-        Copy of the CellVariable.
-
-    """
-    return CellVariable(phi.domain, np.copy(phi.value))
 
 
 def cellVolume(m: MeshStructure):

@@ -29,8 +29,7 @@ from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
 from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE
-from .cell import CellVariable, cellVolume, BC2GhostCells 
-from .cell import copyCellVariable
+from .cell import CellVariable, cellVolume, BC2GhostCells
 from .cell import funceval, celleval
 from .cell import domainInt, domainIntegrate
 from .cell import get_CellVariable_profile1D
