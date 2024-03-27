@@ -103,39 +103,6 @@ class CellVariable:
             self.value[1:-1, 1:-1] = values
         elif issubclass(type(self.domain), Grid3D):
             self.value[1:-1, 1:-1, 1:-1] = values
-
-    def update_bc_cells(self, BC: BoundaryConditionsBase):
-        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
-        self.update_value(phi_temp)
-
-    def update_value(self, new_cell):
-        np.copyto(self.value, new_cell.value)
-
-    def bc_to_ghost(self):
-        """
-        assign the boundary values to the ghost cells
-        """
-        if issubclass(type(self.domain), Grid1D):
-            self.value[0] = 0.5*(self.value[1]+self.value[0])
-            self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
-        elif issubclass(type(self.domain), Grid2D):
-            self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
-            self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
-            self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
-            self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
-        elif issubclass(type(self.domain), Grid3D):
-            self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
-            self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
-            self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
-            self.value[1:-1, -1, 1:-1] = 0.5*(self.value[1:-1, -2, 1:-1]+self.value[1:-1, -1, 1:-1])
-            self.value[1:-1, 1:-1, 0] = 0.5*(self.value[1:-1, 1:-1, 1]+self.value[1:-1, 1:-1, 0])
-            self.value[1:-1, 1:-1, -1] = 0.5*(self.value[1:-1, 1:-1, -2]+self.value[1:-1, 1:-1, -1])
-    
-    def copy(self):
-        """
-        Create a copy of the CellVariable
-        """
-        return CellVariable(self.domain, np.copy(self.value))
     
     def __add__(self, other):
         if type(other) is CellVariable:
@@ -238,6 +205,43 @@ class CellVariable:
     
     def __abs__(self):
         return CellVariable(self.domain, np.abs(self.value))
+
+
+    def update_bc_cells(self, BC: BoundaryConditionsBase):
+        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
+        self.update_value(phi_temp)
+
+    def update_value(self, new_cell):
+        np.copyto(self.value, new_cell.value)
+
+    def bc_to_ghost(self):
+        """
+        assign the boundary values to the ghost cells
+        """
+        if issubclass(type(self.domain), Grid1D):
+            self.value[0] = 0.5*(self.value[1]+self.value[0])
+            self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
+        elif issubclass(type(self.domain), Grid2D):
+            self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
+            self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
+            self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
+            self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
+        elif issubclass(type(self.domain), Grid3D):
+            self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
+            self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
+            self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
+            self.value[1:-1, -1, 1:-1] = 0.5*(self.value[1:-1, -2, 1:-1]+self.value[1:-1, -1, 1:-1])
+            self.value[1:-1, 1:-1, 0] = 0.5*(self.value[1:-1, 1:-1, 1]+self.value[1:-1, 1:-1, 0])
+            self.value[1:-1, 1:-1, -1] = 0.5*(self.value[1:-1, 1:-1, -2]+self.value[1:-1, 1:-1, -1])
+    
+    def copy(self):
+        """
+        Create a copy of the CellVariable
+        """
+        return CellVariable(self.domain, np.copy(self.value))
+
+
+
 
 
 

@@ -79,7 +79,6 @@ class FaceVariable:
                     _zvalue = faceval[2]*np.ones((Nx, Ny, Nz+1))
         else:
             raise TypeError('Unexpected number of arguments')
-            
         self.domain = mesh
         self._xvalue = _xvalue
         self._yvalue = _yvalue
@@ -197,7 +196,6 @@ class FaceVariable:
                              format(self.domain.__class__.__name__))   
 
 
-
     @property
     def rvalue(self):
         if (type(self.domain) is Grid1D)\
@@ -229,6 +227,7 @@ class FaceVariable:
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
+
 
     @property
     def thetavalue(self):
@@ -300,7 +299,7 @@ class FaceVariable:
                             format(self.domain.__class__.__name__))   
                 
     
-
+    
     def __add__(self, other):
         if type(other) is FaceVariable:
             return FaceVariable(self.domain,
