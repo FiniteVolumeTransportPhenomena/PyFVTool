@@ -4,7 +4,6 @@ from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D
 from .cell import CellVariable
-from .cell import get_CellVariable_profile3D
 
 import matplotlib.pyplot as plt
 
@@ -61,29 +60,7 @@ def visualizeCells(phi: CellVariable,
         # plt.show()
 
     elif (type(phi.domain) is Grid3D):
-        x, y, z, phi0 = get_CellVariable_profile3D(phi)
-        # TODO:
-        # get_CellVariable_profile3D can become a method of CellVariable
-        #    (shared with 1D and 2D versions)
-        ## Kept old code below for reference. Can be removed.
-        # x = np.hstack([phi.domain.facecenters.x[0],
-        #                phi.domain.cellcenters.x,
-        #                phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
-        # y = np.hstack([phi.domain.facecenters.y[0],
-        #                phi.domain.cellcenters.y,
-        #                phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
-        # z = np.hstack([phi.domain.facecenters.z[0],
-        #                phi.domain.cellcenters.z,
-        #                phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
-        # phi0 = np.copy(phi.value)
-        # phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
-        # phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
-        # phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
-        # phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
-        # phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
-        # phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
-        ##
-
+        x, y, z, phi0 = phi.plotprofile()
         vmin = np.min(phi0)
         vmax = np.max(phi0)
         mynormalize = lambda a:((a - vmin)/(vmax-vmin))
@@ -95,13 +72,7 @@ def visualizeCells(phi: CellVariable,
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection = "3d")
-        # r = linspace(1.25, 1.25, 50)
-        # p = linspace(0, 2π, 50)
-        # R = repmat(r, 1, 50)
-        # P = repmat(p', 50, 1)
-        # Zc = rand(50, 50) # (P.^2-1).^2
-        # Z = repmat(linspace(0, 2, 50), 1, 50)
-        # X, Y = R.*cos.(P), R.*sin.(P)
+
         ax.plot_surface(X[0,:,:], Y[0,:,:], Z[0,:,:],
                         facecolors=plt.cm.viridis(mynormalize(phi0[0,:,:])),
                         alpha=0.8)
@@ -123,26 +94,8 @@ def visualizeCells(phi: CellVariable,
         # plt.show()
 
     elif (type(phi.domain) is CylindricalGrid3D):
-        r, theta, z, phi0 = get_CellVariable_profile3D(phi)
-        ## Kept old code below for reference. Can be removed.
-        # r = np.hstack([phi.domain.facecenters.x[0],
-        #                phi.domain.cellcenters.x,
-        #                phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
-        # theta = np.hstack([phi.domain.facecenters.y[0],
-        #                    phi.domain.cellcenters.y,
-        #                    phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
-        # z = np.hstack([phi.domain.facecenters.z[0],
-        #                phi.domain.cellcenters.z,
-        #                phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
-        # phi0 = np.copy(phi.value)
-        # phi0[:, 0, :] = 0.5*(phi0[:, 0, :]+phi0[:, 1, :])
-        # phi0[:, -1, :] = 0.5*(phi0[:, -2, :]+phi0[:, -1, :])
-        # phi0[:, :, 0] = 0.5*(phi0[:, :, 0]+phi0[:, :, 0])
-        # phi0[:, :, -1] = 0.5*(phi0[:, :, -2]+phi0[:, :, -1])
-        # phi0[0, :, :] = 0.5*(phi0[1, :, :]+phi0[2, :, :])
-        # phi0[-1, :, :] = 0.5*(phi0[-2, :, :]+phi0[-1, :, :])
-        ##
-        
+        r, theta, z, phi0 = phi.plotprofile()
+      
         x = r*np.cos(theta)
         y = r*np.sin(theta)
         vmin = np.min(phi0)

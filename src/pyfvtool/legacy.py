@@ -84,3 +84,8 @@ def get_CellVariable_profile1D(phi: CellVariable):
 
 def get_CellVariable_profile2D(phi: CellVariable):
     return phi.plotprofile()
+
+def get_CellVariable_profile3D(phi: CellVariable):
+    return phi.plotprofile()
+
+
