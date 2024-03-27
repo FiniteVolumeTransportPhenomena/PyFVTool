@@ -5,6 +5,7 @@ from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D
+from .mesh import SphericalGrid3D
 
 
 
@@ -95,8 +96,9 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('xvalue does not exist for cylindrical grids')
-        elif (type(self.domain) is PolarGrid2D):
-            raise AttributeError('xvalue does not exist for polar grid')
+        elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
+            raise AttributeError('xvalue does not exist for polar or spherical grids')
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
@@ -111,8 +113,9 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('xvalue does not exist for cylindrical grids')
-        elif (type(self.domain) is PolarGrid2D):
-            raise AttributeError('xvalue does not exist for polar grid')
+        elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
+            raise AttributeError('xvalue does not exist for polar or spherical grids')
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
@@ -129,8 +132,9 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('yvalue does not exist for cylindrical grids')
-        elif (type(self.domain) is PolarGrid2D):
-            raise AttributeError('yvalue does not exist for polar grid')
+        elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
+            raise AttributeError('yvalue does not exist for polar or spherical grids')
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
@@ -146,8 +150,9 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('yvalue does not exist for cylindrical grids')
-        elif (type(self.domain) is PolarGrid2D):
-            raise AttributeError('yvalue does not exist for polar grid')
+        elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
+            raise AttributeError('yvalue does not exist for polar or spherical grids')
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
@@ -165,8 +170,9 @@ class FaceVariable:
              raise AttributeError('zvalue does not exist for 1D cylindrical grids')            
         elif (type(self.domain) is CylindricalGrid2D):
               return self._yvalue
-        elif (type(self.domain) is PolarGrid2D):
-             raise AttributeError('zvalue does not exist for polar grid')
+        elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
+            raise AttributeError('zvalue does not exist for polar or spherical grids')
         else:
              raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                              format(self.domain.__class__.__name__))       
@@ -183,8 +189,9 @@ class FaceVariable:
              raise AttributeError('zvalue does not exist for 1D cylindrical grids')            
         elif (type(self.domain) is CylindricalGrid2D):
               self._yvalue = value
-        elif (type(self.domain) is PolarGrid2D):
-             raise AttributeError('zvalue does not exist for polar grid')
+        elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
+            raise AttributeError('zvalue does not exist for polar or spherical grids')
         else:
              raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                              format(self.domain.__class__.__name__))   
@@ -200,7 +207,8 @@ class FaceVariable:
         elif (type(self.domain) is CylindricalGrid1D)\
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D)\
-         or (type(self.domain) is PolarGrid2D):
+         or (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
             return self._xvalue
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
@@ -211,23 +219,87 @@ class FaceVariable:
         if (type(self.domain) is Grid1D)\
          or (type(self.domain) is Grid2D)\
          or (type(self.domain) is Grid3D):
-            raise AttributeError('rvalue does not exist for Cartesian grids')
             self._xvalue = value
         elif (type(self.domain) is CylindricalGrid1D)\
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D)\
-         or (type(self.domain) is PolarGrid2D):
+         or (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid3D):
             self._xvalue = value
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
                             format(self.domain.__class__.__name__))
 
-    #TODO thetavalue
+    @property
+    def thetavalue(self):
+        if (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is CylindricalGrid3D)\
+         or (type(self.domain) is SphericalGrid3D):
+            return self._yvalue
+        elif (type(self.domain) is Grid1D)\
+         or (type(self.domain) is Grid2D)\
+         or (type(self.domain) is Grid3D):
+            raise AttributeError('thetavalue does not exist for Cartesian grids')    
+        elif (type(self.domain) is CylindricalGrid1D)\
+         or (type(self.domain) is CylindricalGrid2D):
+            raise AttributeError('thetavalue does not exist for 1D and 2D cylindrical grids') 
+        else:
+            raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
+                            format(self.domain.__class__.__name__))        
+        
+    @thetavalue.setter
+    def thetavalue(self, value):
+        if (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is CylindricalGrid3D)\
+         or (type(self.domain) is SphericalGrid3D):
+            self._yvalue = value
+        elif (type(self.domain) is Grid1D)\
+         or (type(self.domain) is Grid2D)\
+         or (type(self.domain) is Grid3D):
+            raise AttributeError('thetavalue does not exist for Cartesian grids')    
+        elif (type(self.domain) is CylindricalGrid1D)\
+         or (type(self.domain) is CylindricalGrid2D):
+            raise AttributeError('thetavalue does not exist for 1D and 2D cylindrical grids') 
+        else:
+            raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
+                            format(self.domain.__class__.__name__))      
+
+
+    @property
+    def phivalue(self):
+        if (type(self.domain) is SphericalGrid3D):
+            return self._zvalue
+        elif (type(self.domain) is Grid1D)\
+         or (type(self.domain) is Grid2D)\
+         or (type(self.domain) is Grid3D):
+            raise AttributeError('phivalue does not exist for Cartesian grids')    
+        elif (type(self.domain) is CylindricalGrid1D)\
+          or (type(self.domain) is CylindricalGrid2D)\
+          or (type(self.domain) is PolarGrid2D)\
+          or (type(self.domain) is CylindricalGrid3D):
+            raise AttributeError('phivalue does not exist for cylindrical and polar grids') 
+        else:
+            raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
+                            format(self.domain.__class__.__name__))        
+        
+    @phivalue.setter
+    def phivalue(self, value):
+        if (type(self.domain) is SphericalGrid3D):
+            self._zvalue = value
+        elif (type(self.domain) is Grid1D)\
+         or (type(self.domain) is Grid2D)\
+         or (type(self.domain) is Grid3D):
+            raise AttributeError('phivalue does not exist for Cartesian grids')    
+        elif (type(self.domain) is CylindricalGrid1D)\
+          or (type(self.domain) is CylindricalGrid2D)\
+          or (type(self.domain) is PolarGrid2D)\
+          or (type(self.domain) is CylindricalGrid3D):
+            raise AttributeError('phivalue does not exist for cylindrical and polar grids') 
+        else:
+            raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
+                            format(self.domain.__class__.__name__))   
+                
     
-    #TODO phivalue
-
-
-
 
     def __add__(self, other):
         if type(other) is FaceVariable:

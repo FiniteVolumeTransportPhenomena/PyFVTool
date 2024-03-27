@@ -19,9 +19,6 @@ from pyfvtool import FaceVariable
 
 
 
-g3d = Grid3D(10, 10, 10, 1.0, 1.0, 1.0)
-
-
 
 
 errors_expected = 0
@@ -53,6 +50,24 @@ errors_expected += 1
 try:
     fv.rvalue[:] = 3.0
 except AttributeError:
+    errors_caught +=1
+errors_expected += 1
+try:
+    fv.thetavalue[:] = 3.0
+except AttributeError:
+    errors_caught +=1
+
+
+
+g3d = Grid3D(10, 10, 10, 1.0, 1.0, 1.0)
+fv = FaceVariable(g3d, 1.0)
+fv.xvalue[:] = 3.0
+fv.yvalue[:] = 4.0
+fv.zvalue[:] = 5.0
+errors_expected += 1
+try:
+    fv.rvalue[:] = 7.0
+except AttributeError:
     errors_caught +=1 
 
 
@@ -65,7 +80,11 @@ try:
     fv.xvalue[:] = 3.0
 except AttributeError:
     errors_caught +=1 
-    
+errors_expected += 1
+try:
+    fv.thetavalue[:] = 3.0
+except AttributeError:
+    errors_caught +=1    
 
 
 s1d = SphericalGrid1D(10, 1.0)
@@ -91,6 +110,15 @@ except AttributeError:
     
 
 
+s3d = SphericalGrid3D(10, 10, 10, 1.0, 2*np.pi, 2*np.pi)
+fv = FaceVariable(s3d, 1.0)
+fv.rvalue[:] = 3.0
+fv.thetavalue[:] = 4.0
+print(fv.thetavalue)
+fv.phivalue[:] = 5.0
+assert np.all(fv._xvalue == fv.rvalue)
+assert np.all(fv._yvalue == fv.thetavalue)
+assert np.all(fv._zvalue == fv.phivalue)
 
 
     
