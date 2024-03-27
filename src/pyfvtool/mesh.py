@@ -96,6 +96,7 @@ class MeshStructure:
     def visualize(self):
         pass
 
+
     def shift_origin(self, x=0.0, y=0.0, z=0.0):
         self.cellcenters.x += x
         self.cellcenters.y += y
@@ -103,6 +104,46 @@ class MeshStructure:
         self.facecenters.x += x
         self.facecenters.y += y
         self.facecenters.z += z
+
+
+    def cellVolumes(self):
+        """Get the volumes of all finite volume cells in the mesh
+        
+        Returns
+        -------
+        np.ndarray
+            containing all cell volumes, arranged according to gridcells
+            
+        TODO: these could perhaps be calculated statically, when initializing
+        the mesh.
+        
+        """
+        if (type(self) is Grid1D):
+            c = self.cellsize.x[1:-1]
+        elif (type(self) is CylindricalGrid1D):
+            c = 2.0*np.pi*self.cellsize.x[1:-1]*self.cellcenters.x
+        elif (type(self) is Grid2D):
+            c = self.cellsize.x[1:-1][:, np.newaxis]\
+                *self.cellsize.y[1:-1][np.newaxis, :]
+        elif (type(self) is CylindricalGrid2D):
+            c = 2.0*np.pi*self.cellcenters.x[:, np.newaxis]\
+                *self.cellsize.x[1:-1][:, np.newaxis]\
+                *self.cellsize.y[1:-1][np.newaxis, :]
+        elif (type(self) is PolarGrid2D):
+            c = self.cellcenters.x\
+                *self.cellsize.x[1:-1][:, np.newaxis]\
+                *self.cellsize.y[1:-1][np.newaxis, :]
+        elif (type(self) is Grid3D):
+            c = self.cellsize.x[1:-1][:,np.newaxis,np.newaxis]\
+                *self.cellsize.y[1:-1][np.newaxis,:,np.newaxis]\
+                *self.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
+        elif (type(self) is CylindricalGrid3D):
+            c = self.cellcenters.x\
+                *self.cellsize.x[1:-1][:,np.newaxis,np.newaxis]\
+                *self.cellsize.y[1:-1][np.newaxis,:,np.newaxis]\
+                *self.cellsize.z[np.newaxis,np.newaxis,:]
+        return c
+
 
 
 

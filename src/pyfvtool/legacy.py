@@ -10,7 +10,7 @@ from .face import FaceVariable
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
 from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D
 from .mesh import Grid3D, CylindricalGrid3D, SphericalGrid3D
-
+from .mesh import MeshStructure
 
 
 def boundaryConditionTerm(BC):
@@ -90,5 +90,11 @@ def get_CellVariable_profile3D(phi: CellVariable):
 
 def domainInt(phi: CellVariable) -> float:
     return phi.domainIntegral()
+
+
+def cellVolume(m: MeshStructure):
+    BC = BoundaryConditions(m)
+    c = m.cellVolumes()
+    return CellVariable(m, c, BC)
 
 

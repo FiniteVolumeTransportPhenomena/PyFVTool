@@ -10,6 +10,8 @@ from .mesh import PolarGrid2D, CylindricalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
 
+
+
 class CellVariable:
 
     @overload
@@ -391,11 +393,9 @@ class CellVariable:
             Total finite-volume integral over entire domain.
     
         """
-        v = cellVolume(self.domain).internalCellValues
+        v = self.domain.cellVolumes()
         c = self.internalCellValues
         return (v*c).flatten().sum()
-
-
 
 
     def BC2GhostCells(self):
@@ -426,24 +426,6 @@ class CellVariable:
         return phi
 
 
-
-def cellVolume(m: MeshStructure):
-    BC = BoundaryConditions(m)
-    if (type(m) is Grid1D):
-        c=m.cellsize.x[1:-1]
-    elif (type(m) is CylindricalGrid1D):
-        c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
-    elif (type(m) is Grid2D):
-        c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is CylindricalGrid2D):
-        c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is PolarGrid2D):
-        c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is Grid3D):
-        c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
-    elif (type(m) is CylindricalGrid3D):
-        c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
-    return CellVariable(m, c, BC)
 
 
 
