@@ -31,7 +31,7 @@ msh = pf.Grid1D(Nx, Lx)
 BC_c = pf.BoundaryConditions(msh)
 
 c = pf.CellVariable(msh, 1.0, BC_c)
-total_c = [pf.domainInt(c)]
+total_c = [c.domainIntegral()]
 
 # advection field
 u = pf.FaceVariable(msh, (sg,))
@@ -70,7 +70,7 @@ while (it*dt < t_simulation):
                 bcterm,
                 eqn)
     it+=1
-    total_c.append(pf.domainInt(c))
+    total_c.append(c.domainIntegral())
     if (it % Nskip == 0):
         pf.visualizeCells(c)
 

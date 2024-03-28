@@ -98,15 +98,12 @@ def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list,
         The updated CellVariable.
 
     """
-    # TODO: Presently the bcterm and the eqnterms are simply the objects
-    #       returned by the respective xxxTerm routines. This is done for
-    #       simplicity. Later, we could consider
-    #       a specific `Term` class, with properties M, RHS and arithmetic
-    #       magic methods defined suitably. Certain terms will have `None`
-    #       for either M or RHS etc.
-    #       A first version may simply be a 'signed tuple' class. (tuple with
-    #       additional sign property such that we can write `-Term` in all
-    #       cases)
+    # Presently the bcterm and the eqnterms are simply the objects
+    # returned by the respective xxxTerm routines. This is done for
+    # simplicity. Later, we might perhaps consider
+    # a specific `Term` class, with properties M, RHS and arithmetic
+    # magic methods defined suitably. Certain terms will have `None`
+    # for either M or RHS etc.
     if externalsolver is None:
         solver = spsolve
     else:

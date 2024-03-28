@@ -310,7 +310,7 @@ visualizeCells(c_old)
 # Testing 2D visualization
 #
 mm = Grid2D(50, 50, 5*np.pi, 5*np.pi)
-XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters.y)
+XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters._y)
 vv = CellVariable(mm, np.cos(XX)*np.sin(YY))
 plt.figure(3)
 plt.clf()

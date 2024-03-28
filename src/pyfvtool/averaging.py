@@ -25,16 +25,16 @@ from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
     if issubclass(type(m), Grid1D):
-        dx = m.cellsize.x
+        dx = m.cellsize._x
         return dx
     elif issubclass(type(m), Grid2D):
-        dx = m.cellsize.x[:,np.newaxis]
-        dy = m.cellsize.y[np.newaxis,:]
+        dx = m.cellsize._x[:,np.newaxis]
+        dy = m.cellsize._y[np.newaxis,:]
         return dx, dy
     elif issubclass(type(m), Grid3D):
-        dx = m.cellsize.x[:,np.newaxis,np.newaxis]
-        dy = m.cellsize.y[np.newaxis,:,np.newaxis]
-        dz = m.cellsize.z[np.newaxis,np.newaxis,:]
+        dx = m.cellsize._x[:,np.newaxis,np.newaxis]
+        dy = m.cellsize._y[np.newaxis,:,np.newaxis]
+        dz = m.cellsize._z[np.newaxis,np.newaxis,:]
         return dx, dy, dz
 
     
@@ -335,7 +335,7 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
     # currently, it assumes a uniform mesh.
     phi_tmp = np.copy(phi.value)
     if issubclass(type(phi.domain), Grid1D):
-        ux = u.xvalue
+        ux = u._xvalue
         # assign the value of the left boundary to the left ghost cell
         phi_tmp[0] = 0.5*(phi.value[0]+phi.value[1])
         # assign the value of the right boundary to the right ghost cell
@@ -346,8 +346,8 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
             np.array([]),
             np.array([]))
     elif issubclass(type(phi.domain), Grid2D):
-        ux = u.xvalue
-        uy = u.yvalue
+        ux = u._xvalue
+        uy = u._yvalue
         # assign the value of the left boundary to the left ghost cells
         phi_tmp[0,:] = 0.5*(phi.value[0,:]+phi.value[1,:])
         # assign the value of the right boundary to the right ghost cells
@@ -365,9 +365,9 @@ def upwindMean(phi: CellVariable, u: FaceVariable):
             0.5*(uy==0.0)*(phi.value[1:-1,0:-1]+phi.value[1:-1,1:]),
             np.array([]))
     elif issubclass(type(phi.domain), Grid3D):
-        ux = u.xvalue
-        uy = u.yvalue
-        uz = u.zvalue
+        ux = u._xvalue
+        uy = u._yvalue
+        uz = u._zvalue
         # assign the value of the left boundary to the left ghost cells
         phi_tmp[0,:,:] = 0.5*(phi.value[0,:,:]+phi.value[1,:,:])
         # assign the value of the right boundary to the right ghost cells
@@ -438,12 +438,12 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #     if issubclass(type(phi.domain), Mesh1D):
 #         # extract data from the mesh structure
 #         Nx = u.domain.dims[0]
-#         dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+#         dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
 #         phi_p = np.zeros(Float64, Nx+1)
 #         phi_m = np.zeros(Float64, Nx+1)
 
 #         # extract the velocity data
-#         ux = u.xvalue
+#         ux = u._xvalue
 
 #         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 #         dphi_p = (phi.value[1:Nx+2]-phi.value[0:Nx+1])/dx
@@ -465,9 +465,9 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         # extract data from the mesh structure
 #         Nx = u.domain.dims[0]
 #         Ny = u.domain.dims[2]
-#         dx=0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+#         dx=0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
 #         dy=np.zeros( 1, Ny+1)
-#         dy[:]=0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])
+#         dy[:]=0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])
 #         phi_p = np.zeros(Float64, Nx+1)
 #         phi_m = np.zeros(Float64, Nx+1)
 #         phiX_p = np.zeros(Float64, Nx+1, Ny)
@@ -476,8 +476,8 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         phiY_m = np.zeros(Float64, Nx,Ny+1)
 
 #         # extract the velocity data
-#         ux = u.xvalue
-#         uy = u.yvalue
+#         ux = u._xvalue
+#         uy = u._yvalue
 
 #         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
 #         # x direction
@@ -517,15 +517,15 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         Nx = u.domain.dims[0]
 #         Ny = u.domain.dims[2]
 #         Nz = u.domain.dims[3]
-#         dx=0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+#         dx=0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
 #         dy=np.zeros( 1, Ny+1)
-#         dy[:]=0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])
+#         dy[:]=0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])
 #         dz=np.zeros( 1, 1, Nz+1)
-#         dz[:]=0.5*(u.domain.cellsize.z[0:-1]+u.domain.cellsize.z[1:])
+#         dz[:]=0.5*(u.domain.cellsize._z[0:-1]+u.domain.cellsize._z[1:])
 #         # extract the velocity data
-#         ux = u.xvalue
-#         uy = u.yvalue
-#         uz = u.zvalue
+#         ux = u._xvalue
+#         uy = u._yvalue
+#         uz = u._zvalue
 
 #         # define the tvd face vectors
 #         phiX_p = np.zeros(Float64, Nx+1,Ny,Nz)

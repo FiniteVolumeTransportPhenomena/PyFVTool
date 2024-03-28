@@ -14,12 +14,12 @@ def diffusionTerm1D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx = D.domain.dims[0]
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     dx = 0.5*(DX[0:-1]+DX[1:])
 
     # extract the velocity data
     # note: size(Dx) = [1:m+1, 1:n] and size(Dy) = [1:m, 1:n+1]
-    Dx = D.xvalue
+    Dx = D._xvalue
 
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
@@ -45,14 +45,14 @@ def diffusionTermCylindrical1D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx = D.domain.dims[0]
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     dx = 0.5*(DX[0:-1]+DX[1:])
-    rp = D.domain.cellcenters.x
-    rf = D.domain.facecenters.x
+    rp = D.domain.cellcenters._x
+    rf = D.domain.facecenters._x
 
     # extract the velocity data
     # note: size(Dx) = [1:m+1, 1:n] and size(Dy) = [1:m, 1:n+1]
-    Dx = D.xvalue
+    Dx = D._xvalue
 
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
@@ -79,17 +79,17 @@ def diffusionTerm2D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DX = D.domain.cellsize._x
+    DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     mn = Nx*Ny
 
     # reassign the east, west for code readability (use broadcasting in Julia)
-    De = D.xvalue[1:Nx+1, :]/(dx[1:Nx+1]*DX[1:Nx+1])[:, np.newaxis]
-    Dw = D.xvalue[0:Nx, :]/(dx[0:Nx]*DX[1:Nx+1])[:, np.newaxis]
-    Dn = D.yvalue[:, 1:Ny+1]/(dy[1:Ny+1]*DY[1:Ny+1])
-    Ds = D.yvalue[:, 0:Ny]/(dy[0:Ny]*DY[1:Ny+1])
+    De = D._xvalue[1:Nx+1, :]/(dx[1:Nx+1]*DX[1:Nx+1])[:, np.newaxis]
+    Dw = D._xvalue[0:Nx, :]/(dx[0:Nx]*DX[1:Nx+1])[:, np.newaxis]
+    Dn = D._yvalue[:, 1:Ny+1]/(dy[1:Ny+1]*DY[1:Ny+1])
+    Ds = D._yvalue[:, 0:Ny]/(dy[0:Ny]*DY[1:Ny+1])
 
     # calculate the coefficients for the internal cells
     AE = De.ravel()
@@ -126,20 +126,20 @@ def diffusionTermCylindrical2D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DX = D.domain.cellsize._x
+    DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
-    rp = D.domain.cellcenters.x
-    rf = D.domain.facecenters.x[:, np.newaxis]
+    rp = D.domain.cellcenters._x
+    rf = D.domain.facecenters._x[:, np.newaxis]
     mn = Nx*Ny
 
     # reassign the east, west for code readability (use broadcasting in Julia)
-    De = rf[1:Nx+1]*D.xvalue[1:Nx+1, :] / \
+    De = rf[1:Nx+1]*D._xvalue[1:Nx+1, :] / \
         (rp*dx[1:Nx+1]*DX[1:Nx+1])[:, np.newaxis]
-    Dw = rf[0:Nx]*D.xvalue[0:Nx, :]/(rp*dx[0:Nx]*DX[1:Nx+1])[:, np.newaxis]
-    Dn = D.yvalue[:, 1:Ny+1]/(dy[1:Ny+1]*DY[1:Ny+1])
-    Ds = D.yvalue[:, 0:Ny]/(dy[0:Ny]*DY[1:Ny+1])
+    Dw = rf[0:Nx]*D._xvalue[0:Nx, :]/(rp*dx[0:Nx]*DX[1:Nx+1])[:, np.newaxis]
+    Dn = D._yvalue[:, 1:Ny+1]/(dy[1:Ny+1]*DY[1:Ny+1])
+    Ds = D._yvalue[:, 0:Ny]/(dy[0:Ny]*DY[1:Ny+1])
 
     # calculate the coefficients for the internal cells
     AE = De.ravel()
@@ -176,22 +176,22 @@ def diffusionTermPolar2D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DX = D.domain.cellsize._x
+    DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
-    rp = D.domain.cellcenters.x[:, np.newaxis]
-    rf = D.domain.facecenters.x[:, np.newaxis]
+    rp = D.domain.cellcenters._x[:, np.newaxis]
+    rf = D.domain.facecenters._x[:, np.newaxis]
     mn = Nx*Ny
 
     # reassign the east, west for code readability (use broadcasting in Julia)
-    De = rf[1:Nx+1]*D.xvalue[1:Nx+1, :] / \
+    De = rf[1:Nx+1]*D._xvalue[1:Nx+1, :] / \
         (rp*dx[1:Nx+1][:, np.newaxis]*DX[1:Nx+1][:, np.newaxis])
-    Dw = rf[0:Nx]*D.xvalue[0:Nx, :] / \
+    Dw = rf[0:Nx]*D._xvalue[0:Nx, :] / \
         (rp*dx[0:Nx][:, np.newaxis]*DX[1:Nx+1][:, np.newaxis])
-    Dn = D.yvalue[:, 1:Ny+1] / \
+    Dn = D._yvalue[:, 1:Ny+1] / \
         (rp*rp*dy[1:Ny+1][np.newaxis, :]*DY[1:Ny+1][np.newaxis, :])
-    Ds = D.yvalue[:, 0:Ny]/(rp*rp*dy[0:Ny][np.newaxis, :]
+    Ds = D._yvalue[:, 0:Ny]/(rp*rp*dy[0:Ny][np.newaxis, :]
                             * DY[1:Ny+1][np.newaxis, :])
 
     # calculate the coefficients for the internal cells
@@ -229,9 +229,9 @@ def diffusionTerm3D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
-    DZ = D.domain.cellsize.z
+    DX = D.domain.cellsize._x
+    DY = D.domain.cellsize._y
+    DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     dz = 0.5*(DZ[0:-1]+DZ[1:])
@@ -241,15 +241,15 @@ def diffusionTerm3D(D: FaceVariable) -> csr_array:
 
     # reassign the east, west, north, and south velocity vectors for the
     # code readability (use broadcasting)
-    De = D.xvalue[1:Nx+1, :, :] / \
+    De = D._xvalue[1:Nx+1, :, :] / \
         (dx[1:Nx+1]*DX[1:Nx+1])[:, np.newaxis, np.newaxis]
-    Dw = D.xvalue[0:Nx, :, :]/(dx[0:Nx]*DX[1:Nx+1])[:, np.newaxis, np.newaxis]
-    Dn = D.yvalue[:, 1:Ny+1, :] / \
+    Dw = D._xvalue[0:Nx, :, :]/(dx[0:Nx]*DX[1:Nx+1])[:, np.newaxis, np.newaxis]
+    Dn = D._yvalue[:, 1:Ny+1, :] / \
         (dy[1:Ny+1]*DY[1:Ny+1])[np.newaxis, :, np.newaxis]
-    Ds = D.yvalue[:, 0:Ny, :]/(dy[0:Ny]*DY[1:Ny+1])[np.newaxis, :, np.newaxis]
-    Df = D.zvalue[:, :, 1:Nz+1] / \
+    Ds = D._yvalue[:, 0:Ny, :]/(dy[0:Ny]*DY[1:Ny+1])[np.newaxis, :, np.newaxis]
+    Df = D._zvalue[:, :, 1:Nz+1] / \
         (dz[1:Nz+1]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
-    Db = D.zvalue[:, :, 0:Nz]/(dz[0:Nz]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
+    Db = D._zvalue[:, :, 0:Nz]/(dz[0:Nz]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
 
     # calculate the coefficients for the internal cells
     AE = De.ravel()
@@ -292,33 +292,33 @@ def diffusionTermCylindrical3D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
-    DZ = D.domain.cellsize.z
+    DX = D.domain.cellsize._x
+    DY = D.domain.cellsize._y
+    DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     dz = 0.5*(DZ[0:-1]+DZ[1:])
-    rp = D.domain.cellcenters.x[:, np.newaxis, np.newaxis]
-    rf = D.domain.facecenters.x[:, np.newaxis, np.newaxis]
+    rp = D.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = D.domain.facecenters._x[:, np.newaxis, np.newaxis]
 
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny*Nz
 
     # reassign the east, west, north, and south velocity vectors for the
     # code readability (use broadcasting)
-    De = rf[1:Nx+1]*D.xvalue[1:Nx+1, :, :] / \
+    De = rf[1:Nx+1]*D._xvalue[1:Nx+1, :, :] / \
         (rp*dx[1:Nx+1][:, np.newaxis, np.newaxis]
          * DX[1:Nx+1][:, np.newaxis, np.newaxis])
-    Dw = rf[0:Nx]*D.xvalue[0:Nx, :, :] / \
+    Dw = rf[0:Nx]*D._xvalue[0:Nx, :, :] / \
         (rp*dx[0:Nx][:, np.newaxis, np.newaxis]
          * DX[1:Nx+1][:, np.newaxis, np.newaxis])
-    Dn = D.yvalue[:, 1:Ny+1, :]/(rp*rp*dy[1:Ny+1][np.newaxis,
+    Dn = D._yvalue[:, 1:Ny+1, :]/(rp*rp*dy[1:Ny+1][np.newaxis,
                                  :, np.newaxis]*DY[1:Ny+1][np.newaxis, :, np.newaxis])
-    Ds = D.yvalue[:, 0:Ny, :]/(rp*rp*dy[0:Ny][np.newaxis,
+    Ds = D._yvalue[:, 0:Ny, :]/(rp*rp*dy[0:Ny][np.newaxis,
                                :, np.newaxis]*DY[1:Ny+1][np.newaxis, :, np.newaxis])
-    Df = D.zvalue[:, :, 1:Nz+1] / \
+    Df = D._zvalue[:, :, 1:Nz+1] / \
         (dz[1:Nz+1]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
-    Db = D.zvalue[:, :, 0:Nz]/(dz[0:Nz]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
+    Db = D._zvalue[:, :, 0:Nz]/(dz[0:Nz]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
 
     # calculate the coefficients for the internal cells
     AE = De.ravel()

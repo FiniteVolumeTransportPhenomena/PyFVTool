@@ -10,6 +10,8 @@ from .mesh import PolarGrid2D, CylindricalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries
 
+
+
 class CellVariable:
 
     @overload
@@ -103,39 +105,6 @@ class CellVariable:
             self.value[1:-1, 1:-1] = values
         elif issubclass(type(self.domain), Grid3D):
             self.value[1:-1, 1:-1, 1:-1] = values
-
-    def update_bc_cells(self, BC: BoundaryConditionsBase):
-        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
-        self.update_value(phi_temp)
-
-    def update_value(self, new_cell):
-        np.copyto(self.value, new_cell.value)
-
-    def bc_to_ghost(self):
-        """
-        assign the boundary values to the ghost cells
-        """
-        if issubclass(type(self.domain), Grid1D):
-            self.value[0] = 0.5*(self.value[1]+self.value[0])
-            self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
-        elif issubclass(type(self.domain), Grid2D):
-            self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
-            self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
-            self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
-            self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
-        elif issubclass(type(self.domain), Grid3D):
-            self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
-            self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
-            self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
-            self.value[1:-1, -1, 1:-1] = 0.5*(self.value[1:-1, -2, 1:-1]+self.value[1:-1, -1, 1:-1])
-            self.value[1:-1, 1:-1, 0] = 0.5*(self.value[1:-1, 1:-1, 1]+self.value[1:-1, 1:-1, 0])
-            self.value[1:-1, 1:-1, -1] = 0.5*(self.value[1:-1, 1:-1, -2]+self.value[1:-1, 1:-1, -1])
-    
-    def copy(self):
-        """
-        Create a copy of the CellVariable
-        """
-        return CellVariable(self.domain, np.copy(self.value))
     
     def __add__(self, other):
         if type(other) is CellVariable:
@@ -240,43 +209,224 @@ class CellVariable:
         return CellVariable(self.domain, np.abs(self.value))
 
 
+    def update_bc_cells(self, BC: BoundaryConditionsBase):
+        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
+        self.update_value(phi_temp)
+
+    def update_value(self, new_cell):
+        np.copyto(self.value, new_cell.value)
+
+    def bc_to_ghost(self):
+        """
+        assign the boundary values to the ghost cells
+        """
+        if issubclass(type(self.domain), Grid1D):
+            self.value[0] = 0.5*(self.value[1]+self.value[0])
+            self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
+        elif issubclass(type(self.domain), Grid2D):
+            self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
+            self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
+            self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
+            self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
+        elif issubclass(type(self.domain), Grid3D):
+            self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
+            self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
+            self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
+            self.value[1:-1, -1, 1:-1] = 0.5*(self.value[1:-1, -2, 1:-1]+self.value[1:-1, -1, 1:-1])
+            self.value[1:-1, 1:-1, 0] = 0.5*(self.value[1:-1, 1:-1, 1]+self.value[1:-1, 1:-1, 0])
+            self.value[1:-1, 1:-1, -1] = 0.5*(self.value[1:-1, 1:-1, -2]+self.value[1:-1, 1:-1, -1])
+    
+    def copy(self):
+        """
+        Create a copy of the CellVariable
+        
+        
+        Returns
+        -------
+        CellVariable
+            Copy of the CellVariable.
+        """
+        return CellVariable(self.domain, np.copy(self.value))
+    
+    def plotprofile(self):
+        """
+        Create a 'profile' of a cell variable for plotting, export, etc. 
+        
+        'Plot profiles' are sets of arrays that contain the axes' coordinates,
+        cell values, including the values at the boundaries.
+        
+        For 2D and 3D visualization, it is perhaps better to use only the 
+        internalCellValues (e.g. for a false color map à la plt.pcolormesh),
+        and not include the values at the boundaries.
+        
+
+        1D meshes
+        =========
+        This generates a pair of vectors containing the abscissa and ordinates
+        for plotting the values of the cell variable over the entire calculation
+        domain. It includes the values at the outer faces of the domain, by 
+        taking into account the values of the ghost cells.
+        
+        Returns
+        -------
+        x : np.ndarray
+            x (or r) coordinates.
+        phi0 : np.ndarray
+            Value of the CellVariables at those points.
 
 
-def copyCellVariable(phi: CellVariable) -> CellVariable:
-    """
-    Create a copy of a CellVariable
+        2D meshes
+        =========
+        This generates a set of vectors containing the (x, y) or (r, z)  
+        coordinates and the values of the cell variable at those coordinates
+        for plotting the values of the cell variable over the entire calculation
+        domain. It includes the values at the outer faces of the domain, by 
+        taking into account the values of the ghost cells.
 
-    Parameters
-    ----------
-    phi : CellVariable
-        CellVariable to be copied.
+        Returns
+        -------
+        x : np.ndarray
+            x (or r) coordinates.
+        y : np.ndarray
+            y (or z) coordinates.
+        phi0 : np.ndarray
+            Value of the CellVariables at those coordinates.
+        
+        
+        3D meshes
+        =========
+        This generates a set of vectors containing the (x, y, z) or (r, theta, z)  
+        coordinates and the values of the cell variable at those coordinates
+        for plotting the values of the cell variable over the entire calculation
+        domain. It includes the values at the outer faces of the domain, by 
+        taking into account the values of the ghost cells.
 
-    Returns
-    -------
-    CellVariable
-        Copy of the CellVariable.
+        Returns
+        -------
+        x : np.ndarray
+            x (or r) coordinates.
+        y : np.ndarray
+            y (or theta) coordinates.
+        z : np.ndarray
+            z coordinates.
+        phi0 : np.ndarray
+            Value of the CellVariables at those coordinates.
+        """
+        #
+        # TODO:
+        #    Add a keyword that specifies how the outer FaceValues will be estimated
+        #    Currently, this is just the average of the last inner cell and the boundary
+        #    (ghost) cell.
+        #    In certain cases it may be visually desirable to use an extrapolation of
+        #    the last inner cell values.
+        #
+        if isinstance(self.domain, Grid1D):
+            x = np.hstack([self.domain.facecenters._x[0],
+                           self.domain.cellcenters._x,
+                           self.domain.facecenters._x[-1]])
+            phi0 = np.hstack([0.5*(self.value[0]+self.value[1]),
+                              self.value[1:-1],
+                              0.5*(self.value[-2]+self.value[-1])])
+            # The size of the ghost cell is always equal to the size of the 
+            # first (or last) cell within the domain. The value at the
+            # boundary can therefore be obtained by direct averaging with a
+            # weight factor of 0.5.
+            return (x, phi0)
+        elif isinstance(self.domain, Grid2D):
+            x = np.hstack([self.domain.facecenters._x[0],
+                           self.domain.cellcenters._x,
+                           self.domain.facecenters._x[-1]])
+            y = np.hstack([self.domain.facecenters._y[0],
+                           self.domain.cellcenters._y,
+                           self.domain.facecenters._y[-1]])
+            phi0 = np.copy(self.value)
+            phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
+            phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
+            phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
+            phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
+            phi0[0, 0] = phi0[0, 1]
+            phi0[0, -1] = phi0[0, -2]
+            phi0[-1, 0] = phi0[-1, 1]
+            phi0[-1, -1] = phi0[-1, -2]
+            return (x, y, phi0)
+        elif isinstance(self.domain, Grid3D):
+            x = np.hstack([self.domain.facecenters._x[0],
+                           self.domain.cellcenters._x,
+                           self.domain.facecenters._x[-1]])[:, np.newaxis, np.newaxis]
+            y = np.hstack([self.domain.facecenters._y[0],
+                           self.domain.cellcenters._y,
+                           self.domain.facecenters._y[-1]])[np.newaxis, :, np.newaxis]
+            z = np.hstack([self.domain.facecenters._z[0],
+                           self.domain.cellcenters._z,
+                           self.domain.facecenters._z[-1]])[np.newaxis, np.newaxis, :]
+            phi0 = np.copy(self.value)
+            phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
+            phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
+            phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
+            phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
+            phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
+            phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
+            return (x, y, z, phi0)
+        else:
+            raise NotImplementedError("plotprofile() not implemented for mesh type '{0:s}'".\
+                            format(self.domain.__class__.__name__))
+    
+    
+    def domainIntegral(self) -> float:
+        """
+        Calculate the finite-volume integral of a CellVariable over entire domain
+        
+        The finite-volume integral over the entire mesh domain gives the total
+        amount of `CellVariable` present in the system. Calculation of this
+        integral is useful for checking conservation of the quantity concerned
+        (in case of 'no-flux' BCs), or for monitoring its evolution due to 
+        exchanges via the boundaries (other BCs) or to the presence of source
+        terms.
+    
+        May later become a built-in method of the CellVariable class, but for now 
+        this implementation as a function is chosen for consistency with FVTool. 
+    
+    
+        Returns
+        -------
+        float
+            Total finite-volume integral over entire domain.
+    
+        """
+        v = self.domain.cellVolumes()
+        c = self.internalCellValues
+        return (v*c).flatten().sum()
 
-    """
-    return CellVariable(phi.domain, np.copy(phi.value))
+
+    def BC2GhostCells(self):
+        """
+        assign the boundary values to the ghost cells 
+        
+        Returns
+        -------
+        CellVariable
+            the new cell variable
+        """
+        phi = self.copy()
+        if issubclass(type(phi.domain), Grid1D):
+            phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
+            phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
+        elif issubclass(type(phi.domain), Grid2D):
+            phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
+            phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
+            phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
+            phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
+        elif issubclass(type(phi.domain), Grid3D):
+            phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
+            phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
+            phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
+            phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
+            phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
+            phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
+        return phi
 
 
-def cellVolume(m: MeshStructure):
-    BC = BoundaryConditions(m)
-    if (type(m) is Grid1D):
-        c=m.cellsize.x[1:-1]
-    elif (type(m) is CylindricalGrid1D):
-        c=2.0*np.pi*m.cellsize.x[1:-1]*m.cellcenters.x
-    elif (type(m) is Grid2D):
-        c=m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is CylindricalGrid2D):
-        c=2.0*np.pi*m.cellcenters.x[:, np.newaxis]*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is PolarGrid2D):
-        c=m.cellcenters.x*m.cellsize.x[1:-1][:, np.newaxis]*m.cellsize.y[1:-1][np.newaxis, :]
-    elif (type(m) is Grid3D):
-        c=m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
-    elif (type(m) is CylindricalGrid3D):
-        c=m.cellcenters.x*m.cellsize.x[1:-1][:,np.newaxis,np.newaxis]*m.cellsize.y[1:-1][np.newaxis,:,np.newaxis]*m.cellsize.z[np.newaxis,np.newaxis,:]
-    return CellVariable(m, c, BC)
+
 
 
 def cellLocations(m: MeshStructure):
@@ -285,7 +435,8 @@ def cellLocations(m: MeshStructure):
     
     It can later be used in defining properties that are variable in space.
     
-    Incompletely tested
+    Incompletely tested, and there may be other, more direct, ways to 
+    calculate properties that vary in space, e.g. using cellcenters directly?
     
     Parameters
     ----------
@@ -318,24 +469,25 @@ def cellLocations(m: MeshStructure):
     
     if (type(m) is Grid1D)\
      or (type(m) is CylindricalGrid1D):
-        X = CellVariable(m, m.cellcenters.x)
+        X = CellVariable(m, m.cellcenters._x)
         return X
     elif (type(m) is Grid2D)\
        or (type(m) is CylindricalGrid2D)\
        or (type(m) is PolarGrid2D): 
-        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
-        Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
+        X = CellVariable(m, np.tile(m.cellcenters._x[:, np.newaxis], (1, N[1])))
+        Y = CellVariable(m, np.tile(m.cellcenters._y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
     elif (type(m) is Grid3D)\
        or (type(m) is CylindricalGrid3D): 
-        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
-        Y = CellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
+        X = CellVariable(m, np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
+        Y = CellVariable(m, np.tile((m.cellcenters._y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))
-        z[0, 0, :] = m.cellcenters.z
+        z[0, 0, :] = m.cellcenters._z
         Z = CellVariable(m, np.tile(z, (N[0], N[1], 1)))
         return X, Y, Z
     raise TypeError('mesh type not implemented')
     return None 
+
 
 
 def funceval(f, *args):
@@ -371,236 +523,3 @@ def celleval(f, *args):
 
 
 
-def domainInt(phi: CellVariable) -> float:
-    """
-    Calculate the finite-volume integral of a CellVariable over entire domain
-    
-    The finite-volume integral over the entire mesh domain gives the total
-    amount of `CellVariable` present in the system. Calculation of this
-    integral is useful for checking conservation of the quantity concerned
-    (in case of 'no-flux' BCs), or for monitoring its evolution due to 
-    exchanges via the boundaries (other BCs) or to the presence of source
-    terms.
-
-    May later become a built-in method of the CellVariable class, but for now 
-    this implementation as a function is chosen for consistency with FVTool. 
-    An alias `domainIntegrate`has been added that sounds better than
-    `domainInt`.
-
-    Parameters
-    ----------
-    phi : CellVariable
-        Variable whose finite-volume integral will calculated.
-
-    Returns
-    -------
-    float
-        Total finite-volume integral over entire domain.
-
-    """
-    v = cellVolume(phi.domain).internalCellValues
-    c = phi.internalCellValues
-    return (v*c).flatten().sum()
-
-def domainIntegrate(phi: CellVariable) -> float:
-    """
-    Alias for `domainInt()`
-    
-    See `domainInt()`
-    """
-    return domainInt(phi)
-
-
-# TODO:
-# get_CellVariable_profile1D can become a method of CellVariable
-#    (shared with 2D and 3D versions)
-# TODO:
-#    Add a keyword that specifies how the outer FaceValues will be estimated
-#    Currently, this is just the average of the last inner cell and the boundary
-#    (ghost) cell.
-#    In certain cases it may be visually desirable to use an extrapolation of
-#    the last inner cell values.
-
-def get_CellVariable_profile1D(phi: CellVariable):
-    """
-    Create a profile of a cell variable for plotting, export, etc. (1D).
-    
-    This generates a pair of vectors containing the abscissa and ordinates
-    for plotting the values of the cell variable over the entire calculation
-    domain. It includes the values at the outer faces of the domain, by 
-    taking into account the values of the ghost cells.
-    
-    This function may later become a method of the CellVariable class, but
-    is a function now for simplicity and consistency with other CellVariable
-    utility functions (e.g. `domainIntegrate`).
-
-
-    Parameters
-    ----------
-    phi : CellVariable
-
-
-    Returns
-    -------
-    x : np.ndarray
-        x (or r) coordinates.
-    phi0 : np.ndarray
-        Value of the CellVariables at those points.
-
-    """
-
-    x = np.hstack([phi.domain.facecenters.x[0],
-                   phi.domain.cellcenters.x,
-                   phi.domain.facecenters.x[-1]])
-    phi0 = np.hstack([0.5*(phi.value[0]+phi.value[1]),
-                      phi.value[1:-1],
-                      0.5*(phi.value[-2]+phi.value[-1])])
-    # The size of the ghost cell is always equal to the size of the 
-    # first (or last) cell within the domain. The value at the
-    # boundary can therefore be obtained by direct averaging with a
-    # weight factor of 0.5.
-    return (x, phi0)
-
-
-# TODO:
-# get_CellVariable_profile2D can become a method of CellVariable
-#    (shared with 1D and 3D versions)
-# TODO:
-#    Add a keyword that specifies how the outer FaceValues will be estimated
-#    Currently, this is just the average of the last inner cell and the boundary
-#    (ghost) cell.
-#    In certain cases it may be visually desirable to use an extrapolation of
-#    the last inner cell values.
-# Perhaps for 2D and 3D visualization it is perhaps best to only use the 
-# innervalues (e.g. for a false color map à la plt.pcolormesh)
-
-def get_CellVariable_profile2D(phi: CellVariable):
-    """
-    Create a profile of a cell variable for plotting, export, etc. (2D).
-    
-    This generates a set of vectors containing the (x, y) or (r, z)  
-    coordinates and the values of the cell variable at those coordinates
-    for plotting the values of the cell variable over the entire calculation
-    domain. It includes the values at the outer faces of the domain, by 
-    taking into account the values of the ghost cells.
-    
-    This function may later become a method of the CellVariable class, but
-    is a function now for simplicity and consistency with other CellVariable
-    utility functions (e.g. `domainIntegrate`).
-
-    Parameters
-    ----------
-    phi : CellVariable
-
-
-    Returns
-    -------
-    x : np.ndarray
-        x (or r) coordinates.
-    y : np.ndarray
-        y (or z) coordinates.
-    phi0 : np.ndarray
-        Value of the CellVariables at those coordinates.
-
-    """
-    x = np.hstack([phi.domain.facecenters.x[0],
-                   phi.domain.cellcenters.x,
-                   phi.domain.facecenters.x[-1]])
-    y = np.hstack([phi.domain.facecenters.y[0],
-                   phi.domain.cellcenters.y,
-                   phi.domain.facecenters.y[-1]])
-    phi0 = np.copy(phi.value)
-    phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
-    phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
-    phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
-    phi0[-1, :] = 0.5*(phi0[-1, :]+phi0[-2, :])
-    phi0[0, 0] = phi0[0, 1]
-    phi0[0, -1] = phi0[0, -2]
-    phi0[-1, 0] = phi0[-1, 1]
-    phi0[-1, -1] = phi0[-1, -2]
-    return (x, y, phi0)
-
-
-
-# TODO:
-# get_CellVariable_profile3D can become a method of CellVariable
-#    (shared with 1D and 2D versions)
-# TODO:
-#    Add a keyword that specifies how the outer FaceValues will be estimated
-#    Currently, this is just the average of the last inner cell and the boundary
-#    (ghost) cell.
-#    In certain cases it may be visually desirable to use an extrapolation of
-#    the last inner cell values.
-# Perhaps for 2D and 3D visualization it is perhaps best to only use the 
-# innervalues (e.g. for a false color map à la plt.pcolormesh)
-
-def get_CellVariable_profile3D(phi: CellVariable):
-    """
-    Create a profile of a cell variable for plotting, export, etc. (3D).
-    
-    This generates a set of vectors containing the (x, y, z) or (r, theta, z)  
-    coordinates and the values of the cell variable at those coordinates
-    for plotting the values of the cell variable over the entire calculation
-    domain. It includes the values at the outer faces of the domain, by 
-    taking into account the values of the ghost cells.
-    
-    This function may later become a method of the CellVariable class, but
-    is a function now for simplicity and consistency with other CellVariable
-    utility functions (e.g. `domainIntegrate`).
-
-    Parameters
-    ----------
-    phi : CellVariable
-
-
-    Returns
-    -------
-    x : np.ndarray
-        x (or r) coordinates.
-    y : np.ndarray
-        y (or theta) coordinates.
-    z : np.ndarray
-        z coordinates.
-    phi0 : np.ndarray
-        Value of the CellVariables at those coordinates.
-    """
-    
-    x = np.hstack([phi.domain.facecenters.x[0],
-                   phi.domain.cellcenters.x,
-                   phi.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
-    y = np.hstack([phi.domain.facecenters.y[0],
-                   phi.domain.cellcenters.y,
-                   phi.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
-    z = np.hstack([phi.domain.facecenters.z[0],
-                   phi.domain.cellcenters.z,
-                   phi.domain.facecenters.z[-1]])[np.newaxis, np.newaxis, :]
-    phi0 = np.copy(phi.value)
-    phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
-    phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
-    phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])
-    phi0[:,:,-1]=0.5*(phi0[:,:,-2]+phi0[:,:,-1])
-    phi0[0,:,:]=0.5*(phi0[1,:,:]+phi0[2,:,:])
-    phi0[-1,:,:]=0.5*(phi0[-2,:,:]+phi0[-1,:,:])
-    return (x, y, z, phi0)
-
-def BC2GhostCells(phi0):
-    """
-    assign the boundary values to the ghost cells and returns the new cell variable
-    """
-    phi = copyCellVariable(phi0)
-    if issubclass(type(phi.domain), Grid1D):
-        phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
-        phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
-    elif issubclass(type(phi.domain), Grid2D):
-        phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
-        phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
-        phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
-        phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
-    elif issubclass(type(phi.domain), Grid3D):
-        phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
-        phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
-        phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
-        phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
-        phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
-        phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
-    return phi
