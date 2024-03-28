@@ -17,15 +17,18 @@ class CellSize:
 
     def __str__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
 
     def __repr__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
+    
 
 
 class CellLocation:
@@ -36,15 +39,18 @@ class CellLocation:
 
     def __str__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
 
     def __repr__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
+
 
 
 class FaceLocation:
@@ -55,15 +61,18 @@ class FaceLocation:
 
     def __str__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
 
     def __repr__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
+
 
 
 class MeshStructure:
@@ -78,15 +87,17 @@ class MeshStructure:
 
     def __str__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
 
     def __repr__(self):
         temp = vars(self)
+        result = ""
         for item in temp:
-            print(item, ':', temp[item])
-        return ""
+            result += f"{item}: {temp[item]}\n"
+        return result
 
     def _facelocation_to_cellsize(self, facelocation):
         return np.hstack([facelocation[1]-facelocation[0],
@@ -368,8 +379,7 @@ class SphericalGrid1D(Grid1D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        print(f"1D Spherical mesh with Nr={self.dims[0]} cells")
-        return ""
+        return f"1D Spherical mesh with Nr={self.dims[0]} cells"
 
 
 
@@ -492,8 +502,7 @@ class Grid2D(MeshStructure):
         return dims, cellsize, cellcenters, facecenters, corners, edges
 
     def __repr__(self):
-        print(f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells")
-        return ""
+        return f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells"
     
     def cell_numbers(self):
         Nx, Ny = self.dims
@@ -648,9 +657,8 @@ class PolarGrid2D(Grid2D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        print(
-            f"2D Polar mesh with N_r={self.dims[0]}xN_theta={self.dims[1]} cells")
-        return ""
+        return f"2D Polar mesh with N_r={self.dims[0]}xN_theta={self.dims[1]} cells"
+
 
 
 #%%
@@ -807,9 +815,9 @@ class Grid3D(MeshStructure):
         return G.reshape(Nx+2, Ny+2, Nz+2)
 
     def __repr__(self):
-        print(
-            f"3D Cartesian mesh with Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells")
-        return ""
+        return  f"3D Cartesian mesh with "\
+            f"Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells"
+
 
 
 
@@ -911,9 +919,8 @@ class CylindricalGrid3D(Grid3D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        print(
-            f"3D Cylindrical mesh with Nr={self.dims[0]}xN_theta={self.dims[1]}xNz={self.dims[1]} cells")
-        return ""
+        return f"3D Cylindrical mesh with Nr={self.dims[0]}x"\
+            f"N_theta={self.dims[1]}xNz={self.dims[1]} cells"
 
 
 
@@ -1012,7 +1019,5 @@ class SphericalGrid3D(Grid3D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        print(
-            f"3D Shperical mesh with Nr={self.dims[0]}xN_theta={self.dims[1]}xN_phi={self.dims[1]} cells")
-        return ""
-
+        return f"3D Shperical mesh with Nr={self.dims[0]}x"\
+            "N_theta={self.dims[1]}xN_phi={self.dims[1]} cells"
