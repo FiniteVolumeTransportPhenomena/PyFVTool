@@ -10,10 +10,12 @@ from .utilities import int_range
 #   General data structures for describing meshes
 
 class CellSize:
-    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
+    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray,
+                 coordlabels: dict):
         self._x = _x
         self._y = _y
         self._z = _z
+        self.coordlabels = coordlabels
 
     def __str__(self):
         temp = vars(self)
@@ -29,13 +31,33 @@ class CellSize:
             result += f"{item}: {temp[item]}\n"
         return result
     
+    @property
+    def x(self):
+        if 'x' in self.coordlabels:
+            assert self.coordlabels['x']=='_x',\
+                "User 'x' does not correspond to '_x'"
+            return self._x
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'x'.")
+            
+    @x.setter
+    def x(self, value):
+        if 'x' in self.coordlabels:
+            assert self.coordlabels['x']=='_x',\
+                "User 'x' does not correspond to '_x'"
+            self._x = value
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'x'.")
+    
 
 
 class CellLocation:
-    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
+    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray,
+                 coordlabels: dict):
         self._x = _x
         self._y = _y
         self._z = _z
+        self.coordlabels = coordlabels
 
     def __str__(self):
         temp = vars(self)
@@ -50,14 +72,34 @@ class CellLocation:
         for item in temp:
             result += f"{item}: {temp[item]}\n"
         return result
+
+    @property
+    def x(self):
+        if 'x' in self.coordlabels:
+            assert self.coordlabels['x']=='_x',\
+                "User 'x' does not correspond to '_x'"
+            return self._x
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'x'.")
+            
+    @x.setter
+    def x(self, value):
+        if 'x' in self.coordlabels:
+            assert self.coordlabels['x']=='_x',\
+                "User 'x' does not correspond to '_x'"
+            self._x = value
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'x'.")
 
 
 
 class FaceLocation:
-    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
+    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray,
+                 coordlabels: dict):
         self._x = _x
         self._y = _y
         self._z = _z
+        self.coordlabels = coordlabels
 
     def __str__(self):
         temp = vars(self)
@@ -72,6 +114,24 @@ class FaceLocation:
         for item in temp:
             result += f"{item}: {temp[item]}\n"
         return result
+
+    @property
+    def x(self):
+        if 'x' in self.coordlabels:
+            assert self.coordlabels['x']=='_x',\
+                "User 'x' does not correspond to '_x'"
+            return self._x
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'x'.")
+            
+    @x.setter
+    def x(self, value):
+        if 'x' in self.coordlabels:
+            assert self.coordlabels['x']=='_x',\
+                "User 'x' does not correspond to '_x'"
+            self._x = value
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'x'.")
 
 
 
@@ -224,26 +284,34 @@ class Grid1D(MeshStructure):
             cell_size_x = np.hstack([facelocationX[1]-facelocationX[0],
                                      facelocationX[1:]-facelocationX[0:-1],
                                      facelocationX[-1]-facelocationX[-2]])
-            cell_size = CellSize(cell_size_x, np.array([0.0]), np.array([0.0]))
+            cell_size = CellSize(cell_size_x, np.array([0.0]), np.array([0.0]),
+                                 coordlabels)
             cell_location = CellLocation(
-                0.5*(facelocationX[1:]+facelocationX[0:-1]), np.array([0.0]), np.array([0.0]))
+                0.5*(facelocationX[1:]+facelocationX[0:-1]), 
+                np.array([0.0]), 
+                np.array([0.0]),
+                coordlabels)
             face_location = FaceLocation(
-                facelocationX, np.array([0.0]), np.array([0.0]))
+                facelocationX, np.array([0.0]), np.array([0.0]),
+                coordlabels)
         elif len(args) == 2:
             # Use number of cells and domain length
             Nx = args[0]
             Width = args[1]
             dx = Width/Nx
             cell_size = CellSize(
-                dx*np.ones(Nx+2), np.array([0.0]), np.array([0.0]))
+                dx*np.ones(Nx+2), np.array([0.0]), np.array([0.0]),
+                coordlabels)
             cell_location = CellLocation(
                 int_range(1, Nx)*dx-dx/2,
                 np.array([0.0]),
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
             face_location = FaceLocation(
                 int_range(0, Nx)*dx,
                 np.array([0.0]),
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
         dims = np.array([Nx], dtype=int)
         cellsize = cell_size
         cellcenters = cell_location
@@ -462,15 +530,18 @@ class Grid2D(MeshStructure):
             Ny = facelocationY.size-1
             cell_size = CellSize(self._facelocation_to_cellsize(facelocationX),
                                  self._facelocation_to_cellsize(facelocationY),
-                                 np.array([0.0]))
+                                 np.array([0.0]),
+                                 coordlabels)
             cell_location = CellLocation(
                 0.5*(facelocationX[1:]+facelocationX[0:-1]),
                 0.5*(facelocationY[1:]+facelocationY[0:-1]),
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
             face_location = FaceLocation(
                 facelocationX,
                 facelocationY,
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
         elif len(args) == 4:
             # Use number of cells and domain length
             Nx = args[0]
@@ -482,15 +553,18 @@ class Grid2D(MeshStructure):
             cell_size = CellSize(
                 dx*np.ones(Nx+2),
                 dy*np.ones(Ny+2),
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
             cell_location = CellLocation(
                 int_range(1, Nx)*dx-dx/2,
                 int_range(1, Ny)*dy-dy/2,
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
             face_location = FaceLocation(
                 int_range(0, Nx)*dx,
                 int_range(0, Ny)*dy,
-                np.array([0.0]))
+                np.array([0.0]),
+                coordlabels)
     
         dims = np.array([Nx, Ny], dtype=int)
         cellsize = cell_size
@@ -762,15 +836,18 @@ class Grid3D(MeshStructure):
             Nz = facelocationZ.size-1
             cell_size = CellSize(self._facelocation_to_cellsize(facelocationX),
                                  self._facelocation_to_cellsize(facelocationY),
-                                 self._facelocation_to_cellsize(facelocationZ))
+                                 self._facelocation_to_cellsize(facelocationZ),
+                                 coordlabels)
             cell_location = CellLocation(
                 0.5*(facelocationX[1:]+facelocationX[0:-1]),
                 0.5*(facelocationY[1:]+facelocationY[0:-1]),
-                0.5*(facelocationZ[1:]+facelocationZ[0:-1]))
+                0.5*(facelocationZ[1:]+facelocationZ[0:-1]),
+                coordlabels)
             face_location = FaceLocation(
                 facelocationX,
                 facelocationY,
-                facelocationZ)
+                facelocationZ,
+                coordlabels)
         elif len(args) == 6:
             # Use number of cells and domain length
             Nx = args[0]
@@ -785,15 +862,18 @@ class Grid3D(MeshStructure):
             cell_size = CellSize(
                 dx*np.ones(Nx+2),
                 dy*np.ones(Ny+2),
-                dz*np.ones(Nz+2))
+                dz*np.ones(Nz+2),
+                coordlabels)
             cell_location = CellLocation(
                 int_range(1, Nx)*dx-dx/2,
                 int_range(1, Ny)*dy-dy/2,
-                int_range(1, Nz)*dz-dz/2)
+                int_range(1, Nz)*dz-dz/2,
+                coordlabels)
             face_location = FaceLocation(
                 int_range(0, Nx)*dx,
                 int_range(0, Ny)*dy,
-                int_range(0, Nz)*dz)
+                int_range(0, Nz)*dz,
+                coordlabels)
         G = int_range(1, (Nx+2)*(Ny+2)*(Nz+2))-1
         G = G.reshape(Nx+2, Ny+2, Nz+2)
         dims = np.array([Nx, Ny, Nz], dtype=int)
@@ -989,7 +1069,6 @@ class SphericalGrid3D(Grid3D):
 
 
     def __init__(self, *args):
-
         direct_init = False # Flag to indicate if this is a 'direct' __init__
                             # not requiring any parsing of arguments.
                             # These 'direct' instantiantions are used
