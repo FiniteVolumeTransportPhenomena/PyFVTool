@@ -97,13 +97,13 @@ class MeshStructure:
         pass
 
 
-    def shift_origin(self, x=0.0, y=0.0, z=0.0):
-        self.cellcenters.x += x
-        self.cellcenters.y += y
-        self.cellcenters.z += z
-        self.facecenters.x += x
-        self.facecenters.y += y
-        self.facecenters.z += z
+    def shift_origin(self, _x=0.0, _y=0.0, _z=0.0):
+        self.cellcenters.x += _x
+        self.cellcenters.y += _y
+        self.cellcenters.z += _z
+        self.facecenters.x += _x
+        self.facecenters.y += _y
+        self.facecenters.z += _z
 
 
     def cellVolumes(self):
