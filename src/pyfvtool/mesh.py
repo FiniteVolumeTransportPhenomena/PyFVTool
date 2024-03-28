@@ -146,7 +146,6 @@ class MeshStructure:
 
 
 
-
 #%%
 #   1D Grids
 
@@ -154,105 +153,49 @@ class MeshStructure:
 class Grid1D(MeshStructure):
     """Mesh based on a 1D Cartesian grid (x)
     
-    """
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length.
     
+    Instantiation Options:
+    ----------------------
+    - Grid1D(Nx, Lx)
+    - Grid1D(face_locationsX)
+    
+    
+    Parameters
+    ----------
+    Grid1D(Nx, Lx)
+        Nx : int
+            Number of cells in the x direction.
+        Lx : float
+            Length of the domain in the x direction.
+    
+    Grid1D(face_locationsX)
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import Grid1D
+    >>> mesh = Grid1D(10, 10.0)
+    >>> print(mesh)
+    """
+
     @overload
     def __init__(self, Nx: int, Lx: float):
-        """
-        TODO: docstring (multiple dispatch)
-        These @overload docstrings do NOT show up in help(pf.Grid1D). Therefore,
-        put all versions in the main __init__ docstring 
-
-        Parameters
-        ----------
-        Nx : int
-            DESCRIPTION.
-        Lx : float
-            DESCRIPTION.
-
-        Returns
-        -------
-        None.
-
-        """
         ...
     
     @overload
     def __init__(self, face_locations: np.ndarray):
-        """
-        TODO: docstring (multiple dispatch)
-        These @overload docstrings do NOT show up in help(pf.Grid1D). Therefore,
-        put all versions in the main __init__ docstring 
-
-
-        Parameters
-        ----------
-        face_locations : np.ndarray
-            DESCRIPTION.
-
-        Returns
-        -------
-        None.
-
-        """
         ...
         
     @overload
     def __init__(self, dims, cellsize,
                  cellcenters, facecenters, corners, edges):
-        """
-        TODO: docstring (multiple dispatch)
-        These @overload docstrings do NOT show up in help(pf.Grid1D). Therefore,
-        put all versions in the main __init__ docstring 
-
-
-        Parameters
-        ----------
-        dims : TYPE
-            DESCRIPTION.
-        cellsize : TYPE
-            DESCRIPTION.
-        cellcenters : TYPE
-            DESCRIPTION.
-        facecenters : TYPE
-            DESCRIPTION.
-        corners : TYPE
-            DESCRIPTION.
-        edges : TYPE
-            DESCRIPTION.
-
-        Returns
-        -------
-        None.
-
-        """
         ...
     
     def __init__(self, *args):
-        """Create a Grid1D mesh object from a list of cell face locations or from
-        number of cells and domain length.
-    
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Lx : float
-            Length of the domain in the x direction.
-        face_locations : ndarray
-            Locations of the cell faces in the x direction.
-    
-        Returns
-        -------
-        Grid1D
-            A 1D mesh object.
-    
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import Grid1D
-        >>> mesh = Grid1D(10, 10.0)
-        >>> print(mesh)
-        """
         if (len(args)==6):
             dims, cell_size, cell_location, face_location, corners, edges\
                 = args
@@ -262,15 +205,7 @@ class Grid1D(MeshStructure):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
-    def _mesh_1d_param(self, *args):
-        # In the future, when implementing specific coordinate labels (e.g. (r,z) for 2D
-        # cylindrical), we may create subclasses for CellSize, CellLocation,
-        # FaceLocation, and pass the suitable subclasses as the first three positional
-        # arguments to this _mesh_2d_param method, before *args. This will
-        # allow this method to apply the suitable subclass handling the
-        # coordinate labels. Of course, we should start with renaming the existing
-        # 'internal' x,y,z to _x,_y,_z (same for xvalues, yvalues, zvalues)
-
+    def _mesh_1d_param(self, *args, coordlabels={'x':'_x'}):
         if len(args) == 1:
             # Use face locations
             facelocationX = args[0]
@@ -319,52 +254,55 @@ class Grid1D(MeshStructure):
 class CylindricalGrid1D(Grid1D):
     """Mesh based on a 1D cylindrical grid (r)
     
-    The volume elements are cylindrical shells around a central axis
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length.
+    
+    Instantiation Options:
+    ----------------------
+    - CylindricalGrid1D(Nr, Lr)
+    - CylindricalGrid1D(face_locationsR)
+    
+    
+    Parameters
+    ----------
+    CylindricalGrid1D(Nr, Lr)
+        Nr : int
+            Number of cells in the r direction.
+        Lr : float
+            Length of the domain in the r direction.
+    
+    CylindricalGrid1D(face_locationsR)
+        face_locationsR : ndarray
+            Locations of the cell faces in the r direction.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import CylindricalGrid1D
+    >>> mesh = CylindricalGrid1D(10, 10.0)
+    >>> print(mesh)
     """
+
     @overload
-    def __init__(self, Nx: int, Lx: float):
+    def __init__(self, Nr: int, Lr: float):
         ...
     
     @overload
-    def __init__(self, face_locations: np.ndarray):
+    def __init__(self, face_locationsR: np.ndarray):
         ...
             
     @overload
     def __init__(self, dims, cellsize,
-                 cellcenters, facecenters, corners, edges):
+                       cellcenters, facecenters, corners, edges):
         ...
 
     def __init__(self, *args):
-        """Create a CylindricalGrid1D object from a list of cell face locations or from
-        number of cells and domain length.
-        
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Lx : float
-            Length of the domain in the x direction.
-        face_locations : ndarray
-            Locations of the cell faces in the x direction.
-            
-        Returns
-        -------
-        CylindricalGrid1D
-            A 1D cylindrical mesh object.
-        
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import CylindricalGrid1D
-        >>> mesh = CylindricalGrid1D(10, 10.0)
-        >>> print(mesh)
-        """
         if (len(args)==6):
             dims, cell_size, cell_location, face_location, corners, edges\
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = self._mesh_1d_param(*args)
+                = self._mesh_1d_param(*args, coordlabels={'r':'_x'})
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -377,14 +315,41 @@ class CylindricalGrid1D(Grid1D):
 class SphericalGrid1D(Grid1D):
     """Mesh based on a 1D spherical grid (r)
     
-    The volume elements are concentric spherical shells
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length.
+    
+    Instantiation Options:
+    ----------------------
+    - SphericalGrid1D(Nr, Lr)
+    - SphericalGrid1D(face_locationsR)
+    
+    
+    Parameters
+    ----------
+    SphericalGrid1D(Nr, Lr)
+        Nr : int
+            Number of cells in the r direction.
+        Lr : float
+            Length of the domain in the r direction.
+    
+    SphericalGrid1D(face_locationsR)
+        face_locationsR : ndarray
+            Locations of the cell faces in the r direction.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import SphericalGrid1D
+    >>> mesh = SphericalGrid1D(10, 10.0)
+    >>> print(mesh)
     """
+
     @overload
-    def __init__(self, Nx: int, Lx: float):
+    def __init__(self, Nr: int, Lr: float):
         ...
     
     @overload
-    def __init__(self, face_locations: np.ndarray):
+    def __init__(self, face_locationsR: np.ndarray):
         ...
     
     @overload
@@ -393,41 +358,12 @@ class SphericalGrid1D(Grid1D):
         ...
 
     def __init__(self, *args):
-        """
-        Create a SphericalGrid1D object from a list of cell face locations or from
-        number of cells and domain length.
-    
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Lx : float
-            Length of the domain in the x direction.
-        face_locations : ndarray
-            Locations of the cell faces in the x direction.
-        
-        Returns
-        -------
-        SphericalGrid1D
-            A 1D spherical mesh object.
-    
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import SphericalGrid1D
-        >>> mesh = SphericalGrid1D(10, 10.0)
-        >>> print(mesh)
-    
-        Notes
-        -----
-        The mesh is created in spherical coordinates.
-        """
         if (len(args)==6):
             dims, cell_size, cell_location, face_location, corners, edges\
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = self._mesh_1d_param(*args)
+                = self._mesh_1d_param(*args, coordlabels={'r':'_x'})
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
@@ -443,7 +379,43 @@ class SphericalGrid1D(Grid1D):
 class Grid2D(MeshStructure):
     """Mesh based on a 2D Cartesian grid (x, y)
     
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length.
+    
+    Instantiation Options:
+    ----------------------
+    - Grid2D(Nx, Ny, Lx, Ly)
+    - Grid2D(face_locationsX, face_locationsY)
+    
+    
+    Parameters
+    ----------
+    Grid2D(Nx, Ny, Lx, Ly)
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+    
+    Grid2D(face_locationsX, face_locationsY)
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+    
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import Grid2D
+    >>> mesh = Grid2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
     """
+
+
     @overload
     def __init__(self, Nx: int, Ny: int, Lx: float, Ly: float):
         ...
@@ -460,36 +432,7 @@ class Grid2D(MeshStructure):
         ...
 
     def __init__(self, *args):
-        """Create a Grid2D object from a list of cell face locations or from
-        number of cells and domain length.
-    
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Ny : int
-            Number of cells in the y direction.
-        Lx : float
-            Length of the domain in the x direction.
-        Ly : float
-            Length of the domain in the y direction.
-        face_locationsX : ndarray
-            Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-            Locations of the cell faces in the y direction.
-    
-        Returns
-        -------
-        Grid2D
-            A 2D mesh object.
-    
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import Grid2D
-        >>> mesh = Grid2D(10, 10, 10.0, 10.0)
-        >>> print(mesh)
-        """
+
         if (len(args)==6):
             dims, cell_size, cell_location, face_location, corners, edges\
                 = args
@@ -499,15 +442,8 @@ class Grid2D(MeshStructure):
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
-    def _mesh_2d_param(self, *args):
-        # In the future, when implementing specific coordinate labels (e.g. (r,z) for 2D
-        # cylindrical), we may create subclasses for CellSize, CellLocation,
-        # FaceLocation, and pass the suitable subclasses as the first three positional
-        # arguments to this _mesh_2d_param method, before *args. This will
-        # allow this method to apply the suitable subclass handling the
-        # coordinate labels. Of course, we should start with renaming the existing
-        # 'internal' x,y,z to _x,_y,_z (same for xvalues, yvalues, zvalues)
-
+    def _mesh_2d_param(self, *args, coordlabels={'x':'_x',
+                                                 'y':'_y'}):
         if len(args) == 2:
             # Use face locations
             facelocationX = args[0]
@@ -565,18 +501,57 @@ class Grid2D(MeshStructure):
         return G.reshape(Nx+2, Ny+2)
 
 
+
 class CylindricalGrid2D(Grid2D):
     """Mesh based on a 2D cylindrical grid (r, z)
-
+    
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length.
+    
+    Instantiation Options:
+    ----------------------
+    - CylindricalGrid2D(Nr, Nz, Lr, Lz)
+    - CylindricalGrid2D(face_locationsR, face_locationsZ)
+    
+    Parameters
+    ----------
+    CylindricalGrid2D(Nr, Nz, Lr, Lz)
+        Nr : int
+            Number of cells in the r direction.
+        Nz : int
+            Number of cells in the z direction.
+        Lr : float
+            Length of the domain in the r direction.
+        Lz : float
+            Length of the domain in the z direction.
+    
+    CylindricalGrid2D(face_locationsR, face_locationsZ)
+        face_locationsR : ndarray
+            Locations of the cell faces in the r direction.
+        face_locationsZ : ndarray
+            Locations of the cell faces in the z direction.
+    
+    Returns
+    -------
+    CylindricalGrid2D
+        A 2D cylindrical mesh object.
+    
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import CylindricalGrid2D
+    >>> mesh = CylindricalGrid2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
     """
+
     @overload
-    def __init__(self, Nx: int, Ny: int,
-                 Lx: float, Ly: float):
+    def __init__(self, Nr: int, Nz: int,
+                       Lr: float, Lz: float):
         ...
         
     @overload
-    def __init__(self, face_locationsX: np.ndarray,
-                 face_locationsY: np.ndarray):
+    def __init__(self, face_locationsR: np.ndarray,
+                       face_locationsZ: np.ndarray):
         ...
 
     @overload
@@ -585,45 +560,16 @@ class CylindricalGrid2D(Grid2D):
         ...
 
     def __init__(self, *args):
-        """Create a CylindricalGrid2D object from a list of cell face locations or from
-        number of cells and domain length.
-        
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Ny : int
-            Number of cells in the y direction.
-        Lx : float
-            Length of the domain in the x direction.
-        Ly : float
-            Length of the domain in the y direction.
-        face_locationsX : ndarray
-            Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-            Locations of the cell faces in the y direction.
-        
-        Returns
-        -------
-        CylindricalGrid2D
-            A 2D cylindrical mesh object.
-            
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import CylindricalGrid2D
-        >>> mesh = CylindricalGrid2D(10, 10, 10.0, 10.0)
-        >>> print(mesh)
-        """
+
         if (len(args)==6):
             dims, cell_size, cell_location, face_location, corners, edges\
                 = args
         else:
             dims, cell_size, cell_location, face_location, corners, edges\
-                = self._mesh_2d_param(*args)
+                = self._mesh_2d_param(*args, coordlabels={'r':'_x',
+                                                          'z':'_y'})
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
-
 
     def __repr__(self):
         print(
@@ -633,61 +579,58 @@ class CylindricalGrid2D(Grid2D):
 
 
 class PolarGrid2D(Grid2D):
-    """Mesh based on a 2D polar grid (r, theta)
-
+    """Mesh based on a 2D polar grid (r, theta).
+    
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length.
+    
+    Instantiation Options:
+    ----------------------
+    - PolarGrid2D(Nr, Ntheta, Lr, Ltheta)
+    - PolarGrid2D(face_locationsR, face_locationsTheta)
+    
+    Parameters:
+    -----------
+    PolarGrid2D(Nr, Ntheta, Lr, Ltheta):
+        Nr : int
+            Number of cells in the r direction.
+        Ntheta : int
+            Number of cells in the theta direction.
+        Lr : float
+            Length of the domain in the r direction.
+        Ltheta : float
+            Length of the domain in the theta direction.
+    
+    PolarGrid2D(face_locationsR, face_locationsTheta):
+        face_locationsR : ndarray
+            Locations of the cell faces in the r direction.
+        face_locationsTheta : ndarray
+            Locations of the cell faces in the theta direction.
+    
+    Examples:
+    ---------
+    >>> import numpy as np
+    >>> from pyfvtool import PolarGrid2D
+    >>> mesh = PolarGrid2D(10, 10, 10.0, 10.0)
+    >>> print(mesh)
     """
     @overload
-    def __init__(self, Nx: int, Ny: int, Lx: float, Ly: float):
+    def __init__(self, Nr: int, Ntheta: int, Lr: float, Ltheta: float):
         ...
     
     
     @overload
-    def __init__(self,  face_locationsX: np.ndarray,
-                        face_locationsY: np.ndarray):
+    def __init__(self,  face_locationsR: np.ndarray,
+                        face_locationsTheta: np.ndarray):
         ...
 
     @overload
     def __init__(self, dims, cellsize,
-                 cellcenters, facecenters, corners, edges):
+                       cellcenters, facecenters, corners, edges):
         ...
 
 
     def __init__(self, *args):
-        """
-        Create a PolarGrid2D object from a list of cell face locations or from
-        number of cells and domain length.
-        
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Ny : int
-            Number of cells in the y direction.
-        Lx : float
-            Length of the domain in the x direction.
-        Ly : float
-            Length of the domain in the y direction.
-        face_locationsX : ndarray
-            Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-            Locations of the cell faces in the y direction.
-        
-        Returns
-        -------
-        PolarGrid2D
-            A 2D radial mesh object.
-        
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import PolarGrid2D
-        >>> mesh = PolarGrid2D(10, 10, 10.0, 10.0)
-        >>> print(mesh)
-    
-        Notes
-        -----
-        The mesh is created in radial (cylindrical) coordinates.
-        """
         if (len(args)==6):
             dims, cell_size, cell_location,\
                   face_location, corners, edges= args
@@ -699,15 +642,15 @@ class PolarGrid2D(Grid2D):
             if (theta_max > 2*np.pi):
                 warn("Recreate the mesh with an upper bound of 2*pi for \\theta or there will be unknown consequences!")
             dims, cell_size, cell_location, face_location, corners, edges\
-                = self._mesh_2d_param(*args)
+                = self._mesh_2d_param(*args, coordlabels={'r'    :'_x',
+                                                          'theta':'_y'})
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
 
     def __repr__(self):
         print(
-            f"2D Polar mesh with Nr={self.dims[0]}xN_theta={self.dims[1]} cells")
+            f"2D Polar mesh with N_r={self.dims[0]}xN_theta={self.dims[1]} cells")
         return ""
-
 
 
 #%%
@@ -715,7 +658,53 @@ class PolarGrid2D(Grid2D):
 
 
 class Grid3D(MeshStructure):
-    """Mesh based on a 3D Cartesian grid (x, y, z)"""
+    """Mesh based on a 3D Cartesian grid (x, y, z)
+        
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length. There are multiple
+    overloaded '__init__' methods available to provide flexibility in
+    instantiation.
+    
+    
+    Instantiation Options:
+    ----------------------
+    - Grid3D(Nx, Ny, Nz, Lx, Ly, Lz)
+    - Grid3D(face_locationsX, face_locationsY, face_locationsZ)
+    
+    
+    Parameters
+    ----------
+    Grid3D(Nx, Ny, Nz, Lx, Ly, Lz)
+        Nx : int
+            Number of cells in the x direction.
+        Ny : int
+            Number of cells in the y direction.
+        Nz : int
+            Number of cells in the z direction.
+        Lx : float
+            Length of the domain in the x direction.
+        Ly : float
+            Length of the domain in the y direction.
+        Lz : float
+            Length of the domain in the z direction.
+            
+    Grid3D(face_locationsX, face_locationsY, face_locationsZ)
+        face_locationsX : ndarray
+            Locations of the cell faces in the x direction.
+        face_locationsY : ndarray
+            Locations of the cell faces in the y direction.
+        face_locationsZ : ndarray
+            Locations of the cell faces in the z direction.
+        
+        
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import Grid3D
+    >>> mesh = Grid3D(10, 10, 10, 10.0, 10.0, 10.0)
+    >>> print(mesh)    
+        
+    """
     @overload
     def __init__(self, Nx: int, Ny: int, Nz: int,
                        Lx: float, Ly: float, Lz: float):
@@ -733,43 +722,6 @@ class Grid3D(MeshStructure):
         ...
 
     def __init__(self, *args):
-        """
-        Create a Grid3D object from a list of cell face locations or from
-        number of cells and domain length.
-        
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Ny : int
-            Number of cells in the y direction.
-        Nz : int
-            Number of cells in the z direction.
-        Lx : float
-            Length of the domain in the x direction.
-        Ly : float
-            Length of the domain in the y direction.
-        Lz : float
-            Length of the domain in the z direction.
-        face_locationsX : ndarray
-            Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-            Locations of the cell faces in the y direction.
-        face_locationsZ : ndarray
-            Locations of the cell faces in the z direction.
-        
-        Returns
-        -------
-        Grid3D
-        A 3D mesh object.
-            
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import Grid3D
-        >>> mesh = Grid3D(10, 10, 10, 10.0, 10.0, 10.0)
-        >>> print(mesh)
-        """
         direct_init = False # Flag to indicate if this is a 'direct' __init__
                             # not requiring any parsing of arguments.
                             # These 'direct' instantiantions are used
@@ -789,15 +741,9 @@ class Grid3D(MeshStructure):
                          face_location, corners, edges)
 
 
-    def _mesh_3d_param(self, *args):
-        # In the future, when implementing specific coordinate labels (e.g. (r,z) for 2D
-        # cylindrical), we may create subclasses for CellSize, CellLocation,
-        # FaceLocation, and pass the suitable subclasses as the first three positional
-        # arguments to this _mesh_3d_param method, before *args. This will
-        # allow this method to apply the suitable subclass handling the
-        # coordinate labels. Of course, we should start with renaming the existing
-        # 'internal' x,y,z to _x,_y,_z (same for xvalues, yvalues, zvalues)
-    
+    def _mesh_3d_param(self, *args, coordlabels={'x':'_x',
+                                                 'y':'_y',
+                                                 'z':'_z'}):
         if len(args) == 3:
             # Use face locations
             facelocationX = args[0]
@@ -866,16 +812,62 @@ class Grid3D(MeshStructure):
         return ""
 
 
+
 class CylindricalGrid3D(Grid3D):
-    """Mesh based on a 3D cylindrical grid (r, theta, z)"""
+    """Mesh based on a 3D cylindrical grid (r, theta, z)
+        
+    This class can be instantiated in different ways: from a list of cell face
+    locations or from the number of cells and domain length. There are multiple
+    overloaded '__init__' methods available to provide flexibility in instantiation.
+    
+    
+    Instantiation Options:
+    ----------------------
+    - CylindricalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lz)
+    - CylindricalGrid3D(face_locationsR, face_locationsTheta, face_locationsZ)
+        
+    Parameters
+    ----------
+    CylindricalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lz)
+        Nr : int
+            Number of cells in the r direction.
+        Ntheta : int
+            Number of cells in the theta direction.
+        Nphi : int
+            Number of cells in the z direction.
+        Lr : float
+            Length of the domain in the r direction.
+        Ltheta : float
+            Length of the domain in the theta direction.
+        Lz : float
+            Length of the domain in the z direction.
+            
+    
+    CylindricalGrid3D(face_locationsR, face_locationsTheta, face_locationsZ)
+        face_locationsR : ndarray
+            Locations of the cell faces in the r direction.
+        face_locationsTheta : ndarray
+            Locations of the cell faces in the theta direction.
+        face_locationsZ : ndarray
+            Locations of the cell faces in the z direction.
+        
+        
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import CylindricalGrid3D
+    >>> mesh = CylindricalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)
+    >>> print(mesh)
+    """
+
     @overload
-    def __init__(self, Nx: int, Ny: int, Nz: int,
-                       Lx: float, Ly: float, Lz: float):
+    def __init__(self, Nr: int, Ntheta: int, Nz: int,
+                       Lr: float, Ltheta: float, Lz: float):
         ...
     
     @overload
-    def __init__(self, face_locationsX: np.ndarray,
-                       face_locationsY: np.ndarray,
+    def __init__(self, face_locationsR: np.ndarray,
+                       face_locationsTheta: np.ndarray,
                        face_locationsZ: np.ndarray):
         ...
 
@@ -887,47 +879,7 @@ class CylindricalGrid3D(Grid3D):
 
     def __init__(self, *args):
         """
-        Create a CylindricalGrid3D object from a list of cell face locations or from
-        number of cells and domain length.
 
-        TO DO: docstring (and coordinate labels) -> r, theta, z
-    
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Ny : int
-            Number of cells in the y direction.
-        Nz : int
-            Number of cells in the z direction.
-        Lx : float
-            Length of the domain in the x direction.
-        Ly : float
-            Length of the domain in the y direction.
-        Lz : float
-            Length of the domain in the z direction.
-        face_locationsX : ndarray
-            Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-            Locations of the cell faces in the y direction.
-        face_locationsZ : ndarray
-            Locations of the cell faces in the z direction.
-        
-        Returns
-        -------
-        CylindricalGrid3D
-            A 3D cylindrical mesh object.
-    
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import CylindricalGrid3D
-        >>> mesh = CylindricalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)
-        >>> print(mesh)
-    
-        Notes
-        -----
-        The mesh is created in cylindrical coordinates.
         """
         direct_init = False # Flag to indicate if this is a 'direct' __init__
                             # not requiring any parsing of arguments.
@@ -951,7 +903,9 @@ class CylindricalGrid3D(Grid3D):
                 warn("Recreate the mesh with an upper bound of 2*pi for theta or there will be unknown consequences!")
 
             dims, cell_size, cell_location, face_location, corners, edges\
-                = self._mesh_3d_param(*args)
+                = self._mesh_3d_param(*args, coordlabels={'r'    :'_x',
+                                                          'theta':'_y',
+                                                          'z'    :'_z'})
 
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
@@ -962,18 +916,63 @@ class CylindricalGrid3D(Grid3D):
         return ""
 
 
+
 class SphericalGrid3D(Grid3D):
-    """Mesh based on a 3D spherical grid (r, theta, phi)"""
+    """Mesh based on a 3D spherical grid (r, theta, phi)
+    
+    Create a SphericalGrid3D object from a list of cell face locations or from
+    the number of cells and domain length.
+    
+    
+    Instantiation Options:
+    ----------------------
+    - SphericalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lphi)
+    - SphericalGrid3D(face_locationsR, face_locationsTheta, face_locationsPhi)
+        
+    Parameters
+    ----------
+    SphericalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lphi)
+        Nr : int
+            Number of cells in the r direction.
+        Ntheta : int
+            Number of cells in the theta direction.
+        Nphi : int
+            Number of cells in the phi direction.
+        Lr : float
+            Length of the domain in the r direction.
+        Ltheta : float
+            Length of the domain in the theta direction.
+        Lphi : float
+            Length of the domain in the phi direction.
+            
+    
+    SphericalGrid3D(face_locationsR, face_locationsTheta, face_locationsPhi)
+        face_locationsR : ndarray
+            Locations of the cell faces in the r direction.
+        face_locationsTheta : ndarray
+            Locations of the cell faces in the theta direction.
+        face_locationsPhi : ndarray
+            Locations of the cell faces in the phi direction.
+        
+        
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from pyfvtool import SphericalGrid3D
+    >>> mesh = SphericalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)
+    >>> print(mesh)
+    """
+
     
     @overload
-    def __init__(self, Nx: int, Ny: int, Nz: int,
-                       Lx: float, Ly: float, Lz: float):
+    def __init__(self, Nr: int, Ntheta: int, Nphi: int,
+                       Lr: float, Ltheta: float, Lphi: float):
         ...
     
     @overload
-    def __init__(self, face_locationsX: np.ndarray,
-                       face_locationsY: np.ndarray,
-                       face_locationsZ: np.ndarray):
+    def __init__(self, face_locationsR: np.ndarray,
+                       face_locationsTheta: np.ndarray,
+                       face_locationsPhi: np.ndarray):
         ...
 
     @overload
@@ -983,47 +982,7 @@ class SphericalGrid3D(Grid3D):
 
 
     def __init__(self, *args):
-        """
-        Create a SphericalGrid3D object from a list of cell face locations or from
-        number of cells and domain length.
-    
-        Parameters
-        ----------
-        Nx : int
-            Number of cells in the x direction.
-        Ny : int
-            Number of cells in the y direction.
-        Nz : int
-            Number of cells in the z direction.
-        Lx : float
-            Length of the domain in the x direction.
-        Ly : float
-            Length of the domain in the y direction.
-        Lz : float
-            Length of the domain in the z direction.
-        face_locationsX : ndarray
-            Locations of the cell faces in the x direction.
-        face_locationsY : ndarray
-            Locations of the cell faces in the y direction.
-        face_locationsZ : ndarray
-            Locations of the cell faces in the z direction.
-        
-        Returns
-        -------
-        SphericalGrid3D
-            A 3D spherical mesh object.
-        
-        Examples
-        --------
-        >>> import numpy as np
-        >>> from pyfvtool import SphericalGrid3D
-        >>> mesh = SphericalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)
-        >>> print(mesh)
-    
-        Notes
-        -----
-        The mesh is created in spherical coordinates.
-        """
+
         direct_init = False # Flag to indicate if this is a 'direct' __init__
                             # not requiring any parsing of arguments.
                             # These 'direct' instantiantions are used
@@ -1045,7 +1004,9 @@ class SphericalGrid3D(Grid3D):
                 warn("Recreate the mesh with an upper bound of 2*pi for \\phi"\
                      " or there will be unknown consequences!")
             dims, cell_size, cell_location, face_location, corners, edges\
-                = self._mesh_3d_param(*args)
+                = self._mesh_3d_param(*args, coordlabels={'r'    :'_x',
+                                                          'theta':'_y',
+                                                          'phi'  :'_z'})
 
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)
