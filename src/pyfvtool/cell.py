@@ -336,9 +336,9 @@ class CellVariable:
             x = np.hstack([self.domain.facecenters.x[0],
                            self.domain.cellcenters.x,
                            self.domain.facecenters.x[-1]])
-            y = np.hstack([self.domain.facecenters.y[0],
-                           self.domain.cellcenters.y,
-                           self.domain.facecenters.y[-1]])
+            y = np.hstack([self.domain.facecenters._y[0],
+                           self.domain.cellcenters._y,
+                           self.domain.facecenters._y[-1]])
             phi0 = np.copy(self.value)
             phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
             phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
@@ -353,9 +353,9 @@ class CellVariable:
             x = np.hstack([self.domain.facecenters.x[0],
                            self.domain.cellcenters.x,
                            self.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
-            y = np.hstack([self.domain.facecenters.y[0],
-                           self.domain.cellcenters.y,
-                           self.domain.facecenters.y[-1]])[np.newaxis, :, np.newaxis]
+            y = np.hstack([self.domain.facecenters._y[0],
+                           self.domain.cellcenters._y,
+                           self.domain.facecenters._y[-1]])[np.newaxis, :, np.newaxis]
             z = np.hstack([self.domain.facecenters._z[0],
                            self.domain.cellcenters._z,
                            self.domain.facecenters._z[-1]])[np.newaxis, np.newaxis, :]
@@ -475,12 +475,12 @@ def cellLocations(m: MeshStructure):
        or (type(m) is CylindricalGrid2D)\
        or (type(m) is PolarGrid2D): 
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
-        Y = CellVariable(m, np.tile(m.cellcenters.y[:, np.newaxis].T, (N[0], 1)))
+        Y = CellVariable(m, np.tile(m.cellcenters._y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
     elif (type(m) is Grid3D)\
        or (type(m) is CylindricalGrid3D): 
         X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
-        Y = CellVariable(m, np.tile((m.cellcenters.y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
+        Y = CellVariable(m, np.tile((m.cellcenters._y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters._z
         Z = CellVariable(m, np.tile(z, (N[0], N[1], 1)))

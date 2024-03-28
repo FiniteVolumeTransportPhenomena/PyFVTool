@@ -80,7 +80,7 @@ def diffusionTerm2D(D: FaceVariable) -> csr_array:
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     mn = Nx*Ny
@@ -127,7 +127,7 @@ def diffusionTermCylindrical2D(D: FaceVariable) -> csr_array:
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     rp = D.domain.cellcenters.x
@@ -177,7 +177,7 @@ def diffusionTermPolar2D(D: FaceVariable) -> csr_array:
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     rp = D.domain.cellcenters.x[:, np.newaxis]
@@ -230,7 +230,7 @@ def diffusionTerm3D(D: FaceVariable) -> csr_array:
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DY = D.domain.cellsize._y
     DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
@@ -293,7 +293,7 @@ def diffusionTermCylindrical3D(D: FaceVariable) -> csr_array:
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
-    DY = D.domain.cellsize.y
+    DY = D.domain.cellsize._y
     DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])

@@ -207,8 +207,8 @@ def cellValuesWithBoundaries2D(phi, BC):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
 
     # define the output matrix
     phiBC = np.zeros((Nx+2, Ny+2))
@@ -263,8 +263,8 @@ def cellValuesWithBoundaries3D(phi, BC):
     Nx, Ny, Nz = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     dz_1 = BC.domain.cellsize._z[0]
     dz_end = BC.domain.cellsize._z[-1]
 
@@ -362,8 +362,8 @@ def cellValuesWithBoundariesCylindrical3D(phi, BC):
     Nx, Ny, Nz = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     dz_1 = BC.domain.cellsize._z[0]
     dz_end = BC.domain.cellsize._z[-1]
     rp = BC.domain.cellcenters.x[:, np.newaxis]
@@ -463,8 +463,8 @@ def cellValuesWithBoundariesPolar2D(phi, BC):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     rp = BC.domain.cellcenters.x
 
     # define the output matrix
@@ -650,8 +650,8 @@ def boundaryConditionsTerm2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     G = BC.domain.cell_numbers()
 
     nb = 8*(Nx+Ny+2)  # number of boundary nodes
@@ -816,8 +816,8 @@ def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
     G=BC.domain.cell_numbers()
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     dz_1 = BC.domain.cellsize._z[0]
     dz_end = BC.domain.cellsize._z[-1]
 
@@ -1079,8 +1079,8 @@ def boundaryConditionsTermPolar2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     rp = BC.domain.cellcenters.x
     G = BC.domain.cell_numbers()
 
@@ -1246,8 +1246,8 @@ def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
     G=BC.domain.cell_numbers()
     dx_1 = BC.domain.cellsize.x[0]
     dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     dz_1 = BC.domain.cellsize._z[0]
     dz_end = BC.domain.cellsize._z[-1]
     rp = BC.domain.cellcenters.x[:, np.newaxis]

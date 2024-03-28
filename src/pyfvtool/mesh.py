@@ -12,7 +12,7 @@ from .utilities import int_range
 class CellSize:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
         self.x = _x
-        self.y = _y
+        self._y = _y
         self._z = _z
 
     def __str__(self):
@@ -31,7 +31,7 @@ class CellSize:
 class CellLocation:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
         self.x = _x
-        self.y = _y
+        self._y = _y
         self._z = _z
 
     def __str__(self):
@@ -50,7 +50,7 @@ class CellLocation:
 class FaceLocation:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
         self.x = _x
-        self.y = _y
+        self._y = _y
         self._z = _z
 
     def __str__(self):
@@ -99,10 +99,10 @@ class MeshStructure:
 
     def shift_origin(self, _x=0.0, _y=0.0, _z=0.0):
         self.cellcenters.x += _x
-        self.cellcenters.y += _y
+        self.cellcenters._y += _y
         self.cellcenters._z += _z
         self.facecenters.x += _x
-        self.facecenters.y += _y
+        self.facecenters._y += _y
         self.facecenters._z += _z
 
 
@@ -124,23 +124,23 @@ class MeshStructure:
             c = 2.0*np.pi*self.cellsize.x[1:-1]*self.cellcenters.x
         elif (type(self) is Grid2D):
             c = self.cellsize.x[1:-1][:, np.newaxis]\
-                *self.cellsize.y[1:-1][np.newaxis, :]
+                *self.cellsize._y[1:-1][np.newaxis, :]
         elif (type(self) is CylindricalGrid2D):
             c = 2.0*np.pi*self.cellcenters.x[:, np.newaxis]\
                 *self.cellsize.x[1:-1][:, np.newaxis]\
-                *self.cellsize.y[1:-1][np.newaxis, :]
+                *self.cellsize._y[1:-1][np.newaxis, :]
         elif (type(self) is PolarGrid2D):
             c = self.cellcenters.x\
                 *self.cellsize.x[1:-1][:, np.newaxis]\
-                *self.cellsize.y[1:-1][np.newaxis, :]
+                *self.cellsize._y[1:-1][np.newaxis, :]
         elif (type(self) is Grid3D):
             c = self.cellsize.x[1:-1][:,np.newaxis,np.newaxis]\
-                *self.cellsize.y[1:-1][np.newaxis,:,np.newaxis]\
+                *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
                 *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
         elif (type(self) is CylindricalGrid3D):
             c = self.cellcenters.x\
                 *self.cellsize.x[1:-1][:,np.newaxis,np.newaxis]\
-                *self.cellsize.y[1:-1][np.newaxis,:,np.newaxis]\
+                *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
                 *self.cellsize._z[np.newaxis,np.newaxis,:]
         return c
 
