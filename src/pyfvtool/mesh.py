@@ -10,10 +10,10 @@ from .utilities import int_range
 #   General data structures for describing meshes
 
 class CellSize:
-    def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray):
-        self.x = x
-        self.y = y
-        self.z = z
+    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
+        self.x = _x
+        self.y = _y
+        self.z = _z
 
     def __str__(self):
         temp = vars(self)
@@ -29,10 +29,10 @@ class CellSize:
 
 
 class CellLocation:
-    def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray):
-        self.x = x
-        self.y = y
-        self.z = z
+    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
+        self.x = _x
+        self.y = _y
+        self.z = _z
 
     def __str__(self):
         temp = vars(self)
@@ -48,10 +48,10 @@ class CellLocation:
 
 
 class FaceLocation:
-    def __init__(self, x: np.ndarray, y: np.ndarray, z: np.ndarray):
-        self.x = x
-        self.y = y
-        self.z = z
+    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
+        self.x = _x
+        self.y = _y
+        self.z = _z
 
     def __str__(self):
         temp = vars(self)
