@@ -13,7 +13,7 @@ class CellSize:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
         self.x = _x
         self.y = _y
-        self.z = _z
+        self._z = _z
 
     def __str__(self):
         temp = vars(self)
@@ -32,7 +32,7 @@ class CellLocation:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
         self.x = _x
         self.y = _y
-        self.z = _z
+        self._z = _z
 
     def __str__(self):
         temp = vars(self)
@@ -51,7 +51,7 @@ class FaceLocation:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray):
         self.x = _x
         self.y = _y
-        self.z = _z
+        self._z = _z
 
     def __str__(self):
         temp = vars(self)
@@ -100,10 +100,10 @@ class MeshStructure:
     def shift_origin(self, _x=0.0, _y=0.0, _z=0.0):
         self.cellcenters.x += _x
         self.cellcenters.y += _y
-        self.cellcenters.z += _z
+        self.cellcenters._z += _z
         self.facecenters.x += _x
         self.facecenters.y += _y
-        self.facecenters.z += _z
+        self.facecenters._z += _z
 
 
     def cellVolumes(self):
@@ -136,12 +136,12 @@ class MeshStructure:
         elif (type(self) is Grid3D):
             c = self.cellsize.x[1:-1][:,np.newaxis,np.newaxis]\
                 *self.cellsize.y[1:-1][np.newaxis,:,np.newaxis]\
-                *self.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
+                *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
         elif (type(self) is CylindricalGrid3D):
             c = self.cellcenters.x\
                 *self.cellsize.x[1:-1][:,np.newaxis,np.newaxis]\
                 *self.cellsize.y[1:-1][np.newaxis,:,np.newaxis]\
-                *self.cellsize.z[np.newaxis,np.newaxis,:]
+                *self.cellsize._z[np.newaxis,np.newaxis,:]
         return c
 
 

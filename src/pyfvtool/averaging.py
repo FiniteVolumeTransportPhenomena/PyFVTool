@@ -34,7 +34,7 @@ def cell_size_array(m: MeshStructure):
     elif issubclass(type(m), Grid3D):
         dx = m.cellsize.x[:,np.newaxis,np.newaxis]
         dy = m.cellsize.y[np.newaxis,:,np.newaxis]
-        dz = m.cellsize.z[np.newaxis,np.newaxis,:]
+        dz = m.cellsize._z[np.newaxis,np.newaxis,:]
         return dx, dy, dz
 
     
@@ -521,7 +521,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         dy=np.zeros( 1, Ny+1)
 #         dy[:]=0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])
 #         dz=np.zeros( 1, 1, Nz+1)
-#         dz[:]=0.5*(u.domain.cellsize.z[0:-1]+u.domain.cellsize.z[1:])
+#         dz[:]=0.5*(u.domain.cellsize._z[0:-1]+u.domain.cellsize._z[1:])
 #         # extract the velocity data
 #         ux = u._xvalue
 #         uy = u._yvalue

@@ -265,8 +265,8 @@ def cellValuesWithBoundaries3D(phi, BC):
     dx_end = BC.domain.cellsize.x[-1]
     dy_1 = BC.domain.cellsize.y[0]
     dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
@@ -364,8 +364,8 @@ def cellValuesWithBoundariesCylindrical3D(phi, BC):
     dx_end = BC.domain.cellsize.x[-1]
     dy_1 = BC.domain.cellsize.y[0]
     dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
     rp = BC.domain.cellcenters.x[:, np.newaxis]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
@@ -818,8 +818,8 @@ def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
     dx_end = BC.domain.cellsize.x[-1]
     dy_1 = BC.domain.cellsize.y[0]
     dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
@@ -1248,8 +1248,8 @@ def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
     dx_end = BC.domain.cellsize.x[-1]
     dy_1 = BC.domain.cellsize.y[0]
     dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
     rp = BC.domain.cellcenters.x[:, np.newaxis]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]

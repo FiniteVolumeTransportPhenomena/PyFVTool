@@ -56,7 +56,7 @@ def gradientTerm(phi: CellVariable):
     elif (type(phi.domain) is Grid3D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
-        dz = 0.5*(phi.domain.cellsize.z[0:-1]+phi.domain.cellsize.z[1:])
+        dz = 0.5*(phi.domain.cellsize._z[0:-1]+phi.domain.cellsize._z[1:])
         return FaceVariable(phi.domain,
                      (phi.value[1:, 1:-1, 1:-1] -
                      phi.value[0:-1, 1:-1, 1:-1])/dx[:,np.newaxis,np.newaxis],
@@ -67,7 +67,7 @@ def gradientTerm(phi: CellVariable):
     elif (type(phi.domain) is CylindricalGrid3D):
         dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
         dy = 0.5*(phi.domain.cellsize.y[0:-1]+phi.domain.cellsize.y[1:])
-        dz = 0.5*(phi.domain.cellsize.z[0:-1]+phi.domain.cellsize.z[1:])
+        dz = 0.5*(phi.domain.cellsize._z[0:-1]+phi.domain.cellsize._z[1:])
         rp = phi.domain.cellcenters.x
         return FaceVariable(phi.domain,
                      (phi.value[1:, 1:-1, 1:-1] -
@@ -232,7 +232,7 @@ def divergenceTerm3D(F:FaceVariable):
     G=F.domain.cell_numbers()
     dx = F.domain.cellsize.x[1:-1][:,np.newaxis,np.newaxis]
     dy = F.domain.cellsize.y[1:-1][np.newaxis,:,np.newaxis]
-    dz = F.domain.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
+    dz = F.domain.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
     # define the vector of cell index
     row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
@@ -268,7 +268,7 @@ def divergenceTermCylindrical3D(F:FaceVariable):
     G=F.domain.cell_numbers()
     dx = F.domain.cellsize.x[1:-1][:,np.newaxis,np.newaxis]
     dy = F.domain.cellsize.y[1:-1][np.newaxis,:,np.newaxis]
-    dz = F.domain.cellsize.z[1:-1][np.newaxis,np.newaxis,:]
+    dz = F.domain.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
     rp = F.domain.cellcenters.x[:,np.newaxis,np.newaxis]
     # define the vector of cell index
     row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal

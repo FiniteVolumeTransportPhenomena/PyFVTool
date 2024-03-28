@@ -102,7 +102,7 @@ fv = FaceVariable(c2d, 1.0)
 errors_expected += 1
 fv.zvalue[:] = 3.0
 # peek inside (testing only)
-assert np.all(fv._yvalue==fv.zvalue)
+assert np.all(fv._yvalue == fv.zvalue)
 try:
     fv.yvalue[:] = 3.0
 except AttributeError:

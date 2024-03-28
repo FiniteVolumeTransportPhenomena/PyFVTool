@@ -231,7 +231,7 @@ def diffusionTerm3D(D: FaceVariable) -> csr_array:
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
     DY = D.domain.cellsize.y
-    DZ = D.domain.cellsize.z
+    DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     dz = 0.5*(DZ[0:-1]+DZ[1:])
@@ -294,7 +294,7 @@ def diffusionTermCylindrical3D(D: FaceVariable) -> csr_array:
     G = D.domain.cell_numbers()
     DX = D.domain.cellsize.x
     DY = D.domain.cellsize.y
-    DZ = D.domain.cellsize.z
+    DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     dz = 0.5*(DZ[0:-1]+DZ[1:])
