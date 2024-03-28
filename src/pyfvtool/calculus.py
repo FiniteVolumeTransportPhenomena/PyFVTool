@@ -33,28 +33,28 @@ def gradientTerm(phi: CellVariable):
     # calculates the gradient of a variable
     # the output is a face variable
     if issubclass(type(phi.domain), Grid1D):
-        dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
+        dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
         return FaceVariable(phi.domain,
                      (phi.value[1:]-phi.value[0:-1])/dx,
                      np.array([]),
                      np.array([]))
     elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
-        dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
+        dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
         dy = 0.5*(phi.domain.cellsize._y[0:-1]+phi.domain.cellsize._y[1:])
         return FaceVariable(phi.domain,
                      (phi.value[1:, 1:-1]-phi.value[0:-1, 1:-1])/dx[:,np.newaxis],
                      (phi.value[1:-1, 1:]-phi.value[1:-1, 0:-1])/dy,
                      np.array([]))
     elif (type(phi.domain) is PolarGrid2D):
-        dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
+        dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
         dtheta = 0.5*(phi.domain.cellsize._y[0:-1]+phi.domain.cellsize._y[1:])
-        rp = phi.domain.cellcenters.x
+        rp = phi.domain.cellcenters._x
         return FaceVariable(phi.domain,
                      (phi.value[1:, 1:-1]-phi.value[0:-1, 1:-1])/dx[:,np.newaxis],
                      (phi.value[1:-1, 1:]-phi.value[1:-1, 0:-1])/(dtheta[np.newaxis,:]*rp[:,np.newaxis]),
                      np.array([]))
     elif (type(phi.domain) is Grid3D):
-        dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
+        dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
         dy = 0.5*(phi.domain.cellsize._y[0:-1]+phi.domain.cellsize._y[1:])
         dz = 0.5*(phi.domain.cellsize._z[0:-1]+phi.domain.cellsize._z[1:])
         return FaceVariable(phi.domain,
@@ -65,10 +65,10 @@ def gradientTerm(phi: CellVariable):
                      (phi.value[1:-1, 1:-1, 1:] -
                      phi.value[1:-1, 1:-1, 0:-1])/dz[np.newaxis,np.newaxis,:])
     elif (type(phi.domain) is CylindricalGrid3D):
-        dx = 0.5*(phi.domain.cellsize.x[0:-1]+phi.domain.cellsize.x[1:])
+        dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
         dy = 0.5*(phi.domain.cellsize._y[0:-1]+phi.domain.cellsize._y[1:])
         dz = 0.5*(phi.domain.cellsize._z[0:-1]+phi.domain.cellsize._z[1:])
-        rp = phi.domain.cellcenters.x
+        rp = phi.domain.cellcenters._x
         return FaceVariable(phi.domain,
                      (phi.value[1:, 1:-1, 1:-1] -
                       phi.value[0:-1, 1:-1, 1:-1])/dx[:,np.newaxis,np.newaxis],
@@ -84,7 +84,7 @@ def divergenceTerm1D(F: FaceVariable):
     # extract data from the mesh structure
     Nx = F.domain.dims[0]
     G = F.domain.cell_numbers()
-    DX = F.domain.cellsize.x[1:-1]
+    DX = F.domain.cellsize._x[1:-1]
     # define the vector of cell index
     row_index = G[1:Nx+1] # main diagonal
     # compute the divergence
@@ -103,9 +103,9 @@ def divergenceTermCylindrical1D(F: FaceVariable):
     # extract data from the mesh structure
     Nx = F.domain.dims[0]
     G = F.domain.cell_numbers()
-    DX = F.domain.cellsize.x[1:-1]
-    rp = F.domain.cellcenters.x
-    rf = F.domain.facecenters.x
+    DX = F.domain.cellsize._x[1:-1]
+    rp = F.domain.cellcenters._x
+    rf = F.domain.facecenters._x
     # define the vector of cell index
     row_index = G[1:Nx+1] # main diagonal
     # reassign the east, west, north, and south flux vectors for the
@@ -129,7 +129,7 @@ def divergenceTerm2D(F: FaceVariable):
     # extract data from the mesh structure
     Nx, Ny = F.domain.dims
     G= F.domain.cell_numbers()
-    DX = F.domain.cellsize.x[1:-1][:, np.newaxis]
+    DX = F.domain.cellsize._x[1:-1][:, np.newaxis]
     DY = F.domain.cellsize._y[1:-1][np.newaxis, :]
     # define the vector of cell index
     row_index = G[1:Nx+1,1:Ny+1].ravel() # main diagonal
@@ -161,10 +161,10 @@ def divergenceTermCylindrical2D(F:FaceVariable):
     # extract data from the mesh structure
     Nr, Nz = F.domain.dims
     G= F.domain.cell_numbers()
-    dr = F.domain.cellsize.x[1:-1][:, np.newaxis]
+    dr = F.domain.cellsize._x[1:-1][:, np.newaxis]
     dz = F.domain.cellsize._y[1:-1][np.newaxis, :]
-    rp = F.domain.cellcenters.x[:, np.newaxis]
-    rf = F.domain.facecenters.x[:, np.newaxis]
+    rp = F.domain.cellcenters._x[:, np.newaxis]
+    rf = F.domain.facecenters._x[:, np.newaxis]
     # define the vector of cell index
     row_index = G[1:Nr+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
@@ -196,10 +196,10 @@ def divergenceTermPolar2D(F:FaceVariable):
     # extract data from the mesh structure
     Nr, Ntheta = F.domain.dims
     G=F.domain.cell_numbers()
-    dr = F.domain.cellsize.x[1:-1][:, np.newaxis]
+    dr = F.domain.cellsize._x[1:-1][:, np.newaxis]
     dtheta= F.domain.cellsize._y[1:-1][np.newaxis, :]
-    rp = F.domain.cellcenters.x[:, np.newaxis]
-    rf = F.domain.facecenters.x[:, np.newaxis]
+    rp = F.domain.cellcenters._x[:, np.newaxis]
+    rf = F.domain.facecenters._x[:, np.newaxis]
     # define the vector of cell index
     row_index = G[1:Nr+1,1:Ntheta+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
@@ -230,7 +230,7 @@ def divergenceTerm3D(F:FaceVariable):
     # extract data from the mesh structure
     Nx, Ny, Nz = F.domain.dims
     G=F.domain.cell_numbers()
-    dx = F.domain.cellsize.x[1:-1][:,np.newaxis,np.newaxis]
+    dx = F.domain.cellsize._x[1:-1][:,np.newaxis,np.newaxis]
     dy = F.domain.cellsize._y[1:-1][np.newaxis,:,np.newaxis]
     dz = F.domain.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
     # define the vector of cell index
@@ -266,10 +266,10 @@ def divergenceTermCylindrical3D(F:FaceVariable):
     # extract data from the mesh structure
     Nx, Ny, Nz = F.domain.dims
     G=F.domain.cell_numbers()
-    dx = F.domain.cellsize.x[1:-1][:,np.newaxis,np.newaxis]
+    dx = F.domain.cellsize._x[1:-1][:,np.newaxis,np.newaxis]
     dy = F.domain.cellsize._y[1:-1][np.newaxis,:,np.newaxis]
     dz = F.domain.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
-    rp = F.domain.cellcenters.x[:,np.newaxis,np.newaxis]
+    rp = F.domain.cellcenters._x[:,np.newaxis,np.newaxis]
     # define the vector of cell index
     row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the

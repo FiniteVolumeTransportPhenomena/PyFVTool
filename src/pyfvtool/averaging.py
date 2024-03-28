@@ -25,14 +25,14 @@ from .face import FaceVariable
 
 def cell_size_array(m: MeshStructure):
     if issubclass(type(m), Grid1D):
-        dx = m.cellsize.x
+        dx = m.cellsize._x
         return dx
     elif issubclass(type(m), Grid2D):
-        dx = m.cellsize.x[:,np.newaxis]
+        dx = m.cellsize._x[:,np.newaxis]
         dy = m.cellsize._y[np.newaxis,:]
         return dx, dy
     elif issubclass(type(m), Grid3D):
-        dx = m.cellsize.x[:,np.newaxis,np.newaxis]
+        dx = m.cellsize._x[:,np.newaxis,np.newaxis]
         dy = m.cellsize._y[np.newaxis,:,np.newaxis]
         dz = m.cellsize._z[np.newaxis,np.newaxis,:]
         return dx, dy, dz
@@ -438,7 +438,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #     if issubclass(type(phi.domain), Mesh1D):
 #         # extract data from the mesh structure
 #         Nx = u.domain.dims[0]
-#         dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+#         dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
 #         phi_p = np.zeros(Float64, Nx+1)
 #         phi_m = np.zeros(Float64, Nx+1)
 
@@ -465,7 +465,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         # extract data from the mesh structure
 #         Nx = u.domain.dims[0]
 #         Ny = u.domain.dims[2]
-#         dx=0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+#         dx=0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
 #         dy=np.zeros( 1, Ny+1)
 #         dy[:]=0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])
 #         phi_p = np.zeros(Float64, Nx+1)
@@ -517,7 +517,7 @@ def tvdMean(phi: CellVariable, u: FaceVariable, FL):
 #         Nx = u.domain.dims[0]
 #         Ny = u.domain.dims[2]
 #         Nz = u.domain.dims[3]
-#         dx=0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+#         dx=0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
 #         dy=np.zeros( 1, Ny+1)
 #         dy[:]=0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])
 #         dz=np.zeros( 1, 1, Nz+1)

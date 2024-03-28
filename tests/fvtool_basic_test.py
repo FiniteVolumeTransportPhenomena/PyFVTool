@@ -106,7 +106,7 @@ for i in range(len(mesh_nonuniform)):
 L = 1.0  # domain length
 Nx = 25 # number of cells
 meshstruct = Grid1D(Nx, L)
-x = meshstruct.cellcenters.x # extract the cell center positions
+x = meshstruct.cellcenters._x # extract the cell center positions
 ##
 # The next step is to define the boundary condition:
 BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
@@ -236,7 +236,7 @@ BC.left.c[:]=1 # left boundary
 BC.right.a[:] = 0 
 BC.right.b[:]=1 
 BC.right.c[:]=0 # right boundary
-x = meshstruct.cellcenters.x
+x = meshstruct.cellcenters._x
 ## define the transfer coeffs
 D_val = 1.0
 alfa = CellVariable(meshstruct, 1)
@@ -310,7 +310,7 @@ visualizeCells(c_old)
 # Testing 2D visualization
 #
 mm = Grid2D(50, 50, 5*np.pi, 5*np.pi)
-XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters._y)
+XX, YY = np.meshgrid(mm.cellcenters._x, mm.cellcenters._y)
 vv = CellVariable(mm, np.cos(XX)*np.sin(YY))
 plt.figure(3)
 plt.clf()

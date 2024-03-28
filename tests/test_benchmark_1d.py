@@ -58,7 +58,7 @@ def T_numerical(left_bc: str) -> float:
         T_val = pf.solveMatrixPDE(m, M_bc+M_trans-M_diff, RHS_bc+RHS_trans)
         T_init.update_value(T_val)
 
-    x = m.facecenters.x
+    x = m.facecenters._x
     T_face = pf.linearMean(T_val)
     T_num = T_face.xvalue
     T_an = T_analytic(x, t_sim)
@@ -77,7 +77,7 @@ def conv_numerical_1d() -> float:
     BC.right.a[:] = 0 
     BC.right.b[:] = 1 
     BC.right.c[:] = 1 # right boundary
-    x = meshstruct.cellcenters.x
+    x = meshstruct.cellcenters._x
     ## define the transfer coeffs
     D_val = -1
     D = pf.CellVariable(meshstruct, D_val)

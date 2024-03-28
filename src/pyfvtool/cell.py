@@ -321,9 +321,9 @@ class CellVariable:
         #    the last inner cell values.
         #
         if isinstance(self.domain, Grid1D):
-            x = np.hstack([self.domain.facecenters.x[0],
-                           self.domain.cellcenters.x,
-                           self.domain.facecenters.x[-1]])
+            x = np.hstack([self.domain.facecenters._x[0],
+                           self.domain.cellcenters._x,
+                           self.domain.facecenters._x[-1]])
             phi0 = np.hstack([0.5*(self.value[0]+self.value[1]),
                               self.value[1:-1],
                               0.5*(self.value[-2]+self.value[-1])])
@@ -333,9 +333,9 @@ class CellVariable:
             # weight factor of 0.5.
             return (x, phi0)
         elif isinstance(self.domain, Grid2D):
-            x = np.hstack([self.domain.facecenters.x[0],
-                           self.domain.cellcenters.x,
-                           self.domain.facecenters.x[-1]])
+            x = np.hstack([self.domain.facecenters._x[0],
+                           self.domain.cellcenters._x,
+                           self.domain.facecenters._x[-1]])
             y = np.hstack([self.domain.facecenters._y[0],
                            self.domain.cellcenters._y,
                            self.domain.facecenters._y[-1]])
@@ -350,9 +350,9 @@ class CellVariable:
             phi0[-1, -1] = phi0[-1, -2]
             return (x, y, phi0)
         elif isinstance(self.domain, Grid3D):
-            x = np.hstack([self.domain.facecenters.x[0],
-                           self.domain.cellcenters.x,
-                           self.domain.facecenters.x[-1]])[:, np.newaxis, np.newaxis]
+            x = np.hstack([self.domain.facecenters._x[0],
+                           self.domain.cellcenters._x,
+                           self.domain.facecenters._x[-1]])[:, np.newaxis, np.newaxis]
             y = np.hstack([self.domain.facecenters._y[0],
                            self.domain.cellcenters._y,
                            self.domain.facecenters._y[-1]])[np.newaxis, :, np.newaxis]
@@ -469,17 +469,17 @@ def cellLocations(m: MeshStructure):
     
     if (type(m) is Grid1D)\
      or (type(m) is CylindricalGrid1D):
-        X = CellVariable(m, m.cellcenters.x)
+        X = CellVariable(m, m.cellcenters._x)
         return X
     elif (type(m) is Grid2D)\
        or (type(m) is CylindricalGrid2D)\
        or (type(m) is PolarGrid2D): 
-        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1])))
+        X = CellVariable(m, np.tile(m.cellcenters._x[:, np.newaxis], (1, N[1])))
         Y = CellVariable(m, np.tile(m.cellcenters._y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
     elif (type(m) is Grid3D)\
        or (type(m) is CylindricalGrid3D): 
-        X = CellVariable(m, np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
+        X = CellVariable(m, np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
         Y = CellVariable(m, np.tile((m.cellcenters._y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters._z

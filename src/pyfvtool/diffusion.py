@@ -14,7 +14,7 @@ def diffusionTerm1D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx = D.domain.dims[0]
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     dx = 0.5*(DX[0:-1]+DX[1:])
 
     # extract the velocity data
@@ -45,10 +45,10 @@ def diffusionTermCylindrical1D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx = D.domain.dims[0]
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     dx = 0.5*(DX[0:-1]+DX[1:])
-    rp = D.domain.cellcenters.x
-    rf = D.domain.facecenters.x
+    rp = D.domain.cellcenters._x
+    rf = D.domain.facecenters._x
 
     # extract the velocity data
     # note: size(Dx) = [1:m+1, 1:n] and size(Dy) = [1:m, 1:n+1]
@@ -79,7 +79,7 @@ def diffusionTerm2D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
@@ -126,12 +126,12 @@ def diffusionTermCylindrical2D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
-    rp = D.domain.cellcenters.x
-    rf = D.domain.facecenters.x[:, np.newaxis]
+    rp = D.domain.cellcenters._x
+    rf = D.domain.facecenters._x[:, np.newaxis]
     mn = Nx*Ny
 
     # reassign the east, west for code readability (use broadcasting in Julia)
@@ -176,12 +176,12 @@ def diffusionTermPolar2D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     DY = D.domain.cellsize._y
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
-    rp = D.domain.cellcenters.x[:, np.newaxis]
-    rf = D.domain.facecenters.x[:, np.newaxis]
+    rp = D.domain.cellcenters._x[:, np.newaxis]
+    rf = D.domain.facecenters._x[:, np.newaxis]
     mn = Nx*Ny
 
     # reassign the east, west for code readability (use broadcasting in Julia)
@@ -229,7 +229,7 @@ def diffusionTerm3D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     DY = D.domain.cellsize._y
     DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
@@ -292,14 +292,14 @@ def diffusionTermCylindrical3D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize.x
+    DX = D.domain.cellsize._x
     DY = D.domain.cellsize._y
     DZ = D.domain.cellsize._z
     dx = 0.5*(DX[0:-1]+DX[1:])
     dy = 0.5*(DY[0:-1]+DY[1:])
     dz = 0.5*(DZ[0:-1]+DZ[1:])
-    rp = D.domain.cellcenters.x[:, np.newaxis, np.newaxis]
-    rf = D.domain.facecenters.x[:, np.newaxis, np.newaxis]
+    rp = D.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = D.domain.facecenters._x[:, np.newaxis, np.newaxis]
 
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny*Nz

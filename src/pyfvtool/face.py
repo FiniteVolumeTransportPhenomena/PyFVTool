@@ -517,7 +517,7 @@ def faceLocations(m: MeshStructure):
     if (type(m) is Grid1D)\
      or (type(m) is CylindricalGrid1D):
         X = FaceVariable(m, 0)
-        X._xvalue = m.facecenters.x
+        X._xvalue = m.facecenters._x
         return X
         
     elif (type(m) is Grid2D)\
@@ -525,9 +525,9 @@ def faceLocations(m: MeshStructure):
        or (type(m) is PolarGrid2D):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
-        X._xvalue = np.tile(m.facecenters.x[:, np.newaxis], (1, N[1]))
+        X._xvalue = np.tile(m.facecenters._x[:, np.newaxis], (1, N[1]))
         X._yvalue = np.tile(m.cellcenters._y[:, np.newaxis].T, (N[0]+1, 1))
-        Y._xvalue = np.tile(m.cellcenters.x[:, np.newaxis], (1, N[1]+1))
+        Y._xvalue = np.tile(m.cellcenters._x[:, np.newaxis], (1, N[1]+1))
         Y._yvalue = np.tile(m.facecenters._y[:, np.newaxis].T, (N[0], 1))
         return X, Y
         
@@ -539,17 +539,17 @@ def faceLocations(m: MeshStructure):
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters._z
         
-        X._xvalue = np.tile(m.facecenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2]))
+        X._xvalue = np.tile(m.facecenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2]))
         X._yvalue = np.tile((m.cellcenters._y[:, np.newaxis].T)[:, :, np.newaxis], (N[0]+1, 1, N[2]))
         X._zvalue = np.tile(z, (N[0]+1, N[1], 1))
         
-        Y._xvalue = np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1]+1, N[2]))
+        Y._xvalue = np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1]+1, N[2]))
         Y._yvalue = np.tile((m.facecenters._y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]))
         Y._zvalue = np.tile(z, (N[0], N[1]+1, 1))
 
         z = np.zeros((1,1,N[2]+1))
         z[0, 0, :] = m.cellcenters._z
-        Z._xvalue = np.tile(m.cellcenters.x[:, np.newaxis, np.newaxis], (1, N[1], N[2]+1))
+        Z._xvalue = np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2]+1))
         Z._yvalue = np.tile((m.facecenters._y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]+1))
         Z._zvalue = np.tile(z, (N[0], N[1], 1))
         return X, Y, Z
