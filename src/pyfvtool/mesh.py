@@ -24,14 +24,10 @@ class CellProp:
         for item in temp:
             result += f"{item}: {temp[item]}\n"
         return result
-
-    def __repr__(self):
-        temp = vars(self)
-        result = ""
-        for item in temp:
-            result += f"{item}: {temp[item]}\n"
-        return result
     
+    def __repr__(self):
+        return str(self)
+
     @property
     def x(self):
         if 'x' in self.coordlabels:
@@ -97,13 +93,6 @@ class MeshStructure:
         self.edges = edges
 
     def __str__(self):
-        temp = vars(self)
-        result = ""
-        for item in temp:
-            result += f"{item}: {temp[item]}\n"
-        return result
-
-    def __repr__(self):
         temp = vars(self)
         result = ""
         for item in temp:
