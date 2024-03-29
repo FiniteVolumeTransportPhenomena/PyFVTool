@@ -27,6 +27,11 @@ class CellProp:
     
     def __repr__(self):
         return str(self)
+    
+    
+    # The following coordinate-labeling properties should probably be read-only.
+    # For this reason, the 'setters' have been commented out, but are kept for
+    # future reference.
 
     @property
     def x(self):
@@ -38,15 +43,15 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
             
-    @x.setter
-    def x(self, value):
-        if 'x' in self.coordlabels:
-            if self.coordlabels['x']=='_x':
-                self._x = value
-            else:
-                raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'x'.")
+    # @x.setter
+    # def x(self, value):
+    #     if 'x' in self.coordlabels:
+    #         if self.coordlabels['x']=='_x':
+    #             self._x = value
+    #         else:
+    #             raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")
+    #     else:
+    #         raise AttributeError("This mesh has no coordinate labeled 'x'.")
 
     @property
     def r(self):
@@ -58,15 +63,15 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'r'.")
             
-    @r.setter
-    def r(self, value):
-        if 'r' in self.coordlabels:
-            if self.coordlabels['r']=='_x':
-                self._x = value
-            else:
-                raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'r'.")
+    # @r.setter
+    # def r(self, value):
+    #     if 'r' in self.coordlabels:
+    #         if self.coordlabels['r']=='_x':
+    #             self._x = value
+    #         else:
+    #             raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
+    #     else:
+    #         raise AttributeError("This mesh has no coordinate labeled 'r'.")
     
     @property
     def z(self):
@@ -80,17 +85,17 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'z'.")
             
-    @z.setter
-    def z(self, value):
-        if 'z' in self.coordlabels:
-            if self.coordlabels['z']=='_y':
-                self._y = value
-            if self.coordlabels['z']=='_z':
-                self._z = value
-            else:
-                raise AttributeError(f"Unexpected label correspondence: 'z' -> '{self.coordlabels['z']}'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'z'.")
+    # @z.setter
+    # def z(self, value):
+    #     if 'z' in self.coordlabels:
+    #         if self.coordlabels['z']=='_y':
+    #             self._y = value
+    #         if self.coordlabels['z']=='_z':
+    #             self._z = value
+    #         else:
+    #             raise AttributeError(f"Unexpected label correspondence: 'z' -> '{self.coordlabels['z']}'")
+    #     else:
+    #         raise AttributeError("This mesh has no coordinate labeled 'z'.")
 
     @property
     def y(self):
@@ -102,15 +107,15 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'y'.")
             
-    @y.setter
-    def y(self, value):
-        if 'y' in self.coordlabels:
-            if self.coordlabels['y']=='_y':
-                self._y = value
-            else:
-                raise AttributeError(f"Unexpected label correspondence: 'y' -> '{self.coordlabels['y']}'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'y'.")
+    # @y.setter
+    # def y(self, value):
+    #     if 'y' in self.coordlabels:
+    #         if self.coordlabels['y']=='_y':
+    #             self._y = value
+    #         else:
+    #             raise AttributeError(f"Unexpected label correspondence: 'y' -> '{self.coordlabels['y']}'")
+    #     else:
+    #         raise AttributeError("This mesh has no coordinate labeled 'y'.")
 
     @property
     def theta(self):
@@ -122,15 +127,15 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'theta'.")
             
-    @theta.setter
-    def theta(self, value):
-        if 'theta' in self.coordlabels:
-            if self.coordlabels['theta']=='_y':
-                self._y = value
-            else:
-                raise AttributeError(f"Unexpected label correspondence: 'theta' -> '{self.coordlabels['y']}'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'theta'.")
+    # @theta.setter
+    # def theta(self, value):
+    #     if 'theta' in self.coordlabels:
+    #         if self.coordlabels['theta']=='_y':
+    #             self._y = value
+    #         else:
+    #             raise AttributeError(f"Unexpected label correspondence: 'theta' -> '{self.coordlabels['y']}'")
+    #     else:
+    #         raise AttributeError("This mesh has no coordinate labeled 'theta'.")
 
     @property
     def phi(self):
@@ -142,15 +147,15 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'phi'.")
             
-    @phi.setter
-    def phi(self, value):
-        if 'phi' in self.coordlabels:
-            if self.coordlabels['phi']=='_z':
-                self._z = value
-            else:
-                raise AttributeError(f"Unexpected label correspondence: 'phi' -> '{self.coordlabels['y']}'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'phi'.")
+    # @phi.setter
+    # def phi(self, value):
+    #     if 'phi' in self.coordlabels:
+    #         if self.coordlabels['phi']=='_z':
+    #             self._z = value
+    #         else:
+    #             raise AttributeError(f"Unexpected label correspondence: 'phi' -> '{self.coordlabels['y']}'")
+    #     else:
+    #         raise AttributeError("This mesh has no coordinate labeled 'phi'.")
 
 
 
