@@ -92,6 +92,28 @@ class CellProp:
         else:
             raise AttributeError("This mesh has no coordinate labeled 'z'.")
 
+    @property
+    def y(self):
+        if 'y' in self.coordlabels:
+            if self.coordlabels['y']=='_y':
+                return self._y
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'y' -> '{self.coordlabels['y']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'y'.")
+            
+    @y.setter
+    def y(self, value):
+        if 'y' in self.coordlabels:
+            if self.coordlabels['z']=='_y':
+                self._y = value
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'y' -> '{self.coordlabels['y']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'y'.")
+
+
+
 
 class CellSize(CellProp):
     pass

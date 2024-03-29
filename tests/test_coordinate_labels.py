@@ -111,8 +111,52 @@ try:
     yy = msh.facecenters.y
 except AttributeError:
     errors_caught+=1
-    
-    
+
+
+
+msh = Grid2D(10, 10, 1., 1.)
+xx = msh.cellcenters.x
+yy = msh.cellcenters.y
+assert np.all(xx == msh.cellcenters._x)
+assert np.all(yy == msh.cellcenters._y)
+errors_expected+=1
+try:
+    rr = msh.cellcenters.r
+except AttributeError:
+    errors_caught+=1
+xx = msh.cellsize.x
+yy = msh.cellsize.y
+assert np.all(xx == msh.cellsize._x)
+assert np.all(yy == msh.cellsize._y)
+errors_expected+=1
+try:
+    rr = msh.cellsize.r
+except AttributeError:
+    errors_caught+=1
+xx = msh.facecenters.x
+yy = msh.facecenters.y
+assert np.all(xx == msh.facecenters._x)
+assert np.all(yy == msh.facecenters._y)
+errors_expected+=1
+try:
+    rr = msh.facecenters.r
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    zz = msh.cellcenters.z
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    zz = msh.cellsize.z
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    zz = msh.facecenters.z
+except AttributeError:
+    errors_caught+=1
     
 
 
@@ -144,10 +188,6 @@ try:
     rr = msh.facecenters.r
 except AttributeError:
     errors_caught+=1
-
-
-
-
 
 
 
@@ -196,10 +236,7 @@ except AttributeError:
     errors_caught+=1
     
 
-
-
-
-    
+   
 print('Coordinate label errors expected: ', errors_expected,
       '  caught: ', errors_caught)
 
