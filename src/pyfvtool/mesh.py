@@ -9,7 +9,8 @@ from .utilities import int_range
 #%%
 #   General data structures for describing meshes
 
-class CellSize:
+
+class CellProp:
     def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray,
                  coordlabels: dict):
         self._x = _x
@@ -72,130 +73,16 @@ class CellSize:
             raise AttributeError("This mesh has no coordinate labeled 'r'.")
 
 
-class CellLocation:
-    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray,
-                 coordlabels: dict):
-        self._x = _x
-        self._y = _y
-        self._z = _z
-        self.coordlabels = coordlabels
-
-    def __str__(self):
-        temp = vars(self)
-        result = ""
-        for item in temp:
-            result += f"{item}: {temp[item]}\n"
-        return result
-
-    def __repr__(self):
-        temp = vars(self)
-        result = ""
-        for item in temp:
-            result += f"{item}: {temp[item]}\n"
-        return result
-    
-    @property
-    def x(self):
-        if 'x' in self.coordlabels:
-            if self.coordlabels['x']=='_x':
-                return self._x
-            else:
-                raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'x'.")
-            
-    @x.setter
-    def x(self, value):
-        if 'x' in self.coordlabels:
-            if self.coordlabels['x']=='_x':
-                self._x = value
-            else:
-                raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'x'.")
-
-    @property
-    def r(self):
-        if 'r' in self.coordlabels:
-            if self.coordlabels['r']=='_x':
-                return self._x
-            else:
-                raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'r'.")
-            
-    @r.setter
-    def r(self, value):
-        if 'r' in self.coordlabels:
-            if self.coordlabels['r']=='_x':
-                self._x = value
-            else:
-                raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'r'.")
+class CellSize(CellProp):
+    pass
 
 
-class FaceLocation:
-    def __init__(self, _x: np.ndarray, _y: np.ndarray, _z: np.ndarray,
-                 coordlabels: dict):
-        self._x = _x
-        self._y = _y
-        self._z = _z
-        self.coordlabels = coordlabels
+class CellLocation(CellProp):
+    pass
 
-    def __str__(self):
-        temp = vars(self)
-        result = ""
-        for item in temp:
-            result += f"{item}: {temp[item]}\n"
-        return result
 
-    def __repr__(self):
-        temp = vars(self)
-        result = ""
-        for item in temp:
-            result += f"{item}: {temp[item]}\n"
-        return result
-
-    @property
-    def x(self):
-        if 'x' in self.coordlabels:
-            if self.coordlabels['x']=='_x':
-                return self._x
-            else:
-                raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'x'.")
-            
-    @x.setter
-    def x(self, value):
-        if 'x' in self.coordlabels:
-            if self.coordlabels['x']=='_x':
-                self._x = value
-            else:
-                raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'x'.")
-
-    @property
-    def r(self):
-        if 'r' in self.coordlabels:
-            if self.coordlabels['r']=='_x':
-                return self._x
-            else:
-                raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'r'.")
-            
-    @r.setter
-    def r(self, value):
-        if 'r' in self.coordlabels:
-            if self.coordlabels['r']=='_x':
-                self._x = value
-            else:
-                raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
-        else:
-            raise AttributeError("This mesh has no coordinate labeled 'r'.")
+class FaceLocation(CellProp):
+    pass
 
 
 
