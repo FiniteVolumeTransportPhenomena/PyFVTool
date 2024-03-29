@@ -35,7 +35,7 @@ class CellSize:
     def x(self):
         if 'x' in self.coordlabels:
             assert self.coordlabels['x']=='_x',\
-                "User 'x' does not correspond to '_x'"
+                "User label 'x' does not correspond to '_x'"
             return self._x
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
@@ -44,11 +44,28 @@ class CellSize:
     def x(self, value):
         if 'x' in self.coordlabels:
             assert self.coordlabels['x']=='_x',\
-                "User 'x' does not correspond to '_x'"
+                "User label 'x' does not correspond to '_x'"
             self._x = value
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
     
+    @property
+    def r(self):
+        if 'r' in self.coordlabels:
+            assert self.coordlabels['r']=='_x',\
+                "User label 'r' does not correspond to '_x'"
+            return self._x
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'r'.")
+            
+    @r.setter
+    def r(self, value):
+        if 'r' in self.coordlabels:
+            assert self.coordlabels['r']=='_x',\
+                "User label 'r' does not correspond to '_x'"
+            self._x = value
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'r'.")    
 
 
 class CellLocation:
@@ -77,7 +94,7 @@ class CellLocation:
     def x(self):
         if 'x' in self.coordlabels:
             assert self.coordlabels['x']=='_x',\
-                "User 'x' does not correspond to '_x'"
+                "User label 'x' does not correspond to '_x'"
             return self._x
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
@@ -86,11 +103,28 @@ class CellLocation:
     def x(self, value):
         if 'x' in self.coordlabels:
             assert self.coordlabels['x']=='_x',\
-                "User 'x' does not correspond to '_x'"
+                "User label 'x' does not correspond to '_x'"
             self._x = value
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
-
+    
+    @property
+    def r(self):
+        if 'r' in self.coordlabels:
+            assert self.coordlabels['r']=='_x',\
+                "User label 'r' does not correspond to '_x'"
+            return self._x
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'r'.")
+            
+    @r.setter
+    def r(self, value):
+        if 'r' in self.coordlabels:
+            assert self.coordlabels['r']=='_x',\
+                "User label 'r' does not correspond to '_x'"
+            self._x = value
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'r'.")  
 
 
 class FaceLocation:
@@ -119,7 +153,7 @@ class FaceLocation:
     def x(self):
         if 'x' in self.coordlabels:
             assert self.coordlabels['x']=='_x',\
-                "User 'x' does not correspond to '_x'"
+                "User label 'x' does not correspond to '_x'"
             return self._x
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
@@ -128,11 +162,28 @@ class FaceLocation:
     def x(self, value):
         if 'x' in self.coordlabels:
             assert self.coordlabels['x']=='_x',\
-                "User 'x' does not correspond to '_x'"
+                "User label 'x' does not correspond to '_x'"
             self._x = value
         else:
             raise AttributeError("This mesh has no coordinate labeled 'x'.")
-
+    
+    @property
+    def r(self):
+        if 'r' in self.coordlabels:
+            assert self.coordlabels['r']=='_x',\
+                "User label 'r' does not correspond to '_x'"
+            return self._x
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'r'.")
+            
+    @r.setter
+    def r(self, value):
+        if 'r' in self.coordlabels:
+            assert self.coordlabels['r']=='_x',\
+                "User label 'r' does not correspond to '_x'"
+            self._x = value
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'r'.")  
 
 
 class MeshStructure:
