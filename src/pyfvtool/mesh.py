@@ -67,6 +67,30 @@ class CellProp:
                 raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")
         else:
             raise AttributeError("This mesh has no coordinate labeled 'r'.")
+    
+    @property
+    def z(self):
+        if 'z' in self.coordlabels:
+            if self.coordlabels['z']=='_y':
+                return self._y
+            elif self.coordlabels['z']=='_z':
+                return self._z
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'z' -> '{self.coordlabels['z']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'z'.")
+            
+    @z.setter
+    def z(self, value):
+        if 'z' in self.coordlabels:
+            if self.coordlabels['z']=='_y':
+                self._y = value
+            if self.coordlabels['z']=='_z':
+                self._z = value
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'z' -> '{self.coordlabels['z']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'z'.")
 
 
 class CellSize(CellProp):
@@ -843,25 +867,25 @@ class Grid3D(MeshStructure):
 
 class CylindricalGrid3D(Grid3D):
     """Mesh based on a 3D cylindrical grid (r, theta, z)
+    =================================================
         
     This class can be instantiated in different ways: from a list of cell face
-    locations or from the number of cells and domain length. There are multiple
-    overloaded '__init__' methods available to provide flexibility in instantiation.
+    locations or from the number of cells and domain length.
     
     
     Instantiation Options:
     ----------------------
-    - CylindricalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lz)
+    - CylindricalGrid3D(Nr, Ntheta, Nz, Lr, Ltheta, Lz)
     - CylindricalGrid3D(face_locationsR, face_locationsTheta, face_locationsZ)
         
     Parameters
     ----------
-    CylindricalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lz)
+    CylindricalGrid3D(Nr, Ntheta, Nz, Lr, Ltheta, Lz)
         Nr : int
             Number of cells in the r direction.
         Ntheta : int
             Number of cells in the theta direction.
-        Nphi : int
+        Nz : int
             Number of cells in the z direction.
         Lr : float
             Length of the domain in the r direction.
