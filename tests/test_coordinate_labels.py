@@ -160,10 +160,60 @@ except AttributeError:
     
 
 
+
+msh = PolarGrid2D(10, 10, 1., 1.)
+rr = msh.cellcenters.r
+theta = msh.cellcenters.theta
+assert np.all(rr == msh.cellcenters._x)
+assert np.all(theta == msh.cellcenters._y)
+errors_expected+=1
+try:
+    xx = msh.cellcenters.x
+except AttributeError:
+    errors_caught+=1
+rr = msh.cellsize.r
+theta = msh.cellsize.theta
+assert np.all(rr == msh.cellsize._x)
+assert np.all(theta == msh.cellsize._y)
+errors_expected+=1
+try:
+    xx = msh.cellsize.x
+except AttributeError:
+    errors_caught+=1
+rr = msh.facecenters.r
+theta = msh.facecenters.theta
+assert np.all(rr == msh.facecenters._x)
+assert np.all(theta == msh.facecenters._y)
+errors_expected+=1
+try:
+    xx = msh.facecenters.x
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    yy = msh.cellcenters.y
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    yy = msh.cellsize.y
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    yy = msh.facecenters.y
+except AttributeError:
+    errors_caught+=1
+
+
+
+
 msh = Grid3D(10, 10, 10, 1., 1., 1.)
 xx = msh.cellcenters.x
+yy = msh.cellcenters.y
 zz = msh.cellcenters.z
 assert np.all(xx == msh.cellcenters._x)
+assert np.all(yy == msh.cellcenters._y)
 assert np.all(zz == msh.cellcenters._z)
 errors_expected+=1
 try:
@@ -171,8 +221,10 @@ try:
 except AttributeError:
     errors_caught+=1
 xx = msh.cellsize.x
+yy = msh.cellsize.y
 zz = msh.cellsize.z
 assert np.all(xx == msh.cellsize._x)
+assert np.all(yy == msh.cellsize._y)
 assert np.all(zz == msh.cellsize._z)
 errors_expected+=1
 try:
@@ -180,8 +232,10 @@ try:
 except AttributeError:
     errors_caught+=1
 xx = msh.facecenters.x
+yy = msh.facecenters.y
 zz = msh.facecenters.z
 assert np.all(xx == msh.facecenters._x)
+assert np.all(yy == msh.facecenters._y)
 assert np.all(zz == msh.facecenters._z)
 errors_expected+=1
 try:

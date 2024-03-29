@@ -18,6 +18,24 @@ Below, the correspondence between the (conventional) user coordinate labels and 
 
 
 
+|                   |`_x`|`_y`   |`_z` |
+|-------------------|---------|------------|----------|
+|`Grid1D`           |`x` |            |          |
+|`CylindricalGrid1D`|`r` |            |          |
+|`SphericalGrid1D`  |`r` |            |          |
+|`Grid2D`           |`x` |`y`    |          |
+|`CylindricalGrid2D`|`r` |`z`    |          |
+|`PolarGrid2D`      |`r` |`theta`|          |
+|`Grid3D`           |`x` |`y`    |`z`  |
+|`CylindricalGrid3D`|`r` |`theta`|`z`  |
+|`SphericalGrid3D`  |`r` |`theta`|`phi`|
+
+`SphericalGrid1D` has not yet been implemented.
+
+
+
+
+
 ### FaceVariable
 
 `FaceVariable` objects handle vectorial quantities, defined with respect to the specific mesh coordinate system. Each of the components of the vector is in a separate variable (property) of the object, referred to as xvalue, rvalue and so on. The relation between the conventional user labels of the vector components of the vector and the internal variable names is listed in the table.

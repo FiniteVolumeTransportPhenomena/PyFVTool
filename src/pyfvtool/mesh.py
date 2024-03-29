@@ -105,13 +105,32 @@ class CellProp:
     @y.setter
     def y(self, value):
         if 'y' in self.coordlabels:
-            if self.coordlabels['z']=='_y':
+            if self.coordlabels['y']=='_y':
                 self._y = value
             else:
                 raise AttributeError(f"Unexpected label correspondence: 'y' -> '{self.coordlabels['y']}'")
         else:
             raise AttributeError("This mesh has no coordinate labeled 'y'.")
 
+    @property
+    def theta(self):
+        if 'theta' in self.coordlabels:
+            if self.coordlabels['theta']=='_y':
+                return self._y
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'theta' -> '{self.coordlabels['y']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'theta'.")
+            
+    @theta.setter
+    def theta(self, value):
+        if 'y' in self.coordlabels:
+            if self.coordlabels['theta']=='_y':
+                self._y = value
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'theta' -> '{self.coordlabels['y']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'theta'.")
 
 
 
