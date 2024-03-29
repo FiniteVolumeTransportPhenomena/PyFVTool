@@ -187,6 +187,7 @@ class MeshStructure:
 
 class Grid1D(MeshStructure):
     """Mesh based on a 1D Cartesian grid (x)
+    =====================================
     
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length.
@@ -296,6 +297,7 @@ class Grid1D(MeshStructure):
 
 class CylindricalGrid1D(Grid1D):
     """Mesh based on a 1D cylindrical grid (r)
+    =======================================
     
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length.
@@ -357,6 +359,7 @@ class CylindricalGrid1D(Grid1D):
 
 class SphericalGrid1D(Grid1D):
     """Mesh based on a 1D spherical grid (r)
+    =====================================
     
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length.
@@ -420,6 +423,7 @@ class SphericalGrid1D(Grid1D):
 
 class Grid2D(MeshStructure):
     """Mesh based on a 2D Cartesian grid (x, y)
+    ========================================
     
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length.
@@ -551,6 +555,7 @@ class Grid2D(MeshStructure):
 
 class CylindricalGrid2D(Grid2D):
     """Mesh based on a 2D cylindrical grid (r, z)
+    ==========================================
     
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length.
@@ -626,7 +631,8 @@ class CylindricalGrid2D(Grid2D):
 
 
 class PolarGrid2D(Grid2D):
-    """Mesh based on a 2D polar grid (r, theta).
+    """Mesh based on a 2D polar grid (r, theta)
+    ========================================
     
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length.
@@ -705,6 +711,7 @@ class PolarGrid2D(Grid2D):
 
 class Grid3D(MeshStructure):
     """Mesh based on a 3D Cartesian grid (x, y, z)
+    ===========================================
         
     This class can be instantiated in different ways: from a list of cell face
     locations or from the number of cells and domain length. There are multiple
@@ -970,6 +977,7 @@ class CylindricalGrid3D(Grid3D):
 
 class SphericalGrid3D(Grid3D):
     """Mesh based on a 3D spherical grid (r, theta, phi)
+    =================================================
     
     Create a SphericalGrid3D object from a list of cell face locations or from
     the number of cells and domain length.
