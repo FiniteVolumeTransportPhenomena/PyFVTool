@@ -247,8 +247,10 @@ except AttributeError:
 
 msh = CylindricalGrid3D(10, 10, 10, 1., 2*np.pi, 1.)
 rr = msh.cellcenters.r
+theta = msh.cellcenters.theta
 zz = msh.cellcenters.z
 assert np.all(rr == msh.cellcenters._x)
+assert np.all(theta == msh.cellcenters._y)
 assert np.all(zz == msh.cellcenters._z)
 errors_expected+=1
 try:
@@ -289,6 +291,65 @@ try:
 except AttributeError:
     errors_caught+=1
     
+
+
+
+
+msh = SphericalGrid3D(10, 15, 20, 1., 2*np.pi, 2*np.pi)
+rr = msh.cellcenters.r
+theta = msh.cellcenters.theta
+phi = msh.cellcenters.phi
+assert np.all(rr == msh.cellcenters._x)
+assert np.all(theta == msh.cellcenters._y)
+assert np.all(phi == msh.cellcenters._z)
+errors_expected+=1
+try:
+    xx = msh.cellcenters.x
+except AttributeError:
+    errors_caught+=1
+rr = msh.cellsize.r
+theta = msh.cellsize.theta
+phi = msh.cellsize.phi
+assert np.all(rr == msh.cellsize._x)
+assert np.all(theta == msh.cellsize._y)
+assert np.all(phi == msh.cellsize._z)
+errors_expected+=1
+try:
+    xx = msh.cellsize.x
+except AttributeError:
+    errors_caught+=1
+rr = msh.facecenters.r
+theta = msh.facecenters.theta
+phi = msh.facecenters.phi
+assert np.all(rr == msh.facecenters._x)
+assert np.all(theta == msh.facecenters._y)
+assert np.all(phi == msh.facecenters._z)
+errors_expected+=1
+try:
+    xx = msh.facecenters.x
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    yy = msh.cellcenters.y
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    yy = msh.cellsize.y
+except AttributeError:
+    errors_caught+=1
+errors_expected+=1
+try:
+    yy = msh.facecenters.z
+except AttributeError:
+    errors_caught+=1
+    
+
+
+
+
+
 
    
 print('Coordinate label errors expected: ', errors_expected,

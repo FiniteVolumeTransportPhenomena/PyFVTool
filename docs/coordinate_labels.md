@@ -16,16 +16,21 @@ Below, the correspondence between the (conventional) user coordinate labels and 
 
 ### Cell and mesh properties
 
+All mesh objects (subclasses of `MeshStructure`) have composite properties `cellsize`, `cellcenters` and `facecenters` which are defined along each of the coordinates defined by the specific grid of the mesh.
+
+For instance, the mesh `Grid2D` has `Grid2D.cellsize.x`, `Grid2D.cellsize.y` ,  `Grid2D.cellcenters.x` and so on. These are the coordinates labeled according to the 'user' convention. The correspond, in this case, to internal variables `._x` and `._y` .
+
+The correspondence between conventional user coordinate labels and the internal variable names is as given in the table.
 
 
 |                   |`_x`|`_y`   |`_z` |
-|-------------------|---------|------------|----------|
-|`Grid1D`           |`x` |            |          |
-|`CylindricalGrid1D`|`r` |            |          |
-|`SphericalGrid1D`  |`r` |            |          |
-|`Grid2D`           |`x` |`y`    |          |
-|`CylindricalGrid2D`|`r` |`z`    |          |
-|`PolarGrid2D`      |`r` |`theta`|          |
+|-------------------|----|-------|-----|
+|`Grid1D`           |`x` |       |     |
+|`CylindricalGrid1D`|`r` |       |     |
+|`SphericalGrid1D`  |`r` |       |     |
+|`Grid2D`           |`x` |`y`    |     |
+|`CylindricalGrid2D`|`r` |`z`    |     |
+|`PolarGrid2D`      |`r` |`theta`|     |
 |`Grid3D`           |`x` |`y`    |`z`  |
 |`CylindricalGrid3D`|`r` |`theta`|`z`  |
 |`SphericalGrid3D`  |`r` |`theta`|`phi`|

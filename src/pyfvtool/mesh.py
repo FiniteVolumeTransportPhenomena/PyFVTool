@@ -124,13 +124,34 @@ class CellProp:
             
     @theta.setter
     def theta(self, value):
-        if 'y' in self.coordlabels:
+        if 'theta' in self.coordlabels:
             if self.coordlabels['theta']=='_y':
                 self._y = value
             else:
                 raise AttributeError(f"Unexpected label correspondence: 'theta' -> '{self.coordlabels['y']}'")
         else:
             raise AttributeError("This mesh has no coordinate labeled 'theta'.")
+
+    @property
+    def phi(self):
+        if 'phi' in self.coordlabels:
+            if self.coordlabels['phi']=='_z':
+                return self._z
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'phi' -> '{self.coordlabels['y']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'phi'.")
+            
+    @phi.setter
+    def phi(self, value):
+        if 'phi' in self.coordlabels:
+            if self.coordlabels['phi']=='_z':
+                self._z = value
+            else:
+                raise AttributeError(f"Unexpected label correspondence: 'phi' -> '{self.coordlabels['y']}'")
+        else:
+            raise AttributeError("This mesh has no coordinate labeled 'phi'.")
+
 
 
 
