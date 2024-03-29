@@ -18,7 +18,7 @@ Below, the correspondence between the (conventional) user coordinate labels and 
 
 All mesh objects (subclasses of `MeshStructure`) have composite properties `cellsize`, `cellcenters` and `facecenters` which are defined along each of the coordinates defined by the specific grid of the mesh.
 
-For instance, the mesh `Grid2D` has `Grid2D.cellsize.x`, `Grid2D.cellsize.y` ,  `Grid2D.cellcenters.x` and so on. These are the coordinates labeled according to the 'user' convention. The correspond, in this case, to internal variables `._x` and `._y` .
+For instance, the mesh `Grid2D` has `Grid2D.cellsize.x`, `Grid2D.cellsize.y` ,  `Grid2D.cellcenters.x` and so on. These are the coordinates labeled according to the 'user' convention. They correspond, in this case, to internal variables `._x` and `._y` .
 
 The correspondence between conventional user coordinate labels and the internal variable names is as given in the table.
 
