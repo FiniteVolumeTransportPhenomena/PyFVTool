@@ -178,8 +178,8 @@ def cellValuesWithBoundaries1D(phi, BC):
     
     # extract data from the mesh structure
     # Nx = MeshStructure.numberofcells
-    dx_1 = BC.domain.cellsize.x[1]
-    dx_end = BC.domain.cellsize.x[-1]
+    dx_1 = BC.domain.cellsize._x[1]
+    dx_end = BC.domain.cellsize._x[-1]
 
     # boundary condition (a d\\phi/dx + b \\phi = c, a column vector of [d a])
     # a (phi(i)-phi(i-1))/dx + b (phi(i)+phi(i-1))/2 = c
@@ -205,10 +205,10 @@ def cellValuesWithBoundaries2D(phi, BC):
     
     # extract data from the mesh structure
     Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
 
     # define the output matrix
     phiBC = np.zeros((Nx+2, Ny+2))
@@ -261,12 +261,12 @@ def cellValuesWithBoundaries3D(phi, BC):
     """
     
     Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
@@ -360,13 +360,13 @@ def cellValuesWithBoundariesCylindrical3D(phi, BC):
     """
     
     Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
-    rp = BC.domain.cellcenters.x[:, np.newaxis]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
+    rp = BC.domain.cellcenters._x[:, np.newaxis]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
@@ -461,11 +461,11 @@ def cellValuesWithBoundariesPolar2D(phi, BC):
     
     # extract data from the mesh structure
     Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    rp = BC.domain.cellcenters.x
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
+    rp = BC.domain.cellcenters._x
 
     # define the output matrix
     phiBC = np.zeros((Nx+2, Ny+2))
@@ -566,8 +566,8 @@ array([[1, 0, 2],
 
 def boundaryConditionsTerm1D(BC: BoundaryConditions1D):
     Nx = BC.domain.dims[0]
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
     G = int_range(1, Nx+2)-1
 
     nb = 8  # number of boundary nodes
@@ -648,10 +648,10 @@ def boundaryConditionsTerm1D(BC: BoundaryConditions1D):
 
 def boundaryConditionsTerm2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
     G = BC.domain.cell_numbers()
 
     nb = 8*(Nx+Ny+2)  # number of boundary nodes
@@ -814,12 +814,12 @@ def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
@@ -1077,11 +1077,11 @@ def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
 
 def boundaryConditionsTermPolar2D(BC: BoundaryConditions2D):
     Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    rp = BC.domain.cellcenters.x
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
+    rp = BC.domain.cellcenters._x
     G = BC.domain.cell_numbers()
 
     nb = 8*(Nx+Ny+2)  # number of boundary nodes
@@ -1244,13 +1244,13 @@ def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
-    dx_1 = BC.domain.cellsize.x[0]
-    dx_end = BC.domain.cellsize.x[-1]
-    dy_1 = BC.domain.cellsize.y[0]
-    dy_end = BC.domain.cellsize.y[-1]
-    dz_1 = BC.domain.cellsize.z[0]
-    dz_end = BC.domain.cellsize.z[-1]
-    rp = BC.domain.cellcenters.x[:, np.newaxis]
+    dx_1 = BC.domain.cellsize._x[0]
+    dx_end = BC.domain.cellsize._x[-1]
+    dy_1 = BC.domain.cellsize._y[0]
+    dy_end = BC.domain.cellsize._y[-1]
+    dz_1 = BC.domain.cellsize._z[0]
+    dz_end = BC.domain.cellsize._z[-1]
+    rp = BC.domain.cellcenters._x[:, np.newaxis]
 
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]

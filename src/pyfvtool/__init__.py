@@ -1,4 +1,4 @@
-__version__ = "0.2.1"
+__version__ = "0.3.0"
 
 __author__ = [
     "Ali A. Eftekhari",
@@ -29,11 +29,8 @@ from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
 from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE
-from .cell import CellVariable, cellVolume, BC2GhostCells 
-from .cell import copyCellVariable
+from .cell import CellVariable
 from .cell import funceval, celleval
-from .cell import domainInt, domainIntegrate
-from .cell import get_CellVariable_profile1D
 from .cell import cellLocations
 from .face import FaceVariable, faceeval
 from .face import faceLocations
@@ -54,4 +51,11 @@ if ENABLE_LEGACY:
     from .legacy import createMesh3D
     from .legacy import createMeshCylindrical3D
     from .legacy import createMeshSpherical3D
+    from .legacy import get_CellVariable_profile1D
+    from .legacy import get_CellVariable_profile2D
+    from .legacy import get_CellVariable_profile3D    
+    from .legacy import domainInt
+    from .legacy import cellVolume
+    
+    
     

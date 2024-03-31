@@ -14,34 +14,34 @@ from .face import FaceVariable
 
 def _upwind_min_max(u: FaceVariable, u_upwind: FaceVariable):
     if issubclass(type(u.domain), Grid1D):
-        ux_min = np.copy(u.xvalue)
-        ux_max = np.copy(u.xvalue)
-        ux_min[u_upwind.xvalue > 0.0] = 0.0
-        ux_max[u_upwind.xvalue < 0.0] = 0.0
+        ux_min = np.copy(u._xvalue)
+        ux_max = np.copy(u._xvalue)
+        ux_min[u_upwind._xvalue > 0.0] = 0.0
+        ux_max[u_upwind._xvalue < 0.0] = 0.0
         return ux_min, ux_max
     elif issubclass(type(u.domain), Grid2D):
-        ux_min = np.copy(u.xvalue)
-        ux_max = np.copy(u.xvalue)
-        uy_min = np.copy(u.yvalue)
-        uy_max = np.copy(u.yvalue)
-        ux_min[u_upwind.xvalue > 0.0] = 0.0
-        ux_max[u_upwind.xvalue < 0.0] = 0.0
-        uy_min[u_upwind.yvalue > 0.0] = 0.0
-        uy_max[u_upwind.yvalue < 0.0] = 0.0
+        ux_min = np.copy(u._xvalue)
+        ux_max = np.copy(u._xvalue)
+        uy_min = np.copy(u._yvalue)
+        uy_max = np.copy(u._yvalue)
+        ux_min[u_upwind._xvalue > 0.0] = 0.0
+        ux_max[u_upwind._xvalue < 0.0] = 0.0
+        uy_min[u_upwind._yvalue > 0.0] = 0.0
+        uy_max[u_upwind._yvalue < 0.0] = 0.0
         return ux_min, ux_max, uy_min, uy_max
     elif issubclass(type(u.domain), Grid3D):
-        ux_min = np.copy(u.xvalue)
-        ux_max = np.copy(u.xvalue)
-        uy_min = np.copy(u.yvalue)
-        uy_max = np.copy(u.yvalue)
-        uz_min = np.copy(u.zvalue)
-        uz_max = np.copy(u.zvalue)
-        ux_min[u_upwind.xvalue > 0.0] = 0.0
-        ux_max[u_upwind.xvalue < 0.0] = 0.0
-        uy_min[u_upwind.yvalue > 0.0] = 0.0
-        uy_max[u_upwind.yvalue < 0.0] = 0.0
-        uz_min[u_upwind.zvalue > 0.0] = 0.0
-        uz_max[u_upwind.zvalue < 0.0] = 0.0
+        ux_min = np.copy(u._xvalue)
+        ux_max = np.copy(u._xvalue)
+        uy_min = np.copy(u._yvalue)
+        uy_max = np.copy(u._yvalue)
+        uz_min = np.copy(u._zvalue)
+        uz_max = np.copy(u._zvalue)
+        ux_min[u_upwind._xvalue > 0.0] = 0.0
+        ux_max[u_upwind._xvalue < 0.0] = 0.0
+        uy_min[u_upwind._yvalue > 0.0] = 0.0
+        uy_max[u_upwind._yvalue < 0.0] = 0.0
+        uz_min[u_upwind._zvalue > 0.0] = 0.0
+        uz_max[u_upwind._zvalue < 0.0] = 0.0
         return ux_min, ux_max, uy_min, uy_max, uz_min, uz_max
 
 
@@ -58,13 +58,13 @@ def convectionTerm1D(u: FaceVariable):
     # extract data from the mesh structure
     Nx = u.domain.dims[0]
     G = u.domain.cell_numbers()
-    #DX = u.domain.cellsize.x
-    DXe = u.domain.cellsize.x[2:]
-    DXw = u.domain.cellsize.x[0:-2]
-    DXp = u.domain.cellsize.x[1:-1]
+    #DX = u.domain.cellsize._x
+    DXe = u.domain.cellsize._x[2:]
+    DXw = u.domain.cellsize._x[0:-2]
+    DXp = u.domain.cellsize._x[1:-1]
     # reassign the east, west for code readability
-    ue = u.xvalue[1:Nx+1]/(DXp+DXe)
-    uw = u.xvalue[0:Nx]/(DXp+DXw)
+    ue = u._xvalue[1:Nx+1]/(DXp+DXe)
+    uw = u._xvalue[0:Nx]/(DXp+DXw)
     # build the sparse matrix based on the numbering system
     iix = np.tile(G[1:Nx+1].ravel(), 3)
     jjx = np.hstack([G[0:Nx], G[1:Nx+1], G[2:Nx+2]])
@@ -84,7 +84,7 @@ def convectionUpwindTerm1D(u: FaceVariable, *args):
     # extract data from the mesh structure
     Nx = u.domain.dims[0]
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1]
+    DXp = u.domain.cellsize._x[1:-1]
     # find the velocity direction for the upwind scheme
     ux_min, ux_max = _upwind_min_max(u, u_upwind)
     ue_min = ux_min[1:Nx+1]
@@ -123,8 +123,8 @@ def convectionTvdRHS1D(u: FaceVariable, phi: CellVariable,
         u_upwind = u
     # extract data from the mesh structure
     Nx = u.domain.dims[0]
-    DXp = u.domain.cellsize.x[1:-1]
-    dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+    DXp = u.domain.cellsize._x[1:-1]
+    dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
     RHS = np.zeros(Nx+2)
     psi_p = np.zeros(Nx+1)
     psi_m = np.zeros(Nx+1)
@@ -158,15 +158,15 @@ def convectionTermCylindrical1D(u: FaceVariable):
     # extract data from the mesh structure
     Nx = u.domain.dims[0]
     G = u.domain.cell_numbers()
-    #DX = u.domain.cellsize.x
-    DXe = u.domain.cellsize.x[2:]
-    DXw = u.domain.cellsize.x[0:-2]
-    DXp = u.domain.cellsize.x[1:-1]
-    rp = u.domain.cellcenters.x
-    rf = u.domain.facecenters.x
+    #DX = u.domain.cellsize._x
+    DXe = u.domain.cellsize._x[2:]
+    DXw = u.domain.cellsize._x[0:-2]
+    DXp = u.domain.cellsize._x[1:-1]
+    rp = u.domain.cellcenters._x
+    rf = u.domain.facecenters._x
     # reassign the east, west for code readability
-    ue = rf[1:Nx+1]*u.xvalue[1:Nx+1]/(rp*(DXp+DXe))
-    uw = rf[0:Nx]*u.xvalue[0:Nx]/(rp*(DXp+DXw))
+    ue = rf[1:Nx+1]*u._xvalue[1:Nx+1]/(rp*(DXp+DXe))
+    uw = rf[0:Nx]*u._xvalue[0:Nx]/(rp*(DXp+DXw))
     # calculate the coefficients for the internal cells
     AE = ue
     AW = -uw
@@ -190,9 +190,9 @@ def convectionUpwindTermCylindrical1D(u: FaceVariable, *args):
     # extract data from the mesh structure
     Nx = u.domain.dims[0]
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1]
-    rp = u.domain.cellcenters.x
-    rf = u.domain.facecenters.x
+    DXp = u.domain.cellsize._x[1:-1]
+    rp = u.domain.cellcenters._x
+    rf = u.domain.facecenters._x
     # find the velocity direction for the upwind scheme
     ux_min, ux_max = _upwind_min_max(u, u_upwind)
     ue_min = ux_min[1:Nx+1]
@@ -231,10 +231,10 @@ def convectionTvdRHSCylindrical1D(u: FaceVariable, phi: CellVariable,
         u_upwind = u
     # extract data from the mesh structure
     Nx = u.domain.dims[0]
-    DXp = u.domain.cellsize.x[1:-1]
-    r = u.domain.cellcenters.x
-    rf = u.domain.facecenters.x
-    dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])
+    DXp = u.domain.cellsize._x[1:-1]
+    r = u.domain.cellcenters._x
+    rf = u.domain.facecenters._x
+    dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
     RHS = np.zeros(Nx+2)
     psi_p = np.zeros(Nx+1)
     psi_m = np.zeros(Nx+1)
@@ -268,19 +268,19 @@ def convectionTerm2D(u: FaceVariable):
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXe = u.domain.cellsize.x[2:][:, np.newaxis]
-    DXw = u.domain.cellsize.x[0:-2][:, np.newaxis]
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYn = u.domain.cellsize.y[2:]
-    DYs = u.domain.cellsize.y[0:-2]
-    DYp = u.domain.cellsize.y[1:-1]
+    DXe = u.domain.cellsize._x[2:][:, np.newaxis]
+    DXw = u.domain.cellsize._x[0:-2][:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYn = u.domain.cellsize._y[2:]
+    DYs = u.domain.cellsize._y[0:-2]
+    DYp = u.domain.cellsize._y[1:-1]
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # reassign the east, west for code readability
-    ue = u.xvalue[1:Nx+1, :]/(DXp+DXe)
-    uw = u.xvalue[0:Nx, :]/(DXp+DXw)
-    vn = u.yvalue[:, 1:Ny+1]/(DYp+DYn)
-    vs = u.yvalue[:, 0:Ny]/(DYp+DYs)
+    ue = u._xvalue[1:Nx+1, :]/(DXp+DXe)
+    uw = u._xvalue[0:Nx, :]/(DXp+DXw)
+    vn = u._yvalue[:, 1:Ny+1]/(DYp+DYn)
+    vs = u._yvalue[:, 0:Ny]/(DYp+DYs)
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -319,8 +319,8 @@ def convectionUpwindTerm2D(u: FaceVariable, *args):
         u_upwind = u
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1]
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # find the velocity direction for the upwind scheme
@@ -380,10 +380,10 @@ def convectionTvdRHS2D(u: FaceVariable, phi: CellVariable, FL, *args):
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1][np.newaxis, :]
-    dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])[:, np.newaxis]
-    dy = 0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])[np.newaxis, :]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1][np.newaxis, :]
+    dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])[:, np.newaxis]
+    dy = 0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])[np.newaxis, :]
     psiX_p = np.zeros((Nx+1, Ny))
     psiX_m = np.zeros((Nx+1, Ny))
     psiY_p = np.zeros((Nx, Ny+1))
@@ -448,21 +448,21 @@ def convectionTermCylindrical2D(u: FaceVariable):
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXe = u.domain.cellsize.x[2:][:, np.newaxis]
-    DXw = u.domain.cellsize.x[0:-2][:, np.newaxis]
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYn = u.domain.cellsize.y[2:]
-    DYs = u.domain.cellsize.y[0:-2]
-    DYp = u.domain.cellsize.y[1:-1]
-    rp = u.domain.cellcenters.x[:, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis]
+    DXe = u.domain.cellsize._x[2:][:, np.newaxis]
+    DXw = u.domain.cellsize._x[0:-2][:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYn = u.domain.cellsize._y[2:]
+    DYs = u.domain.cellsize._y[0:-2]
+    DYp = u.domain.cellsize._y[1:-1]
+    rp = u.domain.cellcenters._x[:, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis]
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # reassign the east, west for code readability
-    ue = rf[1:Nx+1, :]*u.xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
-    uw = rf[0:Nx, :]*u.xvalue[0:Nx, :]/(rp*(DXp+DXe))
-    vn = u.yvalue[:, 1:Ny+1]/(DYp+DYn)
-    vs = u.yvalue[:, 0:Ny]/(DYp+DYs)
+    ue = rf[1:Nx+1, :]*u._xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
+    uw = rf[0:Nx, :]*u._xvalue[0:Nx, :]/(rp*(DXp+DXe))
+    vn = u._yvalue[:, 1:Ny+1]/(DYp+DYn)
+    vs = u._yvalue[:, 0:Ny]/(DYp+DYs)
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -501,10 +501,10 @@ def convectionUpwindTermCylindrical2D(u: FaceVariable, *args):
         u_upwind = u
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1]
-    rp = u.domain.cellcenters.x[:, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1]
+    rp = u.domain.cellcenters._x[:, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis]
     re = rf[1:Nx+1, :]
     rw = rf[0:Nx, :]
     # define the vectors to store the sparse matrix data
@@ -566,14 +566,14 @@ def convectionTvdRHSCylindrical2D(u: FaceVariable, phi: CellVariable, FL, *args)
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1][np.newaxis, :]
-    rp = u.domain.cellcenters.x[:, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1][np.newaxis, :]
+    rp = u.domain.cellcenters._x[:, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis]
     re = rf[1:Nx+1, :]
     rw = rf[0:Nx, :]
-    dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])[:, np.newaxis]
-    dy = 0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])[np.newaxis, :]
+    dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])[:, np.newaxis]
+    dy = 0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])[np.newaxis, :]
     psiX_p = np.zeros((Nx+1, Ny))
     psiX_m = np.zeros((Nx+1, Ny))
     psiY_p = np.zeros((Nx, Ny+1))
@@ -630,21 +630,21 @@ def convectionTermPolar2D(u: FaceVariable):
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXe = u.domain.cellsize.x[2:][:, np.newaxis]
-    DXw = u.domain.cellsize.x[0:-2][:, np.newaxis]
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYn = u.domain.cellsize.y[2:]
-    DYs = u.domain.cellsize.y[0:-2]
-    DYp = u.domain.cellsize.y[1:-1]
-    rp = u.domain.cellcenters.x[:, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis]
+    DXe = u.domain.cellsize._x[2:][:, np.newaxis]
+    DXw = u.domain.cellsize._x[0:-2][:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYn = u.domain.cellsize._y[2:]
+    DYs = u.domain.cellsize._y[0:-2]
+    DYp = u.domain.cellsize._y[1:-1]
+    rp = u.domain.cellcenters._x[:, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis]
     # define the vectors to store the sparse matrix data
     mn = Nx*Ny
     # reassign the east, west for code readability
-    ue = rf[1:Nx+1, :]*u.xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
-    uw = rf[0:Nx, :]*u.xvalue[0:Nx, :]/(rp*(DXp+DXe))
-    vn = u.yvalue[:, 1:Ny+1]/(rp*(DYp+DYn))
-    vs = u.yvalue[:, 0:Ny]/(rp*(DYp+DYs))
+    ue = rf[1:Nx+1, :]*u._xvalue[1:Nx+1, :]/(rp*(DXp+DXe))
+    uw = rf[0:Nx, :]*u._xvalue[0:Nx, :]/(rp*(DXp+DXe))
+    vn = u._yvalue[:, 1:Ny+1]/(rp*(DYp+DYn))
+    vs = u._yvalue[:, 0:Ny]/(rp*(DYp+DYs))
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -683,10 +683,10 @@ def convectionUpwindTermPolar2D(u: FaceVariable, *args):
         u_upwind = u
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1]
-    rp = u.domain.cellcenters.x[:, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1]
+    rp = u.domain.cellcenters._x[:, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis]
     re = rf[1:Nx+1, :]
     rw = rf[0:Nx, :]
     # define the vectors to store the sparse matrix data
@@ -748,14 +748,14 @@ def convectionTvdRHSPolar2D(u: FaceVariable, phi: CellVariable, FL, *args):
     # extract data from the mesh structure
     Nx, Ny = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1][np.newaxis, :]
-    rp = u.domain.cellcenters.x[:, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1][np.newaxis, :]
+    rp = u.domain.cellcenters._x[:, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis]
     re = rf[1:Nx+1, :]
     rw = rf[0:Nx, :]
-    dx = 0.5*(u.domain.cellsize.x[0:-1]+u.domain.cellsize.x[1:])[:, np.newaxis]
-    dy = 0.5*(u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:])[np.newaxis, :]
+    dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])[:, np.newaxis]
+    dy = 0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])[np.newaxis, :]
     psiX_p = np.zeros((Nx+1, Ny))
     psiX_m = np.zeros((Nx+1, Ny))
     psiY_p = np.zeros((Nx, Ny+1))
@@ -812,25 +812,25 @@ def convectionTerm3D(u: FaceVariable):
     # extract data from the mesh structure
     Nx, Ny, Nz = u.domain.dims
     G = u.domain.cell_numbers()
-    DXe = u.domain.cellsize.x[2:][:, np.newaxis, np.newaxis]
-    DXw = u.domain.cellsize.x[0:-2][:, np.newaxis, np.newaxis]
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis, np.newaxis]
-    DYn = u.domain.cellsize.y[2:][np.newaxis, :, np.newaxis]
-    DYs = u.domain.cellsize.y[0:-2][np.newaxis, :, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1][np.newaxis, :, np.newaxis]
-    DZf = u.domain.cellsize.z[2:][np.newaxis, np.newaxis, :]
-    DZb = u.domain.cellsize.z[0:-2][np.newaxis, np.newaxis, :]
-    DZp = u.domain.cellsize.z[1:-1][np.newaxis, np.newaxis, :]
+    DXe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DXw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DYn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DYs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
     # define the vectors to stores the sparse matrix data
     mn = Nx*Ny*Nz
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
-    ue = u.xvalue[1:Nx+1, :, :]/(DXp+DXe)
-    uw = u.xvalue[0:Nx, :, :]/(DXp+DXw)
-    vn = u.yvalue[:, 1:Ny+1, :]/(DYp+DYn)
-    vs = u.yvalue[:, 0:Ny, :]/(DYp+DYs)
-    wf = u.zvalue[:, :, 1:Nz+1]/(DZp+DZf)
-    wb = u.zvalue[:, :, 0:Nz]/(DZp+DZb)
+    ue = u._xvalue[1:Nx+1, :, :]/(DXp+DXe)
+    uw = u._xvalue[0:Nx, :, :]/(DXp+DXw)
+    vn = u._yvalue[:, 1:Ny+1, :]/(DYp+DYn)
+    vs = u._yvalue[:, 0:Ny, :]/(DYp+DYs)
+    wf = u._zvalue[:, :, 1:Nz+1]/(DZp+DZf)
+    wb = u._zvalue[:, :, 0:Nz]/(DZp+DZb)
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
     AW = -uw.ravel()
@@ -878,9 +878,9 @@ def convectionUpwindTerm3D(u: FaceVariable, *args):
         u_upwind = u
     Nx, Ny, Nz = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1][np.newaxis, :, np.newaxis]
-    DZp = u.domain.cellsize.z[1:-1][np.newaxis, np.newaxis, :]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
 
     # define the vectors to stores the sparse matrix data
     mn = Nx*Ny*Nz
@@ -973,16 +973,16 @@ def convectionTvdRHS3D(u: FaceVariable, phi: CellVariable, FL, *args):
     # extract data from the mesh structure
     Nx, Ny, Nz = u.domain.dims
     G = u.domain.cell_numbers()
-    DXp = u.domain.cellsize.x[1:-1][:, np.newaxis, np.newaxis]
-    DYp = u.domain.cellsize.y[1:-1][np.newaxis, :, np.newaxis]
-    DZp = u.domain.cellsize.z[1:-1][np.newaxis, np.newaxis, :]
+    DXp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DYp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
     # define the vectors to stores the sparse matrix data
-    dx = 0.5*(u.domain.cellsize.x[0:-1] +
-              u.domain.cellsize.x[1:])[:, np.newaxis, np.newaxis]
-    dy = 0.5*(u.domain.cellsize.y[0:-1] +
-              u.domain.cellsize.y[1:])[np.newaxis, :, np.newaxis]
-    dz = 0.5*(u.domain.cellsize.z[0:-1] +
-              u.domain.cellsize.z[1:])[np.newaxis, np.newaxis, :]
+    dx = 0.5*(u.domain.cellsize._x[0:-1] +
+              u.domain.cellsize._x[1:])[:, np.newaxis, np.newaxis]
+    dy = 0.5*(u.domain.cellsize._y[0:-1] +
+              u.domain.cellsize._y[1:])[np.newaxis, :, np.newaxis]
+    dz = 0.5*(u.domain.cellsize._z[0:-1] +
+              u.domain.cellsize._z[1:])[np.newaxis, np.newaxis, :]
     psiX_p = np.zeros((Nx+1, Ny, Nz))
     psiX_m = np.zeros((Nx+1, Ny, Nz))
     psiY_p = np.zeros((Nx, Ny+1, Nz))
@@ -1065,27 +1065,27 @@ def convectionTermCylindrical3D(u: FaceVariable):
     # extract data from the mesh structure
     Nr, Ntheta, Nz = u.domain.dims
     G = u.domain.cell_numbers()
-    DRe = u.domain.cellsize.x[2:][:, np.newaxis, np.newaxis]
-    DRw = u.domain.cellsize.x[0:-2][:, np.newaxis, np.newaxis]
-    DRp = u.domain.cellsize.x[1:-1][:, np.newaxis, np.newaxis]
-    DTHETAn = u.domain.cellsize.y[2:][np.newaxis, :, np.newaxis]
-    DTHETAs = u.domain.cellsize.y[0:-2][np.newaxis, :, np.newaxis]
-    DTHETAp = u.domain.cellsize.y[1:-1][np.newaxis, :, np.newaxis]
-    DZf = u.domain.cellsize.z[2:][np.newaxis, np.newaxis, :]
-    DZb = u.domain.cellsize.z[0:-2][np.newaxis, np.newaxis, :]
-    DZp = u.domain.cellsize.z[1:-1][np.newaxis, np.newaxis, :]
-    rp = u.domain.cellcenters.x[:, np.newaxis, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis, np.newaxis]
+    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
     # define the vectors to stores the sparse matrix data
     mn = Nr*Ntheta*Nz
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
-    ue = rf[1:Nr+1]*u.xvalue[1:Nr+1, :, :]/(rp*(DRp+DRe))
-    uw = rf[0:Nr]*u.xvalue[0:Nr, :, :]/(rp*(DRp+DRw))
-    vn = u.yvalue[:, 1:Ntheta+1, :]/(rp*(DTHETAp+DTHETAn))
-    vs = u.yvalue[:, 0:Ntheta, :]/(rp*(DTHETAp+DTHETAs))
-    wf = u.zvalue[:, :, 1:Nz+1]/(DZp+DZf)
-    wb = u.zvalue[:, :, 0:Nz]/(DZp+DZb)
+    ue = rf[1:Nr+1]*u._xvalue[1:Nr+1, :, :]/(rp*(DRp+DRe))
+    uw = rf[0:Nr]*u._xvalue[0:Nr, :, :]/(rp*(DRp+DRw))
+    vn = u._yvalue[:, 1:Ntheta+1, :]/(rp*(DTHETAp+DTHETAn))
+    vs = u._yvalue[:, 0:Ntheta, :]/(rp*(DTHETAp+DTHETAs))
+    wf = u._zvalue[:, :, 1:Nz+1]/(DZp+DZf)
+    wb = u._zvalue[:, :, 0:Nz]/(DZp+DZb)
 
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
@@ -1134,17 +1134,17 @@ def convectionUpwindTermCylindrical3D(u: FaceVariable, *args):
         u_upwind = u
     Nr, Ntheta, Nz = u.domain.dims
     G = u.domain.cell_numbers()
-    DRe = u.domain.cellsize.x[2:][:, np.newaxis, np.newaxis]
-    DRw = u.domain.cellsize.x[0:-2][:, np.newaxis, np.newaxis]
-    DRp = u.domain.cellsize.x[1:-1][:, np.newaxis, np.newaxis]
-    DTHETAn = u.domain.cellsize.y[2:][np.newaxis, :, np.newaxis]
-    DTHETAs = u.domain.cellsize.y[0:-2][np.newaxis, :, np.newaxis]
-    DTHETAp = u.domain.cellsize.y[1:-1][np.newaxis, :, np.newaxis]
-    DZf = u.domain.cellsize.z[2:][np.newaxis, np.newaxis, :]
-    DZb = u.domain.cellsize.z[0:-2][np.newaxis, np.newaxis, :]
-    DZp = u.domain.cellsize.z[1:-1][np.newaxis, np.newaxis, :]
-    rp = u.domain.cellcenters.x[:, np.newaxis, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis, np.newaxis]
+    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
     mn = Nr*Ntheta*Nz
     re = rf[1:Nr+1, :, :]
     rw = rf[0:Nr, :, :]
@@ -1227,30 +1227,30 @@ def convectionTvdRHSCylindrical3D(u: FaceVariable, phi: CellVariable, FL, *args)
         u_upwind = u
     Nr, Ntheta, Nz = u.domain.dims
     G = u.domain.cell_numbers()
-    DRe = u.domain.cellsize.x[2:][:, np.newaxis, np.newaxis]
-    DRw = u.domain.cellsize.x[0:-2][:, np.newaxis, np.newaxis]
-    DRp = u.domain.cellsize.x[1:-1][:, np.newaxis, np.newaxis]
-    DTHETAn = u.domain.cellsize.y[2:][np.newaxis, :, np.newaxis]
-    DTHETAs = u.domain.cellsize.y[0:-2][np.newaxis, :, np.newaxis]
-    DTHETAp = u.domain.cellsize.y[1:-1][np.newaxis, :, np.newaxis]
-    DZf = u.domain.cellsize.z[2:][np.newaxis, np.newaxis, :]
-    DZb = u.domain.cellsize.z[0:-2][np.newaxis, np.newaxis, :]
-    DZp = u.domain.cellsize.z[1:-1][np.newaxis, np.newaxis, :]
-    dr = 0.5*(u.domain.cellsize.x[0:-1] +
-              u.domain.cellsize.x[1:])[:, np.newaxis, np.newaxis]
+    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    dr = 0.5*(u.domain.cellsize._x[0:-1] +
+              u.domain.cellsize._x[1:])[:, np.newaxis, np.newaxis]
     dtheta = 0.5 * \
-        (u.domain.cellsize.y[0:-1]+u.domain.cellsize.y[1:]
+        (u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:]
          )[np.newaxis, :, np.newaxis]
-    dz = 0.5*(u.domain.cellsize.z[0:-1] +
-              u.domain.cellsize.z[1:])[np.newaxis, np.newaxis, :]
+    dz = 0.5*(u.domain.cellsize._z[0:-1] +
+              u.domain.cellsize._z[1:])[np.newaxis, np.newaxis, :]
     psiX_p = np.zeros((Nr+1, Ntheta, Nz))
     psiX_m = np.zeros((Nr+1, Ntheta, Nz))
     psiY_p = np.zeros((Nr, Ntheta+1, Nz))
     psiY_m = np.zeros((Nr, Ntheta+1, Nz))
     psiZ_p = np.zeros((Nr, Ntheta, Nz+1))
     psiZ_m = np.zeros((Nr, Ntheta, Nz+1))
-    rp = u.domain.cellcenters.x[:, np.newaxis, np.newaxis]
-    rf = u.domain.facecenters.x[:, np.newaxis, np.newaxis]
+    rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
 
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction

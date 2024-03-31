@@ -9,8 +9,8 @@ from scipy.special import erf
 
 # define the domain
 L = 5.0  # domain length
-Nx = 100 # number of cells
-meshstruct = pf.CylindricalGrid2D(Nx, Nx, L, L)
+N = 100 # number of cells
+meshstruct = pf.CylindricalGrid2D(N, N, L, L)
 BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
 BC.bottom.a[:] = 0.0 
 BC.bottom.b[:] = 1.0 
@@ -18,7 +18,7 @@ BC.bottom.c[:] = 1.0 # bottom boundary
 BC.top.a[:] = 0.0 
 BC.top.b[:] = 1.0 
 BC.top.c[:] = 0.0 # top boundary
-x = meshstruct.cellcenters.x
+r = meshstruct.cellcenters.r
 ## define the transfer coeffs
 D_val = 1.0
 alfa = pf.CellVariable(meshstruct, 1.0)
@@ -37,11 +37,11 @@ for t in np.arange(dt, final_t, dt):
     c_old.update_value(c)
 
 # analytical solution
-c_analytical = 1-erf(x/(2*np.sqrt(D_val*t)))
+c_analytical = 1-erf(r/(2*np.sqrt(D_val*t)))
 
 plt.figure(1)
 plt.clf()
-plt.plot(x, c.internalCellValues[2,:], 'k', label='PyFVTool')
-plt.plot(x, c_analytical, 'r--', label='analytic')
+plt.plot(r, c.internalCellValues[2,:], 'k', label='PyFVTool')
+plt.plot(r, c_analytical, 'r--', label='analytic')
 plt.legend()
 plt.show()

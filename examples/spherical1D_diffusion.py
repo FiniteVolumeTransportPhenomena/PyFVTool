@@ -40,13 +40,13 @@ alfa = pf.CellVariable(m, 1.0)
 ## Solution variable and define initial condition
 c_init = 0.0
 c_old = pf.CellVariable(m, c_init, BC)
-r = c_old.domain.cellcenters.x
+r = c_old.domain.cellcenters.r
 c_old.internalCellValues[r<1.0] = 1.0   # TO DO: find a better syntax for this
 
 # calculate volumes of FV cellslices
 #  We use this for demonstrating mass conservation
-cellA = m.facecenters.x[0:-1]
-cellB = m.facecenters.x[1:]
+cellA = m.facecenters.r[0:-1]
+cellB = m.facecenters.r[1:]
 cellvol = 4/3 * pi * (cellB**3 - cellA**3)
 cellsum = np.sum(cellvol)
 

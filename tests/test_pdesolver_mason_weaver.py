@@ -7,7 +7,7 @@ see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.;
      Part. Part. Syst. Charact. 2017, 34, 1700095. doi:10.1002/ppsc.201700095.
 
 
-using solvePDE v0.2.1  
+using solvePDE v0.3.0  
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -31,7 +31,7 @@ msh = pf.Grid1D(Nx, Lx)
 BC_c = pf.BoundaryConditions(msh)
 
 c = pf.CellVariable(msh, 1.0, BC_c)
-total_c = [pf.domainInt(c)]
+total_c = [c.domainIntegral()]
 
 # advection field
 u = pf.FaceVariable(msh, (sg,))
@@ -70,7 +70,7 @@ while (it*dt < t_simulation):
                 bcterm,
                 eqn)
     it+=1
-    total_c.append(pf.domainInt(c))
+    total_c.append(c.domainIntegral())
     if (it % Nskip == 0):
         pf.visualizeCells(c)
 

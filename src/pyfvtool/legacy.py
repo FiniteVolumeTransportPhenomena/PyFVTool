@@ -10,6 +10,7 @@ from .face import FaceVariable
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
 from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D
 from .mesh import Grid3D, CylindricalGrid3D, SphericalGrid3D
+from .mesh import MeshStructure
 
 
 def boundaryConditionTerm(BC):
@@ -28,6 +29,7 @@ def createCellVariable(*args, **kwargs):
 
 
 def createFaceVariable(mesh, faceval):
+    """Legacy factory function for FaceVariable"""
     return FaceVariable(mesh, faceval)
 
 
@@ -74,3 +76,25 @@ def createMeshCylindrical3D(*args) -> CylindricalGrid3D:
 def createMeshSpherical3D(*args) -> SphericalGrid3D:
     """Legacy factory function for SphericalGrid3D"""
     return SphericalGrid3D(*args)
+
+
+def get_CellVariable_profile1D(phi: CellVariable):
+    """Legacy function"""
+    return phi.plotprofile()
+
+def get_CellVariable_profile2D(phi: CellVariable):
+    return phi.plotprofile()
+
+def get_CellVariable_profile3D(phi: CellVariable):
+    return phi.plotprofile()
+
+def domainInt(phi: CellVariable) -> float:
+    return phi.domainIntegral()
+
+
+def cellVolume(m: MeshStructure):
+    BC = BoundaryConditions(m)
+    c = m.cellVolumes()
+    return CellVariable(m, c, BC)
+
+
