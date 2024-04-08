@@ -109,9 +109,15 @@ def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list,
     else:
         solver = externalsolver
     
+    # Decode 'bcterm' which is actually a tuple (M, RHS)
     Mbc, RHSbc = bcterm
-    M = Mbc
-    RHS = RHSbc
+    
+    # Initialize overall cumulative matrix and right-hand side for 
+    # matrix equation
+    M = Mbc.copy() # need to copy, so that 'bcterm' is protected
+    RHS = RHSbc.copy() # need to copy, so that 'bcterm' is protected
+    
+    # Cumulate all equation terms
     for term in eqnterms:
         if isinstance(term, tuple):
             Mterm, RHSterm = term
@@ -125,9 +131,13 @@ def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list,
             M += term
         else:
             raise TypeError('Unknown term')
-            
+
+    # Solve!
     phi_new_values = solver(M, RHS)
-    phi.value[:] = phi_new_values
+    
+    # Update phi
+    phi.value = np.reshape(phi_new_values, phi.domain.dims+2)
+    
     return phi
 
 
