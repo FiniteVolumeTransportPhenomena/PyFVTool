@@ -7,6 +7,7 @@ from scipy.sparse.linalg import spsolve
 from .mesh import MeshStructure
 from .cell import CellVariable
 from .boundary import BoundaryConditions
+from .boundary import boundaryConditionsTerm
 
 
 
@@ -51,7 +52,7 @@ def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
 
 
 
-def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list, 
+def solvePDE(phi: CellVariable, eqnterms: list, 
               externalsolver = None) -> CellVariable:
     """
     Solve a PDE using the finite volume method
@@ -109,8 +110,10 @@ def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list,
     else:
         solver = externalsolver
     
-    # Decode 'bcterm' which is actually a tuple (M, RHS)
-    Mbc, RHSbc = bcterm
+    # Construct BCterm - May be pre-calculated in 
+    #                    CellVariable.apply_BCs() and in CellVariable.__init__()
+    #                    to avoid reconstructing this every time.
+    Mbc, RHSbc = boundaryConditionsTerm(phi.BCs)
     
     # Initialize overall cumulative matrix and right-hand side for 
     # matrix equation

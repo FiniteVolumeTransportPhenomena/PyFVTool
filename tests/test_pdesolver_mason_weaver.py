@@ -28,20 +28,18 @@ maxdev_ppq = 1000. # max rel deviation in parts per 10^15
 
 msh = pf.Grid1D(Nx, Lx)
 
-BC_c = pf.BoundaryConditions(msh)
-
-c = pf.CellVariable(msh, 1.0, BC_c)
+# Solution variable (no flux BCs)
+c = pf.CellVariable(msh, 1.0)
 total_c = [c.domainIntegral()]
 
 # advection field
 u = pf.FaceVariable(msh, (sg,))
-# closed boundaries
+# closed boundaries: no flow at extremities
 u.xvalue[0] = 0.0
 u.xvalue[-1] = 0.0
 
 # diffusion field
 D = pf.FaceVariable(msh, D_coeff)
-
 
 # prepare plot
 plt.figure(1)
@@ -59,16 +57,11 @@ while (it*dt < t_simulation):
     # of the loop and store their results. The difference in performance is 
     # probably minimal, since most of the CPU time is in the
     # actual solving of the matrix equation
-    
-    bcterm = pf.boundaryConditionsTerm(BC_c)
-
     eqn = [pf.transientTerm(c, dt, 1.0),
            -pf.diffusionTerm(D),
            pf.convectionTerm(u)]
 
-    pf.solvePDE(c,
-                bcterm,
-                eqn)
+    pf.solvePDE(c, eqn)
     it+=1
     total_c.append(c.domainIntegral())
     if (it % Nskip == 0):

@@ -108,16 +108,12 @@ D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfac
 t = 0
 nplot = 0
 while t<t_simulation:
-    # compose discretized terms for matrix equation
-    bcterm = pf.boundaryConditionsTerm(c.BCs)
-
+    # Compose discretized terms for matrix equation
     eqn = [ pf.transientTerm(c, dt, 1.0),
            -pf.diffusionTerm(D_face)]
 
-    # solve PDE
-    pf.solvePDE(c,
-                bcterm,
-                eqn)
+    # Solve PDE
+    pf.solvePDE(c, eqn)
     t+=dt
 
     if (nplot % Nskip == 0):
