@@ -6,9 +6,8 @@ see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.;
      Solution and Its Study Using Quantitative Digital Photography.",
      Part. Part. Syst. Charact. 2017, 34, 1700095. doi:10.1002/ppsc.201700095.
 
-
-using solvePDE v0.3.0  
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 

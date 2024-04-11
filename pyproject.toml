@@ -1,7 +1,7 @@
 # minimalist pyproject.toml
 [project]
 name = "pyfvtool"
-version = "0.3.0"
+version = "0.3.1"
 authors = [
     { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
     { name="Gavin M. Weir"},
