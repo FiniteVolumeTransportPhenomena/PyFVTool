@@ -32,7 +32,8 @@ class CellVariable:
     def __init__(self, mesh_struct: MeshStructure, cell_value: float):
         ...
 
-    def __init__(self, mesh_struct: MeshStructure, cell_value, *arg):
+    def __init__(self, mesh_struct: MeshStructure, cell_value, *arg,
+                 BCsTerm_precalc = True):
         """
         Create a cell variable of class CellVariable
 
@@ -48,6 +49,10 @@ class CellVariable:
             requirement also applies if default 'no-flux' boundary conditions are
             desired, in which case the BoundaryCondition should be created without
             further parameters (see .boundary.BoundaryConditions)
+        BCsTerm_precalc : Boolean, optional
+            Pre-calculate the matrix equation terms for the boundary conditions.
+            The default is True. It can be switched to False, if these matrix
+            equation terms are not needed, avoiding unneeded computations.
             
 
         Raises
@@ -61,7 +66,9 @@ class CellVariable:
             An initialized instance of CellVariable.
 
         """
-                
+        
+        self.BCsTerm_precalc = BCsTerm_precalc
+        
         self.domain = mesh_struct
         self.value = None
 
@@ -86,9 +93,10 @@ class CellVariable:
                 self.BCs = BoundaryConditions(self.domain)
             else:
                 raise Exception('Incorrect number of arguments')
-            # see also: apply_BCs()
+            # see also: apply_BCs() - code may be merged
             self.value = cellValuesWithBoundaries(phi_val, self.BCs)
-            self._BCsTerm  = boundaryConditionsTerm(self.BCs)
+            if self.BCsTerm_precalc:
+                self._BCsTerm  = boundaryConditionsTerm(self.BCs)
 
     @property
     def internalCellValues(self):
@@ -212,13 +220,20 @@ class CellVariable:
 
 
     def apply_BCs(self):
-        # Initialize ghost cells according to the boundary conditions and
-        # the internal (inner) cell values
-        #
-        # see also __init__()
+        """Initialize ghost cells according to the boundary conditions and
+        the internal (inner) cell values
+        
+        See also __init__()        
+
+        Returns
+        -------
+        None.
+
+        """
         self.value = cellValuesWithBoundaries(self.internalCellValues,
                                               self.BCs)
-        self._BCsTerm = boundaryConditionsTerm(self.BCs)
+        if self.BCsTerm_precalc:
+            self._BCsTerm = boundaryConditionsTerm(self.BCs)
 
 
     def update_value(self, new_cell):

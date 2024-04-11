@@ -149,7 +149,7 @@ def solveExplicitPDE(phi_old: CellVariable,
                      dt: float, 
                      RHS: np.ndarray) -> CellVariable:
     """
-    Solve the PDE using the finite volume method.
+    Solve the PDE using an explicit finite volume method.
 
     Parameters
     ----------
@@ -159,17 +159,18 @@ def solveExplicitPDE(phi_old: CellVariable,
         Time step
     RHS: np.ndarray
         Right hand side of the linear system
-    BC: BoundaryConditions
-        Boundary conditions
+
     
     Returns
     -------
     phi: CellVariable
         Solution of the PDE
+    
     """
     
     x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
-    phi = CellVariable(phi_old.domain, 0.0, phi_old.BCs)
+    phi = CellVariable(phi_old.domain, 0.0, phi_old.BCs, 
+                       BCsTerm_precalc = False)
     phi.value = x
     phi.apply_BCs()
     return phi
