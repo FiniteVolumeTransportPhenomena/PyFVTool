@@ -33,7 +33,7 @@ for t in np.arange(dt, final_t, dt):
     # step 1: calculate divergence term
     RHS = pf.divergenceTerm(Dave*pf.gradientTerm(c_old))
     # step 2: calculate the new value for internal cells
-    c = pf.solveExplicitPDE(c_old, dt, RHS, BC)
+    c = pf.solveExplicitPDE(c_old, dt, RHS)
     c_old.update_value(c)
 
 # analytical solution

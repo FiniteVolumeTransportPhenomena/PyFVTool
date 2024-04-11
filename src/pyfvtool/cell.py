@@ -212,16 +212,14 @@ class CellVariable:
 
 
     def apply_BCs(self):
-        # could replace update_bc_cells?
+        # Initialize ghost cells according to the boundary conditions and
+        # the internal (inner) cell values
+        #
         # see also __init__()
         self.value = cellValuesWithBoundaries(self.internalCellValues,
                                               self.BCs)
         self._BCsTerm = boundaryConditionsTerm(self.BCs)
 
-    def update_bc_cells(self, BC: BoundaryConditionsBase):
-        # to be replaced by apply_BCs ?
-        phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
-        self.update_value(phi_temp)
 
     def update_value(self, new_cell):
         np.copyto(self.value, new_cell.value)

@@ -230,12 +230,12 @@ L = 5.0  # domain length
 Nx = 100 # number of cells
 meshstruct = Grid1D(Nx, L)
 BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
-BC.left.a[:] = 0 
-BC.left.b[:]=1 
-BC.left.c[:]=1 # left boundary
-BC.right.a[:] = 0 
-BC.right.b[:]=1 
-BC.right.c[:]=0 # right boundary
+BC.left.a[:] = 0.0 
+BC.left.b[:] = 1.0 
+BC.left.c[:] = 1.0 # left boundary
+BC.right.a[:] = 0.0 
+BC.right.b[:] = 1.0
+BC.right.c[:] = 0.0 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
@@ -251,7 +251,7 @@ for t in np.arange(dt, final_t, dt):
     # step 1: calculate divergence term
     RHS = divergenceTerm(Dave*gradientTerm(c_old))
     # step 2: calculate the new value for internal cells
-    c = solveExplicitPDE(c_old, dt, RHS, BC)
+    c = solveExplicitPDE(c_old, dt, RHS)
     c_old.update_value(c)
 
 # analytical solution
