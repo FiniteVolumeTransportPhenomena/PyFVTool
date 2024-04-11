@@ -76,6 +76,8 @@ import pyfvtool as pf
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
 
+
+# Calculation parameters
 Nx = 20 # number of finite volume cells
 Lx = 1.0 # [m] length of the domain 
 c_left = 1.0 # left boundary concentration
@@ -85,27 +87,29 @@ t_simulation = 7200.0 # [s] simulation time
 dt = 60.0 # [s] time step
 Nskip = 10 # plot every Nskip-th profile
 
-m1 = pf.Grid1D(Nx, Lx) # mesh object
-bc = pf.BoundaryConditions(m1) # Neumann boundary condition by default
+# Define mesh
+mesh = pf.Grid1D(Nx, Lx)
 
-# switch the left boundary to Dirichlet: fixed concentration
-bc.left.a[:] = 0.0
-bc.left.b[:] = 1.0
-bc.left.c[:] = c_left
+# Create a cell variable with initial concentration
+# By default, 'no flux' boundary conditions are applied
+c = pf.CellVariable(mesh, c_init)
 
-# create a cell variable with initial concentration
-c = pf.CellVariable(m1, c_init, bc)
+# Switch the left boundary to Dirichlet: fixed concentration
+c.BCs.left.a[:] = 0.0
+c.BCs.left.b[:] = 1.0
+c.BCs.left.c[:] = c_left
+c.apply_BCs()
 
-# assign diffusivity to cells
-D_cell = pf.CellVariable(m1, D_val)
+# Assign diffusivity to cells
+D_cell = pf.CellVariable(mesh, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
-# time loop
+# Time loop
 t = 0
 nplot = 0
 while t<t_simulation:
     # compose discretized terms for matrix equation
-    bcterm = pf.boundaryConditionsTerm(bc)
+    bcterm = pf.boundaryConditionsTerm(c.BCs)
 
     eqn = [ pf.transientTerm(c, dt, 1.0),
            -pf.diffusionTerm(D_face)]

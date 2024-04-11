@@ -81,12 +81,12 @@ class CellVariable:
                 
         if self.value is None:
             if len(arg)==1:
-                self.value = cellValuesWithBoundaries(phi_val, arg[0])
+                self.BCs = arg[0]
             elif len(arg)==0:
-                self.value = cellValuesWithBoundaries(phi_val, 
-                                 BoundaryConditions(mesh_struct))
+                self.BCs = BoundaryConditions(self.domain)
             else:
                 raise Exception('Incorrect number of arguments')
+            self.value = cellValuesWithBoundaries(phi_val, self.BCs)
 
     @property
     def internalCellValues(self):
@@ -209,13 +209,19 @@ class CellVariable:
         return CellVariable(self.domain, np.abs(self.value))
 
 
+    def apply_BCs(self):
+        # could also replace update_bc_cells??
+        self.value = cellValuesWithBoundaries(self.internalCellValues, self.BCs)
+
     def update_bc_cells(self, BC: BoundaryConditionsBase):
+        # to be replaced by apply_BCs ?
         phi_temp = CellVariable(self.domain, self.internalCellValues, BC)
         self.update_value(phi_temp)
 
     def update_value(self, new_cell):
         np.copyto(self.value, new_cell.value)
   
+    
     def copy(self):
         """
         Create a copy of the CellVariable
