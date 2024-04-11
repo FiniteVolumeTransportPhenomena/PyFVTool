@@ -215,27 +215,7 @@ class CellVariable:
 
     def update_value(self, new_cell):
         np.copyto(self.value, new_cell.value)
-
-    def bc_to_ghost(self):
-        """
-        assign the boundary values to the ghost cells
-        """
-        if issubclass(type(self.domain), Grid1D):
-            self.value[0] = 0.5*(self.value[1]+self.value[0])
-            self.value[-1] = 0.5*(self.value[-2]+self.value[-1])
-        elif issubclass(type(self.domain), Grid2D):
-            self.value[0, 1:-1] = 0.5*(self.value[1, 1:-1]+self.value[0, 1:-1])
-            self.value[-1, 1:-1] = 0.5*(self.value[-2, 1:-1]+self.value[-1, 1:-1])
-            self.value[1:-1, 0] = 0.5*(self.value[1:-1, 1]+self.value[1:-1, 0])
-            self.value[1:-1, -1] = 0.5*(self.value[1:-1, -2]+self.value[1:-1, -1])
-        elif issubclass(type(self.domain), Grid3D):
-            self.value[0, 1:-1, 1:-1] = 0.5*(self.value[1, 1:-1, 1:-1]+self.value[0, 1:-1, 1:-1])
-            self.value[-1, 1:-1, 1:-1] = 0.5*(self.value[-2, 1:-1, 1:-1]+self.value[-1, 1:-1, 1:-1])
-            self.value[1:-1, 0, 1:-1] = 0.5*(self.value[1:-1, 1, 1:-1]+self.value[1:-1, 0, 1:-1])
-            self.value[1:-1, -1, 1:-1] = 0.5*(self.value[1:-1, -2, 1:-1]+self.value[1:-1, -1, 1:-1])
-            self.value[1:-1, 1:-1, 0] = 0.5*(self.value[1:-1, 1:-1, 1]+self.value[1:-1, 1:-1, 0])
-            self.value[1:-1, 1:-1, -1] = 0.5*(self.value[1:-1, 1:-1, -2]+self.value[1:-1, 1:-1, -1])
-    
+  
     def copy(self):
         """
         Create a copy of the CellVariable
@@ -396,36 +376,6 @@ class CellVariable:
         v = self.domain.cellVolumes()
         c = self.internalCellValues
         return (v*c).flatten().sum()
-
-
-    def BC2GhostCells(self):
-        """
-        assign the boundary values to the ghost cells 
-        
-        Returns
-        -------
-        CellVariable
-            the new cell variable
-        """
-        phi = self.copy()
-        if issubclass(type(phi.domain), Grid1D):
-            phi.value[0] = 0.5*(phi.value[1]+phi.value[0])
-            phi.value[-1] = 0.5*(phi.value[-2]+phi.value[-1])
-        elif issubclass(type(phi.domain), Grid2D):
-            phi.value[0, 1:-1] = 0.5*(phi.value[1, 1:-1]+phi.value[0, 1:-1])
-            phi.value[-1, 1:-1] = 0.5*(phi.value[-2, 1:-1]+phi.value[-1, 1:-1])
-            phi.value[1:-1, 0] = 0.5*(phi.value[1:-1, 1]+phi.value[1:-1, 0])
-            phi.value[1:-1, -1] = 0.5*(phi.value[1:-1, -2]+phi.value[1:-1, -1])
-        elif issubclass(type(phi.domain), Grid3D):
-            phi.value[0, 1:-1, 1:-1] = 0.5*(phi.value[1, 1:-1, 1:-1]+phi.value[0, 1:-1, 1:-1])
-            phi.value[-1, 1:-1, 1:-1] = 0.5*(phi.value[-2, 1:-1, 1:-1]+phi.value[-1, 1:-1, 1:-1])
-            phi.value[1:-1, 0, 1:-1] = 0.5*(phi.value[1:-1, 1, 1:-1]+phi.value[1:-1, 0, 1:-1])
-            phi.value[1:-1, -1, 1:-1] = 0.5*(phi.value[1:-1, -2, 1:-1]+phi.value[1:-1, -1, 1:-1])
-            phi.value[1:-1, 1:-1, 0] = 0.5*(phi.value[1:-1, 1:-1, 1]+phi.value[1:-1, 1:-1, 0])
-            phi.value[1:-1, 1:-1, -1] = 0.5*(phi.value[1:-1, 1:-1, -2]+phi.value[1:-1, 1:-1, -1])
-        return phi
-
-
 
 
 
