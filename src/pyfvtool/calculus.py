@@ -334,6 +334,7 @@ def divergenceTerm(F: FaceVariable):
         raise Exception("DivergenceTerm is not defined for this Mesh type.")
     return RHSdiv
 
+
 def gradientTermFixedBC(phi):
     """
     Warning: 
@@ -344,9 +345,9 @@ def gradientTermFixedBC(phi):
     cells. Note that phi is not a variable but a parameter calculated with a
     function over a domain. 
     
-    Make sure that phi is calculated by BC2GhostCells (usually but not
-    necessarily in combination with celleval);  otherwise, do not use this
-    function as it leads to wrong values at the boundaries.
+    Make sure that phi is calculated by cellValuesWithBoundaries, usually
+    (but not necessarily) in combination with celleval. Otherwise, do not use 
+    this function as it leads to wrong values at the boundaries.
     
     It checks for the availability of the ghost variables and use them, 
     otherwise estimate them, assuming a zero gradient  on the boundaries.

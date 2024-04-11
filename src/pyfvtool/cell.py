@@ -79,7 +79,7 @@ class CellVariable:
         elif np.all(np.array(cell_value.shape)==mesh_struct.dims):
             phi_val = cell_value
         elif np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
-            # Values for boundary cells already included,
+            # Values for ghost cells already included,
             # simply fill
             self.value = cell_value
         else:

@@ -166,8 +166,8 @@ def BoundaryConditions(mesh: MeshStructure):
 
 #%%
 #
-# Calculation of the values in the boundary cells, taking into account the 
-# boundary conditions. Return array with all internal and boundary cell values.
+# Calculation of the values in the ghost cells, taking into account the 
+# boundary conditions. Return array with all internal and ghost cell values.
 #
 
 
