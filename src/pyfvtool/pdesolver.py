@@ -110,10 +110,10 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     else:
         solver = externalsolver
     
-    # Construct BCterm - May be pre-calculated in 
-    #                    CellVariable.apply_BCs() and in CellVariable.__init__()
-    #                    to avoid reconstructing this every time.
-    Mbc, RHSbc = boundaryConditionsTerm(phi.BCs)
+    # Construct BCs Term
+    # Mbc, RHSbc = boundaryConditionsTerm(phi.BCs)
+    # Retrieve pre-constructed BCs Term
+    Mbc, RHSbc = phi._BCsTerm
     
     # Initialize overall cumulative matrix and right-hand side for 
     # matrix equation

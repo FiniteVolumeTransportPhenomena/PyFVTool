@@ -8,7 +8,7 @@ from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
-from .boundary import cellValuesWithBoundaries
+from .boundary import cellValuesWithBoundaries, boundaryConditionsTerm
 
 
 
@@ -86,7 +86,9 @@ class CellVariable:
                 self.BCs = BoundaryConditions(self.domain)
             else:
                 raise Exception('Incorrect number of arguments')
+            # see also: apply_BCs()
             self.value = cellValuesWithBoundaries(phi_val, self.BCs)
+            self._BCsTerm  = boundaryConditionsTerm(self.BCs)
 
     @property
     def internalCellValues(self):
@@ -210,8 +212,11 @@ class CellVariable:
 
 
     def apply_BCs(self):
-        # could also replace update_bc_cells??
-        self.value = cellValuesWithBoundaries(self.internalCellValues, self.BCs)
+        # could replace update_bc_cells?
+        # see also __init__()
+        self.value = cellValuesWithBoundaries(self.internalCellValues,
+                                              self.BCs)
+        self._BCsTerm = boundaryConditionsTerm(self.BCs)
 
     def update_bc_cells(self, BC: BoundaryConditionsBase):
         # to be replaced by apply_BCs ?
