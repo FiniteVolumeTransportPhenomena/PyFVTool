@@ -48,7 +48,7 @@ def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
     else:
         solver = externalsolver
     phi = solver(M, RHS)
-    return CellVariable(m, np.reshape(phi, m.dims+2))
+    return CellVariable(m, np.reshape(phi, m.dims+2)) # BCs handled by user
 
 
 
