@@ -1,7 +1,10 @@
 # CellVariable class definition and operator overloading
 
-import numpy as np
+from copy import deepcopy
 from typing import overload
+
+
+import numpy as np
 
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
@@ -85,18 +88,19 @@ class CellVariable:
         else:
             raise ValueError(f"The cell size {cell_value.shape} is not valid "\
                              f"for a mesh of size {mesh_struct.dims}.")
-                
+        if len(arg)==1:
+            self.BCs = arg[0]
+        elif len(arg)==0:
+            self.BCs = BoundaryConditions(self.domain)
+        else:
+            raise Exception('Incorrect number of arguments')
+
         if self.value is None:
-            if len(arg)==1:
-                self.BCs = arg[0]
-            elif len(arg)==0:
-                self.BCs = BoundaryConditions(self.domain)
-            else:
-                raise Exception('Incorrect number of arguments')
             # see also: apply_BCs() - code may be merged
             self.value = cellValuesWithBoundaries(phi_val, self.BCs)
-            if self.BCsTerm_precalc:
-                self._BCsTerm  = boundaryConditionsTerm(self.BCs)
+
+        if self.BCsTerm_precalc:
+            self._BCsTerm  = boundaryConditionsTerm(self.BCs)
 
     @property
     def internalCellValues(self):
@@ -250,7 +254,8 @@ class CellVariable:
         CellVariable
             Copy of the CellVariable.
         """
-        return CellVariable(self.domain, np.copy(self.value))
+        return CellVariable(self.domain, np.copy(self.value),
+                            deepcopy(self.BCs))
     
     def plotprofile(self):
         """
