@@ -128,105 +128,138 @@ class CellVariable:
     
     def __add__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value+other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues + other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value+other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues + other)
 
     def __radd__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value+other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues + other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value+other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues + other)
 
     def __rsub__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, other.value-self.value)
+            return CellVariable(self.domain, 
+                                other.innerCellValues - self.innerCellValues)
         else:
-            return CellVariable(self.domain, other-self.value)
+            return CellVariable(self.domain, 
+                                other - self.innerCellValues)
     
     def __sub__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value-other.value)
+            return CellVariable(self.domain,
+                                self.innerCellValues - other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value-other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues - other)
 
     def __mul__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value*other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues * other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value*other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues * other)
 
     def __rmul__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value*other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues * other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value*other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues * other)
 
     def __truediv__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value/other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues / other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value/other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues / other)
 
     def __rtruediv__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, other.value/self.value)
+            return CellVariable(self.domain, 
+                                other.innerCellValues / self.innerCellValues)
         else:
-            return CellVariable(self.domain, other/self.value)
+            return CellVariable(self.domain, 
+                                other / self.innerCellValues)
     
     def __neg__(self):
-        return CellVariable(self.domain, -self.value)
+        return CellVariable(self.domain, -self.innerCellValues)
     
     def __pow__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value**other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues**other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value**other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues**other)
     
     def __rpow__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, other.value**self.value)
+            return CellVariable(self.domain, 
+                                other.innerCellValues**self.innerCellValues)
         else:
-            return CellVariable(self.domain, other**self.value)
+            return CellVariable(self.domain, 
+                                other**self.innerCellValues)
     
     def __gt__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value>other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues>other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value>other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues>other)
 
     def __ge__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value>=other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues>=other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value>=other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues>=other)
 
     def __lt__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value<other.value)
+            return CellVariable(self.domain, 
+                                self.innerCellValues<other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value<other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues<other)
     
     def __le__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, self.value<=other.value)
+            return CellVariable(self.domain,
+                                self.innerCellValues<=other.innerCellValues)
         else:
-            return CellVariable(self.domain, self.value<=other)
+            return CellVariable(self.domain, 
+                                self.innerCellValues<=other)
 
     def __and__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, np.logical_and(self.value, other.value))
+            return CellVariable(self.domain, 
+                       np.logical_and(self.innerCellValues, other.innerCellValues))
         else:
-            return CellVariable(self.domain, np.logical_and(self.value, other))
+            return CellVariable(self.domain, 
+                                np.logical_and(self.innerCellValues, other))
     
     def __or__(self, other):
         if type(other) is CellVariable:
-            return CellVariable(self.domain, np.logical_or(self.value, other.value))
+            return CellVariable(self.domain, 
+                                np.logical_or(self.innerCellValues, 
+                                              other.innerCellValues))
         else:
-            return CellVariable(self.domain, np.logical_or(self.value, other))
+            return CellVariable(self.domain, 
+                                np.logical_or(self.innerCellValues, other))
     
     def __abs__(self):
-        return CellVariable(self.domain, np.abs(self.value))
+        return CellVariable(self.domain, np.abs(self.innerCellValues))
 
 
     def apply_BCs(self):

@@ -44,7 +44,8 @@ cv5.BCs.top.c[:] = -1.25
 
 cv5.apply_BCs()
 
-cv56 = cv5/cv6 # Warning! The ghost cells create division by zero
+cv56 = cv5/cv6 # Warning! Ghost cells may lead to division by zero
+               # This is why only inner cells should participate in arithmetic
 assert np.all(cv56.innerCellValues == cv5.innerCellValues\
                                       / cv6.innerCellValues)
     
