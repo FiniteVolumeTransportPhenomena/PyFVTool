@@ -547,28 +547,64 @@ def cellLocations(m: MeshStructure):
 def funceval(f, *args):
     if len(args)==1:
         return CellVariable(args[0].domain, 
-                            f(args[0].value))
+                            f(args[0].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==2:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==3:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value, args[2].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues, 
+                              args[2].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==4:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value, args[2].value, args[3].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues, 
+                              args[2].innerCellValues, 
+                              args[3].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==5:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues, 
+                              args[2].innerCellValues, 
+                              args[3].innerCellValues, 
+                              args[4].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==6:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value, args[5].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues, 
+                              args[2].innerCellValues, 
+                              args[3].innerCellValues, 
+                              args[4].innerCellValues, 
+                              args[5].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==7:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value, args[5].value, args[6].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues, 
+                              args[2].innerCellValues, 
+                              args[3].innerCellValues, 
+                              args[4].innerCellValues, 
+                              args[5].innerCellValues, 
+                              args[6].innerCellValues),
+                            deepcopy(args[0].BCs))
     elif len(args)==8:
         return CellVariable(args[0].domain, 
-                            f(args[0].value, args[1].value, args[2].value, args[3].value, args[4].value, args[5].value, args[6].value, args[7].value))
+                            f(args[0].innerCellValues, 
+                              args[1].innerCellValues, 
+                              args[2].innerCellValues, 
+                              args[3].innerCellValues, 
+                              args[4].innerCellValues, 
+                              args[5].innerCellValues, 
+                              args[6].innerCellValues, 
+                              args[7].innerCellValues),
+                            deepcopy(args[0].BCs))
     
 
 

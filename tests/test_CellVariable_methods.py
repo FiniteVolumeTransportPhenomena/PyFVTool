@@ -71,6 +71,37 @@ assert np.all(cv56.BCs.top.c == -1.25)
 # Copilot?
 
 
+# Quick, incomplete test of pf.funceval (and transfer of BCs)
+
+def addfun(u0, u1):
+    return u0 + u1
+
+cvnew12 = pf.funceval(addfun, cv1, cv2)
+
+assert np.all(cvnew12.innerCellValues == cv12.innerCellValues)
+
+
+def divfun(u0, u1):
+    return u0/u1
+
+cvnew56 = pf.funceval(divfun, cv5, cv6)
+
+assert np.all(cvnew56.innerCellValues == cv56.innerCellValues)
+
+
+assert np.all(cvnew56.BCs.left.a == 0.0)
+assert np.all(cvnew56.BCs.left.b == 1.0)
+assert np.all(cvnew56.BCs.left.c == 1.25)
+
+
+assert np.all(cvnew56.BCs.top.a == 0.0)
+assert np.all(cvnew56.BCs.top.b == 1.0)
+assert np.all(cvnew56.BCs.top.c == -1.25)
+
+
+
+
+
 # End of test: all tests completed successfully
 
 complete_success = True
