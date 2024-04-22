@@ -103,7 +103,7 @@ class CellVariable:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
 
     @property
-    def internalCellValues(self):
+    def innerCellValues(self):
         if issubclass(type(self.domain), Grid1D):
             return self.value[1:-1]
         elif issubclass(type(self.domain), Grid2D):
@@ -111,8 +111,8 @@ class CellVariable:
         elif issubclass(type(self.domain), Grid3D):
             return self.value[1:-1, 1:-1, 1:-1]
         
-    @internalCellValues.setter
-    def internalCellValues(self, values):
+    @innerCellValues.setter
+    def innerCellValues(self, values):
         if issubclass(type(self.domain), Grid1D):
             self.value[1:-1] = values
         elif issubclass(type(self.domain), Grid2D):
@@ -234,7 +234,7 @@ class CellVariable:
         None.
 
         """
-        self.value = cellValuesWithBoundaries(self.internalCellValues,
+        self.value = cellValuesWithBoundaries(self.innerCellValues,
                                               self.BCs)
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
@@ -265,7 +265,7 @@ class CellVariable:
         cell values, including the values at the boundaries.
         
         For 2D and 3D visualization, it is perhaps better to use only the 
-        internalCellValues (e.g. for a false color map à la plt.pcolormesh),
+        innerCellValues (e.g. for a false color map à la plt.pcolormesh),
         and not include the values at the boundaries.
         
 
@@ -403,7 +403,7 @@ class CellVariable:
     
         """
         v = self.domain.cellVolumes()
-        c = self.internalCellValues
+        c = self.innerCellValues
         return (v*c).flatten().sum()
 
 
