@@ -78,10 +78,4 @@ for s in [20,60,240]:
   
   # TO DO: output result, compare to analytic solution?
   ##  See FVTool repo (there's some Python there)
-  ##  ORIGINAL Matlab/Octave code for output
-  # % The following writes the result to a file
-  # x = [c.domain.facecenters.x(1); c.domain.cellcenters.x; c.domain.facecenters.x(end)];
-  # cval = [0.5*(c.value(1)+c.value(2)); c.value(2:end-1); 0.5*(c.value(end-1)+c.value(end))];
-  # ti += s;
-  # filename = ["diffusion1Dspherical_FVTool_tstep",num2str(ti),".mat"]
-  # save('-6',filename,'x','cval');
+

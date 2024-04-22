@@ -156,7 +156,6 @@ for i in range(len(mesh_nonuniform)):
     M_dif.append(M)
     M_conv.append(convectionTerm(0.1*f_n[i]))
     c_conv.append(solveMatrixPDE(mesh_nonuniform[i], M_conv[i]-M_dif[i]+M_bc[i], RHS_bc[i]))
-    # print(c_conv[i].value)
 # # visualize
 # # figure(2)
 # # for i=1:N_mesh
