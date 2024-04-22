@@ -120,6 +120,12 @@ class CellVariable:
         elif issubclass(type(self.domain), Grid3D):
             self.value[1:-1, 1:-1, 1:-1] = values
     
+    # read-only property innerCellVolumes
+    @property
+    def innerCellVolumes(self):
+        return self.domain.cellVolumes()
+        
+    
     def __add__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, self.value+other.value)
@@ -402,7 +408,7 @@ class CellVariable:
             Total finite-volume integral over entire domain.
     
         """
-        v = self.domain.cellVolumes()
+        v = self.innerCellVolumes
         c = self.innerCellValues
         return (v*c).flatten().sum()
 
