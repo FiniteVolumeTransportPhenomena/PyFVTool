@@ -94,7 +94,6 @@ for i in range(len(mesh_nonuniform)):
     c_conv.append(pf.solveMatrixPDE(mesh_nonuniform[i], 
                                     M_conv[i]-M_dif[i]+M_bc[i],
                                     RHS_bc[i]))
-    # print(c_conv[i].value)
 # # visualize
 # # figure(2)
 # # for i=1:N_mesh

@@ -6,9 +6,8 @@ see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.;
      Solution and Its Study Using Quantitative Digital Photography.",
      Part. Part. Syst. Charact. 2017, 34, 1700095. doi:10.1002/ppsc.201700095.
 
-
-using solvePDE v0.3.0  
 """
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -28,20 +27,18 @@ maxdev_ppq = 1000. # max rel deviation in parts per 10^15
 
 msh = pf.Grid1D(Nx, Lx)
 
-BC_c = pf.BoundaryConditions(msh)
-
-c = pf.CellVariable(msh, 1.0, BC_c)
+# Solution variable (no flux BCs)
+c = pf.CellVariable(msh, 1.0)
 total_c = [c.domainIntegral()]
 
 # advection field
 u = pf.FaceVariable(msh, (sg,))
-# closed boundaries
+# closed boundaries: no flow at extremities
 u.xvalue[0] = 0.0
 u.xvalue[-1] = 0.0
 
 # diffusion field
 D = pf.FaceVariable(msh, D_coeff)
-
 
 # prepare plot
 plt.figure(1)
@@ -59,16 +56,11 @@ while (it*dt < t_simulation):
     # of the loop and store their results. The difference in performance is 
     # probably minimal, since most of the CPU time is in the
     # actual solving of the matrix equation
-    
-    bcterm = pf.boundaryConditionsTerm(BC_c)
-
     eqn = [pf.transientTerm(c, dt, 1.0),
            -pf.diffusionTerm(D),
            pf.convectionTerm(u)]
 
-    pf.solvePDE(c,
-                bcterm,
-                eqn)
+    pf.solvePDE(c, eqn)
     it+=1
     total_c.append(c.domainIntegral())
     if (it % Nskip == 0):
@@ -107,4 +99,4 @@ def test_mass_conservation():
 def test_amplitude():
     # simulation should have reach at least 90% of steady-state value
     # 
-    assert np.max(c.internalCellValues) > 0.9*B
+    assert np.max(c.innerCellValues) > 0.9*B

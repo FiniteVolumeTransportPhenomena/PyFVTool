@@ -7,6 +7,7 @@ from scipy.sparse.linalg import spsolve
 from .mesh import MeshStructure
 from .cell import CellVariable
 from .boundary import BoundaryConditions
+from .boundary import boundaryConditionsTerm
 
 
 
@@ -47,11 +48,11 @@ def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
     else:
         solver = externalsolver
     phi = solver(M, RHS)
-    return CellVariable(m, np.reshape(phi, m.dims+2))
+    return CellVariable(m, np.reshape(phi, m.dims+2)) # BCs handled by user
 
 
 
-def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list, 
+def solvePDE(phi: CellVariable, eqnterms: list, 
               externalsolver = None) -> CellVariable:
     """
     Solve a PDE using the finite volume method
@@ -109,8 +110,10 @@ def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list,
     else:
         solver = externalsolver
     
-    # Decode 'bcterm' which is actually a tuple (M, RHS)
-    Mbc, RHSbc = bcterm
+    # Construct BCs Term
+    # Mbc, RHSbc = boundaryConditionsTerm(phi.BCs)
+    # Retrieve pre-constructed BCs Term
+    Mbc, RHSbc = phi._BCsTerm
     
     # Initialize overall cumulative matrix and right-hand side for 
     # matrix equation
@@ -142,10 +145,11 @@ def solvePDE(phi: CellVariable, bcterm: tuple, eqnterms: list,
 
 
 
-def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray, 
-                     BC: BoundaryConditions) -> CellVariable:
+def solveExplicitPDE(phi_old: CellVariable, 
+                     dt: float, 
+                     RHS: np.ndarray) -> CellVariable:
     """
-    Solve the PDE using the finite volume method.
+    Solve the PDE using an explicit finite volume method.
 
     Parameters
     ----------
@@ -155,17 +159,18 @@ def solveExplicitPDE(phi_old: CellVariable, dt: float, RHS: np.ndarray,
         Time step
     RHS: np.ndarray
         Right hand side of the linear system
-    BC: BoundaryConditions
-        Boundary conditions
+
     
     Returns
     -------
     phi: CellVariable
         Solution of the PDE
+    
     """
     
     x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
-    phi= CellVariable(phi_old.domain, 0.0)
+    phi = CellVariable(phi_old.domain, 0.0, phi_old.BCs, 
+                       BCsTerm_precalc = False)
     phi.value = x
-    phi.update_bc_cells(BC)
+    phi.apply_BCs()
     return phi

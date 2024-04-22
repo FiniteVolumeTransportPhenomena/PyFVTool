@@ -336,7 +336,7 @@ def convectionUpwindTerm2D(u: FaceVariable, *args):
     AS = -vs_max/DYp
     APx = (ue_max-uw_min)/DXp
     APy = (vn_max-vs_min)/DYp
-    # Also correct for the boundary cells (not the ghost cells)
+    # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
     APx[0, :] = APx[0, :]-uw_max[0, :]/(2.0*DXp[0])
     AW[0, :] = AW[0, :]/2.0
@@ -522,7 +522,7 @@ def convectionUpwindTermCylindrical2D(u: FaceVariable, *args):
     AS = -vs_max/DYp
     APx = (re*ue_max-rw*uw_min)/(DXp*rp)
     APy = (vn_max-vs_min)/DYp
-    # Also correct for the boundary cells (not the ghost cells)
+    # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
     APx[0, :] = APx[0, :]-rw[0, :]*uw_max[0, :]/(2.0*DXp[0]*rp[0, :])
     AW[0, :] = AW[0, :]/2.0
@@ -704,7 +704,7 @@ def convectionUpwindTermPolar2D(u: FaceVariable, *args):
     AS = -vs_max/(rp*DYp)
     APx = (re*ue_max-rw*uw_min)/(DXp*rp)
     APy = (vn_max-vs_min)/(DYp*rp)
-    # Also correct for the boundary cells (not the ghost cells)
+    # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
     APx[0, :] = APx[0, :]-rw[0, :]*uw_max[0, :]/(2.0*DXp[0]*rp[0, :])
     AW[0, :] = AW[0, :]/2.0
@@ -906,7 +906,7 @@ def convectionUpwindTerm3D(u: FaceVariable, *args):
     APy = (vn_max-vs_min)/DYp
     APz = (wf_max-wb_min)/DZp
 
-    # Also correct for the boundary cells (not the ghost cells)
+    # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
     APx[0, :, :] = APx[0, :, :]-uw_max[0, :, :]/(2.0*DXp[0, :, :])
     AW[0, :, :] = AW[0, :, :]/2.0
@@ -1169,7 +1169,7 @@ def convectionUpwindTermCylindrical3D(u: FaceVariable, *args):
     APy = (vn_max-vs_min)/(DTHETAp*rp)
     APz = (wf_max-wb_min)/DZp
 
-    # Also correct for the boundary cells (not the ghost cells)
+    # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
     APx[0, :, :] = APx[0, :, :]-rw[0, :, :] * \
         uw_max[0, :, :]/(2.0*DRp[0, :, :]*rp[0, :, :])

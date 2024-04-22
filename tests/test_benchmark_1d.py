@@ -96,9 +96,9 @@ def conv_numerical_1d() -> float:
     c = pf.solveMatrixPDE(meshstruct, M, RHS)
     # c_upwind = solveMatrixPDE(meshstruct, Mupwind, RHS)
     c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
-    er = np.sum(np.abs(c_analytical-c.internalCellValues))/Nx
+    er = np.sum(np.abs(c_analytical-c.innerCellValues))/Nx
     if OUTPUT_DIAGNOSTICS:
-        return er, x, c_analytical, c.internalCellValues
+        return er, x, c_analytical, c.innerCellValues
     else:
         return er
 

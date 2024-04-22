@@ -135,8 +135,8 @@ c = solveMatrixPDE(meshstruct, M, RHS) # solve for the central scheme
 c_upwind = solveMatrixPDE(meshstruct, Mupwind, RHS) # solve for the upwind scheme
 c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val)) # analytical solution
 # plt.figure(5)
-# plt.plot(x, c.internalCellValues) 
-# plt.plot(x, c_upwind.internalCellValues, '--')
+# plt.plot(x, c.innerCellValues) 
+# plt.plot(x, c_upwind.innerCellValues, '--')
 # plt.plot(x, c_analytical, '.')
 # plt.show()
 # plt.legend('central', 'upwind', 'analytical')
@@ -156,7 +156,6 @@ for i in range(len(mesh_nonuniform)):
     M_dif.append(M)
     M_conv.append(convectionTerm(0.1*f_n[i]))
     c_conv.append(solveMatrixPDE(mesh_nonuniform[i], M_conv[i]-M_dif[i]+M_bc[i], RHS_bc[i]))
-    # print(c_conv[i].value)
 # # visualize
 # # figure(2)
 # # for i=1:N_mesh
@@ -230,12 +229,12 @@ L = 5.0  # domain length
 Nx = 100 # number of cells
 meshstruct = Grid1D(Nx, L)
 BC = BoundaryConditions(meshstruct) # all Neumann boundary condition structure
-BC.left.a[:] = 0 
-BC.left.b[:]=1 
-BC.left.c[:]=1 # left boundary
-BC.right.a[:] = 0 
-BC.right.b[:]=1 
-BC.right.c[:]=0 # right boundary
+BC.left.a[:] = 0.0 
+BC.left.b[:] = 1.0 
+BC.left.c[:] = 1.0 # left boundary
+BC.right.a[:] = 0.0 
+BC.right.b[:] = 1.0
+BC.right.c[:] = 0.0 # right boundary
 x = meshstruct.cellcenters.x
 ## define the transfer coeffs
 D_val = 1.0
@@ -251,14 +250,14 @@ for t in np.arange(dt, final_t, dt):
     # step 1: calculate divergence term
     RHS = divergenceTerm(Dave*gradientTerm(c_old))
     # step 2: calculate the new value for internal cells
-    c = solveExplicitPDE(c_old, dt, RHS, BC)
+    c = solveExplicitPDE(c_old, dt, RHS)
     c_old.update_value(c)
 
 # analytical solution
 c_analytical = 1-erf(x/(2*np.sqrt(D_val*t)))
 plt.figure(1)
 plt.clf()
-plt.plot(x, c.internalCellValues, x, c_analytical, 'r--')
+plt.plot(x, c.innerCellValues, x, c_analytical, 'r--')
 # plt.show()
 
 

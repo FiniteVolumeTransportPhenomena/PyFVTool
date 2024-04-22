@@ -216,9 +216,6 @@ class MeshStructure:
         np.ndarray
             containing all cell volumes, arranged according to gridcells
             
-        TODO: these could perhaps be calculated statically, when initializing
-        the mesh.
-        
         """
         if (type(self) is Grid1D):
             c = self.cellsize._x[1:-1]

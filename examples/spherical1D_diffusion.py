@@ -41,7 +41,7 @@ alfa = pf.CellVariable(m, 1.0)
 c_init = 0.0
 c_old = pf.CellVariable(m, c_init, BC)
 r = c_old.domain.cellcenters.r
-c_old.internalCellValues[r<1.0] = 1.0   # TO DO: find a better syntax for this
+c_old.innerCellValues[r<1.0] = 1.0   # TO DO: find a better syntax for this
 
 # calculate volumes of FV cellslices
 #  We use this for demonstrating mass conservation
@@ -54,7 +54,7 @@ t = 0.0 # overall time
 deltat = 0.0625/20 #  time step
 
 # output total mass in the system
-m_tot = np.sum(c_old.internalCellValues * cellvol)
+m_tot = np.sum(c_old.innerCellValues * cellvol)
 print(t,m_tot)
 
 # loop for "time-stepping" the solution
@@ -73,15 +73,9 @@ for s in [20,60,240]:
       c = pf.solveMatrixPDE(m,M, RHS)
       t += deltat
       c_old.update_value(c)
-  m_tot = np.sum(c.internalCellValues * cellvol)
+  m_tot = np.sum(c.innerCellValues * cellvol)
   print(n,t,m_tot)
   
   # TO DO: output result, compare to analytic solution?
   ##  See FVTool repo (there's some Python there)
-  ##  ORIGINAL Matlab/Octave code for output
-  # % The following writes the result to a file
-  # x = [c.domain.facecenters.x(1); c.domain.cellcenters.x; c.domain.facecenters.x(end)];
-  # cval = [0.5*(c.value(1)+c.value(2)); c.value(2:end-1); 0.5*(c.value(end-1)+c.value(end))];
-  # ti += s;
-  # filename = ["diffusion1Dspherical_FVTool_tstep",num2str(ti),".mat"]
-  # save('-6',filename,'x','cval');
+
