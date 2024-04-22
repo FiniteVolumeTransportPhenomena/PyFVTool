@@ -129,137 +129,173 @@ class CellVariable:
     def __add__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other.innerCellValues)
+                                self.innerCellValues + other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other)
+                                self.innerCellValues + other,
+                                deepcopy(self.BCs))
 
     def __radd__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other.innerCellValues)
+                                self.innerCellValues + other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other)
+                                self.innerCellValues + other,
+                                deepcopy(self.BCs))
 
     def __rsub__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                other.innerCellValues - self.innerCellValues)
+                                other.innerCellValues - self.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                other - self.innerCellValues)
+                                other - self.innerCellValues,
+                                deepcopy(self.BCs))
     
     def __sub__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain,
-                                self.innerCellValues - other.innerCellValues)
+                                self.innerCellValues - other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues - other)
+                                self.innerCellValues - other,
+                                deepcopy(self.BCs))
 
     def __mul__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other.innerCellValues)
+                                self.innerCellValues * other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other)
+                                self.innerCellValues * other,
+                                deepcopy(self.BCs))
 
     def __rmul__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other.innerCellValues)
+                                self.innerCellValues * other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other)
+                                self.innerCellValues * other,
+                                deepcopy(self.BCs))
 
     def __truediv__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues / other.innerCellValues)
+                                self.innerCellValues / other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues / other)
+                                self.innerCellValues / other,
+                                deepcopy(self.BCs))
 
     def __rtruediv__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                other.innerCellValues / self.innerCellValues)
+                                other.innerCellValues / self.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                other / self.innerCellValues)
+                                other / self.innerCellValue,
+                                deepcopy(self.BCs))
     
     def __neg__(self):
-        return CellVariable(self.domain, -self.innerCellValues)
+        return CellVariable(self.domain, -self.innerCellValues,
+                            deepcopy(self.BCs))
     
     def __pow__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues**other.innerCellValues)
+                                self.innerCellValues**other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues**other)
+                                self.innerCellValues**other,
+                                deepcopy(self.BCs))
     
     def __rpow__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                other.innerCellValues**self.innerCellValues)
+                                other.innerCellValues**self.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                other**self.innerCellValues)
+                                other**self.innerCellValues,
+                                deepcopy(self.BCs))
     
     def __gt__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues>other.innerCellValues)
+                                self.innerCellValues>other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues>other)
+                                self.innerCellValues>other,
+                                deepcopy(self.BCs))
 
     def __ge__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues>=other.innerCellValues)
+                                self.innerCellValues>=other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues>=other)
+                                self.innerCellValues>=other,
+                                deepcopy(self.BCs))
 
     def __lt__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues<other.innerCellValues)
+                                self.innerCellValues<other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues<other)
+                                self.innerCellValues<other,
+                                deepcopy(self.BCs))
     
     def __le__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain,
-                                self.innerCellValues<=other.innerCellValues)
+                                self.innerCellValues<=other.innerCellValues,
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues<=other)
+                                self.innerCellValues<=other,
+                                deepcopy(self.BCs))
 
     def __and__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                       np.logical_and(self.innerCellValues, other.innerCellValues))
+                                np.logical_and(self.innerCellValues, 
+                                               other.innerCellValues),
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                np.logical_and(self.innerCellValues, other))
+                                np.logical_and(self.innerCellValues, other),
+                                deepcopy(self.BCs))
     
     def __or__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
                                 np.logical_or(self.innerCellValues, 
-                                              other.innerCellValues))
+                                              other.innerCellValues),
+                                deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                np.logical_or(self.innerCellValues, other))
+                                np.logical_or(self.innerCellValues, other),
+                                deepcopy(self.BCs))
     
     def __abs__(self):
-        return CellVariable(self.domain, np.abs(self.innerCellValues))
+        return CellVariable(self.domain,
+                            np.abs(self.innerCellValues),
+                            deepcopy(self.BCs))
 
 
     def apply_BCs(self):

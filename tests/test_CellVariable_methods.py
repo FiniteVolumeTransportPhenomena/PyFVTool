@@ -4,6 +4,8 @@ Basic, incomplete testing of CellVariable arithmetic
 
 """
 
+complete_success = False
+
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -55,15 +57,25 @@ assert np.all(cv5.BCs.left.b == 1.0)
 assert np.all(cv5.BCs.left.c == 1.25)
 
 
-# TODO: make the following work
-
-# assert np.all(cv56.BCs.left.a == 0.0)
-# assert np.all(cv56.BCs.left.b == 1.0)
-# assert np.all(cv56.BCs.left.c == 1.25)
+assert np.all(cv56.BCs.left.a == 0.0)
+assert np.all(cv56.BCs.left.b == 1.0)
+assert np.all(cv56.BCs.left.c == 1.25)
 
 
+assert np.all(cv56.BCs.top.a == 0.0)
+assert np.all(cv56.BCs.top.b == 1.0)
+assert np.all(cv56.BCs.top.c == -1.25)
 
 
-# # pytest
-# def test_success():
-#     assert 1 == 0, "to be implemented"
+# We should probably test all arithmetic methods for CellVariables...
+# Copilot?
+
+
+# End of test: all tests completed successfully
+
+complete_success = True
+
+
+# pytest
+def test_success():
+    assert complete_success
