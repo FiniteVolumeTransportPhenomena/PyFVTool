@@ -1,4 +1,4 @@
-__version__ = "0.3.1"
+__version__ = "0.3.2"
 
 __author__ = [
     "Ali A. Eftekhari",
@@ -13,8 +13,6 @@ __copyright__ = "Copyright 2023-2024, The Authors"
 __license__ = "MIT License"
 
 
-
-ENABLE_LEGACY = False # enable/disable backward compatibility
 
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
 from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D 
@@ -35,27 +33,4 @@ from .cell import cellLocations
 from .face import FaceVariable, faceeval
 from .face import faceLocations
 from .visualization import visualizeCells
-
-# legacy naming of certain functions and classes
-if ENABLE_LEGACY:
-    from .legacy import boundaryConditionTerm
-    from .legacy import createBC
-    from .legacy import createCellVariable
-    from .legacy import createFaceVariable
-    from .legacy import createMesh1D
-    from .legacy import createMeshCylindrical1D
-    from .legacy import createMeshSpherical1D
-    from .legacy import createMesh2D
-    from .legacy import createMeshCylindrical2D
-    from .legacy import createMeshRadial2D
-    from .legacy import createMesh3D
-    from .legacy import createMeshCylindrical3D
-    from .legacy import createMeshSpherical3D
-    from .legacy import get_CellVariable_profile1D
-    from .legacy import get_CellVariable_profile2D
-    from .legacy import get_CellVariable_profile3D    
-    from .legacy import domainInt
-    from .legacy import cellVolume
-    
-    
     
