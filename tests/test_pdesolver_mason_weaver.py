@@ -56,11 +56,11 @@ while (it*dt < t_simulation):
     # of the loop and store their results. The difference in performance is 
     # probably minimal, since most of the CPU time is in the
     # actual solving of the matrix equation
-    eqn = [pf.transientTerm(c, dt, 1.0),
-           -pf.diffusionTerm(D),
-           pf.convectionTerm(u)]
+    eqnterms = [ pf.transientTerm(c, dt, 1.0),
+                -pf.diffusionTerm(D),
+                 pf.convectionTerm(u)]
 
-    pf.solvePDE(c, eqn)
+    pf.solvePDE(c, eqnterms)
     it+=1
     total_c.append(c.domainIntegral())
     if (it % Nskip == 0):
