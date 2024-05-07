@@ -17,7 +17,7 @@ __license__ = "MIT License"
 from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
 from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D 
 from .mesh import Grid3D, CylindricalGrid3D, SphericalGrid3D
-from .advection import convectionTerm, convectionTvdRHSTerm,\
+from .advection import convectionTerm, convectionTVDupwindRHSTerm,\
                        convectionUpwindTerm
 from .diffusion import diffusionTerm
 from .source import linearSourceTerm, constantSourceTerm, transientTerm

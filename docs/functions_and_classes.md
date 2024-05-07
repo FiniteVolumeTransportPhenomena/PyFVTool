@@ -15,7 +15,7 @@ from pyfvtool import CylindricalGrid3D, PolarGrid2D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionTerm, diffusionTerm
-from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
+from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
 from pyfvtool import transientTerm
@@ -52,7 +52,7 @@ from pyfvtool import visualizeCells
 ## Discretization: construction of (sparse) matrix equation
 
 - boundaryConditionTerm, diffusionTerm
-- convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
+- convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
 	- fluxLimiter
 - gradientTerm, divergenceTerm
 - linearSourceTerm, constantSourceTerm
