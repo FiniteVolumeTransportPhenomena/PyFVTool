@@ -49,11 +49,11 @@ t = 0
 nplot = 0
 while t<t_simulation:
     # Compose discretized terms for matrix equation
-    eqn = [ pf.transientTerm(c, dt, 1.0),
-           -pf.diffusionTerm(D_face)]
+    eqnterms = [ pf.transientTerm(c, dt, 1.0),
+                -pf.diffusionTerm(D_face)]
 
     # Solve PDE
-    pf.solvePDE(c, eqn)
+    pf.solvePDE(c, eqnterms)
     t+=dt
 
     if (nplot % Nskip == 0):

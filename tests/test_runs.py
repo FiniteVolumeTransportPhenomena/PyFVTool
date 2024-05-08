@@ -129,7 +129,7 @@ for i in range(len(mesh_nonuniform)):
     M=pf.diffusionTerm(f_n[i])
     M_dif.append(M)
     M_conv.append(pf.convectionUpwindTerm(0.1*f_n[i]))
-    RHS_tvd.append(pf.convectionTvdRHSTerm(0.01*f_n[i], c_old[i], FL1)) #only called, not used
+    RHS_tvd.append(pf.convectionTVDupwindRHSTerm(0.01*f_n[i], c_old[i], FL1)) #only called, not used
     M_ls.append(pf.linearSourceTerm(0.1*c_n[i]))
     RHS_s.append(pf.constantSourceTerm(0.2*c_n[i]))
 

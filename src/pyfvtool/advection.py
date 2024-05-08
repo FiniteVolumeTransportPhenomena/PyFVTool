@@ -1415,11 +1415,11 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
             "convectionUpwindTerm is not defined for this Mesh type.")
 
 
-def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.ndarray:
+def convectionTVDupwindRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.ndarray:
     """
-    Returns the discretized correction vector fot the convection term, 
+    Returns the TVD correction vector for the upwind convection term, 
     :math:`\\nabla \\cdot (u \\phi)`.
-    The convection term is evaluated based on the TVD scheme.
+    The convection term is evaluated based on the TVD upwind scheme.
 
     Parameters
     ----------
@@ -1437,7 +1437,7 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
     >>> u = pf.FaceVariable(m, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> FL = pf.fluxLimiter('SUPERBEE')
-    >>> RHS = pf.convectionTvdRHSTerm(u, phi, FL)
+    >>> RHS = pf.convectionTVDupwindRHSTerm(u, phi, FL)
     """
     if (type(u.domain) is Grid1D):
         return convectionTvdRHS1D(u, phi, FL, *args)
@@ -1455,4 +1455,4 @@ def convectionTvdRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) -> np.nd
         return convectionTvdRHSCylindrical3D(u, phi, FL, *args)[0]
     else:
         raise Exception(
-            "convectionTvdRHSTerm is not defined for this Mesh type.")
+            "convectionTVDupwindRHSTerm is not defined for this Mesh type.")

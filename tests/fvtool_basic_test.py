@@ -14,7 +14,7 @@ from pyfvtool import CylindricalGrid3D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
-from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTvdRHSTerm
+from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
 from pyfvtool import gradientTerm, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
 from pyfvtool import transientTerm
@@ -191,7 +191,7 @@ for i in range(len(mesh_nonuniform)):
     M=diffusionTerm(f_n[i])
     M_dif.append(M)
     M_conv.append(convectionUpwindTerm(0.1*f_n[i]))
-    RHS_tvd.append(convectionTvdRHSTerm(0.01*f_n[i], c_old[i], FL1)) #only called, not used
+    RHS_tvd.append(convectionTVDupwindRHSTerm(0.01*f_n[i], c_old[i], FL1)) #only called, not used
     M_ls.append(linearSourceTerm(0.1*c_n[i]))
     RHS_s.append(constantSourceTerm(0.2*c_n[i]))
 
