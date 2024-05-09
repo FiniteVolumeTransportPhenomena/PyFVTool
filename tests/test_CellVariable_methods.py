@@ -19,15 +19,15 @@ cv1 = pf.CellVariable(msh, 1.0)
 cv2 = pf.CellVariable(msh, 2.0)
 
 cv12 = cv1 + cv2
-assert np.all(cv12.innerCellValues == cv1.innerCellValues\
-                                      + cv2.innerCellValues)
+assert np.all(cv12.value == cv1.value\
+                            + cv2.value)
     
 cv3 = pf.CellVariable(msh, 3.0)
 cv4 = pf.CellVariable(msh, 4.0)
 
 cv34 = cv3 * cv4
-assert np.all(cv34.innerCellValues == cv3.innerCellValues\
-                                      * cv4.innerCellValues)
+assert np.all(cv34.value == cv3.value\
+                            * cv4.value)
 
     
 msh2 = pf.Grid2D(20, 20, 1.0, 1.0)
@@ -48,8 +48,8 @@ cv5.apply_BCs()
 
 cv56 = cv5/cv6 # Warning! Ghost cells may lead to division by zero
                # This is why only inner cells should participate in arithmetic
-assert np.all(cv56.innerCellValues == cv5.innerCellValues\
-                                      / cv6.innerCellValues)
+assert np.all(cv56.value == cv5.value\
+                            / cv6.value)
     
 # test of boundary condition transfer
 assert np.all(cv5.BCs.left.a == 0.0)
@@ -78,7 +78,7 @@ def addfun(u0, u1):
 
 cvnew12 = pf.funceval(addfun, cv1, cv2)
 
-assert np.all(cvnew12.innerCellValues == cv12.innerCellValues)
+assert np.all(cvnew12.value == cv12.value)
 
 
 def divfun(u0, u1):
@@ -86,7 +86,7 @@ def divfun(u0, u1):
 
 cvnew56 = pf.funceval(divfun, cv5, cv6)
 
-assert np.all(cvnew56.innerCellValues == cv56.innerCellValues)
+assert np.all(cvnew56.value == cv56.value)
 
 
 assert np.all(cvnew56.BCs.left.a == 0.0)

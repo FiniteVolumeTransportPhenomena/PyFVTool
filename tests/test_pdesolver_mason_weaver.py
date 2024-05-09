@@ -99,4 +99,4 @@ def test_mass_conservation():
 def test_amplitude():
     # simulation should have reach at least 90% of steady-state value
     # 
-    assert np.max(c.innerCellValues) > 0.9*B
+    assert np.max(c.value) > 0.9*B

@@ -103,7 +103,7 @@ class CellVariable:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
 
     @property
-    def innerCellValues(self):
+    def value(self):
         if issubclass(type(self.domain), Grid1D):
             return self._value[1:-1]
         elif issubclass(type(self.domain), Grid2D):
@@ -111,8 +111,8 @@ class CellVariable:
         elif issubclass(type(self.domain), Grid3D):
             return self._value[1:-1, 1:-1, 1:-1]
         
-    @innerCellValues.setter
-    def innerCellValues(self, values):
+    @value.setter
+    def value(self, values):
         if issubclass(type(self.domain), Grid1D):
             self._value[1:-1] = values
         elif issubclass(type(self.domain), Grid2D):
@@ -129,172 +129,172 @@ class CellVariable:
     def __add__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other.innerCellValues,
+                                self.value + other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other,
+                                self.value + other,
                                 deepcopy(self.BCs))
 
     def __radd__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other.innerCellValues,
+                                self.value + other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues + other,
+                                self.value + other,
                                 deepcopy(self.BCs))
 
     def __rsub__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                other.innerCellValues - self.innerCellValues,
+                                other.value - self.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                other - self.innerCellValues,
+                                other - self.value,
                                 deepcopy(self.BCs))
     
     def __sub__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain,
-                                self.innerCellValues - other.innerCellValues,
+                                self.value - other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues - other,
+                                self.value - other,
                                 deepcopy(self.BCs))
 
     def __mul__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other.innerCellValues,
+                                self.value * other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other,
+                                self.value * other,
                                 deepcopy(self.BCs))
 
     def __rmul__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other.innerCellValues,
+                                self.value * other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues * other,
+                                self.value * other,
                                 deepcopy(self.BCs))
 
     def __truediv__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues / other.innerCellValues,
+                                self.value / other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues / other,
+                                self.value / other,
                                 deepcopy(self.BCs))
 
     def __rtruediv__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                other.innerCellValues / self.innerCellValues,
+                                other.value / self.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                other / self.innerCellValue,
+                                other / self.value,
                                 deepcopy(self.BCs))
     
     def __neg__(self):
-        return CellVariable(self.domain, -self.innerCellValues,
+        return CellVariable(self.domain, -self.value,
                             deepcopy(self.BCs))
     
     def __pow__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues**other.innerCellValues,
+                                self.value**other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues**other,
+                                self.value**other,
                                 deepcopy(self.BCs))
     
     def __rpow__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                other.innerCellValues**self.innerCellValues,
+                                other.value**self.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                other**self.innerCellValues,
+                                other**self.value,
                                 deepcopy(self.BCs))
     
     def __gt__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues>other.innerCellValues,
+                                self.value>other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues>other,
+                                self.value>other,
                                 deepcopy(self.BCs))
 
     def __ge__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues>=other.innerCellValues,
+                                self.value>=other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues>=other,
+                                self.value>=other,
                                 deepcopy(self.BCs))
 
     def __lt__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                self.innerCellValues<other.innerCellValues,
+                                self.value<other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues<other,
+                                self.value<other,
                                 deepcopy(self.BCs))
     
     def __le__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain,
-                                self.innerCellValues<=other.innerCellValues,
+                                self.value<=other.value,
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                self.innerCellValues<=other,
+                                self.value<=other,
                                 deepcopy(self.BCs))
 
     def __and__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                np.logical_and(self.innerCellValues, 
-                                               other.innerCellValues),
+                                np.logical_and(self.value, 
+                                               other.value),
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                np.logical_and(self.innerCellValues, other),
+                                np.logical_and(self.value, other),
                                 deepcopy(self.BCs))
     
     def __or__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 
-                                np.logical_or(self.innerCellValues, 
-                                              other.innerCellValues),
+                                np.logical_or(self.value, 
+                                              other.value),
                                 deepcopy(self.BCs))
         else:
             return CellVariable(self.domain, 
-                                np.logical_or(self.innerCellValues, other),
+                                np.logical_or(self.value, other),
                                 deepcopy(self.BCs))
     
     def __abs__(self):
         return CellVariable(self.domain,
-                            np.abs(self.innerCellValues),
+                            np.abs(self.value),
                             deepcopy(self.BCs))
 
 
@@ -309,7 +309,7 @@ class CellVariable:
         None.
 
         """
-        self._value = cellValuesWithBoundaries(self.innerCellValues,
+        self._value = cellValuesWithBoundaries(self.value,
                                               self.BCs)
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
@@ -340,7 +340,7 @@ class CellVariable:
         cell values, including the values at the boundaries.
         
         For 2D and 3D visualization, it is perhaps better to use only the 
-        innerCellValues (e.g. for a false color map à la plt.pcolormesh),
+        actual cell values (e.g. for a false color map à la plt.pcolormesh),
         and not include the values at the boundaries.
         
 
@@ -478,7 +478,7 @@ class CellVariable:
     
         """
         v = self.innerCellVolumes
-        c = self.innerCellValues
+        c = self.value
         return (v*c).flatten().sum()
 
 
@@ -547,63 +547,63 @@ def cellLocations(m: MeshStructure):
 def funceval(f, *args):
     if len(args)==1:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues),
+                            f(args[0].value),
                             deepcopy(args[0].BCs))
     elif len(args)==2:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value),
                             deepcopy(args[0].BCs))
     elif len(args)==3:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues, 
-                              args[2].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value, 
+                              args[2].value),
                             deepcopy(args[0].BCs))
     elif len(args)==4:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues, 
-                              args[2].innerCellValues, 
-                              args[3].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value, 
+                              args[2].value, 
+                              args[3].value),
                             deepcopy(args[0].BCs))
     elif len(args)==5:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues, 
-                              args[2].innerCellValues, 
-                              args[3].innerCellValues, 
-                              args[4].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value, 
+                              args[2].value, 
+                              args[3].value, 
+                              args[4].value),
                             deepcopy(args[0].BCs))
     elif len(args)==6:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues, 
-                              args[2].innerCellValues, 
-                              args[3].innerCellValues, 
-                              args[4].innerCellValues, 
-                              args[5].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value, 
+                              args[2].value, 
+                              args[3].value, 
+                              args[4].value, 
+                              args[5].value),
                             deepcopy(args[0].BCs))
     elif len(args)==7:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues, 
-                              args[2].innerCellValues, 
-                              args[3].innerCellValues, 
-                              args[4].innerCellValues, 
-                              args[5].innerCellValues, 
-                              args[6].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value, 
+                              args[2].value, 
+                              args[3].value, 
+                              args[4].value, 
+                              args[5].value, 
+                              args[6].value),
                             deepcopy(args[0].BCs))
     elif len(args)==8:
         return CellVariable(args[0].domain, 
-                            f(args[0].innerCellValues, 
-                              args[1].innerCellValues, 
-                              args[2].innerCellValues, 
-                              args[3].innerCellValues, 
-                              args[4].innerCellValues, 
-                              args[5].innerCellValues, 
-                              args[6].innerCellValues, 
-                              args[7].innerCellValues),
+                            f(args[0].value, 
+                              args[1].value, 
+                              args[2].value, 
+                              args[3].value, 
+                              args[4].value, 
+                              args[5].value, 
+                              args[6].value, 
+                              args[7].value),
                             deepcopy(args[0].BCs))
     
 

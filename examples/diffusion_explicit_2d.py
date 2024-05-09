@@ -41,7 +41,7 @@ c_analytical = 1-erf(r/(2*np.sqrt(D_val*t)))
 
 plt.figure(1)
 plt.clf()
-plt.plot(r, c.innerCellValues[2,:], 'k', label='PyFVTool')
+plt.plot(r, c.value[2,:], 'k', label='PyFVTool')
 plt.plot(r, c_analytical, 'r--', label='analytic')
 plt.legend()
 plt.show()
