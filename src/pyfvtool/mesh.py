@@ -194,21 +194,8 @@ class MeshStructure:
         return np.hstack([facelocation[1]-facelocation[0],
                           facelocation[1:]-facelocation[0:-1],
                           facelocation[-1]-facelocation[-2]])
-    
-    def visualize(self):
-        pass
 
-
-    def shift_origin(self, _x=0.0, _y=0.0, _z=0.0):
-        self.cellcenters._x += _x
-        self.cellcenters._y += _y
-        self.cellcenters._z += _z
-        self.facecenters._x += _x
-        self.facecenters._y += _y
-        self.facecenters._z += _z
-
-
-    def cellVolumes(self):
+    def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
         
         Returns
@@ -242,7 +229,12 @@ class MeshStructure:
                 *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
                 *self.cellsize._z[np.newaxis,np.newaxis,:]
         return c
-
+    
+    # read-only property cellvolume
+    @property
+    def cellvolume(self):
+        return self._getCellVolumes()
+    
 
 
 #%%

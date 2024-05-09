@@ -123,7 +123,7 @@ class CellVariable:
     # read-only property cellvolume
     @property
     def cellvolume(self):
-        return self.domain.cellVolumes()
+        return self.domain.cellvolume
         
     
     def __add__(self, other):
