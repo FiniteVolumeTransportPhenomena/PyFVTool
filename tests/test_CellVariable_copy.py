@@ -86,7 +86,7 @@ while t<t_simulation:
 ### README code ends here
 
 # end test: identical results for both runs
-successful_finish = np.all(c.value == cc.value)
+successful_finish = np.all(c._value == cc._value)
 
 
 # pytest

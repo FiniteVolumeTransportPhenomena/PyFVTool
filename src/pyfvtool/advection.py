@@ -129,13 +129,13 @@ def convectionTvdRHS1D(u: FaceVariable, phi: CellVariable,
     psi_p = np.zeros(Nx+1)
     psi_m = np.zeros(Nx+1)
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-    dphi_p = (phi.value[1:Nx+2]-phi.value[0:Nx+1])/dx
+    dphi_p = (phi._value[1:Nx+2]-phi._value[0:Nx+1])/dx
     rp = dphi_p[0:-1]/_fsign(dphi_p[1:])
-    psi_p[1:Nx+1] = 0.5*FL(rp)*(phi.value[2:Nx+2]-phi.value[1:Nx+1])
+    psi_p[1:Nx+1] = 0.5*FL(rp)*(phi._value[2:Nx+2]-phi._value[1:Nx+1])
     psi_p[0] = 0.0  # left boundary will be handled explicitly
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     rm = dphi_p[1:]/_fsign(dphi_p[0:-1])
-    psi_m[0:Nx] = 0.5*FL(rm)*(phi.value[0:Nx]-phi.value[1:Nx+1])
+    psi_m[0:Nx] = 0.5*FL(rm)*(phi._value[0:Nx]-phi._value[1:Nx+1])
     psi_m[Nx] = 0.0  # right boundary will be handled explicitly
     # find the velocity direction for the upwind scheme
     ux_min, ux_max = _upwind_min_max(u, u_upwind)
@@ -239,13 +239,13 @@ def convectionTvdRHSCylindrical1D(u: FaceVariable, phi: CellVariable,
     psi_p = np.zeros(Nx+1)
     psi_m = np.zeros(Nx+1)
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-    dphi_p = (phi.value[1:Nx+2]-phi.value[0:Nx+1])/dx
+    dphi_p = (phi._value[1:Nx+2]-phi._value[0:Nx+1])/dx
     rp = dphi_p[0:-1]/_fsign(dphi_p[1:])
-    psi_p[1:Nx+1] = 0.5*FL(rp)*(phi.value[2:Nx+2]-phi.value[1:Nx+1])
+    psi_p[1:Nx+1] = 0.5*FL(rp)*(phi._value[2:Nx+2]-phi._value[1:Nx+1])
     psi_p[0] = 0.0  # left boundary will be handled explicitly
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     rm = dphi_p[1:]/_fsign(dphi_p[0:-1])
-    psi_m[0:Nx] = 0.5*FL(rm)*(phi.value[0:Nx]-phi.value[1:Nx+1])
+    psi_m[0:Nx] = 0.5*FL(rm)*(phi._value[0:Nx]-phi._value[1:Nx+1])
     psi_m[Nx] = 0.0  # right boundary will be handled explicitly
     # find the velocity direction for the upwind scheme
     ux_min, ux_max = _upwind_min_max(u, u_upwind)
@@ -390,27 +390,27 @@ def convectionTvdRHS2D(u: FaceVariable, phi: CellVariable, FL, *args):
     psiY_m = np.zeros((Nx, Ny+1))
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction
-    dphiX_p = (phi.value[1:Nx+2, 1:Ny+1]-phi.value[0:Nx+1, 1:Ny+1])/dx
+    dphiX_p = (phi._value[1:Nx+2, 1:Ny+1]-phi._value[0:Nx+1, 1:Ny+1])/dx
     rX_p = dphiX_p[0:-1, :]/_fsign(dphiX_p[1:, :])
-    psiX_p[1:Nx+1, :] = 0.5*FL(rX_p)*(phi.value[2:Nx+2, 1:Ny+1] -
-                                      phi.value[1:Nx+1, 1:Ny+1])
+    psiX_p[1:Nx+1, :] = 0.5*FL(rX_p)*(phi._value[2:Nx+2, 1:Ny+1] -
+                                      phi._value[1:Nx+1, 1:Ny+1])
     psiX_p[0, :] = 0.0  # left boundary will be handled in the main matrix
     # y direction
-    dphiY_p = (phi.value[1:Nx+1, 1:Ny+2]-phi.value[1:Nx+1, 0:Ny+1])/dy
+    dphiY_p = (phi._value[1:Nx+1, 1:Ny+2]-phi._value[1:Nx+1, 0:Ny+1])/dy
     rY_p = dphiY_p[:, 0:-1]/_fsign(dphiY_p[:, 1:])
-    psiY_p[:, 1:Ny+1] = 0.5*FL(rY_p)*(phi.value[1:Nx+1, 2:Ny+2] -
-                                      phi.value[1:Nx+1, 1:Ny+1])
+    psiY_p[:, 1:Ny+1] = 0.5*FL(rY_p)*(phi._value[1:Nx+1, 2:Ny+2] -
+                                      phi._value[1:Nx+1, 1:Ny+1])
     psiY_p[:, 0] = 0.0  # Bottom boundary will be handled in the main matrix
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     # x direction
     rX_m = dphiX_p[1:, :]/_fsign(dphiX_p[0:-1, :])
-    psiX_m[0:Nx, :] = 0.5*FL(rX_m)*(phi.value[0:Nx, 1:Ny+1] -
-                                    phi.value[1:Nx+1, 1:Ny+1])
+    psiX_m[0:Nx, :] = 0.5*FL(rX_m)*(phi._value[0:Nx, 1:Ny+1] -
+                                    phi._value[1:Nx+1, 1:Ny+1])
     psiX_m[-1, :] = 0.0  # right boundary
     # y direction
     rY_m = dphiY_p[:, 1:]/_fsign(dphiY_p[:, 0:-1])
-    psiY_m[:, 0:Ny] = 0.5*FL(rY_m)*(phi.value[1:Nx+1, 0:Ny] -
-                                    phi.value[1:Nx+1, 1:Ny+1])
+    psiY_m[:, 0:Ny] = 0.5*FL(rY_m)*(phi._value[1:Nx+1, 0:Ny] -
+                                    phi._value[1:Nx+1, 1:Ny+1])
     psiY_m[:, -1] = 0.0  # top boundary will be handled in the main matrix
     # find the velocity direction for the upwind scheme
     ux_min, ux_max, uy_min, uy_max = _upwind_min_max(u, u_upwind)
@@ -580,27 +580,27 @@ def convectionTvdRHSCylindrical2D(u: FaceVariable, phi: CellVariable, FL, *args)
     psiY_m = np.zeros((Nx, Ny+1))
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction
-    dphiX_p = (phi.value[1:Nx+2, 1:Ny+1]-phi.value[0:Nx+1, 1:Ny+1])/dx
+    dphiX_p = (phi._value[1:Nx+2, 1:Ny+1]-phi._value[0:Nx+1, 1:Ny+1])/dx
     rX_p = dphiX_p[0:-1, :]/_fsign(dphiX_p[1:, :])
-    psiX_p[1:Nx+1, :] = 0.5*FL(rX_p)*(phi.value[2:Nx+2, 1:Ny+1] -
-                                      phi.value[1:Nx+1, 1:Ny+1])
+    psiX_p[1:Nx+1, :] = 0.5*FL(rX_p)*(phi._value[2:Nx+2, 1:Ny+1] -
+                                      phi._value[1:Nx+1, 1:Ny+1])
     psiX_p[0, :] = 0.0  # left boundary will be handled in the main matrix
     # y direction
-    dphiY_p = (phi.value[1:Nx+1, 1:Ny+2]-phi.value[1:Nx+1, 0:Ny+1])/dy
+    dphiY_p = (phi._value[1:Nx+1, 1:Ny+2]-phi._value[1:Nx+1, 0:Ny+1])/dy
     rY_p = dphiY_p[:, 0:-1]/_fsign(dphiY_p[:, 1:])
-    psiY_p[:, 1:Ny+1] = 0.5*FL(rY_p)*(phi.value[1:Nx+1, 2:Ny+2] -
-                                      phi.value[1:Nx+1, 1:Ny+1])
+    psiY_p[:, 1:Ny+1] = 0.5*FL(rY_p)*(phi._value[1:Nx+1, 2:Ny+2] -
+                                      phi._value[1:Nx+1, 1:Ny+1])
     psiY_p[:, 0] = 0.0  # Bottom boundary will be handled in the main matrix
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     # x direction
     rX_m = dphiX_p[1:, :]/_fsign(dphiX_p[0:-1, :])
-    psiX_m[0:Nx, :] = 0.5*FL(rX_m)*(phi.value[0:Nx, 1:Ny+1] -
-                                    phi.value[1:Nx+1, 1:Ny+1])
+    psiX_m[0:Nx, :] = 0.5*FL(rX_m)*(phi._value[0:Nx, 1:Ny+1] -
+                                    phi._value[1:Nx+1, 1:Ny+1])
     psiX_m[-1, :] = 0.0  # right boundary
     # y direction
     rY_m = dphiY_p[:, 1:]/_fsign(dphiY_p[:, 0:-1])
-    psiY_m[:, 0:Ny] = 0.5*FL(rY_m)*(phi.value[1:Nx+1, 0:Ny] -
-                                    phi.value[1:Nx+1, 1:Ny+1])
+    psiY_m[:, 0:Ny] = 0.5*FL(rY_m)*(phi._value[1:Nx+1, 0:Ny] -
+                                    phi._value[1:Nx+1, 1:Ny+1])
     psiY_m[:, -1] = 0.0  # top boundary will be handled in the main matrix
     # find the velocity direction for the upwind scheme
     ux_min, ux_max, uy_min, uy_max = _upwind_min_max(u, u_upwind)
@@ -762,27 +762,27 @@ def convectionTvdRHSPolar2D(u: FaceVariable, phi: CellVariable, FL, *args):
     psiY_m = np.zeros((Nx, Ny+1))
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction
-    dphiX_p = (phi.value[1:Nx+2, 1:Ny+1]-phi.value[0:Nx+1, 1:Ny+1])/dx
+    dphiX_p = (phi._value[1:Nx+2, 1:Ny+1]-phi._value[0:Nx+1, 1:Ny+1])/dx
     rX_p = dphiX_p[0:-1, :]/_fsign(dphiX_p[1:, :])
-    psiX_p[1:Nx+1, :] = 0.5*FL(rX_p)*(phi.value[2:Nx+2, 1:Ny+1] -
-                                      phi.value[1:Nx+1, 1:Ny+1])
+    psiX_p[1:Nx+1, :] = 0.5*FL(rX_p)*(phi._value[2:Nx+2, 1:Ny+1] -
+                                      phi._value[1:Nx+1, 1:Ny+1])
     psiX_p[0, :] = 0.0  # left boundary will be handled in the main matrix
     # y direction
-    dphiY_p = (phi.value[1:Nx+1, 1:Ny+2]-phi.value[1:Nx+1, 0:Ny+1])/dy
+    dphiY_p = (phi._value[1:Nx+1, 1:Ny+2]-phi._value[1:Nx+1, 0:Ny+1])/dy
     rY_p = dphiY_p[:, 0:-1]/_fsign(dphiY_p[:, 1:])
-    psiY_p[:, 1:Ny+1] = 0.5*FL(rY_p)*(phi.value[1:Nx+1, 2:Ny+2] -
-                                      phi.value[1:Nx+1, 1:Ny+1])
+    psiY_p[:, 1:Ny+1] = 0.5*FL(rY_p)*(phi._value[1:Nx+1, 2:Ny+2] -
+                                      phi._value[1:Nx+1, 1:Ny+1])
     psiY_p[:, 0] = 0.0  # Bottom boundary will be handled in the main matrix
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     # x direction
     rX_m = dphiX_p[1:, :]/_fsign(dphiX_p[0:-1, :])
-    psiX_m[0:Nx, :] = 0.5*FL(rX_m)*(phi.value[0:Nx, 1:Ny+1] -
-                                    phi.value[1:Nx+1, 1:Ny+1])
+    psiX_m[0:Nx, :] = 0.5*FL(rX_m)*(phi._value[0:Nx, 1:Ny+1] -
+                                    phi._value[1:Nx+1, 1:Ny+1])
     psiX_m[-1, :] = 0.0  # right boundary
     # y direction
     rY_m = dphiY_p[:, 1:]/_fsign(dphiY_p[:, 0:-1])
-    psiY_m[:, 0:Ny] = 0.5*FL(rY_m)*(phi.value[1:Nx+1, 0:Ny] -
-                                    phi.value[1:Nx+1, 1:Ny+1])
+    psiY_m[:, 0:Ny] = 0.5*FL(rY_m)*(phi._value[1:Nx+1, 0:Ny] -
+                                    phi._value[1:Nx+1, 1:Ny+1])
     psiY_m[:, -1] = 0.0  # top boundary will be handled in the main matrix
     # find the velocity direction for the upwind scheme
     ux_min, ux_max, uy_min, uy_max = _upwind_min_max(u, u_upwind)
@@ -991,44 +991,44 @@ def convectionTvdRHS3D(u: FaceVariable, phi: CellVariable, FL, *args):
     psiZ_m = np.zeros((Nx, Ny, Nz+1))
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction
-    dphiX_p = (phi.value[1:Nx+2, 1:Ny+1, 1:Nz+1] -
-               phi.value[0:Nx+1, 1:Ny+1, 1:Nz+1])/dx
+    dphiX_p = (phi._value[1:Nx+2, 1:Ny+1, 1:Nz+1] -
+               phi._value[0:Nx+1, 1:Ny+1, 1:Nz+1])/dx
     rX_p = dphiX_p[0:-1, :, :]/_fsign(dphiX_p[1:, :, :])
     psiX_p[1:Nx+1, :, :] = 0.5 * \
-        FL(rX_p)*(phi.value[2:Nx+2, 1:Ny+1, 1:Nz+1] -
-                  phi.value[1:Nx+1, 1:Ny+1, 1:Nz+1])
+        FL(rX_p)*(phi._value[2:Nx+2, 1:Ny+1, 1:Nz+1] -
+                  phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
     psiX_p[0, :, :] = 0.0  # left boundary
     # y direction
-    dphiY_p = (phi.value[1:Nx+1, 1:Ny+2, 1:Nz+1] -
-               phi.value[1:Nx+1, 0:Ny+1, 1:Nz+1])/dy
+    dphiY_p = (phi._value[1:Nx+1, 1:Ny+2, 1:Nz+1] -
+               phi._value[1:Nx+1, 0:Ny+1, 1:Nz+1])/dy
     rY_p = dphiY_p[:, 0:-1, :]/_fsign(dphiY_p[:, 1:, :])
     psiY_p[:, 1:Ny+1, :] = 0.5 * \
-        FL(rY_p)*(phi.value[1:Nx+1, 2:Ny+2, 1:Nz+1] -
-                  phi.value[1:Nx+1, 1:Ny+1, 1:Nz+1])
+        FL(rY_p)*(phi._value[1:Nx+1, 2:Ny+2, 1:Nz+1] -
+                  phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
     psiY_p[:, 0, :] = 0.0  # Bottom boundary
     # z direction
-    dphiZ_p = (phi.value[1:Nx+1, 1:Ny+1, 1:Nz+2] -
-               phi.value[1:Nx+1, 1:Ny+1, 0:Nz+1])/dz
+    dphiZ_p = (phi._value[1:Nx+1, 1:Ny+1, 1:Nz+2] -
+               phi._value[1:Nx+1, 1:Ny+1, 0:Nz+1])/dz
     rZ_p = dphiZ_p[:, :, 0:-1]/_fsign(dphiZ_p[:, :, 1:])
     psiZ_p[:, :, 1:Nz+1] = 0.5 * \
-        FL(rZ_p)*(phi.value[1:Nx+1, 1:Ny+1, 2:Nz+2] -
-                  phi.value[1:Nx+1, 1:Ny+1, 1:Nz+1])
+        FL(rZ_p)*(phi._value[1:Nx+1, 1:Ny+1, 2:Nz+2] -
+                  phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
     psiZ_p[:, :, 0] = 0.0  # Back boundary
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     # x direction
     rX_m = dphiX_p[1:, :, :]/_fsign(dphiX_p[0:-1, :, :])
-    psiX_m[0:Nx, :, :] = 0.5*FL(rX_m)*(phi.value[0:Nx,
-                                                 1:Ny+1, 1:Nz+1]-phi.value[1:Nx+1, 1:Ny+1, 1:Nz+1])
+    psiX_m[0:Nx, :, :] = 0.5*FL(rX_m)*(phi._value[0:Nx,
+                                                 1:Ny+1, 1:Nz+1]-phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
     psiX_m[-1, :, :] = 0.0  # right boundary
     # y direction
     rY_m = dphiY_p[:, 1:, :]/_fsign(dphiY_p[:, 0:-1, :])
-    psiY_m[:, 0:Ny, :] = 0.5*FL(rY_m)*(phi.value[1:Nx+1,
-                                                 0:Ny, 1:Nz+1]-phi.value[1:Nx+1, 1:Ny+1, 1:Nz+1])
+    psiY_m[:, 0:Ny, :] = 0.5*FL(rY_m)*(phi._value[1:Nx+1,
+                                                 0:Ny, 1:Nz+1]-phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
     psiY_m[:, -1, :] = 0.0  # top boundary
     # z direction
     rZ_m = dphiZ_p[:, :, 1:]/_fsign(dphiZ_p[:, :, 0:-1])
-    psiZ_m[:, :, 0:Nz] = 0.5*FL(rZ_m)*(phi.value[1:Nx+1,
-                                                 1:Ny+1, 0:Nz]-phi.value[1:Nx+1, 1:Ny+1, 1:Nz+1])
+    psiZ_m[:, :, 0:Nz] = 0.5*FL(rZ_m)*(phi._value[1:Nx+1,
+                                                 1:Ny+1, 0:Nz]-phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
     psiZ_m[:, :, -1] = 0.0  # front boundary
     # find the velocity direction for the upwind scheme
     ux_min, ux_max, uy_min, uy_max, uz_min, uz_max = _upwind_min_max(
@@ -1254,44 +1254,44 @@ def convectionTvdRHSCylindrical3D(u: FaceVariable, phi: CellVariable, FL, *args)
 
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction
-    dphiX_p = (phi.value[1:Nr+2, 1:Ntheta+1, 1:Nz+1] -
-               phi.value[0:Nr+1, 1:Ntheta+1, 1:Nz+1])/dr
+    dphiX_p = (phi._value[1:Nr+2, 1:Ntheta+1, 1:Nz+1] -
+               phi._value[0:Nr+1, 1:Ntheta+1, 1:Nz+1])/dr
     rX_p = dphiX_p[0:-1, :, :]/_fsign(dphiX_p[1:, :, :])
-    psiX_p[1:Nr+1, :, :] = 0.5*FL(rX_p)*(phi.value[2:Nr+2, 1:Ntheta+1, 1:Nz+1] -
-                                         phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiX_p[1:Nr+1, :, :] = 0.5*FL(rX_p)*(phi._value[2:Nr+2, 1:Ntheta+1, 1:Nz+1] -
+                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
     psiX_p[0, :, :] = 0  # left boundary
     # y direction
-    dphiY_p = (phi.value[1:Nr+1, 1:Ntheta+2, 1:Nz+1] -
-               phi.value[1:Nr+1, 0:Ntheta+1, 1:Nz+1])/dtheta
+    dphiY_p = (phi._value[1:Nr+1, 1:Ntheta+2, 1:Nz+1] -
+               phi._value[1:Nr+1, 0:Ntheta+1, 1:Nz+1])/dtheta
     rY_p = dphiY_p[:, 0:-1, :]/_fsign(dphiY_p[:, 1:, :])
     psiY_p[:, 1:Ntheta+1, :] = 0.5 * \
-        FL(rY_p)*(phi.value[1:Nr+1, 2:Ntheta+2, 1:Nz+1] -
-                  phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+        FL(rY_p)*(phi._value[1:Nr+1, 2:Ntheta+2, 1:Nz+1] -
+                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
     psiY_p[:, 0, :] = 0.0  # Bottom boundary
     # z direction
-    dphiZ_p = (phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+2] -
-               phi.value[1:Nr+1, 1:Ntheta+1, 0:Nz+1])/dz
+    dphiZ_p = (phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+2] -
+               phi._value[1:Nr+1, 1:Ntheta+1, 0:Nz+1])/dz
     rZ_p = dphiZ_p[:, :, 0:-1]/_fsign(dphiZ_p[:, :, 1:])
-    psiZ_p[:, :, 1:Nz+1] = 0.5*FL(rZ_p)*(phi.value[1:Nr+1, 1:Ntheta+1, 2:Nz+2] -
-                                         phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiZ_p[:, :, 1:Nz+1] = 0.5*FL(rZ_p)*(phi._value[1:Nr+1, 1:Ntheta+1, 2:Nz+2] -
+                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
     psiZ_p[:, :, 0] = 0.0  # Back boundary
 
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     # x direction
     rX_m = dphiX_p[1:, :, :]/_fsign(dphiX_p[0:-1, :, :])
-    psiX_m[0:Nr, :, :] = 0.5*FL(rX_m)*(phi.value[0:Nr, 1:Ntheta+1, 1:Nz+1] -
-                                       phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiX_m[0:Nr, :, :] = 0.5*FL(rX_m)*(phi._value[0:Nr, 1:Ntheta+1, 1:Nz+1] -
+                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
     psiX_m[-1, :, :] = 0.0  # right boundary
     # y direction
     rY_m = dphiY_p[:, 1:, :]/_fsign(dphiY_p[:, 0:-1, :])
     psiY_m[:, 0:Ntheta, :] = 0.5 * \
-        FL(rY_m)*(phi.value[1:Nr+1, 0:Ntheta, 1:Nz+1] -
-                  phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+        FL(rY_m)*(phi._value[1:Nr+1, 0:Ntheta, 1:Nz+1] -
+                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
     psiY_m[:, -1, :] = 0.0  # top boundary
     # z direction
     rZ_m = dphiZ_p[:, :, 1:]/_fsign(dphiZ_p[:, :, 0:-1])
-    psiZ_m[:, :, 0:Nz] = 0.5*FL(rZ_m)*(phi.value[1:Nr+1, 1:Ntheta+1, 0:Nz] -
-                                       phi.value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiZ_m[:, :, 0:Nz] = 0.5*FL(rZ_m)*(phi._value[1:Nr+1, 1:Ntheta+1, 0:Nz] -
+                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
     psiZ_m[:, :, -1] = 0.0  # front boundary
 
     re = rf[1:Nr+1]

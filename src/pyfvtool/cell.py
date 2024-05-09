@@ -73,7 +73,7 @@ class CellVariable:
         self.BCsTerm_precalc = BCsTerm_precalc
         
         self.domain = mesh_struct
-        self.value = None
+        self._value = None
 
         if np.isscalar(cell_value):
             phi_val = cell_value*np.ones(mesh_struct.dims)
@@ -84,7 +84,7 @@ class CellVariable:
         elif np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
             # Values for ghost cells already included,
             # simply fill
-            self.value = cell_value
+            self._value = cell_value
         else:
             raise ValueError(f"The cell size {cell_value.shape} is not valid "\
                              f"for a mesh of size {mesh_struct.dims}.")
@@ -95,9 +95,9 @@ class CellVariable:
         else:
             raise Exception('Incorrect number of arguments')
 
-        if self.value is None:
+        if self._value is None:
             # see also: apply_BCs() - code may be merged
-            self.value = cellValuesWithBoundaries(phi_val, self.BCs)
+            self._value = cellValuesWithBoundaries(phi_val, self.BCs)
 
         if self.BCsTerm_precalc:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
@@ -105,20 +105,20 @@ class CellVariable:
     @property
     def innerCellValues(self):
         if issubclass(type(self.domain), Grid1D):
-            return self.value[1:-1]
+            return self._value[1:-1]
         elif issubclass(type(self.domain), Grid2D):
-            return self.value[1:-1, 1:-1]
+            return self._value[1:-1, 1:-1]
         elif issubclass(type(self.domain), Grid3D):
-            return self.value[1:-1, 1:-1, 1:-1]
+            return self._value[1:-1, 1:-1, 1:-1]
         
     @innerCellValues.setter
     def innerCellValues(self, values):
         if issubclass(type(self.domain), Grid1D):
-            self.value[1:-1] = values
+            self._value[1:-1] = values
         elif issubclass(type(self.domain), Grid2D):
-            self.value[1:-1, 1:-1] = values
+            self._value[1:-1, 1:-1] = values
         elif issubclass(type(self.domain), Grid3D):
-            self.value[1:-1, 1:-1, 1:-1] = values
+            self._value[1:-1, 1:-1, 1:-1] = values
     
     # read-only property innerCellVolumes
     @property
@@ -309,14 +309,14 @@ class CellVariable:
         None.
 
         """
-        self.value = cellValuesWithBoundaries(self.innerCellValues,
+        self._value = cellValuesWithBoundaries(self.innerCellValues,
                                               self.BCs)
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
 
 
     def update_value(self, new_cell):
-        np.copyto(self.value, new_cell.value)
+        np.copyto(self._value, new_cell._value)
   
     
     def copy(self):
@@ -329,7 +329,7 @@ class CellVariable:
         CellVariable
             Copy of the CellVariable.
         """
-        return CellVariable(self.domain, np.copy(self.value),
+        return CellVariable(self.domain, np.copy(self._value),
                             deepcopy(self.BCs))
     
     def plotprofile(self):
@@ -408,9 +408,9 @@ class CellVariable:
             x = np.hstack([self.domain.facecenters._x[0],
                            self.domain.cellcenters._x,
                            self.domain.facecenters._x[-1]])
-            phi0 = np.hstack([0.5*(self.value[0]+self.value[1]),
-                              self.value[1:-1],
-                              0.5*(self.value[-2]+self.value[-1])])
+            phi0 = np.hstack([0.5*(self._value[0]+self._value[1]),
+                              self._value[1:-1],
+                              0.5*(self._value[-2]+self._value[-1])])
             # The size of the ghost cell is always equal to the size of the 
             # first (or last) cell within the domain. The value at the
             # boundary can therefore be obtained by direct averaging with a
@@ -423,7 +423,7 @@ class CellVariable:
             y = np.hstack([self.domain.facecenters._y[0],
                            self.domain.cellcenters._y,
                            self.domain.facecenters._y[-1]])
-            phi0 = np.copy(self.value)
+            phi0 = np.copy(self._value)
             phi0[:, 0] = 0.5*(phi0[:, 0]+phi0[:, 1])
             phi0[0, :] = 0.5*(phi0[0, :]+phi0[1, :])
             phi0[:, -1] = 0.5*(phi0[:, -1]+phi0[:, -2])
@@ -443,7 +443,7 @@ class CellVariable:
             z = np.hstack([self.domain.facecenters._z[0],
                            self.domain.cellcenters._z,
                            self.domain.facecenters._z[-1]])[np.newaxis, np.newaxis, :]
-            phi0 = np.copy(self.value)
+            phi0 = np.copy(self._value)
             phi0[:,0,:]=0.5*(phi0[:,0,:]+phi0[:,1,:])
             phi0[:,-1,:]=0.5*(phi0[:,-2,:]+phi0[:,-1,:])
             phi0[:,:,0]=0.5*(phi0[:,:,0]+phi0[:,:,0])

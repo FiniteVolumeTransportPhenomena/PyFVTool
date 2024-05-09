@@ -1,13 +1,9 @@
-from typing import overload
-
 import numpy as np
 from scipy.sparse import csr_array
 from scipy.sparse.linalg import spsolve
 
 from .mesh import MeshStructure
 from .cell import CellVariable
-from .boundary import BoundaryConditions
-from .boundary import boundaryConditionsTerm
 
 
 
@@ -139,7 +135,7 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     phi_new_values = solver(M, RHS)
     
     # Update phi
-    phi.value = np.reshape(phi_new_values, phi.domain.dims+2)
+    phi._value = np.reshape(phi_new_values, phi.domain.dims+2)
     
     return phi
 
@@ -168,9 +164,9 @@ def solveExplicitPDE(phi_old: CellVariable,
     
     """
     
-    x = phi_old.value + dt*RHS.reshape(phi_old.value.shape)
+    x = phi_old._value + dt*RHS.reshape(phi_old._value.shape)
     phi = CellVariable(phi_old.domain, 0.0, phi_old.BCs, 
                        BCsTerm_precalc = False)
-    phi.value = x
+    phi._value = x
     phi.apply_BCs()
     return phi
