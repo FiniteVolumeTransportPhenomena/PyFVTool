@@ -1,8 +1,9 @@
+
 # PyFVTool: Python toolbox for the finite volume method
 
-This is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool). Inspired by [FiPy](http://www.ctcms.nist.gov/fipy/), it has only a fraction of FiPy's features. Boundary conditions, however, are much easier (and arguably more consistent) to implement in PyFVTool. 
+PyFVTool discretizes and numerically solves the conservative form of transient [convection-diffusion-reaction](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation) equations with variable velocity field/diffusion coefficients and source terms. PyFVTool uses the [finite volume method](https://en.wikipedia.org/wiki/Finite_volume_method) (FVM) to do this. 
 
-PyFVTool can discretize and solve the conservative form of transient [convection-diffusion](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation)-reaction equation(s) with variable velocity field/diffusion coefficients and source terms:  
+The partial differential equations that can be solved numerically with PyFVTool have the general form
 
 ```math
 \underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla \cdot \left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla \cdot (-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
@@ -12,9 +13,13 @@ with the following general form of boundary conditions (specified by constants `
 ```math
 a\nabla\phi \cdot \mathbf{e}+b\phi=c
 ```
+An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
+
+PyFVTool is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool). It was strongly inspired by [FiPy](http://www.ctcms.nist.gov/fipy/), but it has only a fraction of FiPy's features. Boundary conditions, however, are much easier (and arguably more consistently) implemented in PyFVTool. 
+
 PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
 
-The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes include:  
+The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes in PyFVTool include:  
   * 1D, 2D and 3D Cartesian and cylindrical grids
   * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
   * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
@@ -25,9 +30,7 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
   * Divergence and gradient terms
 
-An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
-
-The code is under active development. Preliminary simulations match analytical solutions. More validation is under way, and the use of this PyFVTool toolbox in ongoing research projects will further consolidate the code and verify its validity.   There is not much documentation for the code yet (help wanted!) but the example folder is the best place to start. If you know the topic, there is a good chance you will never need any documentations.  
+PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects.  There is not much documentation for the code yet (help wanted!) but the `example` and `example-notebooks` folders are the best places to start. The latter folder contains annotated Jupyter Notebooks. From the examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
 
 ## Installation
 For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.9` or higher and `numpy`, `scipy`, and `matplotlib`:  
