@@ -4,7 +4,7 @@ from scipy.sparse import csr_array
 
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, CylindricalGrid3D
+from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid1D, SphericalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -258,6 +258,111 @@ def convectionTvdRHSCylindrical1D(u: FaceVariable, phi: CellVariable,
                                   rf[0:Nx]*(uw_max*psi_p[0:Nx]+uw_min*psi_m[0:Nx]))
     return RHS
 
+
+def convectionTermSpherical1D(u: FaceVariable):
+    # u is a face variable
+    # extract data from the mesh structure
+    Nx = u.domain.dims[0]
+    G = u.domain.cell_numbers()
+    #DX = u.domain.cellsize._x
+    DXe = u.domain.cellsize._x[2:]
+    DXw = u.domain.cellsize._x[0:-2]
+    DXp = u.domain.cellsize._x[1:-1]
+    rp = u.domain.cellcenters._x
+    rf = u.domain.facecenters._x
+    # reassign the east, west for code readability
+    ue = u._xvalue[1:Nx+1]*DXp/(DXp+DXe)*rf[1:Nx+1]**2/(1/3*(rf[1:Nx+1]**3-rf[0:Nx]**3))
+    uw = u._xvalue[0:Nx]*DXp/(DXp+DXw)*rf[0:Nx]**2/(1/3*(rf[1:Nx+1]**3-rf[0:Nx]**3))
+    # calculate the coefficients for the internal cells
+    AE = ue
+    AW = -uw
+    APx = (ue*DXe-uw*DXw)/DXp
+    # build the sparse matrix based on the numbering system
+    iix = np.tile(G[1:Nx+1].ravel(), 3)
+    jjx = np.hstack([G[0:Nx], G[1:Nx+1], G[2:Nx+2]])
+    sx = np.hstack([AW, APx, AE])
+    # build the sparse matrix
+    kx = 3*Nx
+    return csr_array((sx[0:kx], (iix[0:kx], jjx[0:kx])),
+                     shape=(Nx+2, Nx+2))
+
+
+def convectionUpwindTermSpherical1D(u: FaceVariable, *args):
+    # u is a face variable
+    if len(args) > 0:
+        u_upwind = args[0]
+    else:
+        u_upwind = u
+    # extract data from the mesh structure
+    Nx = u.domain.dims[0]
+    G = u.domain.cell_numbers()
+    DXp = u.domain.cellsize._x[1:-1]
+    rp = u.domain.cellcenters._x
+    rf = u.domain.facecenters._x
+    # find the velocity direction for the upwind scheme
+    ux_min, ux_max = _upwind_min_max(u, u_upwind)
+    ue_min = ux_min[1:Nx+1]
+    ue_max = ux_max[1:Nx+1]
+    uw_min = ux_min[0:Nx]
+    uw_max = ux_max[0:Nx]
+    # calculate the coefficients for the internal cells
+    AE = rf[1:Nx+1]**2 * ue_min/(1/3*(rf[1:Nx+1]**3-rf[0:Nx]**3))
+    AW = -rf[0:Nx]**2 * uw_max/(1/3*(rf[1:Nx+1]**3-rf[0:Nx]**3))
+    APx = (rf[1:Nx+1]**2 * ue_max - rf[0:Nx]**2 * uw_min)/(1/3*(rf[1:Nx+1]**3-rf[0:Nx]**3))
+    # correct for the cells next to the boundary
+    # Left boundary:
+    APx[0] = APx[0] - 0.5*rf[0]**2*uw_max[0]/(1/3*(rf[1]**3-rf[0]**3))
+    AW[0] = AW[0]/2.0
+    # Right boundary:
+    AE[-1] = AE[-1]/2.0
+    APx[-1] = APx[-1] + 0.5*rf[-1]**2*ue_min[-1]/(1/3*(rf[-1]**3-rf[-2]**3))
+    # build the sparse matrix based on the numbering system
+    iix = np.tile(G[1:Nx+1], 3)
+    jjx = np.hstack([G[0:Nx], G[1:Nx+1], G[2:Nx+2]])
+    sx = np.hstack([AW, APx, AE])
+    # build the sparse matrix
+    kx = 3*Nx
+    return csr_array((sx[0:kx], (iix[0:kx], jjx[0:kx])),
+                     shape=(Nx+2, Nx+2))
+
+
+def convectionTvdRHSSpherical1D(u: FaceVariable, phi: CellVariable,
+                                  FL, *args):
+    # u is a face variable
+    # phi is a cell variable
+    # a function to avoid division by zero
+    if len(args) > 0:
+        u_upwind = args[0]
+    else:
+        u_upwind = u
+    # extract data from the mesh structure
+    Nx = u.domain.dims[0]
+    DXp = u.domain.cellsize._x[1:-1]
+    r = u.domain.cellcenters._x
+    rf = u.domain.facecenters._x
+    dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
+    RHS = np.zeros(Nx+2)
+    psi_p = np.zeros(Nx+1)
+    psi_m = np.zeros(Nx+1)
+    # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+    dphi_p = (phi._value[1:Nx+2]-phi._value[0:Nx+1])/dx
+    rp = dphi_p[0:-1]/_fsign(dphi_p[1:])
+    psi_p[1:Nx+1] = 0.5*FL(rp)*(phi._value[2:Nx+2]-phi._value[1:Nx+1])
+    psi_p[0] = 0.0  # left boundary will be handled explicitly
+    # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+    rm = dphi_p[1:]/_fsign(dphi_p[0:-1])
+    psi_m[0:Nx] = 0.5*FL(rm)*(phi._value[0:Nx]-phi._value[1:Nx+1])
+    psi_m[Nx] = 0.0  # right boundary will be handled explicitly
+    # find the velocity direction for the upwind scheme
+    ux_min, ux_max = _upwind_min_max(u, u_upwind)
+    ue_min = ux_min[1:Nx+1]
+    ue_max = ux_max[1:Nx+1]
+    uw_min = ux_min[0:Nx]
+    uw_max = ux_max[0:Nx]
+    # calculate the TVD correction term
+    RHS[1:Nx+1] = -(1.0/(1/3**(rf[1:Nx+1]**3-rf[0:Nx]**3)))*(rf[1:Nx+1]**2*(ue_max*psi_p[1:Nx+1]+ue_min*psi_m[1:Nx+1]) -
+                                  rf[0:Nx]**2*(uw_max*psi_p[0:Nx]+uw_min*psi_m[0:Nx]))
+    return RHS
 
 
 # ------------------------- 2D functions ------------------------
@@ -1218,6 +1323,282 @@ def convectionUpwindTermCylindrical3D(u: FaceVariable, *args):
 
 
 def convectionTvdRHSCylindrical3D(u: FaceVariable, phi: CellVariable, FL, *args):
+    # u is a face variable
+    # a function to avoid division by zero
+    # extract data from the mesh structure
+    if len(args) > 0:
+        u_upwind = args[0]
+    else:
+        u_upwind = u
+    Nr, Ntheta, Nz = u.domain.dims
+    G = u.domain.cell_numbers()
+    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    dr = 0.5*(u.domain.cellsize._x[0:-1] +
+              u.domain.cellsize._x[1:])[:, np.newaxis, np.newaxis]
+    dtheta = 0.5 * \
+        (u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:]
+         )[np.newaxis, :, np.newaxis]
+    dz = 0.5*(u.domain.cellsize._z[0:-1] +
+              u.domain.cellsize._z[1:])[np.newaxis, np.newaxis, :]
+    psiX_p = np.zeros((Nr+1, Ntheta, Nz))
+    psiX_m = np.zeros((Nr+1, Ntheta, Nz))
+    psiY_p = np.zeros((Nr, Ntheta+1, Nz))
+    psiY_m = np.zeros((Nr, Ntheta+1, Nz))
+    psiZ_p = np.zeros((Nr, Ntheta, Nz+1))
+    psiZ_m = np.zeros((Nr, Ntheta, Nz+1))
+    rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
+
+    # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
+    # x direction
+    dphiX_p = (phi._value[1:Nr+2, 1:Ntheta+1, 1:Nz+1] -
+               phi._value[0:Nr+1, 1:Ntheta+1, 1:Nz+1])/dr
+    rX_p = dphiX_p[0:-1, :, :]/_fsign(dphiX_p[1:, :, :])
+    psiX_p[1:Nr+1, :, :] = 0.5*FL(rX_p)*(phi._value[2:Nr+2, 1:Ntheta+1, 1:Nz+1] -
+                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiX_p[0, :, :] = 0  # left boundary
+    # y direction
+    dphiY_p = (phi._value[1:Nr+1, 1:Ntheta+2, 1:Nz+1] -
+               phi._value[1:Nr+1, 0:Ntheta+1, 1:Nz+1])/dtheta
+    rY_p = dphiY_p[:, 0:-1, :]/_fsign(dphiY_p[:, 1:, :])
+    psiY_p[:, 1:Ntheta+1, :] = 0.5 * \
+        FL(rY_p)*(phi._value[1:Nr+1, 2:Ntheta+2, 1:Nz+1] -
+                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiY_p[:, 0, :] = 0.0  # Bottom boundary
+    # z direction
+    dphiZ_p = (phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+2] -
+               phi._value[1:Nr+1, 1:Ntheta+1, 0:Nz+1])/dz
+    rZ_p = dphiZ_p[:, :, 0:-1]/_fsign(dphiZ_p[:, :, 1:])
+    psiZ_p[:, :, 1:Nz+1] = 0.5*FL(rZ_p)*(phi._value[1:Nr+1, 1:Ntheta+1, 2:Nz+2] -
+                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiZ_p[:, :, 0] = 0.0  # Back boundary
+
+    # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
+    # x direction
+    rX_m = dphiX_p[1:, :, :]/_fsign(dphiX_p[0:-1, :, :])
+    psiX_m[0:Nr, :, :] = 0.5*FL(rX_m)*(phi._value[0:Nr, 1:Ntheta+1, 1:Nz+1] -
+                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiX_m[-1, :, :] = 0.0  # right boundary
+    # y direction
+    rY_m = dphiY_p[:, 1:, :]/_fsign(dphiY_p[:, 0:-1, :])
+    psiY_m[:, 0:Ntheta, :] = 0.5 * \
+        FL(rY_m)*(phi._value[1:Nr+1, 0:Ntheta, 1:Nz+1] -
+                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiY_m[:, -1, :] = 0.0  # top boundary
+    # z direction
+    rZ_m = dphiZ_p[:, :, 1:]/_fsign(dphiZ_p[:, :, 0:-1])
+    psiZ_m[:, :, 0:Nz] = 0.5*FL(rZ_m)*(phi._value[1:Nr+1, 1:Ntheta+1, 0:Nz] -
+                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiZ_m[:, :, -1] = 0.0  # front boundary
+
+    re = rf[1:Nr+1]
+    rw = rf[0:Nr]
+
+    # find the velocity direction for the upwind scheme
+    ux_min, ux_max, uy_min, uy_max, uz_min, uz_max = _upwind_min_max(
+        u, u_upwind)
+    ue_min, ue_max = ux_min[1:Nr+1, :, :], ux_max[1:Nr+1, :, :]
+    uw_min, uw_max = ux_min[0:Nr, :, :], ux_max[0:Nr, :, :]
+    vn_min, vn_max = uy_min[:, 1:Ntheta+1, :], uy_max[:, 1:Ntheta+1, :]
+    vs_min, vs_max = uy_min[:, 0:Ntheta, :], uy_max[:, 0:Ntheta, :]
+    wf_min, wf_max = uz_min[:, :, 1:Nz+1], uz_max[:, :, 1:Nz+1]
+    wb_min, wb_max = uz_min[:, :, 0:Nz], uz_max[:, :, 0:Nz]
+
+    # calculate the TVD correction term
+    div_x = -(1.0/(DRp*rp))*(re*(ue_max*psiX_p[1:Nr+1, :, :]+ue_min*psiX_m[1:Nr+1, :, :]) -
+                             rw*(uw_max*psiX_p[0:Nr, :, :]+uw_min*psiX_m[0:Nr, :, :]))
+    div_y = -(1.0/(DTHETAp*rp))*((vn_max*psiY_p[:, 1:Ntheta+1, :]+vn_min*psiY_m[:, 1:Ntheta+1, :]) -
+                                 (vs_max*psiY_p[:, 0:Ntheta, :]+vs_min*psiY_m[:, 0:Ntheta, :]))
+    div_z = -(1.0/DZp)*((wf_max*psiZ_p[:, :, 1:Nz+1]+wf_min*psiZ_m[:, :, 1:Nz+1]) -
+                        (wb_max*psiZ_p[:, :, 0:Nz]+wb_min*psiZ_m[:, :, 0:Nz]))
+
+    # define the RHS Vector
+    RHS = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+    RHSx = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+    RHSy = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+    RHSz = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+
+    # assign the values of the RHS vector
+    mnx = Nr*Ntheta*Nz
+    mny = Nr*Ntheta*Nz
+    mnz = Nr*Ntheta*Nz
+    rowx_index = G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel()  # main diagonal x
+    rowy_index = G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel()  # main diagonal y
+    rowz_index = G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel()  # main diagonal z
+    row_index = rowx_index
+    RHS[row_index] = (div_x+div_y+div_z).ravel()
+    RHSx[rowx_index] = div_x.ravel()
+    RHSy[rowy_index] = div_y.ravel()
+    RHSz[rowz_index] = div_z.ravel()
+
+    return RHS, RHSx, RHSy, RHSz
+
+def convectionTermSpherical3D(u: FaceVariable):
+    # u is a face variable
+    # extract data from the mesh structure
+    Nr, Ntheta, Nz = u.domain.dims
+    G = u.domain.cell_numbers()
+    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DPHIf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DPHIb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DPHIp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
+    # define the vectors to stores the sparse matrix data
+    mn = Nr*Ntheta*Nz
+    # reassign the east, west, north, and south velocity vectors for the
+    # code readability
+    ue = rf[1:Nr+1]*u._xvalue[1:Nr+1, :, :]/(rp*(DRp+DRe))
+    uw = rf[0:Nr]*u._xvalue[0:Nr, :, :]/(rp*(DRp+DRw))
+    vn = u._yvalue[:, 1:Ntheta+1, :]/(rp*(DTHETAp+DTHETAn))
+    vs = u._yvalue[:, 0:Ntheta, :]/(rp*(DTHETAp+DTHETAs))
+    wf = u._zvalue[:, :, 1:Nz+1]/(DZp+DZf)
+    wb = u._zvalue[:, :, 0:Nz]/(DZp+DZb)
+
+    # calculate the coefficients for the internal cells
+    AE = ue.ravel()
+    AW = -uw.ravel()
+    AN = vn.ravel()
+    AS = -vs.ravel()
+    AF = wf.ravel()
+    AB = wb.ravel()
+    APx = ((DRe*ue-DRw*uw)/DRp).ravel()
+    APy = ((DTHETAn*vn-DTHETAs*vs)/DTHETAp).ravel()
+    APz = ((DZf*wf-DZb*wb)/DZp).ravel()
+
+    # build the sparse matrix based on the numbering system
+    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(), 3)
+    jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[2:Nr+2, 1:Ntheta+1, 1:Nz+1].ravel()])
+    jjy = np.hstack([G[1:Nr+1, 0:Ntheta, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 2:Ntheta+2, 1:Nz+1].ravel()])
+    jjz = np.hstack([G[1:Nr+1, 1:Ntheta+1, 0:Nz].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 2:Nz+2].ravel()])
+    sx = np.hstack([AW, APx, AE])
+    sy = np.hstack([AS, APy, AN])
+    sz = np.hstack([AB, APz, AF])
+
+    # build the sparse matrix
+    kx = ky = kz = 3*mn
+    Mx = csr_array((sx[0:kx], (ii[0:kx], jjx[0:kx])),
+                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+    My = csr_array((sy[0:kx], (ii[0:ky], jjy[0:ky])),
+                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+    Mz = csr_array((sz[0:kz], (ii[0:kz], jjz[0:kz])),
+                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+    M = Mx + My + Mz
+    return M, Mx, My, Mz
+
+
+def convectionUpwindTermSpherical3D(u: FaceVariable, *args):
+    # u is a face variable
+    # extract data from the mesh structure
+    if len(args) > 0:
+        u_upwind = args[0]
+    else:
+        u_upwind = u
+    Nr, Ntheta, Nz = u.domain.dims
+    G = u.domain.cell_numbers()
+    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
+    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
+    DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
+    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
+    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
+    DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
+    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
+    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
+    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+    rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
+    mn = Nr*Ntheta*Nz
+    re = rf[1:Nr+1, :, :]
+    rw = rf[0:Nr, :, :]
+    # find the velocity direction for the upwind scheme
+    ux_min, ux_max, uy_min, uy_max, uz_min, uz_max = _upwind_min_max(
+        u, u_upwind)
+    ue_min, ue_max = ux_min[1:Nr+1, :, :], ux_max[1:Nr+1, :, :]
+    uw_min, uw_max = ux_min[0:Nr, :, :], ux_max[0:Nr, :, :]
+    vn_min, vn_max = uy_min[:, 1:Ntheta+1, :], uy_max[:, 1:Ntheta+1, :]
+    vs_min, vs_max = uy_min[:, 0:Ntheta, :], uy_max[:, 0:Ntheta, :]
+    wf_min, wf_max = uz_min[:, :, 1:Nz+1], uz_max[:, :, 1:Nz+1]
+    wb_min, wb_max = uz_min[:, :, 0:Nz], uz_max[:, :, 0:Nz]
+
+    # calculate the coefficients for the internal cells
+    AE = re*ue_min/(DRp*rp)
+    AW = -rw*uw_max/(DRp*rp)
+    AN = vn_min/(DTHETAp*rp)
+    AS = -vs_max/(DTHETAp*rp)
+    AF = wf_min/DZp
+    AB = -wb_max/DZp
+    APx = (re*ue_max-rw*uw_min)/(DRp*rp)
+    APy = (vn_max-vs_min)/(DTHETAp*rp)
+    APz = (wf_max-wb_min)/DZp
+
+    # Also correct for the inner boundary cells (not the ghost cells)
+    # Left boundary:
+    APx[0, :, :] = APx[0, :, :]-rw[0, :, :] * \
+        uw_max[0, :, :]/(2.0*DRp[0, :, :]*rp[0, :, :])
+    AW[0, :, :] = AW[0, :, :]/2.0
+    # Right boundary:
+    AE[-1, :, :] = AE[-1, :, :]/2.0
+    APx[-1, :, :] = APx[-1, :, :]+re[-1, :, :] * \
+        ue_min[-1, :, :]/(2.0*DRp[-1, :, :]*rp[-1, :, :])
+    # Bottom boundary:
+    APy[:, 0, :] = APy[:, 0, :]-vs_max[:, 0, :]/(2.0*DTHETAp[:, 0, :]*rp[:,0, :]) 
+    AS[:, 0, :] = AS[:, 0, :]/2.0
+    # Top boundary:
+    AN[:, -1, :] = AN[:, -1, :]/2.0
+    APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]/(2.0*DTHETAp[:, -1, :]*rp[:, -1, :])
+    # Back boundary:
+    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DZp[:, :, 0])
+    AB[:, :, 0] = AB[:, :, 0]/2.0
+    # Front boundary:
+    AF[:, :, -1] = AF[:, :, -1]/2.0
+    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[:, :, -1])
+    # build the sparse matrix based on the numbering system
+    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(), 3)
+    jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[2:Nr+2, 1:Ntheta+1, 1:Nz+1].ravel()])
+    jjy = np.hstack([G[1:Nr+1, 0:Ntheta, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 2:Ntheta+2, 1:Nz+1].ravel()])
+    jjz = np.hstack([G[1:Nr+1, 1:Ntheta+1, 0:Nz].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 2:Nz+2].ravel()])
+    sx = np.hstack([AW.ravel(), APx.ravel(), AE.ravel()])
+    sy = np.hstack([AS.ravel(), APy.ravel(), AN.ravel()])
+    sz = np.hstack([AB.ravel(), APz.ravel(), AF.ravel()])
+
+    # build the sparse matrix
+    kx = ky = kz = 3*mn
+    Mx = csr_array((sx[0:kx], (ii[0:kx], jjx[0:kx])),
+                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+    My = csr_array((sy[0:kx], (ii[0:ky], jjy[0:ky])),
+                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+    Mz = csr_array((sz[0:kz], (ii[0:kz], jjz[0:kz])),
+                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+    M = Mx + My + Mz
+    return M, Mx, My, Mz
+
+
+def convectionTvdRHSSpherical3D(u: FaceVariable, phi: CellVariable, FL, *args):
     # u is a face variable
     # a function to avoid division by zero
     # extract data from the mesh structure
