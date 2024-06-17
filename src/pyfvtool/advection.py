@@ -1444,7 +1444,7 @@ def convectionTvdRHSCylindrical3D(u: FaceVariable, phi: CellVariable, FL, *args)
 def convectionTermSpherical3D(u: FaceVariable):
     # u is a face variable
     # extract data from the mesh structure
-    Nr, Ntheta, Nz = u.domain.dims
+    Nr, Ntheta, Nphi = u.domain.dims
     G = u.domain.cell_numbers()
     DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
     DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
@@ -1457,16 +1457,18 @@ def convectionTermSpherical3D(u: FaceVariable):
     DPHIp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
     rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
     rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
+    thetap = u.domain.cellcenters._y[np.newaxis, :, np.newaxis]
+    thetaf = u.domain.facecenters._y[np.newaxis, :, np.newaxis]
     # define the vectors to stores the sparse matrix data
-    mn = Nr*Ntheta*Nz
+    mn = Nr*Ntheta*Nphi
     # reassign the east, west, north, and south velocity vectors for the
     # code readability
-    ue = rf[1:Nr+1]*u._xvalue[1:Nr+1, :, :]/(rp*(DRp+DRe))
-    uw = rf[0:Nr]*u._xvalue[0:Nr, :, :]/(rp*(DRp+DRw))
-    vn = u._yvalue[:, 1:Ntheta+1, :]/(rp*(DTHETAp+DTHETAn))
-    vs = u._yvalue[:, 0:Ntheta, :]/(rp*(DTHETAp+DTHETAs))
-    wf = u._zvalue[:, :, 1:Nz+1]/(DZp+DZf)
-    wb = u._zvalue[:, :, 0:Nz]/(DZp+DZb)
+    ue = rf[1:Nr+1]**2*u._xvalue[1:Nr+1, :, :]/(rp**2*(DRp+DRe))
+    uw = rf[0:Nr]**2*u._xvalue[0:Nr, :, :]/(rp**2*(DRp+DRw))
+    vn = u._yvalue[:, 1:Ntheta+1, :]*np.sin(thetaf[:,1:Ntheta+1,:])/(rp*np.sin(thetap)*(DTHETAp+DTHETAn))
+    vs = u._yvalue[:, 0:Ntheta, :]*np.sin(thetaf[:,0:Ntheta,:])/(rp*np.sin(thetap)*(DTHETAp+DTHETAs))
+    wf = u._zvalue[:, :, 1:Nphi+1]/(rp*np.sin(thetap)*(DPHIp+DPHIf))
+    wb = u._zvalue[:, :, 0:Nphi]/(rp*np.sin(thetap)*(DPHIp+DPHIb))
 
     # calculate the coefficients for the internal cells
     AE = ue.ravel()
@@ -1477,19 +1479,19 @@ def convectionTermSpherical3D(u: FaceVariable):
     AB = wb.ravel()
     APx = ((DRe*ue-DRw*uw)/DRp).ravel()
     APy = ((DTHETAn*vn-DTHETAs*vs)/DTHETAp).ravel()
-    APz = ((DZf*wf-DZb*wb)/DZp).ravel()
+    APz = ((DPHIf*wf-DPHIb*wb)/DPHIp).ravel()
 
     # build the sparse matrix based on the numbering system
-    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(), 3)
-    jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[2:Nr+2, 1:Ntheta+1, 1:Nz+1].ravel()])
-    jjy = np.hstack([G[1:Nr+1, 0:Ntheta, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 2:Ntheta+2, 1:Nz+1].ravel()])
-    jjz = np.hstack([G[1:Nr+1, 1:Ntheta+1, 0:Nz].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 2:Nz+2].ravel()])
+    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(), 3)
+    jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[2:Nr+2, 1:Ntheta+1, 1:Nphi+1].ravel()])
+    jjy = np.hstack([G[1:Nr+1, 0:Ntheta, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 2:Ntheta+2, 1:Nphi+1].ravel()])
+    jjz = np.hstack([G[1:Nr+1, 1:Ntheta+1, 0:Nphi].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 2:Nphi+2].ravel()])
     sx = np.hstack([AW, APx, AE])
     sy = np.hstack([AS, APy, AN])
     sz = np.hstack([AB, APz, AF])
@@ -1497,36 +1499,33 @@ def convectionTermSpherical3D(u: FaceVariable):
     # build the sparse matrix
     kx = ky = kz = 3*mn
     Mx = csr_array((sx[0:kx], (ii[0:kx], jjx[0:kx])),
-                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+                   shape=((Nr+2)*(Ntheta+2)*(Nphi+2), (Nr+2)*(Ntheta+2)*(Nphi+2)))
     My = csr_array((sy[0:kx], (ii[0:ky], jjy[0:ky])),
-                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+                   shape=((Nr+2)*(Ntheta+2)*(Nphi+2), (Nr+2)*(Ntheta+2)*(Nphi+2)))
     Mz = csr_array((sz[0:kz], (ii[0:kz], jjz[0:kz])),
-                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+                   shape=((Nr+2)*(Ntheta+2)*(Nphi+2), (Nr+2)*(Ntheta+2)*(Nphi+2)))
     M = Mx + My + Mz
     return M, Mx, My, Mz
 
 
 def convectionUpwindTermSpherical3D(u: FaceVariable, *args):
+    # TBD: not done yet
     # u is a face variable
     # extract data from the mesh structure
     if len(args) > 0:
         u_upwind = args[0]
     else:
         u_upwind = u
-    Nr, Ntheta, Nz = u.domain.dims
+    Nr, Ntheta, Nphi = u.domain.dims
     G = u.domain.cell_numbers()
-    DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
-    DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
     DRp = u.domain.cellsize._x[1:-1][:, np.newaxis, np.newaxis]
-    DTHETAn = u.domain.cellsize._y[2:][np.newaxis, :, np.newaxis]
-    DTHETAs = u.domain.cellsize._y[0:-2][np.newaxis, :, np.newaxis]
     DTHETAp = u.domain.cellsize._y[1:-1][np.newaxis, :, np.newaxis]
-    DZf = u.domain.cellsize._z[2:][np.newaxis, np.newaxis, :]
-    DZb = u.domain.cellsize._z[0:-2][np.newaxis, np.newaxis, :]
-    DZp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
+    DPHIp = u.domain.cellsize._z[1:-1][np.newaxis, np.newaxis, :]
     rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
     rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
-    mn = Nr*Ntheta*Nz
+    thetap = u.domain.cellcenters._y[np.newaxis, :, np.newaxis]
+    thetaf = u.domain.facecenters._y[np.newaxis, :, np.newaxis]
+    mn = Nr*Ntheta*Nphi
     re = rf[1:Nr+1, :, :]
     rw = rf[0:Nr, :, :]
     # find the velocity direction for the upwind scheme
@@ -1536,19 +1535,19 @@ def convectionUpwindTermSpherical3D(u: FaceVariable, *args):
     uw_min, uw_max = ux_min[0:Nr, :, :], ux_max[0:Nr, :, :]
     vn_min, vn_max = uy_min[:, 1:Ntheta+1, :], uy_max[:, 1:Ntheta+1, :]
     vs_min, vs_max = uy_min[:, 0:Ntheta, :], uy_max[:, 0:Ntheta, :]
-    wf_min, wf_max = uz_min[:, :, 1:Nz+1], uz_max[:, :, 1:Nz+1]
-    wb_min, wb_max = uz_min[:, :, 0:Nz], uz_max[:, :, 0:Nz]
+    wf_min, wf_max = uz_min[:, :, 1:Nphi+1], uz_max[:, :, 1:Nphi+1]
+    wb_min, wb_max = uz_min[:, :, 0:Nphi], uz_max[:, :, 0:Nphi]
 
     # calculate the coefficients for the internal cells
-    AE = re*ue_min/(DRp*rp)
-    AW = -rw*uw_max/(DRp*rp)
-    AN = vn_min/(DTHETAp*rp)
-    AS = -vs_max/(DTHETAp*rp)
-    AF = wf_min/DZp
-    AB = -wb_max/DZp
-    APx = (re*ue_max-rw*uw_min)/(DRp*rp)
-    APy = (vn_max-vs_min)/(DTHETAp*rp)
-    APz = (wf_max-wb_min)/DZp
+    AE = re**2*ue_min/(DRp*rp**2)
+    AW = -rw**2*uw_max/(DRp*rp**2)
+    AN = vn_min*np.sin(thetaf[:,1:Ntheta+1,:])/(DTHETAp*rp*np.sin(thetap))
+    AS = -vs_max*np.sin(thetaf[:,0:Ntheta,:])/(DTHETAp*rp*np.sin(thetap))
+    AF = wf_min/(DPHIp*rp*np.sin(thetap))
+    AB = -wb_max/(DPHIp*rp*np.sin(thetap))
+    APx = (re**2*ue_max-rw**2*uw_min)/(DRp*rp)
+    APy = (np.sin(thetaf[:,1:Ntheta+1,:])*vn_max-np.sin(thetaf[:,0:Ntheta,:])*vs_min)/(DTHETAp*rp*np.sin(thetap))
+    APz = (wf_max-wb_min)/(DPHIp*rp*np.sin(thetap))
 
     # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
@@ -1566,22 +1565,22 @@ def convectionUpwindTermSpherical3D(u: FaceVariable, *args):
     AN[:, -1, :] = AN[:, -1, :]/2.0
     APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]/(2.0*DTHETAp[:, -1, :]*rp[:, -1, :])
     # Back boundary:
-    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DZp[:, :, 0])
+    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DPHIp[:, :, 0])
     AB[:, :, 0] = AB[:, :, 0]/2.0
     # Front boundary:
     AF[:, :, -1] = AF[:, :, -1]/2.0
-    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[:, :, -1])
+    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DPHIp[:, :, -1])
     # build the sparse matrix based on the numbering system
-    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(), 3)
-    jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[2:Nr+2, 1:Ntheta+1, 1:Nz+1].ravel()])
-    jjy = np.hstack([G[1:Nr+1, 0:Ntheta, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 2:Ntheta+2, 1:Nz+1].ravel()])
-    jjz = np.hstack([G[1:Nr+1, 1:Ntheta+1, 0:Nz].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel(),
-                     G[1:Nr+1, 1:Ntheta+1, 2:Nz+2].ravel()])
+    ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(), 3)
+    jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[2:Nr+2, 1:Ntheta+1, 1:Nphi+1].ravel()])
+    jjy = np.hstack([G[1:Nr+1, 0:Ntheta, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 2:Ntheta+2, 1:Nphi+1].ravel()])
+    jjz = np.hstack([G[1:Nr+1, 1:Ntheta+1, 0:Nphi].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(),
+                     G[1:Nr+1, 1:Ntheta+1, 2:Nphi+2].ravel()])
     sx = np.hstack([AW.ravel(), APx.ravel(), AE.ravel()])
     sy = np.hstack([AS.ravel(), APy.ravel(), AN.ravel()])
     sz = np.hstack([AB.ravel(), APz.ravel(), AF.ravel()])
@@ -1589,11 +1588,11 @@ def convectionUpwindTermSpherical3D(u: FaceVariable, *args):
     # build the sparse matrix
     kx = ky = kz = 3*mn
     Mx = csr_array((sx[0:kx], (ii[0:kx], jjx[0:kx])),
-                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+                   shape=((Nr+2)*(Ntheta+2)*(Nphi+2), (Nr+2)*(Ntheta+2)*(Nphi+2)))
     My = csr_array((sy[0:kx], (ii[0:ky], jjy[0:ky])),
-                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+                   shape=((Nr+2)*(Ntheta+2)*(Nphi+2), (Nr+2)*(Ntheta+2)*(Nphi+2)))
     Mz = csr_array((sz[0:kz], (ii[0:kz], jjz[0:kz])),
-                   shape=((Nr+2)*(Ntheta+2)*(Nz+2), (Nr+2)*(Ntheta+2)*(Nz+2)))
+                   shape=((Nr+2)*(Ntheta+2)*(Nphi+2), (Nr+2)*(Ntheta+2)*(Nphi+2)))
     M = Mx + My + Mz
     return M, Mx, My, Mz
 
@@ -1606,7 +1605,7 @@ def convectionTvdRHSSpherical3D(u: FaceVariable, phi: CellVariable, FL, *args):
         u_upwind = args[0]
     else:
         u_upwind = u
-    Nr, Ntheta, Nz = u.domain.dims
+    Nr, Ntheta, Nphi = u.domain.dims
     G = u.domain.cell_numbers()
     DRe = u.domain.cellsize._x[2:][:, np.newaxis, np.newaxis]
     DRw = u.domain.cellsize._x[0:-2][:, np.newaxis, np.newaxis]
@@ -1742,6 +1741,8 @@ def convectionTerm(u: FaceVariable) -> csr_array:
         return convectionTerm1D(u)
     elif (type(u.domain) is CylindricalGrid1D):
         return convectionTermCylindrical1D(u)
+    elif (type(u.domain) is SphericalGrid1D):
+        return convectionTermSpherical1D(u)
     elif (type(u.domain) is Grid2D):
         return convectionTerm2D(u)[0]
     elif (type(u.domain) is CylindricalGrid2D):
@@ -1752,8 +1753,8 @@ def convectionTerm(u: FaceVariable) -> csr_array:
         return convectionTerm3D(u)[0]
     elif (type(u.domain) is CylindricalGrid3D):
         return convectionTermCylindrical3D(u)[0]
-    else:
-        raise Exception("convectionTerm is not defined for this Mesh type.")
+    elif (type(u.domain) is SphericalGrid3D):
+        return convectionTermSpherical3D(u)[0]
 
 
 def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
