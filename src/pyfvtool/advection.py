@@ -1545,31 +1545,31 @@ def convectionUpwindTermSpherical3D(u: FaceVariable, *args):
     AS = -vs_max*np.sin(thetaf[:,0:Ntheta,:])/(DTHETAp*rp*np.sin(thetap))
     AF = wf_min/(DPHIp*rp*np.sin(thetap))
     AB = -wb_max/(DPHIp*rp*np.sin(thetap))
-    APx = (re**2*ue_max-rw**2*uw_min)/(DRp*rp)
+    APx = (re**2*ue_max-rw**2*uw_min)/(DRp*rp**2)
     APy = (np.sin(thetaf[:,1:Ntheta+1,:])*vn_max-np.sin(thetaf[:,0:Ntheta,:])*vs_min)/(DTHETAp*rp*np.sin(thetap))
     APz = (wf_max-wb_min)/(DPHIp*rp*np.sin(thetap))
 
     # Also correct for the inner boundary cells (not the ghost cells)
     # Left boundary:
-    APx[0, :, :] = APx[0, :, :]-rw[0, :, :] * \
-        uw_max[0, :, :]/(2.0*DRp[0, :, :]*rp[0, :, :])
+    APx[0, :, :] = APx[0, :, :]-rw[0, :, :]**2 * \
+        uw_max[0, :, :]/(2.0*DRp[0, :, :]*rp[0, :, :]**2)
     AW[0, :, :] = AW[0, :, :]/2.0
     # Right boundary:
     AE[-1, :, :] = AE[-1, :, :]/2.0
-    APx[-1, :, :] = APx[-1, :, :]+re[-1, :, :] * \
-        ue_min[-1, :, :]/(2.0*DRp[-1, :, :]*rp[-1, :, :])
+    APx[-1, :, :] = APx[-1, :, :]+re[-1, :, :]**2 * \
+        ue_min[-1, :, :]/(2.0*DRp[-1, :, :]*rp[-1, :, :]**2)
     # Bottom boundary:
-    APy[:, 0, :] = APy[:, 0, :]-vs_max[:, 0, :]/(2.0*DTHETAp[:, 0, :]*rp[:,0, :]) 
+    APy[:, 0, :] = APy[:, 0, :]-vs_max[:, 0, :]*np.sin(thetaf[:,0,:])/(2.0*DTHETAp[:, 0, :]*rp[:,0, :]*np.sin(thetap[:, 0, :])) 
     AS[:, 0, :] = AS[:, 0, :]/2.0
     # Top boundary:
     AN[:, -1, :] = AN[:, -1, :]/2.0
-    APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]/(2.0*DTHETAp[:, -1, :]*rp[:, -1, :])
+    APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]*np.sin(thetaf[:,-1,:])/(2.0*DTHETAp[:, -1, :]*rp[:, -1, :]*np.sin(thetap[:, -1, :]))
     # Back boundary:
-    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DPHIp[:, :, 0])
+    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*rp[:,:,0]*np.sin(thetap[:,:,0])*DPHIp[:, :, 0])
     AB[:, :, 0] = AB[:, :, 0]/2.0
     # Front boundary:
     AF[:, :, -1] = AF[:, :, -1]/2.0
-    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DPHIp[:, :, -1])
+    APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*rp[:,:,-1]*np.sin(thetap[:,:,-1])*DPHIp[:, :, -1])
     # build the sparse matrix based on the numbering system
     ii = np.tile(G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel(), 3)
     jjx = np.hstack([G[0:Nr, 1:Ntheta+1, 1:Nphi+1].ravel(),
