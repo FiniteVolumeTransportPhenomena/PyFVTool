@@ -2,7 +2,7 @@ import numpy as np
 
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, CylindricalGrid3D
+from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid1D, SphericalGrid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
@@ -76,6 +76,19 @@ def gradientTerm(phi: CellVariable):
                       phi._value[1:-1, 0:-1, 1:-1])/(dy[np.newaxis,:,np.newaxis]*rp[:,np.newaxis,np.newaxis]),
                      (phi._value[1:-1, 1:-1, 1:] -
                      phi._value[1:-1, 1:-1, 0:-1])/dz[np.newaxis,np.newaxis,:])
+    elif (type(phi.domain) is SphericalGrid3D):
+        dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
+        dy = 0.5*(phi.domain.cellsize._y[0:-1]+phi.domain.cellsize._y[1:])
+        dz = 0.5*(phi.domain.cellsize._z[0:-1]+phi.domain.cellsize._z[1:])
+        rp = phi.domain.cellcenters._x[:, np.newaxis, np.newaxis]
+        thetap = phi.domain.cellcenters._y[np.newaxis, :, np.newaxis]
+        return FaceVariable(phi.domain,
+                     (phi._value[1:, 1:-1, 1:-1] -
+                      phi._value[0:-1, 1:-1, 1:-1])/dx[:,np.newaxis,np.newaxis],
+                     (phi._value[1:-1, 1:, 1:-1] -
+                      phi._value[1:-1, 0:-1, 1:-1])/(dy[np.newaxis,:,np.newaxis]*rp),
+                     (phi._value[1:-1, 1:-1, 1:] -
+                     phi._value[1:-1, 1:-1, 0:-1])/(dz[np.newaxis,np.newaxis,:]*rp*np.sin(thetap)))
 
 # =============== Divergence 1D Term ============================
 def divergenceTerm1D(F: FaceVariable):

@@ -1623,55 +1623,55 @@ def convectionTvdRHSSpherical3D(u: FaceVariable, phi: CellVariable, FL, *args):
          )[np.newaxis, :, np.newaxis]
     dz = 0.5*(u.domain.cellsize._z[0:-1] +
               u.domain.cellsize._z[1:])[np.newaxis, np.newaxis, :]
-    psiX_p = np.zeros((Nr+1, Ntheta, Nz))
-    psiX_m = np.zeros((Nr+1, Ntheta, Nz))
-    psiY_p = np.zeros((Nr, Ntheta+1, Nz))
-    psiY_m = np.zeros((Nr, Ntheta+1, Nz))
-    psiZ_p = np.zeros((Nr, Ntheta, Nz+1))
-    psiZ_m = np.zeros((Nr, Ntheta, Nz+1))
+    psiX_p = np.zeros((Nr+1, Ntheta, Nphi))
+    psiX_m = np.zeros((Nr+1, Ntheta, Nphi))
+    psiY_p = np.zeros((Nr, Ntheta+1, Nphi))
+    psiY_m = np.zeros((Nr, Ntheta+1, Nphi))
+    psiZ_p = np.zeros((Nr, Ntheta, Nphi+1))
+    psiZ_m = np.zeros((Nr, Ntheta, Nphi+1))
     rp = u.domain.cellcenters._x[:, np.newaxis, np.newaxis]
     rf = u.domain.facecenters._x[:, np.newaxis, np.newaxis]
 
     # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
     # x direction
-    dphiX_p = (phi._value[1:Nr+2, 1:Ntheta+1, 1:Nz+1] -
-               phi._value[0:Nr+1, 1:Ntheta+1, 1:Nz+1])/dr
+    dphiX_p = (phi._value[1:Nr+2, 1:Ntheta+1, 1:Nphi+1] -
+               phi._value[0:Nr+1, 1:Ntheta+1, 1:Nphi+1])/dr
     rX_p = dphiX_p[0:-1, :, :]/_fsign(dphiX_p[1:, :, :])
-    psiX_p[1:Nr+1, :, :] = 0.5*FL(rX_p)*(phi._value[2:Nr+2, 1:Ntheta+1, 1:Nz+1] -
-                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiX_p[1:Nr+1, :, :] = 0.5*FL(rX_p)*(phi._value[2:Nr+2, 1:Ntheta+1, 1:Nphi+1] -
+                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+1])
     psiX_p[0, :, :] = 0  # left boundary
     # y direction
-    dphiY_p = (phi._value[1:Nr+1, 1:Ntheta+2, 1:Nz+1] -
-               phi._value[1:Nr+1, 0:Ntheta+1, 1:Nz+1])/dtheta
+    dphiY_p = (phi._value[1:Nr+1, 1:Ntheta+2, 1:Nphi+1] -
+               phi._value[1:Nr+1, 0:Ntheta+1, 1:Nphi+1])/dtheta
     rY_p = dphiY_p[:, 0:-1, :]/_fsign(dphiY_p[:, 1:, :])
     psiY_p[:, 1:Ntheta+1, :] = 0.5 * \
-        FL(rY_p)*(phi._value[1:Nr+1, 2:Ntheta+2, 1:Nz+1] -
-                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+        FL(rY_p)*(phi._value[1:Nr+1, 2:Ntheta+2, 1:Nphi+1] -
+                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+1])
     psiY_p[:, 0, :] = 0.0  # Bottom boundary
     # z direction
-    dphiZ_p = (phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+2] -
-               phi._value[1:Nr+1, 1:Ntheta+1, 0:Nz+1])/dz
+    dphiZ_p = (phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+2] -
+               phi._value[1:Nr+1, 1:Ntheta+1, 0:Nphi+1])/dz
     rZ_p = dphiZ_p[:, :, 0:-1]/_fsign(dphiZ_p[:, :, 1:])
-    psiZ_p[:, :, 1:Nz+1] = 0.5*FL(rZ_p)*(phi._value[1:Nr+1, 1:Ntheta+1, 2:Nz+2] -
-                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiZ_p[:, :, 1:Nphi+1] = 0.5*FL(rZ_p)*(phi._value[1:Nr+1, 1:Ntheta+1, 2:Nphi+2] -
+                                         phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+1])
     psiZ_p[:, :, 0] = 0.0  # Back boundary
 
     # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
     # x direction
     rX_m = dphiX_p[1:, :, :]/_fsign(dphiX_p[0:-1, :, :])
-    psiX_m[0:Nr, :, :] = 0.5*FL(rX_m)*(phi._value[0:Nr, 1:Ntheta+1, 1:Nz+1] -
-                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiX_m[0:Nr, :, :] = 0.5*FL(rX_m)*(phi._value[0:Nr, 1:Ntheta+1, 1:Nphi+1] -
+                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+1])
     psiX_m[-1, :, :] = 0.0  # right boundary
     # y direction
     rY_m = dphiY_p[:, 1:, :]/_fsign(dphiY_p[:, 0:-1, :])
     psiY_m[:, 0:Ntheta, :] = 0.5 * \
-        FL(rY_m)*(phi._value[1:Nr+1, 0:Ntheta, 1:Nz+1] -
-                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+        FL(rY_m)*(phi._value[1:Nr+1, 0:Ntheta, 1:Nphi+1] -
+                  phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+1])
     psiY_m[:, -1, :] = 0.0  # top boundary
     # z direction
     rZ_m = dphiZ_p[:, :, 1:]/_fsign(dphiZ_p[:, :, 0:-1])
-    psiZ_m[:, :, 0:Nz] = 0.5*FL(rZ_m)*(phi._value[1:Nr+1, 1:Ntheta+1, 0:Nz] -
-                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nz+1])
+    psiZ_m[:, :, 0:Nphi] = 0.5*FL(rZ_m)*(phi._value[1:Nr+1, 1:Ntheta+1, 0:Nphi] -
+                                       phi._value[1:Nr+1, 1:Ntheta+1, 1:Nphi+1])
     psiZ_m[:, :, -1] = 0.0  # front boundary
 
     re = rf[1:Nr+1]
@@ -1684,30 +1684,30 @@ def convectionTvdRHSSpherical3D(u: FaceVariable, phi: CellVariable, FL, *args):
     uw_min, uw_max = ux_min[0:Nr, :, :], ux_max[0:Nr, :, :]
     vn_min, vn_max = uy_min[:, 1:Ntheta+1, :], uy_max[:, 1:Ntheta+1, :]
     vs_min, vs_max = uy_min[:, 0:Ntheta, :], uy_max[:, 0:Ntheta, :]
-    wf_min, wf_max = uz_min[:, :, 1:Nz+1], uz_max[:, :, 1:Nz+1]
-    wb_min, wb_max = uz_min[:, :, 0:Nz], uz_max[:, :, 0:Nz]
+    wf_min, wf_max = uz_min[:, :, 1:Nphi+1], uz_max[:, :, 1:Nphi+1]
+    wb_min, wb_max = uz_min[:, :, 0:Nphi], uz_max[:, :, 0:Nphi]
 
     # calculate the TVD correction term
     div_x = -(1.0/(DRp*rp))*(re*(ue_max*psiX_p[1:Nr+1, :, :]+ue_min*psiX_m[1:Nr+1, :, :]) -
                              rw*(uw_max*psiX_p[0:Nr, :, :]+uw_min*psiX_m[0:Nr, :, :]))
     div_y = -(1.0/(DTHETAp*rp))*((vn_max*psiY_p[:, 1:Ntheta+1, :]+vn_min*psiY_m[:, 1:Ntheta+1, :]) -
                                  (vs_max*psiY_p[:, 0:Ntheta, :]+vs_min*psiY_m[:, 0:Ntheta, :]))
-    div_z = -(1.0/DZp)*((wf_max*psiZ_p[:, :, 1:Nz+1]+wf_min*psiZ_m[:, :, 1:Nz+1]) -
-                        (wb_max*psiZ_p[:, :, 0:Nz]+wb_min*psiZ_m[:, :, 0:Nz]))
+    div_z = -(1.0/DZp)*((wf_max*psiZ_p[:, :, 1:Nphi+1]+wf_min*psiZ_m[:, :, 1:Nphi+1]) -
+                        (wb_max*psiZ_p[:, :, 0:Nphi]+wb_min*psiZ_m[:, :, 0:Nphi]))
 
     # define the RHS Vector
-    RHS = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
-    RHSx = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
-    RHSy = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
-    RHSz = np.zeros((Nr+2)*(Ntheta+2)*(Nz+2))
+    RHS = np.zeros((Nr+2)*(Ntheta+2)*(Nphi+2))
+    RHSx = np.zeros((Nr+2)*(Ntheta+2)*(Nphi+2))
+    RHSy = np.zeros((Nr+2)*(Ntheta+2)*(Nphi+2))
+    RHSz = np.zeros((Nr+2)*(Ntheta+2)*(Nphi+2))
 
     # assign the values of the RHS vector
-    mnx = Nr*Ntheta*Nz
-    mny = Nr*Ntheta*Nz
-    mnz = Nr*Ntheta*Nz
-    rowx_index = G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel()  # main diagonal x
-    rowy_index = G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel()  # main diagonal y
-    rowz_index = G[1:Nr+1, 1:Ntheta+1, 1:Nz+1].ravel()  # main diagonal z
+    mnx = Nr*Ntheta*Nphi
+    mny = Nr*Ntheta*Nphi
+    mnz = Nr*Ntheta*Nphi
+    rowx_index = G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel()  # main diagonal x
+    rowy_index = G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel()  # main diagonal y
+    rowz_index = G[1:Nr+1, 1:Ntheta+1, 1:Nphi+1].ravel()  # main diagonal z
     row_index = rowx_index
     RHS[row_index] = (div_x+div_y+div_z).ravel()
     RHSx[rowx_index] = div_x.ravel()
