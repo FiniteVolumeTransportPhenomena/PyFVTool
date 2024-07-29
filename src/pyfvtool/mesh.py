@@ -202,12 +202,15 @@ class MeshStructure:
         -------
         np.ndarray
             containing all cell volumes, arranged according to gridcells
-            
+        
+        TODO: move each of these to the respective grid classes?
         """
         if (type(self) is Grid1D):
             c = self.cellsize._x[1:-1]
         elif (type(self) is CylindricalGrid1D):
             c = 2.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x
+        elif (type(self) is SphericalGrid1D):
+            c = 4.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x**2
         elif (type(self) is Grid2D):
             c = self.cellsize._x[1:-1][:, np.newaxis]\
                 *self.cellsize._y[1:-1][np.newaxis, :]
@@ -228,6 +231,12 @@ class MeshStructure:
                 *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
                 *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
                 *self.cellsize._z[np.newaxis,np.newaxis,:]
+        elif (type(self) is SphericalGrid3D):
+            c = self.cellcenters._x**2\
+                *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
+                *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
+                *self.cellsize._z[np.newaxis,np.newaxis,:]
+            warn("SphericalGrid3D: cell volumes might not be correct!") # TODO: Check these volumes
         return c
     
     # read-only property cellvolume

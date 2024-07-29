@@ -9,7 +9,7 @@ import numpy as np
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, CylindricalGrid3D
+from .mesh import SphericalGrid1D, PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries, boundaryConditionsTerm
 
@@ -522,7 +522,8 @@ def cellLocations(m: MeshStructure):
    
     
     if (type(m) is Grid1D)\
-     or (type(m) is CylindricalGrid1D):
+     or (type(m) is CylindricalGrid1D)\
+     or (type(m) is SphericalGrid1D):
         X = CellVariable(m, m.cellcenters._x)
         return X
     elif (type(m) is Grid2D)\
@@ -532,7 +533,8 @@ def cellLocations(m: MeshStructure):
         Y = CellVariable(m, np.tile(m.cellcenters._y[:, np.newaxis].T, (N[0], 1)))
         return X, Y  
     elif (type(m) is Grid3D)\
-       or (type(m) is CylindricalGrid3D): 
+       or (type(m) is CylindricalGrid3D)\
+       or (type(m) is SphericalGrid3D): 
         X = CellVariable(m, np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2])))
         Y = CellVariable(m, np.tile((m.cellcenters._y[:, np.newaxis].T)[:,:,np.newaxis], (N[0], 1, N[2])))
         z = np.zeros((1,1,N[2]))
