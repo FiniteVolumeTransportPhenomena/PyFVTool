@@ -306,10 +306,10 @@ def diffusionTermCylindrical3D(D: FaceVariable) -> csr_array:
 
     # reassign the east, west, north, and south velocity vectors for the
     # code readability (use broadcasting)
-    De = rf[1:Nx+1]*D._xvalue[1:Nx+1, :, :] / \
+    De = rf[1:Nx+1,:,:]*D._xvalue[1:Nx+1, :, :] / \
         (rp*dx[1:Nx+1][:, np.newaxis, np.newaxis]
          * DX[1:Nx+1][:, np.newaxis, np.newaxis])
-    Dw = rf[0:Nx]*D._xvalue[0:Nx, :, :] / \
+    Dw = rf[0:Nx,:,:]*D._xvalue[0:Nx, :, :] / \
         (rp*dx[0:Nx][:, np.newaxis, np.newaxis]
          * DX[1:Nx+1][:, np.newaxis, np.newaxis])
     Dn = D._yvalue[:, 1:Ny+1, :]/(rp*rp*dy[1:Ny+1][np.newaxis,

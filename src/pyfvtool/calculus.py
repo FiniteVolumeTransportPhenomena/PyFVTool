@@ -283,6 +283,7 @@ def divergenceTermCylindrical3D(F:FaceVariable):
     dy = F.domain.cellsize._y[1:-1][np.newaxis,:,np.newaxis]
     dz = F.domain.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
     rp = F.domain.cellcenters._x[:,np.newaxis,np.newaxis]
+    rf = F.domain.facecenters._x[:,np.newaxis,np.newaxis]
     # define the vector of cell index
     row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal
     # reassign the east, west, north, and south flux vectors for the
@@ -294,9 +295,65 @@ def divergenceTermCylindrical3D(F:FaceVariable):
     Ff = F._zvalue[:,:,1:Nz+1]
     Fb = F._zvalue[:,:,0:Nz]
     # compute the divergence
-    div_x = (Fe - Fw)/dx
+    div_x = (rf[1:Nx+1,:,:]*Fe - rf[0:Nx,:,:]*Fw)/(dx*rp)
     div_y = (Fn - Fs)/(dy*rp)
     div_z = (Ff - Fb)/dz
+    # define the RHS Vector
+    RHSdiv = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
+    RHSdivx = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
+    RHSdivy = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
+    RHSdivz = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
+    # assign the values of the RHS vector
+    RHSdiv[row_index] = (div_x+div_y+div_z).ravel()
+    RHSdivx[row_index] = div_x.ravel()
+    RHSdivy[row_index] = div_y.ravel()
+    RHSdivz[row_index] = div_z.ravel()
+    return RHSdiv, RHSdivx, RHSdivy, RHSdivz
+
+def divergenceTermSpherical1D(F:FaceVariable):
+    # This def calculates the divergence of a field
+    # using its face
+    # extract data from the mesh structure
+    Nx = F.domain.dims[0]
+    G = F.domain.cell_numbers()
+    DX = F.domain.cellsize._x[1:-1]
+    rp = F.domain.cellcenters._x
+    rf = F.domain.facecenters._x
+    # define the vector of cell index
+    row_index = G[1:Nx+1] # main diagonal
+    # reassign the east, west, north, and south flux vectors for the
+    # code readability
+    Fe = F._xvalue[1:Nx+1]
+    Fw = F._xvalue[0:Nx]
+    re = rf[1:Nx+1]
+    rw = rf[0:Nx]
+    # compute the divergence
+    div_x = (re*re*Fe-rw*Fw)/(DX*rp*rp)
+    # define the RHS Vector
+    RHSdiv = np.zeros(Nx+2)
+    # assign the values of the RHS vector
+    RHSdiv[row_index] = div_x
+    return RHSdiv
+
+def divergenceTermSpherical3D(F:FaceVariable):
+    # This def calculates the divergence of a field
+    # using its face
+    # extract data from the mesh structure
+    Nx, Ny, Nz = F.domain.dims
+    G=F.domain.cell_numbers()
+    dx = F.domain.cellsize._x[1:-1][:,np.newaxis,np.newaxis]
+    dy = F.domain.cellsize._y[1:-1][np.newaxis,:,np.newaxis]
+    dz = F.domain.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
+    rp = F.domain.cellcenters._x[:,np.newaxis,np.newaxis]
+    rf = F.domain.facecenters._x[:,np.newaxis,np.newaxis]
+    thetap = F.domain.cellcenters._y[np.newaxis,:,np.newaxis]
+    thetaf = F.domain.facecenters._y[np.newaxis,:,np.newaxis]
+    # define the vector of cell index
+    row_index = G[1:Nx+1,1:Ny+1,1:Nz+1].ravel() # main diagonal
+    # compute the divergence
+    div_x = (rf[1:Nx+1,:,:]**2*F._xvalue[1:Nx+1,:,:] - rf[0:Nx,:,:]**2*F._xvalue[0:Nx,:,:])/(dx*rp**2)
+    div_y = (np.sin(thetaf[:,1:Ny+1,:])*F._yvalue[:,1:Ny+1,:] - np.sin(thetaf[:,0:Ny,:])*F._yvalue[:,0:Ny,:])/(dy*rp*np.sin(thetap))
+    div_z = (F._zvalue[:,:,1:Nz+1] - F._zvalue[:,:,0:Nz])/(dz*rp*np.sin(thetap))
     # define the RHS Vector
     RHSdiv = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
     RHSdivx = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
