@@ -1608,7 +1608,7 @@ def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
     return BCMatrix, BCRHS
 
-def boundaryConditionsTermSphericl3D(BC: BoundaryConditions3D):
+def boundaryConditionsTermSpherical3D(BC: BoundaryConditions3D):
     # extract data from the mesh structure
     Nx, Ny, Nz = BC.domain.dims
     G=BC.domain.cell_numbers()
@@ -1906,4 +1906,4 @@ def boundaryConditionsTerm(BC):
     elif (type(BC.domain) is CylindricalGrid3D):
         return boundaryConditionsTermCylindrical3D(BC)
     elif (type(BC.domain) is SphericalGrid3D):
-        return boundaryConditionsTermSphericl3D(BC)
+        return boundaryConditionsTermSpherical3D(BC)
