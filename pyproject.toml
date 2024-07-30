@@ -1,4 +1,5 @@
 # minimalist pyproject.toml
+
 [project]
 name = "pyfvtool"
 version = "0.3.3"
@@ -8,8 +9,6 @@ authors = [
     { name="Martinus H. V. Werts"}
 ]
 description = "Finite volume toolbox in Python"
-readme = "README.md"
-requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
@@ -18,13 +17,21 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Mathematics"
 ]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+        "numpy>=1.23.0",
+        "scipy>=1.11.0",
+		"matplotlib"
+        ]
+
 
 [project.urls]
 "Homepage" = "https://github.com/FiniteVolumeTransportPhenomena/PyFVTool"
 "Bug Tracker" = "https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/issues"
 
 [build-system]
-requires = ["setuptools>=61.0", "numpy", "scipy>=1.8.0", "matplotlib"]
+requires = ["setuptools>=61.0", "numpy>=1.23.0", "scipy>=1.11.0", "matplotlib"]
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
