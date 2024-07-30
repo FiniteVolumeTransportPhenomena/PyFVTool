@@ -9,8 +9,8 @@ from scipy.special import erf
 # elaborate documentation for PyFVTool functions and classes.
 
 from pyfvtool import Grid1D, Grid2D, Grid3D
-from pyfvtool import CylindricalGrid1D, CylindricalGrid2D, PolarGrid2D
-from pyfvtool import CylindricalGrid3D
+from pyfvtool import CylindricalGrid1D, SphericalGrid1D, CylindricalGrid2D, PolarGrid2D
+from pyfvtool import CylindricalGrid3D, SphericalGrid3D
 from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
@@ -59,8 +59,10 @@ mesh_nonuniform.append(Grid2D(X, Y))
 mesh_nonuniform.append(Grid3D(X, Y, Z))
 mesh_nonuniform.append(CylindricalGrid1D(X))
 mesh_nonuniform.append(CylindricalGrid2D(X, Y))
-mesh_nonuniform.append(CylindricalGrid3D(X, Y, Z))
 mesh_nonuniform.append(PolarGrid2D(X, Y))
+mesh_nonuniform.append(CylindricalGrid3D(X, Y, Z))
+mesh_nonuniform.append(SphericalGrid1D(X))
+mesh_nonuniform.append(SphericalGrid3D(X, Y, Z))
 print("Non-uniform mesh created successfully!")
 ## Part II: create cell and face variables
 c_val= 1.0
@@ -141,7 +143,7 @@ c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val)) # analytical solution
 # plt.show()
 # plt.legend('central', 'upwind', 'analytical')
 
-## Part VI: solve convection diffucion equation
+## Part VI: solve convection diffusion equation
 # nonuniform
 c_conv=[]
 M_bc=[]
@@ -163,7 +165,7 @@ for i in range(len(mesh_nonuniform)):
 # #     visualizeCells(c_conv[i])
 # # end
 # # println("Convection-Diffusion equation solved and visualized successfully")
-# ## Part VII: test the calculus fanctions
+# ## Part VII: test the calculus functions
 grad_c=[]
 for i in range(len(mesh_nonuniform)):
     grad_c.append(gradientTerm(c_dif[i]))
@@ -208,7 +210,7 @@ for i in range(len(mesh_nonuniform)):
 # #     visualizeCells(c_trans[i])
 # #     pause(1.5)
 # #end
-# println("Transient convection-diffucion-reaction solved successfully!")
+# println("Transient convection-diffusion-reaction solved successfully!")
 ## Part VIII: test the utilities
 # only test the averaging, don"t save the result
 for i in range(len(mesh_nonuniform)):

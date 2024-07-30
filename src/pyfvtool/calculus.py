@@ -400,6 +400,10 @@ def divergenceTerm(F: FaceVariable):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTerm3D(F)
     elif (type(F.domain) is CylindricalGrid3D):
         RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTermCylindrical3D(F)
+    elif (type(F.domain) is SphericalGrid1D):
+        RHSdiv = divergenceTermSpherical1D(F)
+    elif (type(F.domain) is SphericalGrid3D):
+        RHSdiv, RHSdivx, RHSdivy, RHSdivz = divergenceTermSpherical3D(F)
     else:
         raise Exception("DivergenceTerm is not defined for this Mesh type.")
     return RHSdiv

@@ -1792,6 +1792,10 @@ def convectionUpwindTerm(u: FaceVariable, *args) -> csr_array:
         return convectionUpwindTerm3D(u)[0]
     elif (type(u.domain) is CylindricalGrid3D):
         return convectionUpwindTermCylindrical3D(u)[0]
+    elif (type(u.domain) is SphericalGrid1D):
+        return convectionUpwindTermSpherical1D(u)
+    elif (type(u.domain) is SphericalGrid3D):
+        return convectionUpwindTermSpherical3D(u)[0]
     else:
         raise Exception(
             "convectionUpwindTerm is not defined for this Mesh type.")
@@ -1835,6 +1839,10 @@ def convectionTVDupwindRHSTerm(u: FaceVariable, phi: CellVariable, FL, *args) ->
         return convectionTvdRHS3D(u, phi, FL, *args)[0]
     elif (type(u.domain) is CylindricalGrid3D):
         return convectionTvdRHSCylindrical3D(u, phi, FL, *args)[0]
+    elif (type(u.domain) is SphericalGrid1D):
+        return convectionTvdRHSSpherical1D(u, phi, FL, *args)
+    elif (type(u.domain) is SphericalGrid3D):
+        return convectionTvdRHSSpherical3D(u, phi, FL, *args)[0]
     else:
         raise Exception(
             "convectionTVDupwindRHSTerm is not defined for this Mesh type.")

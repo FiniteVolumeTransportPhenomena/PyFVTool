@@ -1108,7 +1108,7 @@ class SphericalGrid3D(Grid3D):
     def __init__(self, *args):
         direct_init = False # Flag to indicate if this is a 'direct' __init__
                             # not requiring any parsing of arguments.
-                            # These 'direct' instantiantions are used
+                            # These 'direct' instantiations are used
                             # internally.
         if len(args)==6:
             # Resolve ambiguous @overload situation for 3D meshes
@@ -1120,16 +1120,23 @@ class SphericalGrid3D(Grid3D):
             dims, cell_size, cell_location, face_location, corners, edges\
                 = args
         else:
-            if args[4] > 2*np.pi:
+            if len(args) == 3:
+                theta_max = args[1][-1]
+                phi_max = args[2][-1]
+            elif len(args) == 6:
+                theta_max = args[4]
+                phi_max = args[5]
+            
+            if theta_max > 2*np.pi:
                 warn("Recreate the mesh with an upper bound of 2*pi for \\theta"\
-                     " or there will be unknown consequences!")
-            if args[5] > 2*np.pi:
+                    " or there will be unknown consequences!")
+            if phi_max > 2*np.pi:
                 warn("Recreate the mesh with an upper bound of 2*pi for \\phi"\
-                     " or there will be unknown consequences!")
+                    " or there will be unknown consequences!")
             dims, cell_size, cell_location, face_location, corners, edges\
                 = self._mesh_3d_param(*args, coordlabels={'r'    :'_x',
-                                                          'theta':'_y',
-                                                          'phi'  :'_z'})
+                                                        'theta':'_y',
+                                                        'phi'  :'_z'})
 
         super().__init__(dims, cell_size, cell_location,
                          face_location, corners, edges)

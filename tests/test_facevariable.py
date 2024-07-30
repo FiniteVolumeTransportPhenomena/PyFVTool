@@ -92,7 +92,7 @@ fv = FaceVariable(s1d, 1.0)
 errors_expected += 1
 try:
     fv.xvalue[:] = 3.0
-except NotImplementedError:
+except AttributeError:
     errors_caught +=1 
     
 

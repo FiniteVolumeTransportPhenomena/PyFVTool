@@ -77,7 +77,7 @@ for i in range(len(mesh_nonuniform)):
     print(i)
     c_dif.append(pf.solveMatrixPDE(mesh_nonuniform[i], -M_dif[i]+M_bc[i], RHS_bc[i]))
 
-## Part VI: solve convection diffucion equation
+## Part VI: solve convection diffusion equation
 # nonuniform
 c_conv=[]
 M_bc=[]
@@ -101,7 +101,7 @@ for i in range(len(mesh_nonuniform)):
 # #     visualizeCells(c_conv[i])
 # # end
 # # println("Convection-Diffusion equation solved and visualized successfully")
-# ## Part VII: test the calculus fanctions
+# ## Part VII: test the calculus functions
 grad_c=[]
 for i in range(len(mesh_nonuniform)):
     grad_c.append(pf.gradientTerm(c_dif[i]))
@@ -147,7 +147,7 @@ for i in range(len(mesh_nonuniform)):
 # #     visualizeCells(c_trans[i])
 # #     pause(1.5)
 # #end
-# println("Transient convection-diffucion-reaction solved successfully!")
+# println("Transient convection-diffusion-reaction solved successfully!")
 ## Part VIII: test the utilities
 # only test the averaging, don"t save the result
 for i in range(len(mesh_nonuniform)):
