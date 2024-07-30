@@ -294,13 +294,13 @@ def cellValuesWithBoundaries3D(phi, BC):
         j=Ny+1
         i = i_ind
         k = k_ind
-        phiBC[i,j,k]= phi[:,0,:]
+        phiBC[i,j,k]= phi[:,0,:][:, np.newaxis, :]
 
         # Bottom boundary
         j=0
         i = i_ind
         k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:]
+        phiBC[i,j,k]= phi[:,-1,:][:, np.newaxis, :]
 
     if (not BC.left.periodic) and (not BC.right.periodic):
         # Right boundary
@@ -344,13 +344,13 @@ def cellValuesWithBoundaries3D(phi, BC):
         i = i_ind
         j = j_ind
         k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0]
+        phiBC[i,j,k]= phi[:,:,0][:, :, np.newaxis]
 
         # back boundary
         i = i_ind
         j = j_ind
         k = 0
-        phiBC[i,j,k]= phi[:,:,-1]
+        phiBC[i,j,k]= phi[:,:,-1][:, :, np.newaxis]
     return phiBC
 
 
@@ -394,13 +394,13 @@ def cellValuesWithBoundariesCylindrical3D(phi, BC):
         j=Ny+1
         i = i_ind
         k = k_ind
-        phiBC[i,j,k]= phi[:,0,:]
+        phiBC[i,j,k]= phi[:,0,:][:, np.newaxis, :]
 
         # Bottom boundary
         j=0
         i = i_ind
         k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:]
+        phiBC[i,j,k]= phi[:,-1,:][:, np.newaxis, :]
 
     if (not BC.left.periodic) and (not BC.right.periodic):
         # Right boundary
@@ -444,13 +444,13 @@ def cellValuesWithBoundariesCylindrical3D(phi, BC):
         i = i_ind
         j = j_ind
         k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0]
+        phiBC[i,j,k]= phi[:,:,0][:, :, np.newaxis]
 
         # back boundary
         i = i_ind
         j = j_ind
         k = 0
-        phiBC[i,j,k]= phi[:,:,-1]
+        phiBC[i,j,k]= phi[:,:,-1][:, :, np.newaxis]
     return phiBC
 
 
@@ -553,13 +553,13 @@ def cellValuesWithBoundariesSpherical3D(phi, BC):
         j=Ny+1
         i = i_ind
         k = k_ind
-        phiBC[i,j,k]= phi[:,0,:]
+        phiBC[i,j,k]= phi[:,0,:][:, np.newaxis, :]
 
         # Bottom boundary
         j=0
         i = i_ind
         k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:]
+        phiBC[i,j,k]= phi[:,-1,:][:, np.newaxis, :]
 
     if (not BC.left.periodic) and (not BC.right.periodic):
         # Right boundary
@@ -603,13 +603,13 @@ def cellValuesWithBoundariesSpherical3D(phi, BC):
         i = i_ind
         j = j_ind
         k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0]
+        phiBC[i,j,k]= phi[:,:,0][:, :, np.newaxis]
 
         # back boundary
         i = i_ind
         j = j_ind
         k = 0
-        phiBC[i,j,k]= phi[:,:,-1]
+        phiBC[i,j,k]= phi[:,:,-1][:, :, np.newaxis]
     return phiBC
 
 
@@ -1624,7 +1624,7 @@ def boundaryConditionsTermSpherical3D(BC: BoundaryConditions3D):
     i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
     j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
     k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    # number of boundary nodes (axact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
+    # number of boundary nodes (exact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
     nb = 8*((Nx+1)*(Ny+1)+(Nx+1)*(Nz+1)+(Ny+1)*(Nz+1))
 
     # define the vectors to be used for the creation of the sparse matrix

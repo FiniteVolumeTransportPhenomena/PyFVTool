@@ -392,12 +392,12 @@ def diffusionTermSpherical3D(D: FaceVariable) -> csr_array:
     # extract data from the mesh structure
     Nx, Ny, Nz = D.domain.dims
     G = D.domain.cell_numbers()
-    DX = D.domain.cellsize._x
-    DY = D.domain.cellsize._y
-    DZ = D.domain.cellsize._z
-    dx = 0.5*(DX[0:-1]+DX[1:])
-    dy = 0.5*(DY[0:-1]+DY[1:])
-    dz = 0.5*(DZ[0:-1]+DZ[1:])
+    DX = D.domain.cellsize._x[:, np.newaxis, np.newaxis]
+    DY = D.domain.cellsize._y[np.newaxis, :, np.newaxis]
+    DZ = D.domain.cellsize._z[np.newaxis, np.newaxis, :]
+    dx = 0.5*(DX[0:-1,:,:]+DX[1:,:,:])
+    dy = 0.5*(DY[:,0:-1,:]+DY[:,1:,:])
+    dz = 0.5*(DZ[:,:,0:-1]+DZ[:,:,1:])
     rp = D.domain.cellcenters._x[:, np.newaxis, np.newaxis]
     rf = D.domain.facecenters._x[:, np.newaxis, np.newaxis]
     thetap = D.domain.cellcenters._y[np.newaxis, :, np.newaxis]
@@ -408,19 +408,12 @@ def diffusionTermSpherical3D(D: FaceVariable) -> csr_array:
 
     # reassign the east, west, north, and south velocity vectors for the
     # code readability (use broadcasting)
-    De = rf[1:Nx+1]**2*D._xvalue[1:Nx+1, :, :] / \
-        (rp**2*dx[1:Nx+1][:, np.newaxis, np.newaxis]
-         * DX[1:Nx+1][:, np.newaxis, np.newaxis])
-    Dw = rf[0:Nx]**2*D._xvalue[0:Nx, :, :] / \
-        (rp**2*dx[0:Nx][:, np.newaxis, np.newaxis]
-         * DX[1:Nx+1][:, np.newaxis, np.newaxis])
-    Dn = D._yvalue[:, 1:Ny+1, :]*np.sin(thetaf[:,1:Ny+1,:])/(rp*rp*np.sin(thetap)*dy[1:Ny+1][np.newaxis,
-                                 :, np.newaxis]*DY[1:Ny+1][np.newaxis, :, np.newaxis])
-    Ds = D._yvalue[:, 0:Ny, :]*np.sin(thetaf[:,0:Ny,:])/(rp*rp*np.sin(thetap)*dy[0:Ny][np.newaxis,
-                               :, np.newaxis]*DY[1:Ny+1][np.newaxis, :, np.newaxis])
-    Df = D._zvalue[:, :, 1:Nz+1] / \
-        (rp**2 * np.sin(thetap)**2 * dz[1:Nz+1]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
-    Db = D._zvalue[:, :, 0:Nz]/(rp**2 * np.sin(thetap)**2 * dz[0:Nz]*DZ[1:Nz+1])[np.newaxis, np.newaxis, :]
+    De = rf[1:Nx+1,:,:]**2*D._xvalue[1:Nx+1, :, :] / (rp**2*dx[1:Nx+1,:,:] * DX[1:Nx+1,:,:])
+    Dw = rf[0:Nx,:,:]**2*D._xvalue[0:Nx, :, :] / (rp**2*dx[0:Nx,:,:] * DX[1:Nx+1,:,:])
+    Dn = D._yvalue[:, 1:Ny+1, :]*np.sin(thetaf[:,1:Ny+1,:])/(rp*rp*np.sin(thetap)*dy[:,1:Ny+1,:]*DY[:,1:Ny+1,:])
+    Ds = D._yvalue[:, 0:Ny, :]*np.sin(thetaf[:,0:Ny,:])/(rp*rp*np.sin(thetap)*dy[:,0:Ny,:]*DY[:,1:Ny+1,:])
+    Df = D._zvalue[:, :, 1:Nz+1] / (rp**2 * np.sin(thetap)**2 * dz[:,:,1:Nz+1]*DZ[:,:,1:Nz+1])
+    Db = D._zvalue[:, :, 0:Nz]/(rp**2 * np.sin(thetap)**2 * dz[:,:,0:Nz]*DZ[:,:,1:Nz+1])
 
     # calculate the coefficients for the internal cells
     AE = De.ravel()
