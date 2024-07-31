@@ -1127,12 +1127,12 @@ class SphericalGrid3D(Grid3D):
                 theta_max = args[4]
                 phi_max = args[5]
             
-            if theta_max > 2*np.pi:
-                warn("Recreate the mesh with an upper bound of 2*pi for \\theta"\
+            if theta_max > np.pi:
+                warn("Recreate the mesh with an upper bound of pi for \\theta"\
                     " or there will be unknown consequences!")
             if phi_max > 2*np.pi:
                 warn("Recreate the mesh with an upper bound of 2*pi for \\phi"\
-                    " or there will be unknown consequences!")
+                    " or there will be unknown consequences! Do not forget to use a periodic boundary condition for \\phi!")
             dims, cell_size, cell_location, face_location, corners, edges\
                 = self._mesh_3d_param(*args, coordlabels={'r'    :'_x',
                                                         'theta':'_y',
