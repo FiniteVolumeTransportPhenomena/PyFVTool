@@ -125,6 +125,11 @@ class CellVariable:
     def cellvolume(self):
         return self.domain.cellvolume
         
+    # read-only property cellcenters
+    @property
+    def cellcenters(self):
+        return self.domain.cellcenters
+        
     
     def __add__(self, other):
         if type(other) is CellVariable:

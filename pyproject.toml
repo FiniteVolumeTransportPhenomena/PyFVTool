@@ -2,7 +2,7 @@
 
 [project]
 name = "pyfvtool"
-version = "0.3.3"
+version = "0.3.4"
 authors = [
     { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
     { name="Gavin M. Weir"},
