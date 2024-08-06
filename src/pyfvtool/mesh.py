@@ -219,7 +219,7 @@ class MeshStructure:
                 *self.cellsize._x[1:-1][:, np.newaxis]\
                 *self.cellsize._y[1:-1][np.newaxis, :]
         elif (type(self) is PolarGrid2D):
-            c = self.cellcenters._x\
+            c = self.cellcenters._x[:, np.newaxis]\
                 *self.cellsize._x[1:-1][:, np.newaxis]\
                 *self.cellsize._y[1:-1][np.newaxis, :]
         elif (type(self) is Grid3D):
@@ -227,16 +227,16 @@ class MeshStructure:
                 *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
                 *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
         elif (type(self) is CylindricalGrid3D):
-            c = self.cellcenters._x\
+            c = self.cellcenters._x[:,np.newaxis,np.newaxis]\
                 *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
                 *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-                *self.cellsize._z[np.newaxis,np.newaxis,:]
+                *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
         elif (type(self) is SphericalGrid3D):
-            c = self.cellcenters._x**2\
+            c = self.cellcenters._x[:,np.newaxis,np.newaxis]**2\
+                *np.sin(self.cellcenters._y[np.newaxis,:,np.newaxis])\
                 *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
                 *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-                *self.cellsize._z[np.newaxis,np.newaxis,:]
-            warn("SphericalGrid3D: cell volumes might not be correct!") # TODO: Check these volumes
+                *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
         return c
     
     # read-only property cellvolume
