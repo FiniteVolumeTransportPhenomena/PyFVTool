@@ -1,5 +1,5 @@
-import unittest
 import numpy as np
 from scipy.special import erf
 
-# TBD: compare 1D advection in spherical coordinate with analytical solution
+# TO DO: make a test script based on Notebook 'spherical1D_diffusion.ipynb'
+# (see issue #44 on GitHub)
