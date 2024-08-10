@@ -2,8 +2,9 @@ import numpy as np
 
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
-from .mesh import PolarGrid2D, CylindricalGrid3D
+from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .cell import CellVariable
+from warnings import warn
 
 import matplotlib.pyplot as plt
 
@@ -95,7 +96,7 @@ def visualizeCells(phi: CellVariable,
 
     elif (type(phi.domain) is CylindricalGrid3D):
         r, theta, z, phi0 = phi.plotprofile()
-      
+        Nx, Ny, Nz = phi.domain.dims
         x = r*np.cos(theta)
         y = r*np.sin(theta)
         vmin = np.min(phi0)
@@ -127,6 +128,42 @@ def visualizeCells(phi: CellVariable,
                        facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
                        alpha=alfa)
         # plt.show()
+
+    elif (type(phi.domain) is SphericalGrid3D):
+        warn("SphericalGrid3D visualization is not working properly yet.")
+        r, theta, PHI, phi0 = phi.plotprofile()
+        Nx, Ny, Nz = phi.domain.dims
+        x = r*np.sin(theta)*np.cos(PHI)
+        y = r*np.sin(theta)*np.sin(PHI)
+        z = r*np.cos(theta)
+        vmin = np.min(phi0)
+        vmax = np.max(phi0)
+        mynormalize = lambda a:((a - vmin)/(vmax-vmin))
+        a = np.ones((Nx+2, Ny+2, Nz+2))
+        X = x*a
+        Y = y*a
+        Z = z*a
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="3d")
+        alfa = 1.0
+        # ax.plot_surface(X[:, 0, :], Y[:, 0, :], Z[:, 0, :],
+        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, 0, :])),
+        #                alpha=alfa)
+        # ax.plot_surface(X[:, int(Ny/2)+1, :], Y[:, int(Ny/2)+1, :], Z[:, int(Ny/2)+1, :],
+        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, int(Ny/2)+1, :])),
+        #                alpha=alfa)
+        # ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
+        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
+        #                alpha=alfa)
+        # ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
+        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
+        #                alpha=alfa)
+        # ax.plot_surface(X[:, :, int(Nz/2)], Y[:, :, int(Nz/2)], Z[:, :, int(Nz/2)],
+        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, int(Nz/2)])),
+        #                alpha=alfa)
+        ax.plot_surface(X[-1, :, :], Y[-1, :, :], Z[-1, :, :],
+                       facecolors=plt.cm.viridis(mynormalize(phi0[-1, :, :])),
+                       alpha=alfa)
         
     else:
         # just in case...

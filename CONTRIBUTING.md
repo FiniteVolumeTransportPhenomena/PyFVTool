@@ -7,11 +7,11 @@ For development, `git clone` the repository to a local directory, or unpack the 
 A suitable development and test Python environment can be created with conda:
 
 ```
-conda create --name pyfvtool_dev python numpy scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook
+conda create --name pyfvtool_dev python numpy scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook tqdm
 conda activate pyfvtool_dev
 ```
 
-Once the environment configured and activated, you can change your working directory to the local copy of the pyfvtool repository and install an editable (development) version.
+Once the environment configured and activated, you can change your working directory to the local copy of the `pyfvtool` repository and install an editable (development) version.
 
 ```
 pip install --editable .
@@ -22,9 +22,9 @@ pip install --editable .
 
 ## Testing
 
-Simple automated testing of the Python code can be done using `pytest` for which a configuration has been set up. The configuration is minimalist. It enables to conveniently test if the PyFVTool still works as expected before commiting changes to the code repository. A full 100 percent code testing coverage is not guarantueed at this stage. 
+Simple automated testing of the Python code can be done using `pytest` for which a configuration has been set up. The configuration is minimalist. It enables to conveniently test if the PyFVTool still works as expected before committing changes to the code repository. A full 100 percent code testing coverage is not guaranteed at this stage. 
 
-All available tests can be run by simpling invoking
+All available tests can be run by simply invoking
 
 ```   
 pytest

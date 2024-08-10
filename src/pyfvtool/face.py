@@ -4,7 +4,7 @@ from typing import overload
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid1D, CylindricalGrid2D
-from .mesh import PolarGrid2D, CylindricalGrid3D
+from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid1D
 from .mesh import SphericalGrid3D
 
 
@@ -96,7 +96,8 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('xvalue does not exist for cylindrical grids')
         elif (type(self.domain) is PolarGrid2D)\
-         or (type(self.domain) is SphericalGrid3D):
+         or (type(self.domain) is SphericalGrid3D)\
+         or (type(self.domain) is SphericalGrid1D):
             raise AttributeError('xvalue does not exist for polar or spherical grids')
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
@@ -113,7 +114,8 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('xvalue does not exist for cylindrical grids')
         elif (type(self.domain) is PolarGrid2D)\
-         or (type(self.domain) is SphericalGrid3D):
+         or (type(self.domain) is SphericalGrid3D)\
+         or (type(self.domain) is SphericalGrid1D):
             raise AttributeError('xvalue does not exist for polar or spherical grids')
         else:
             raise NotImplementedError("FaceVariable not implemented for mesh type '{0:s}'".\
@@ -132,6 +134,7 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('yvalue does not exist for cylindrical grids')
         elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid1D)\
          or (type(self.domain) is SphericalGrid3D):
             raise AttributeError('yvalue does not exist for polar or spherical grids')
         else:
@@ -150,6 +153,7 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid3D):
             raise AttributeError('yvalue does not exist for cylindrical grids')
         elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid1D)\
          or (type(self.domain) is SphericalGrid3D):
             raise AttributeError('yvalue does not exist for polar or spherical grids')
         else:
@@ -170,6 +174,7 @@ class FaceVariable:
         elif (type(self.domain) is CylindricalGrid2D):
               return self._yvalue
         elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid1D)\
          or (type(self.domain) is SphericalGrid3D):
             raise AttributeError('zvalue does not exist for polar or spherical grids')
         else:
@@ -189,6 +194,7 @@ class FaceVariable:
         elif (type(self.domain) is CylindricalGrid2D):
               self._yvalue = value
         elif (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid1D)\
          or (type(self.domain) is SphericalGrid3D):
             raise AttributeError('zvalue does not exist for polar or spherical grids')
         else:
@@ -206,6 +212,7 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D)\
          or (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid1D)\
          or (type(self.domain) is SphericalGrid3D):
             return self._xvalue
         else:
@@ -222,6 +229,7 @@ class FaceVariable:
          or (type(self.domain) is CylindricalGrid2D)\
          or (type(self.domain) is CylindricalGrid3D)\
          or (type(self.domain) is PolarGrid2D)\
+         or (type(self.domain) is SphericalGrid1D)\
          or (type(self.domain) is SphericalGrid3D):
             self._xvalue = value
         else:
