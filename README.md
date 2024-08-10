@@ -20,7 +20,7 @@ PyFVTool is a Python implementation of [A. A. Eftekhari](https://github.com/simu
 PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
 
 The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes in PyFVTool include:  
-  * 1D, 2D and 3D Cartesian and cylindrical grids
+  * 1D, 2D and 3D Cartesian, cylindrical and spherical grids
   * Second order (central difference) [diffusion](https://en.wikipedia.org/wiki/Diffusion_equation) terms
   * Second order (central difference), first order ([upwind](https://en.wikipedia.org/wiki/Upwind_scheme)), and [total variation diminishing](https://en.wikipedia.org/wiki/Total_variation_diminishing) (TVD) for advection terms
   * Constant and linear source terms
@@ -65,7 +65,7 @@ Of course, do not forget to  `conda activate pyfvtool_user`  the environment eve
 
 
 ### Development installation
-If you would like to work on the source code, it is possible to install a development version using `pip`. See `CONTRIBUTING.md`
+If you would like to work on the source code, it is possible to install a development version using `pip`. See [`CONTRIBUTING.md`](https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/blob/main/CONTRIBUTING.md)
 
 
 
