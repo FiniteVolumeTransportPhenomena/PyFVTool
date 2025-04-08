@@ -1,4 +1,3 @@
-
 # PyFVTool: Python toolbox for the finite volume method
 
 PyFVTool discretizes and numerically solves the conservative form of transient [convection-diffusion-reaction](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation) equations with variable velocity field/diffusion coefficients and source terms. PyFVTool uses the [finite volume method](https://en.wikipedia.org/wiki/Finite_volume_method) (FVM) to do this. 
@@ -33,7 +32,7 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
 PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects.  There is not much documentation for the code yet (help wanted!) but the `example` and `example-notebooks` folders are the best places to start. The latter folder contains annotated Jupyter Notebooks. From the examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
 
 ## Installation
-For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.9` or higher and `numpy`, `scipy`, and `matplotlib`:  
+For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.12` or later and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`:  
 
 ```
 pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
@@ -54,7 +53,7 @@ It is convenient to use the Anaconda/miniconda Python distributions and set up a
 
 This requires three commands to be launched from the command-line prompt.
 ```
-conda create --name pyfvtool_user numpy scipy matplotlib spyder jupyterlab tqdm
+conda create --name pyfvtool_user python=3.12 numpy scipy matplotlib spyder jupyterlab tqdm
 
 conda activate pyfvtool_user
 

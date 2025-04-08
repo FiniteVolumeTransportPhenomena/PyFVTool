@@ -7,9 +7,11 @@ For development, `git clone` the repository to a local directory, or unpack the 
 A suitable development and test Python environment can be created with conda:
 
 ```
-conda create --name pyfvtool_dev python numpy scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook tqdm
+conda create --name pyfvtool_dev python=3.12 numpy=1.26.4 scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook tqdm
 conda activate pyfvtool_dev
 ```
+
+**NOTE.** *NumPy 2.x seems to break `pypardiso`. Use NumPy 1.26.4.*
 
 Once the environment configured and activated, you can change your working directory to the local copy of the `pyfvtool` repository and install an editable (development) version.
 

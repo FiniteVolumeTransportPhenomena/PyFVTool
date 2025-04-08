@@ -110,7 +110,7 @@ except AttributeError:
     
 
 
-s3d = SphericalGrid3D(10, 10, 10, 1.0, 2*np.pi, 2*np.pi)
+s3d = SphericalGrid3D(10, 10, 10, 1.0, np.pi, 2*np.pi)
 fv = FaceVariable(s3d, 1.0)
 fv.rvalue[:] = 3.0
 fv.thetavalue[:] = 4.0
