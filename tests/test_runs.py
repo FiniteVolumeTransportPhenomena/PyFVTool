@@ -20,7 +20,7 @@ Nx=5
 Ny=7
 Nz=9
 X=np.array([0.01, 0.1, 0.3, 0.5, 0.55, 1.0])
-Y= np.array([0.0, 0.1, 1.0, 1.5, 2.9, 3.0, np.pi, 2*np.pi])
+Y= np.array([0.0, 0.1, 1.0, 1.5, 2.9, 3.0, np.pi])
 Z= np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
 N_mesh=7
 # create nonuniform mesh

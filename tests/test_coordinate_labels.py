@@ -295,7 +295,7 @@ except AttributeError:
 
 
 
-msh = SphericalGrid3D(10, 15, 20, 1., 2*np.pi, 2*np.pi)
+msh = SphericalGrid3D(10, 15, 20, 1., np.pi, 2*np.pi)
 rr = msh.cellcenters.r
 theta = msh.cellcenters.theta
 phi = msh.cellcenters.phi
