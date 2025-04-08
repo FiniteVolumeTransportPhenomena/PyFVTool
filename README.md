@@ -32,7 +32,7 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
 PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects.  There is not much documentation for the code yet (help wanted!) but the `example` and `example-notebooks` folders are the best places to start. The latter folder contains annotated Jupyter Notebooks. From the examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
 
 ## Installation
-For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.12` or later and `numpy` (version 2 or later), `scipy`, and `matplotlib`:  
+For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.12` or later and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`:  
 
 ```
 pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
