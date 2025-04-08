@@ -7,7 +7,7 @@ For development, `git clone` the repository to a local directory, or unpack the 
 A suitable development and test Python environment can be created with conda:
 
 ```
-conda create --name pyfvtool_dev python numpy scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook tqdm
+conda create --name pyfvtool_dev python=3.12 numpy scipy matplotlib pypardiso spyder jupyterlab pytest=7.4 pytest_notebook tqdm
 conda activate pyfvtool_dev
 ```
 

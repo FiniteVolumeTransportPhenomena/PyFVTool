@@ -54,7 +54,7 @@ It is convenient to use the Anaconda/miniconda Python distributions and set up a
 
 This requires three commands to be launched from the command-line prompt.
 ```
-conda create --name pyfvtool_user numpy scipy matplotlib spyder jupyterlab tqdm
+conda create --name pyfvtool_user python=3.12 numpy scipy matplotlib spyder jupyterlab tqdm
 
 conda activate pyfvtool_user
 
