@@ -9,7 +9,7 @@ see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.;
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 import pyfvtool as pf
 
@@ -41,9 +41,9 @@ u.xvalue[-1] = 0.0
 D = pf.FaceVariable(msh, D_coeff)
 
 # prepare plot
-plt.figure(1)
-plt.clf()
-pf.visualizeCells(c)
+# plt.figure(1)
+# plt.clf()
+# pf.visualizeCells(c)
 
 # time loop
 it = 0
@@ -63,29 +63,29 @@ while (it*dt < t_simulation):
     pf.solvePDE(c, eqnterms)
     it+=1
     total_c.append(c.domainIntegral())
-    if (it % Nskip == 0):
-        pf.visualizeCells(c)
+    # if (it % Nskip == 0):
+    #     pf.visualizeCells(c)
 
-plt.xlabel('depth / a.u.')
-plt.ylabel('local concentration / a.u.')
-plt.title('Finite-volume solution to the Mason-Weaver equation')
+# plt.xlabel('depth / a.u.')
+# plt.ylabel('local concentration / a.u.')
+# plt.title('Finite-volume solution to the Mason-Weaver equation')
 
-plt.figure(2)
-plt.clf()
-plt.plot(total_c)
-plt.ylabel('total amount of c')
-plt.xlabel('time step')
-plt.ylim(0, 1.2*np.max(total_c))
-plt.title('mass conservation')
+# plt.figure(2)
+# plt.clf()
+# plt.plot(total_c)
+# plt.ylabel('total amount of c')
+# plt.xlabel('time step')
+# plt.ylim(0, 1.2*np.max(total_c))
+# plt.title('mass conservation')
 
 total_dev = np.array(1e15*(total_c-total_c[0])/total_c[0])
-plt.figure(3)
-plt.clf()
-plt.plot(total_dev)
-plt.ylabel('deviation total amount of c [parts per 10^15]')
-plt.ylim(-200, 200)
-plt.xlabel('time step')
-plt.title('deviation from mass conservation')
+# plt.figure(3)
+# plt.clf()
+# plt.plot(total_dev)
+# plt.ylabel('deviation total amount of c [parts per 10^15]')
+# plt.ylim(-200, 200)
+# plt.xlabel('time step')
+# plt.title('deviation from mass conservation')
 
 # amplitude of steady-state solution
 z0 = D_coeff/sg

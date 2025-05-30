@@ -7,7 +7,7 @@ Basic, incomplete testing of CellVariable arithmetic
 complete_success = False
 
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 import pyfvtool as pf
 

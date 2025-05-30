@@ -56,8 +56,8 @@ while t<t_simulation:
     pf.solvePDE(c, eqnterms)
     t+=dt
 
-    if (nplot % Nskip == 0):
-        pf.visualizeCells(c)
+    # if (nplot % Nskip == 0):
+    #     pf.visualizeCells(c)
     nplot+=1
     
     
