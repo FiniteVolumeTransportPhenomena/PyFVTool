@@ -32,7 +32,23 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
 PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects.  There is not much documentation for the code yet (help wanted!) but the `example` and `example-notebooks` folders are the best places to start. The latter folder contains annotated Jupyter Notebooks. From the examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
 
 ## Installation
-For now, install PyFVTool directly from the GitHub repository using `pip`. You will need `Python 3.12` or later and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`:  
+
+### Python environment
+
+We highly recommend to use the Anaconda/miniconda Python distributions and to set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
+
+This requires two commands to be launched from the command-line prompt.
+```
+conda create --name pyfvtool_user python=3.12 numpy scipy matplotlib spyder jupyterlab tqdm
+
+conda activate pyfvtool_user
+```
+
+Of course, do not forget to  `conda activate pyfvtool_user`  the environment every time you run Python code that uses PyFVTool.
+
+### Installation of PyFVTool
+
+Install PyFVTool using `pip`. You will need `Python 3.12` or later and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
 
 ```
 pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
@@ -47,20 +63,6 @@ If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.co
 This will install PyFVTool in the current Colab instance, and make it available for import in the Notebook.
 
 
-### Working in a conda environment
-
-It is convenient to use the Anaconda/miniconda Python distributions and set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
-
-This requires three commands to be launched from the command-line prompt.
-```
-conda create --name pyfvtool_user python=3.12 numpy scipy matplotlib spyder jupyterlab tqdm
-
-conda activate pyfvtool_user
-
-pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
-```
-
-Of course, do not forget to  `conda activate pyfvtool_user`  the environment every time you run Python code that uses PyFVTool.
 
 
 ### Development installation
