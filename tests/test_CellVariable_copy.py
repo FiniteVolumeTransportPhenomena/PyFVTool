@@ -4,7 +4,7 @@ Test CellVariable copy
 
 """
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 import pyfvtool as pf
 
@@ -44,8 +44,8 @@ cc = c.copy()
 D_cell = pf.CellVariable(mesh, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
-plt.figure(1)
-plt.clf()
+# plt.figure(1)
+# plt.clf()
 # Time loop
 t = 0
 nplot = 0
@@ -58,15 +58,15 @@ while t<t_simulation:
     pf.solvePDE(c, eqnterms)
     t+=dt
 
-    if (nplot % Nskip == 0):
-        pf.visualizeCells(c)
+    # if (nplot % Nskip == 0):
+    #     pf.visualizeCells(c)
     nplot+=1
     
     
 # Do it once more on the copy
 
-plt.figure(2)
-plt.clf()
+# plt.figure(2)
+# plt.clf()
 t = 0
 nplot = 0
 while t<t_simulation:
@@ -78,8 +78,8 @@ while t<t_simulation:
     pf.solvePDE(cc, eqnterms)
     t+=dt
 
-    if (nplot % Nskip == 0):
-        pf.visualizeCells(cc)
+    # if (nplot % Nskip == 0):
+    #     pf.visualizeCells(cc)
     nplot+=1
     
     

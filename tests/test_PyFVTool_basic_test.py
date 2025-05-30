@@ -1,5 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from scipy.special import erf
 
 
@@ -22,7 +22,7 @@ from pyfvtool import solveMatrixPDE, solveExplicitPDE
 from pyfvtool import harmonicMean, linearMean, arithmeticMean, geometricMean
 from pyfvtool import upwindMean
 from pyfvtool import fluxLimiter
-from pyfvtool import visualizeCells
+# from pyfvtool import visualizeCells
 
 
 
@@ -257,14 +257,14 @@ for t in np.arange(dt, final_t, dt):
 
 # analytical solution
 c_analytical = 1-erf(x/(2*np.sqrt(D_val*t)))
-plt.figure(1)
-plt.clf()
-plt.plot(x, c.value, x, c_analytical, 'r--')
+# plt.figure(1)
+# plt.clf()
+# plt.plot(x, c.value, x, c_analytical, 'r--')
 # plt.show()
 
 
 
-# Testing 1D visualization...
+# Testing 1D visualization... (deactivated for now, MW250530)
 # (code from README.md )
 
 # Solving a 1D diffusion equation with a fixed concentration 
@@ -304,18 +304,18 @@ while t<t_simulation:
     c_new = solveMatrixPDE(m1, Mt-Mdiff+Mbc, RHSbc+RHSt)
     c_old.update_value(c_new)
 
-plt.figure(2)
-plt.clf()
-visualizeCells(c_old)
+# plt.figure(2)
+# plt.clf()
+# visualizeCells(c_old)
 
-# Testing 2D visualization
+# Testing 2D visualization (deactivated for now, MW250530)
 #
 mm = Grid2D(50, 50, 5*np.pi, 5*np.pi)
 XX, YY = np.meshgrid(mm.cellcenters.x, mm.cellcenters.y)
 vv = CellVariable(mm, np.cos(XX)*np.sin(YY))
-plt.figure(3)
-plt.clf()
-visualizeCells(vv)
+# plt.figure(3)
+# plt.clf()
+# visualizeCells(vv)
 
 # Only use show() at the end of the script, since only a single call is needed
 # to display all created Figures. `visualizeCells` does not call plt.show() anymore
@@ -328,7 +328,7 @@ visualizeCells(vv)
 # Replaced plt.show() with plt.pause(3) which does not necessitate user 
 # interaction to close windows.
 #
-plt.pause(3) # show figures and pause for 3 seconds before continuing
+# plt.pause(3) # show figures and pause for 3 seconds before continuing
 
 
 # end test (if the scripts run until here, it should be OK)
