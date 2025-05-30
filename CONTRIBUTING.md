@@ -36,7 +36,7 @@ pytest
 
 from the command line, when in the `pyfvtool` project root development directory.
 
-The full test takes several minutes to complete (a little over 2 minutes on a typical Windows 11 laptop), since it involves many cycles of actually numerically solving partial differential equations.
+The full test takes several minutes to complete (almost 3 minutes on a typical Windows 11 laptop), since it involves many cycles of actually solving partial differential equations numerically.
 
 The collection of test scripts has not been optimized. Most of the test scripts are modified example scripts, which have been adapted to work with `pytest` by adding simple `assert` statements in test functions.
 
