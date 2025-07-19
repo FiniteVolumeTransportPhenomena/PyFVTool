@@ -1,6 +1,14 @@
 import numpy as np
+
 from scipy.sparse import csr_array
 from scipy.sparse.linalg import spsolve
+from scipy.sparse.linalg import use_solver
+use_solver(useUmfpack=False) 
+# For reproducibility, do not automatically use any installed `scikits.umfpack`
+# solver. Always use the built-in SuperLU by default. In PyFVTool, the
+# `scikits.umfpack.spsolve` solver (if installed) should be supplied via
+# the `externalsolver` keyword argument of `solvePDE`, as is the case for
+# the `pypardiso.spsolve` solver (and any other external solvers).
 
 from .mesh import MeshStructure
 from .cell import CellVariable
@@ -29,7 +37,7 @@ def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
         Right hand side of the linear system
     externalsolver: function (optional)
         If provided, use an external sparse solver via a function call
-        having the same interface as the default solver
+        having the same interface as the default built-in SuperLU solver
         scipy.sparse.linalg.spsolve.
     
     Returns
@@ -81,8 +89,8 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     externalsolver : function, optional
         If specified, use an external sparse solver via a function call
         having the same interface as the default solver
-        `scipy.sparse.linalg.spsolve`. If not specified, this default
-        solver will be used.
+        `scipy.sparse.linalg.spsolve`. If not specified, this default built-in
+        SuperLU solver will be used.
 
     Raises
     ------
