@@ -35,7 +35,7 @@ PyFVTool is under active development. Several test cases have been validated to 
 
 ### Python environment
 
-We highly recommend to use the Anaconda/miniconda Python distributions and to set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
+We recommend to use PyFVTool with Python 3.12 (no more, no less) and the most recent NumPy and SciPy versions. It is also highly recommended to use the [MiniForge](https://conda-forge.org/download/) / Anaconda / miniconda Python distributions and to set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
 
 This requires two commands to be launched from the command-line prompt.
 ```
@@ -48,7 +48,7 @@ Of course, do not forget to  `conda activate pyfvtool_user`  the environment eve
 
 ### Installation of PyFVTool
 
-Install PyFVTool using `pip`. You will need `Python 3.12` or later and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
+Install PyFVTool into your specific PyFVTool Conda environment using `pip`. You will need `Python 3.12` (or later) and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
 
 ```
 pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
