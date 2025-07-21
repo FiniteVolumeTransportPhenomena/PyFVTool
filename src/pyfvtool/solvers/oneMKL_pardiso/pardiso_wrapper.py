@@ -41,6 +41,7 @@ import scipy.sparse as sp
 from scipy.sparse import SparseEfficiencyWarning
 
 
+
 class PyPardisoSolver:
     """
     Python interface to Intel's OneMKL PARDISO library for solving large sparse linear systems of equations Ax=b.
@@ -369,6 +370,53 @@ class PyPardisoSolver:
         self.set_phase(-1 if everything else 0)
         self._call_pardiso(A, b)
         self.set_phase(13)
+        
+    def get_MKL_version_string(self):
+        """
+        Return the version string of the underlying Intel oneMKL library
+
+        Returns
+        -------
+        Instance.
+
+        """  
+        class MKLVersion(ctypes.Structure):
+            _fields_ = [
+                ("MajorVersion", ctypes.c_int),
+                ("MinorVersion", ctypes.c_int),
+                ("UpdateVersion", ctypes.c_int),
+                ("ProductStatus", ctypes.c_char * 64),
+                ("Build", ctypes.c_char * 64),
+                ("Processor", ctypes.c_char * 64),
+                ("Platform", ctypes.c_char * 64),
+            ]
+               
+        # Create the structure instance
+        version = MKLVersion()
+    
+        # Set argument types and return type for safety (optional but recommended)
+        self.libmkl.mkl_get_version.argtypes = [ctypes.POINTER(MKLVersion)]
+        self.libmkl.mkl_get_version.restype = None
+    
+        # Call the function
+        self.libmkl.mkl_get_version(ctypes.byref(version))
+    
+        # print("Major version:          ", version.MajorVersion)
+        # print("Minor version:          ", version.MinorVersion)
+        # print("Update version:         ", version.UpdateVersion)
+        # print("Product status:         ", version.ProductStatus.decode())
+        # print("Build:                  ", version.Build.decode())
+        # print("Platform:               ", version.Platform.decode())
+        # print("Processor optimization: ", version.Processor.decode())
+
+        # version_string_verbose = (
+        #     f"Intel oneAPI Math Kernel Library {version.MajorVersion}."
+        #     f"{version.MinorVersion} Update {version.UpdateVersion}"
+        # )
+        
+        version_string = f"{version.MajorVersion}.{version.MinorVersion}.{version.UpdateVersion}"
+        
+        return version_string
 
 
 class PyPardisoWarning(UserWarning):
