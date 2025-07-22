@@ -48,7 +48,7 @@ Of course, do not forget to  `conda activate pyfvtool_user`  the environment eve
 
 ### Installation of PyFVTool
 
-Install PyFVTool into your specific PyFVTool Conda environment using `pip`. You will need `Python 3.12` (or later) and `numpy` (version 1.26.1 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
+Install PyFVTool into your specific PyFVTool Conda environment using `pip`. You will need `Python 3.12` (or later) and `numpy` (version 2.0.0 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
 
 ```
 pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git

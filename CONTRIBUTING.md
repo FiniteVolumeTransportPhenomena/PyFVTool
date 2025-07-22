@@ -31,10 +31,10 @@ The present pytest configuration for PyFVTool scans all directories for files na
 All available tests can be run by simply invoking
 
 ```   
-pytest
+pytest -s
 ```  
 
-from the command line, when in the `pyfvtool` project root development directory.
+from the command line, when in the `pyfvtool` project root development directory. We prefer to use the `-s` option to explicitly show the console output of all test scripts. This gives us something to watch while the tests are running.
 
 The full test takes several minutes to complete (almost 4 minutes on a typical Windows 11 laptop), since it involves many cycles of actually solving partial differential equations numerically.
 
@@ -43,7 +43,6 @@ The collection of test scripts has not been optimized. Most of the test scripts 
 
 ### Testing environment
 
-Running tests requires to have installed in your Python environment:
-- `pytest`
+Running tests requires to have `pytest` installed in your Python environment, in addition to the package already installed in the PyFVTool environment.
 
 It can be installed, using `conda install pytest`
