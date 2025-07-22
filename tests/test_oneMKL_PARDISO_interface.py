@@ -45,7 +45,7 @@ import pyfvtool as pf
 from pyfvtool.solvers.oneMKL_pardiso import oneMKL_pardiso_solver_instance
 
 # Import oneMKL PARDISO solver interface
-from pyfvtool.solvers.oneMKL_pardiso import spsolve_oneMKL_pardiso
+from pyfvtool.solvers.oneMKL_pardiso import spsolve as spsolve_oneMKL_pardiso
 
 
 
