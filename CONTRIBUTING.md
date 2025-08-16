@@ -7,11 +7,9 @@ For development, `git clone` the repository to a local directory, or unpack the 
 A suitable development and test Python environment can be created with conda:
 
 ```
-conda create --name pyfvtool_dev python=3.12 numpy=1.26.4 scipy matplotlib pypardiso spyder jupyterlab pytest tqdm
+conda create --name pyfvtool_dev python=3.12 mkl numpy scipy matplotlib spyder jupyterlab pytest tqdm
 conda activate pyfvtool_dev
 ```
-
-**NOTE.** *NumPy 2.x seems to break `pypardiso`. Use NumPy 1.26.4.*
 
 Once the environment configured and activated, you can change your working directory to the local copy of the `pyfvtool` repository and install an editable (development) version.
 
@@ -39,10 +37,3 @@ from the command line, when in the `pyfvtool` project root development directory
 The full test takes several minutes to complete (almost 4 minutes on a typical Windows 11 laptop), since it involves many cycles of actually solving partial differential equations numerically.
 
 The collection of test scripts has not been optimized. Most of the test scripts are modified example scripts, which have been adapted to work with `pytest` by adding simple `assert` statements in test functions.
-
-
-### Testing environment
-
-Running tests requires to have `pytest` installed in your Python environment, in addition to the package already installed in the PyFVTool environment.
-
-It can be installed, using `conda install pytest`
