@@ -72,7 +72,8 @@ If you would like to work on the source code, it is possible to install a develo
 
 
 ## Example
-Here is a simple example of a 1D transient diffusion equation:
+
+Here is a simple example of a 1D transient diffusion equation. Further examples can be found as Jupyter Notebooks in the docs.
 
 ```python
 import pyfvtool as pf
