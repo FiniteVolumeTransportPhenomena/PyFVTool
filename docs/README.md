@@ -2,7 +2,7 @@
 
 In the present, pre-release state of PyFVTool, documentation is scarce. A documentation system is being set-up using Sphinx. Docstrings are being added to the code, also enabling the `help` function in interactive Python sessions. 
 
-The `/docs/source/notebook-examples/` folder of the PyFVTool repository contains examples of how to set up finite-volume solvers using PyFVTool for certain textbook cases. These Notebooks are also part of the Sphinx documentation.
+The [`/docs/source/notebook-examples/`](source/notebook-examples/) folder of the PyFVTool repository contains examples of how to set up finite-volume solvers using PyFVTool for certain textbook cases. These Notebooks are also part of the Sphinx documentation.
 
 Further documents will be collected here (in particular in `/docs/source/`). Markdown may be used.
 
