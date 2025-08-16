@@ -10,6 +10,7 @@ Further documents will be collected here. Initially as simple MarkDown text file
 
 See `CONTRIBUTING.md` for installation of the development environment, which also includes Sphinx and its plug-ins.
 
+
 ### Sphinx set-up
 
 Sphinx has been set up as follows. The Sphinx set-up procedure is recorded here for future reference, but needs not be repeated, as the `docs` folder has already been configured.
@@ -28,6 +29,14 @@ From within the `docs` folder
 ```
 make clean
 make html
+```
+
+#### Regenerate RST source files from PyFVTool docstrings (can perhaps be automated?)
+
+From within the `docs` folder
+
+```
+sphinx-apidoc ../src/pyfvtool -o ./source/_pyfvtool_autodoc
 ```
 
 
