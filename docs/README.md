@@ -17,6 +17,7 @@ Further documents will be collected here (in particular in [`/docs/source/`](sou
   	- inspiration may be drawn from https://miepython.readthedocs.io -- [(source)](https://github.com/scottprahl/miepython)
   	- and https://sfepy.org -- [(source)](https://github.com/sfepy/sfepy)
 - Do not worry about tweaking Sphinx. This will happen as we go. Keep it simple!
+  	- see also: https://the-ultimate-sphinx-tutorial.readthedocs.io
 
 
 ## Sphinx
