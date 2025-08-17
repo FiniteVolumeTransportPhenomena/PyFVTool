@@ -1,10 +1,10 @@
 # PyFVTool documentation
 
-In the present, pre-release state of PyFVTool, documentation is scarce. A documentation system is being set-up using Sphinx. Docstrings are being added to the code, also enabling the `help` function in interactive Python sessions. 
+In the present state of PyFVTool, documentation is scarce. A documentation system is being set-up using Sphinx. Docstrings are being added to the code, also enabling the `help` function in interactive Python sessions. 
 
-The [`/docs/source/notebook-examples/`](source/notebook-examples/) folder of the PyFVTool repository contains examples of how to set up finite-volume solvers using PyFVTool for certain textbook cases. These Notebooks are also part of the Sphinx documentation.
+The [`/docs/source/notebook-examples/`](source/notebook-examples/) folder of the PyFVTool repository contains examples of how to set up finite-volume solvers using PyFVTool for a number of textbook cases. These Jupyter Notebooks are also integrated in the Sphinx documentation system.
 
-Further documents will be collected here (in particular in `/docs/source/`). Markdown may be used.
+Further documents will be collected here (in particular in [`/docs/source/`](source/). Markdown can be used.
 
 
 ## Documentation TO-DO
@@ -14,6 +14,8 @@ Further documents will be collected here (in particular in `/docs/source/`). Mar
 	- https://documentation.help/Sphinx/toctree.html
 - Set up a way of publishing the built documentation (ReadTheDocs? github.io? PDF?)
 - Tutorial documentation can nicely be written as Jupyter Notebooks.
+  	- inspiration may be drawn from https://miepython.readthedocs.io -- [(source)](https://github.com/scottprahl/miepython)
+  	- and https://sfepy.org -- [(source)](https://github.com/sfepy/sfepy)
 - Do not worry about tweaking Sphinx. This will happen as we go. Keep it simple!
 
 
