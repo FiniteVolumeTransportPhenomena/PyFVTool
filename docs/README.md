@@ -44,6 +44,8 @@ make clean
 make html
 ```
 
+The documentation in HTML will be in `docs/build/html/`
+
 #### Regenerate RST source files for API documentation from PyFVTool docstrings
 
 Can perhaps be automated? Or only needs to be run once, with further manual editing.
@@ -51,7 +53,7 @@ Can perhaps be automated? Or only needs to be run once, with further manual edit
 From within the `docs` folder
 
 ```
-sphinx-apidoc ../src/pyfvtool -o ./source/_pyfvtool_autodoc
+sphinx-apidoc ../src/pyfvtool -o ./source/pyfvtool_api_autodoc
 ```
 
 

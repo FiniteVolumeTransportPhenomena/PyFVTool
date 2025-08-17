@@ -42,11 +42,11 @@ Welcome to PyFVTool!
    
    
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 1
    :caption: API
-   :hidden:
 
-   _pyfvtool_autodoc/pyfvtool
+
+   pyfvtool_api_autodoc/pyfvtool
 
 
 
