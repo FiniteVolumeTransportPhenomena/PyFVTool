@@ -1,13 +1,18 @@
 # Labeling of coordinates
 
 
-## User (API) coordinate labels and internal labels
+## User (API) coordinate labels vs internal (private) labels
 
-*If you are a casual user of this library, you do not need to read this section. It details the inner workings of PyFVTool, but this knowledge is not required to simply use the PyFVTool as a library.*
+*If you are a casual user of this library, you do not need to read this section. It details the inner workings of PyFVTool. This knowledge is not required to simply use the PyFVTool as a library.*
 
 Internally, PyFVTool always uses an (x, y, z) convention for labeling coordinates, even for cylindrical and spherical grids. This is for historical reasons and efficient coding. Also, these three dimensions are always present, even in the case for 1D and 2D grids.
 
-To avoid confusing situations on the user (API) side, PyFVTool uses conventional coordinate labels towards the user, and then translates these to the appropriate internal labels. Thus, for 1D Cartesian grids, there is (x),  for 1D cylindrical grids, there is \(r\), for 2D Cartesian grids, there is (x, y),  for 2D cylindrical grids, there is (r, z), and so on.
+To avoid confusing situations on the user (API) side, PyFVTool uses conventional coordinate labels towards the user, and then translates these to the appropriate internal labels. Thus: 
+- for 1D Cartesian grids, there is (x) as the user coordinate
+- for 1D cylindrical grids, there is \(r\)
+- for 2D Cartesian grids, there is (x, y),  as pair of user coodinates
+- for 2D cylindrical grids, there is (r, z)
+- and so on.
 
 The 'internal' labeling uses a preceding underscore to distinguish it from the 'user' labeling. This follows the Python convention that indicates that these variables (properties) are internal to PyFVTool (private) and should not be touched by the external user.
 
@@ -35,9 +40,6 @@ The correspondence between conventional user coordinate labels and the internal 
 |`CylindricalGrid3D`|`r` |`theta`|`z`  |
 |`SphericalGrid3D`  |`r` |`theta`|`phi`|
 
-`SphericalGrid1D` has not yet been implemented.
-
-
 
 
 
@@ -57,6 +59,5 @@ The correspondence between conventional user coordinate labels and the internal 
 |`CylindricalGrid3D`|`rvalue` |`thetavalue`|`zvalue`  |
 |`SphericalGrid3D`  |`rvalue` |`thetavalue`|`phivalue`|
 
-`SphericalGrid1D` has not yet been implemented.
 
 

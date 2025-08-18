@@ -1,3 +1,12 @@
+# PyFVTool Origins
+
+The origin story of PyFVTool remains to be written, but can be reconstructed from many remaining digital artifacts that can be found by exploring GitHub and the Internets.
+
+## `dev_story.py`
+
+Fragments of the story of porting (Py)FVTool from MATLAB to Python remained in a log file `dev_story.py`, by the sage [A. A. Eftekhari](https://github.com/simulkade), last updated in [February 2023](https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/commit/01e211896063c9bc2d3622e2eecc9d821b26aff8). It is conserved here.
+
+```python
 # from visualization import *
 # from averaging import *
 # from calculus import *
@@ -314,3 +323,4 @@ sin_c = funceval(np.sin, c)
 sin_c = celleval(np.sin, c)
 sin_c_face = faceeval(np.sin, linearMean(c))
 celleval(lambda x,y:(np.sin(x)+np.cos(y)), c, 2*c)
+```

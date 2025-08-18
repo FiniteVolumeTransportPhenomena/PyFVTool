@@ -1,4 +1,4 @@
-__version__ = "0.4.0"
+__version__ = "0.4.1"
 
 __author__ = [
     "Ali A. Eftekhari",
@@ -8,7 +8,7 @@ __author__ = [
 
 __contact__ = "e.eftekhari@gmail.com"
 
-__copyright__ = "Copyright 2023-2024, The Authors"
+__copyright__ = "Copyright 2023-2025, The Authors"
 
 __license__ = "MIT License"
 
