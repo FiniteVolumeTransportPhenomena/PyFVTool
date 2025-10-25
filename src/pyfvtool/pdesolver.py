@@ -20,11 +20,12 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     """
     Solve a PDE using the finite volume method
     
-    This solver routine constructs the matrix equation based. The terms of the 
-    equation are provided by the user as a list each term being the output of a
-    prior call to the appropriate xxxTerm() function. The terms provided by the
-    user should not include any terms related to the boundary conditions, as 
-    these are handled automatically by solvePDE.
+    This solver routine constructs the matrix equation from the FVM-discretized
+    terms. These terms are provided by the user as a list each term being the 
+    output of a prior call to the appropriate xxxTerm() function. 
+    
+    The terms provided by the user should not include any terms related to the 
+    boundary conditions, as these are handled automatically by solvePDE.
     
     The CellVariable is updated with the solution values, and a
     reference to this one and the same variable is returned. If the 'old' 
@@ -58,18 +59,13 @@ def solvePDE(phi: CellVariable, eqnterms: list,
         The updated CellVariable.
 
     """
-    # Presently the bcterm and the eqnterms are simply the objects
-    # returned by the respective xxxTerm routines. This is done for
-    # simplicity. Later, we might perhaps consider
-    # a specific `Term` class, with properties M, RHS and arithmetic
-    # magic methods defined suitably. Certain terms will have `None`
-    # for either M or RHS etc.
     if externalsolver is None:
         solver = spsolve
     else:
         solver = externalsolver
 
-    # *** BC-API: TODO: automatically apply_BCs() if necessary ***
+    if phi.BCs_changed():
+        phi.apply_BCs()
     
     # Construct BCs Term
     # Mbc, RHSbc = boundaryConditionsTerm(phi.BCs)
@@ -172,7 +168,8 @@ def solveExplicitPDE(phi_old: CellVariable,
         Solution of the PDE
     
     """
-    # *** BC-API: TODO: automatically apply_BCs() if necessary ***
+    if phi_old.BCs_changed():
+        phi_old.apply_BCs()
     
     x = phi_old._value + dt*RHS.reshape(phi_old._value.shape)
     phi = CellVariable(phi_old.domain, 0.0, phi_old.BCs, 

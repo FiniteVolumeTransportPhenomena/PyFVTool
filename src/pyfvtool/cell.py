@@ -96,9 +96,9 @@ class CellVariable:
             raise Exception('Incorrect number of arguments')
 
         if self._value is None:
-            # see also: apply_BCs() - code may be merged
+            # initialize self._value incl. ghost cells
             self._value = cellValuesWithBoundaries(phi_val, self.BCs)
-
+            # see also: apply_BCs() 
         if self.BCsTerm_precalc:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
 
@@ -303,11 +303,31 @@ class CellVariable:
                             deepcopy(self.BCs))
 
 
+    def BCs_changed(self):
+        """
+        Check if any of the BCs has changed since last apply_BCs()
+
+        Returns
+        -------
+        boolean
+            True if any of the BoundaryFace conditions has changed.
+
+        """
+        # To keep things simple, we always include all possible faces,
+        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
+        # they are not used in a specific geometry.
+        return (self.BCs.left.changed or self.BCs.right.changed\
+                or self.BCs.top.changed or self.BCs.bottom.changed\
+                or self.BCs.front.changed or self.BCs.back.changed)
+
+
     def apply_BCs(self):
         """Initialize ghost cells according to the boundary conditions and
         the internal (inner) cell values
         
-        See also __init__()        
+        See also __init__()    
+        
+        The 'changed' attribute of all BCs is reset.
 
         Returns
         -------
@@ -318,6 +338,17 @@ class CellVariable:
                                               self.BCs)
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
+ 
+        # To keep things simple, we always include all possible faces,
+        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
+        # they are not used in a specific geometry.
+        self.BCs.left.changed = False
+        self.BCs.right.changed = False
+        self.BCs.top.changed = False
+        self.BCs.bottom.changed = False
+        self.BCs.front.changed = False
+        self.BCs.back.changed = False
+        
 
 
     def update_value(self, new_cell):
