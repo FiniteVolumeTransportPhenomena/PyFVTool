@@ -111,15 +111,15 @@ def solveMatrixPDE(m: MeshStructure, M:csr_array, RHS: np.ndarray,
     """
     Solve the PDE discretized according to the finite volume method    
         
-    This solver routine uses the M matrix and RHS right-hand side vector 
-    directly. These matrices should be constructed beforehand by combining 
-    the different M matrices and RHS vectors generated using the
-    xxxTerm routines.
+    This 'expert-level' solver routine uses the M matrix and RHS right-hand side 
+    vector directly. These matrices should be constructed beforehand by 
+    combining the different M matrices and RHS vectors generated using the
+    xxxTerm routines, including those related to the boundary conditions.
     
     Returns a new CellVariable without changing the input ('old') CellVariable.
     
     Application of boundary condition terms and updating the related ghost
-    cells should be handled entirely by the user.
+    cells should be handled entirely by the (expert-level) user.
     
     Parameters
     ----------

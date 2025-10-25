@@ -36,7 +36,8 @@ class BoundaryFace:
         True if the boundary is periodic
     """
     
-    def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, periodic=False):
+    def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, 
+                 periodic=False):
         self.a = a
         self.b = b
         self.c = c
