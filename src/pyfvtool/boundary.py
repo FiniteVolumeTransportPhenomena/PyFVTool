@@ -34,14 +34,21 @@ class BoundaryFace:
         coefficient of the boundary condition
     periodic : boolean
         True if the boundary is periodic
+    changed : boolean
+        True if boundary condition values have changed since last calculation
+        of BC terms and ghost cells, indicating need for a BC refresh
     """
     
     def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, 
                  periodic=False):
-        self.a = a
-        self.b = b
-        self.c = c
-        self.periodic = periodic
+        if (type(a) is not np.ndarray) or (type(b) is not np.ndarray)\
+            or (type(c) is not np.ndarray):
+                raise TypeError('a, b, c must be np.ndarray')
+        self._a = a
+        self._b = b
+        self._c = c
+        self._periodic = periodic
+        self.changed = True
 
     def __str__(self):
         temp = vars(self)
@@ -54,6 +61,43 @@ class BoundaryFace:
         for item in temp:
             print(item, ':', temp[item])
         return ""
+    
+    @property
+    def a(self):
+        return self._a
+    
+    @a.setter
+    def a(self, val):
+        self.changed = True
+        self._a[:] = val
+        
+    @property
+    def b(self):
+        return self._b
+
+    @b.setter       
+    def b(self, val):
+        self.changed = True
+        self._b[:] = val
+
+    @property
+    def c(self):
+        return self._c
+
+    @c.setter       
+    def c(self, val):
+        self.changed = True
+        self._c[:] = val
+        
+    @property
+    def periodic(self):
+        return self._periodic
+
+    @periodic.setter       
+    def periodic(self, val):
+        self.changed = True
+        self._periodic = val
+
 
 
 class BoundaryConditionsBase:
