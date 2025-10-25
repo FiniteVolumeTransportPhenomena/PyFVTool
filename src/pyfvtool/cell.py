@@ -319,16 +319,23 @@ class CellVariable:
 
 
     def apply_BCs(self):
-        """Initialize ghost cells according to the boundary conditions and
-        the internal (inner) cell values
+        """(Re)initialize ghost cells according to the boundary conditions and
+        the internal (inner) cell values.
         
-        See also __init__()    
+        This function should be called by the user if the BCs or the cell
+        values have been changed by directly accessing individual array
+        elements. 
         
-        The 'changed' attribute of all BCs is reset.
+        In general, superfluous calls to apply_BCs() will not hurt, so better
+        safe than sorry.
+        
 
         Returns
         -------
         None.
+
+        The 'changed' attribute of all BCs is reset, as well as the
+        `value_changed` attribute of the CellVariable
 
         """
         self._value = cellValuesWithBoundaries(self.value,

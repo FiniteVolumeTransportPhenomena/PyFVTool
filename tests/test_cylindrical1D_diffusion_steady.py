@@ -102,10 +102,10 @@ T = CellVariable(mesh, 0.0)
 
 
 # switch the right (=outer) boundary to Dirichlet: fixed temperature
-T.BCs.right.a[:] = 0.0
-T.BCs.right.b[:] = 1.0
-T.BCs.right.c[:] = T_outer
-T.apply_BCs()
+T.BCs.right.a = 0.0
+T.BCs.right.b = 1.0
+T.BCs.right.c = T_outer
+
 
 
 # The diffusion term requires the face values of the diffusion coefficient

@@ -103,15 +103,13 @@ def diffusion_spherical(mesh, t_simulation=7200.0, dt=60.0):
     c = pf.CellVariable(mesh, c_init)
 
     # Switch the right boundary to Dirichlet: fixed concentration
-    c.BCs.right.a[:] = 0.0
-    c.BCs.right.b[:] = 1.0
-    c.BCs.right.c[:] = c_left
+    c.BCs.right.a = 0.0
+    c.BCs.right.b = 1.0
+    c.BCs.right.c = c_left
     if type(mesh) == pf.SphericalGrid3D:
         # make top and bottom boundaries periodic
         c.BCs.back.periodic = True
         c.BCs.front.periodic = True
-
-    c.apply_BCs()
 
     # Assign diffusivity to cells
     D_cell = pf.CellVariable(mesh, D_val)
@@ -204,7 +202,7 @@ c.BCs.left.c[:] = 0.0
 # c.BCs.bottom.periodic = True
 c.BCs.back.periodic = True
 c.BCs.front.periodic = True
-c.apply_BCs()
+c.apply_BCs() # individual c.value elements addressed, so need to call apply_BCs
 Mbc, RHSbc = pf.boundaryConditionsTerm(c.BCs)
 
 # create a constant velocity field
@@ -344,7 +342,7 @@ c.value[0, np.random.randint(0, Ntheta, 20), np.random.randint(0, Nz, 20)] = 100
 # top and bottom boundaries are periodic
 c.BCs.top.periodic = True
 c.BCs.bottom.periodic = True
-c.apply_BCs()
+c.apply_BCs() # c.value changed, better safe than sorry
 Mbc, RHSbc = pf.boundaryConditionsTerm(c.BCs)
 
 # create a velocity field of random values between 0 and v_wind_max
@@ -403,7 +401,7 @@ c.BCs.right.c[:] = 0.0
 # c.BCs.top.periodic = True
 c.BCs.front.periodic = True
 
-c.apply_BCs()
+c.apply_BCs() # accessed individual array elements
 Mbc, RHSbc = pf.boundaryConditionsTerm(c.BCs)
 
 v_wind_max = 10  # wind speed [m/s]
