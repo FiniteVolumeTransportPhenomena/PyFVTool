@@ -148,17 +148,11 @@ c = CellVariable(mesh, c0)
 
 
 # switch the right (=outer) boundary to Dirichlet: fixed concentration
-c.BCs.right.a[:] = 0.0
-c.BCs.right.b[:] = 1.0
-c.BCs.right.c[:] = c_outer
+c.BCs.right.a = 0.0
+c.BCs.right.b = 1.0
+c.BCs.right.c = c_outer
 
 
-# When changing the BCs, it is necessary to update everything in the cell variable object by calling `apply_BCs()`
-
-# In[11]:
-
-
-c.apply_BCs()
 
 
 # In[12]:

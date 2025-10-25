@@ -74,6 +74,7 @@ class CellVariable:
         
         self.domain = mesh_struct
         self._value = None
+        self.value_changed = False
 
         if np.isscalar(cell_value):
             phi_val = cell_value*np.ones(mesh_struct.dims)
@@ -113,6 +114,7 @@ class CellVariable:
         
     @value.setter
     def value(self, values):
+        self.value_changed = True
         if issubclass(type(self.domain), Grid1D):
             self._value[1:-1] = values
         elif issubclass(type(self.domain), Grid2D):
@@ -302,16 +304,11 @@ class CellVariable:
                             np.abs(self.value),
                             deepcopy(self.BCs))
 
-
+    @property
     def BCs_changed(self):
         """
-        Check if any of the BCs has changed since last apply_BCs()
-
-        Returns
-        -------
-        boolean
-            True if any of the BoundaryFace conditions has changed.
-
+        True if any of the BoundaryFace conditions has changed since last 
+        apply_BCs()
         """
         # To keep things simple, we always include all possible faces,
         # even for 1D and 2D, since all BoundaryFaces always exist, even when 
@@ -348,6 +345,8 @@ class CellVariable:
         self.BCs.bottom.changed = False
         self.BCs.front.changed = False
         self.BCs.back.changed = False
+        
+        self.value_changed = False
         
 
 

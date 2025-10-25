@@ -279,7 +279,6 @@ srcterm = constantSourceTerm(fv_dotq)
 
 t = 0.
 fv_T.value = T0 # (re)set initial conditions
-fv_T.apply_BCs() # apply BCs (necessary each time the BCs or the CellVariable.value change)
 
 rr0 = np.linspace(0, w*10, 500)
 sample_i = [0, 1, 2, 5, 10, 20, 50, 100]
