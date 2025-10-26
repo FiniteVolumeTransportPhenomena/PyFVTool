@@ -308,19 +308,13 @@ class CellVariable:
         """(Re)initialize ghost cells according to the boundary conditions and
         the internal (inner) cell values.
         
-        This function should be called by the user if the BCs or the cell
-        values have been changed by directly accessing individual array
-        elements. 
+        In general, superfluous calls to apply_BCs() will not hurt.
         
-        In general, superfluous calls to apply_BCs() will not hurt, so better
-        safe than sorry.
-        
-
         Returns
         -------
         None.
 
-        The 'changed' attribute of all BCs is reset, as well as the
+        The 'modified' attribute of the BCs is reset, as well as the
         `value_changed` attribute of the CellVariable
 
         """
@@ -329,7 +323,7 @@ class CellVariable:
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
  
-        self.BCs.changed = False
+        self.BCs.modified = False
         
         self.value_changed = False
         

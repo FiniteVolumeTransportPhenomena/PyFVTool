@@ -34,8 +34,8 @@ class BoundaryFace:
         coefficient of the boundary condition
     periodic : boolean
         True if the boundary is periodic
-    changed : boolean
-        True if boundary condition values have changed since last calculation
+    modified : boolean
+        True if boundary condition values have been changed since last calculation
         of BC terms and ghost cells, indicating need for a BC refresh
     """
     
@@ -62,14 +62,14 @@ class BoundaryFace:
         return ""
     
     @property
-    def changed(self):
+    def modified(self):
         change = self._a.modified\
                  or self._b.modified\
                  or self._c.modified
         return change
     
-    @changed.setter
-    def changed(self, val):
+    @modified.setter
+    def modified(self, val):
         modval = bool(val)
         self._a.modified = modval
         self._b.modified = modval
@@ -105,7 +105,7 @@ class BoundaryFace:
 
     @periodic.setter       
     def periodic(self, val):
-        self.changed = True
+        self.modified = True
         self._periodic = bool(val)
 
 
@@ -159,7 +159,7 @@ class BoundaryConditionsBase:
         return ""
 
     @property
-    def changed(self):
+    def modified(self):
         """
         True if any of the BoundaryFace conditions has changed since last 
         apply_BCs()
@@ -167,21 +167,21 @@ class BoundaryConditionsBase:
         # To keep things simple, we always include all possible faces,
         # even for 1D and 2D, since all BoundaryFaces always exist, even when 
         # they are not used in a specific geometry.
-        return (self.left.changed or self.right.changed\
-                or self.top.changed or self.bottom.changed\
-                or self.front.changed or self.back.changed)
+        return (self.left.modified or self.right.modified\
+                or self.top.modified or self.bottom.modified\
+                or self.front.modified or self.back.modified)
             
-    @changed.setter
-    def changed(self, val):
+    @modified.setter
+    def modified(self, val):
         # To keep things simple, we always include all possible faces,
         # even for 1D and 2D, since all BoundaryFaces always exist, even when 
         # they are not used in a specific geometry.
-        self.left.changed = False
-        self.right.changed = False
-        self.top.changed = False
-        self.bottom.changed = False
-        self.front.changed = False
-        self.back.changed = False
+        self.left.modified = False
+        self.right.modified = False
+        self.top.modified = False
+        self.bottom.modified = False
+        self.front.modified = False
+        self.back.modified = False
 
 
 

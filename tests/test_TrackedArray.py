@@ -30,11 +30,11 @@ c.BCs.left.a = 0.0
 c.BCs.left.b = 1.0
 c.BCs.left.c = c_left
 
-assert c.BCs.left.changed==True
+assert c.BCs.left.modified==True
 
-c.BCs.left.changed = False
+c.BCs.left.modified = False
 
-assert c.BCs.left.changed==False
+assert c.BCs.left.modified==False
 
 
 # Switch the right boundary to partial Dirichlet: fixed concentration
@@ -42,13 +42,13 @@ c.BCs.right.a[Nx//4:-Nx//4] = 0.0
 c.BCs.right.b[Nx//4:-Nx//4] = 1.0
 c.BCs.right.c[Nx//4:-Nx//4] = c_left
 
-assert c.BCs.right.changed==True
-assert c.BCs.changed == True
+assert c.BCs.right.modified==True
+assert c.BCs.modified == True
 
 c.apply_BCs()
 
-assert c.BCs.changed == False
-assert c.BCs.right.changed==False
+assert c.BCs.modified == False
+assert c.BCs.right.modified==False
 
 
 
@@ -65,8 +65,8 @@ c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
 # right boundary: inhomogeneous Dirchlet right-side
 c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
 
-assert c.BCs.left.changed == True
-assert c.BCs.right.changed == True
+assert c.BCs.left.modified == True
+assert c.BCs.right.modified == True
 
 c.BCs.top.a[:] = 0.0
 c.BCs.top.b[:] = 1.0
@@ -74,8 +74,8 @@ c.BCs.top.c[:] = 2.0
 
 c.BCs.bottom.periodic = True
 
-assert c.BCs.top.changed == True
-assert c.BCs.bottom.changed == True
+assert c.BCs.top.modified == True
+assert c.BCs.bottom.modified == True
 
 c.BCs.front.a[:] = 0.0
 c.BCs.front.b = 1.0
@@ -83,20 +83,20 @@ c.BCs.front.c = 2.0
 c.BCs.front.periodic = False
 
 
-assert c.BCs.front.changed == True
+assert c.BCs.front.modified == True
 
 c.BCs.back.a = 1.0
 c.BCs.back.b = 1.0
 c.BCs.back.c = 1.0
 c.BCs.front.periodic = True
 
-assert c.BCs.back.changed == True
+assert c.BCs.back.modified == True
 
-assert c.BCs.changed == True
+assert c.BCs.modified == True
 
 c.apply_BCs()
 
-assert c.BCs.changed == False
+assert c.BCs.modified == False
 
 
 successful_finish = True
