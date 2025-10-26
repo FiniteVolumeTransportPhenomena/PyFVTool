@@ -64,7 +64,7 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     else:
         solver = externalsolver
 
-    if phi.BCs_changed or phi.value_changed:
+    if phi.BCs.changed or phi.value_changed:
         phi.apply_BCs()
     
     # Construct BCs Term
@@ -168,7 +168,7 @@ def solveExplicitPDE(phi_old: CellVariable,
         Solution of the PDE
     
     """
-    if phi_old.BCs_changed or phi_old.value_changed:
+    if phi_old.BCs.changed or phi_old.value_changed:
         phi_old.apply_BCs()
     
     x = phi_old._value + dt*RHS.reshape(phi_old._value.shape)

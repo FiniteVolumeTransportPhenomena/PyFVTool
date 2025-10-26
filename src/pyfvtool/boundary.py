@@ -158,6 +158,32 @@ class BoundaryConditionsBase:
             print(item, ':', temp[item])
         return ""
 
+    @property
+    def changed(self):
+        """
+        True if any of the BoundaryFace conditions has changed since last 
+        apply_BCs()
+        """
+        # To keep things simple, we always include all possible faces,
+        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
+        # they are not used in a specific geometry.
+        return (self.left.changed or self.right.changed\
+                or self.top.changed or self.bottom.changed\
+                or self.front.changed or self.back.changed)
+            
+    @changed.setter
+    def changed(self, val):
+        # To keep things simple, we always include all possible faces,
+        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
+        # they are not used in a specific geometry.
+        self.left.changed = False
+        self.right.changed = False
+        self.top.changed = False
+        self.bottom.changed = False
+        self.front.changed = False
+        self.back.changed = False
+
+
 
 class BoundaryConditions1D(BoundaryConditionsBase):
     def __init__(self, mesh: Grid1D):

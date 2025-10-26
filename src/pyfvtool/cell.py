@@ -304,20 +304,6 @@ class CellVariable:
                             np.abs(self.value),
                             deepcopy(self.BCs))
 
-    @property
-    def BCs_changed(self):
-        """
-        True if any of the BoundaryFace conditions has changed since last 
-        apply_BCs()
-        """
-        # To keep things simple, we always include all possible faces,
-        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
-        # they are not used in a specific geometry.
-        return (self.BCs.left.changed or self.BCs.right.changed\
-                or self.BCs.top.changed or self.BCs.bottom.changed\
-                or self.BCs.front.changed or self.BCs.back.changed)
-
-
     def apply_BCs(self):
         """(Re)initialize ghost cells according to the boundary conditions and
         the internal (inner) cell values.
@@ -343,15 +329,7 @@ class CellVariable:
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
  
-        # To keep things simple, we always include all possible faces,
-        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
-        # they are not used in a specific geometry.
-        self.BCs.left.changed = False
-        self.BCs.right.changed = False
-        self.BCs.top.changed = False
-        self.BCs.bottom.changed = False
-        self.BCs.front.changed = False
-        self.BCs.back.changed = False
+        self.BCs.changed = False
         
         self.value_changed = False
         

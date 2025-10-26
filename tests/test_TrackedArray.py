@@ -43,11 +43,11 @@ c.BCs.right.b[Nx//4:-Nx//4] = 1.0
 c.BCs.right.c[Nx//4:-Nx//4] = c_left
 
 assert c.BCs.right.changed==True
-assert c.BCs_changed == True
+assert c.BCs.changed == True
 
 c.apply_BCs()
 
-assert c.BCs_changed == False
+assert c.BCs.changed == False
 assert c.BCs.right.changed==False
 
 
@@ -92,11 +92,11 @@ c.BCs.front.periodic = True
 
 assert c.BCs.back.changed == True
 
-assert c.BCs_changed == True
+assert c.BCs.changed == True
 
 c.apply_BCs()
 
-assert c.BCs_changed == False
+assert c.BCs.changed == False
 
 
 successful_finish = True
