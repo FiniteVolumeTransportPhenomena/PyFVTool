@@ -9,7 +9,7 @@ from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .utilities import int_range
-
+from .utilities import TrackedArray
 
 
 #%%
@@ -44,11 +44,10 @@ class BoundaryFace:
         if (type(a) is not np.ndarray) or (type(b) is not np.ndarray)\
             or (type(c) is not np.ndarray):
                 raise TypeError('a, b, c must be np.ndarray')
-        self._a = a
-        self._b = b
-        self._c = c
+        self._a = TrackedArray(a)
+        self._b = TrackedArray(b)
+        self._c = TrackedArray(c)
         self._periodic = periodic
-        self.changed = True
 
     def __str__(self):
         temp = vars(self)
@@ -63,12 +62,25 @@ class BoundaryFace:
         return ""
     
     @property
+    def changed(self):
+        change = self._a.modified\
+                 or self._b.modified\
+                 or self._c.modified
+        return change
+    
+    @changed.setter
+    def changed(self, val):
+        modval = bool(val)
+        self._a.modified = modval
+        self._b.modified = modval
+        self._c.modified = modval
+    
+    @property
     def a(self):
         return self._a
     
     @a.setter
     def a(self, val):
-        self.changed = True
         self._a[:] = val
         
     @property
@@ -77,7 +89,6 @@ class BoundaryFace:
 
     @b.setter       
     def b(self, val):
-        self.changed = True
         self._b[:] = val
 
     @property
@@ -86,7 +97,6 @@ class BoundaryFace:
 
     @c.setter       
     def c(self, val):
-        self.changed = True
         self._c[:] = val
         
     @property
@@ -96,7 +106,7 @@ class BoundaryFace:
     @periodic.setter       
     def periodic(self, val):
         self.changed = True
-        self._periodic = val
+        self._periodic = bool(val)
 
 
 

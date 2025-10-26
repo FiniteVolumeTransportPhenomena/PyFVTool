@@ -127,3 +127,64 @@ class SignedTuple(tuple):
 
 
 
+class TrackedArray(np.ndarray):
+    """
+    A NumPy array subclass that tracks whether its values have been modified.
+    
+    The `modified` property is set to True whenever elements are changed via
+    item assignment (e.g., arr[0] = 5). It can be manually set or reset using
+    direct assignment (e.g., arr.modified = False).
+    
+    Attributes
+    ----------
+    modified : bool
+        True if the array has been modified since creation or since the last
+        manual reset. Initially False. Can be set directly.
+    
+    Examples
+    --------
+    >>> arr = TrackedArray([1, 2, 3])
+    >>> arr.modified
+    False
+    >>> arr[0] = 10
+    >>> arr.modified
+    True
+    >>> arr.modified = False  # Reset the flag
+    >>> arr.modified
+    False
+    >>> arr.modified = True   # Manually mark as modified
+    >>> arr.modified
+    True
+    """
+    def __new__(cls, input_array):
+        obj = np.asarray(input_array).view(cls)
+        obj._modified = False
+        return obj
+    
+    def __array_finalize__(self, obj):
+        """Called whenever a new array instance is created.
+        
+        Needed for copy.deepcopy() to work correctly.
+        """
+        if obj is None:
+            return
+        # Inherit _modified from parent, or initialize to False
+        self._modified = getattr(obj, '_modified', False)
+    
+    def __setitem__(self, key, value):
+        super().__setitem__(key, value)
+        self._modified = True
+    
+    @property
+    def modified(self):
+        """Return whether the array has been modified."""
+        return self._modified
+    
+    @modified.setter
+    def modified(self, value):
+        """Set the modification tracking flag."""
+        self._modified = bool(value)
+        
+        
+
+
