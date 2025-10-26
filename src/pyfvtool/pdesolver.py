@@ -97,6 +97,7 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     
     # Update phi
     phi._value = np.reshape(phi_new_values, phi.domain.dims+2)
+    phi.apply_BCs()
     
     return phi
 
