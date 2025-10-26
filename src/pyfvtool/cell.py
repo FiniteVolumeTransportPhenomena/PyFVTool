@@ -304,16 +304,18 @@ class CellVariable:
                             np.abs(self.value),
                             deepcopy(self.BCs))
 
+
     def apply_BCs(self):
         """(Re)initialize ghost cells according to the boundary conditions and
         the internal (inner) cell values.
         
-        It is necessary in certain special cases, in particular when the
-        CellVariable is used prior to using `solvePDE` (or without `solvePDE`
-        altogether).
+        It is necessary to explicitly call this method in certain special cases, 
+        in particular when the CellVariable is used prior to using `solvePDE()`. 
+        Or when `solvePDE()` is not used at all, typically when working with
+        the 'expert-level' function `solveMatrixPDE()`.
         
-        It is also necessary to call it if the CellVariable.value has been
-        changed by directly addressing individual array elements.
+        It is also necessary to call `apply_BCs()` if the CellVariable.value 
+        has been modified by directly addressing individual array elements.
         
         In general, superfluous calls to apply_BCs() will not hurt.
         
@@ -334,8 +336,7 @@ class CellVariable:
         
         self.value_changed = False
         
-
-
+        
     def update_value(self, new_cell):
         np.copyto(self._value, new_cell._value)
   
