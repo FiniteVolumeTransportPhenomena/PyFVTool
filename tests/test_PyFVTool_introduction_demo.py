@@ -269,7 +269,6 @@ print(phi.BCs.top)
 
 # Yes, that's right. a, b, and c are vectors. It means that you can have different boundary conditions for different cell faces at each boundary. For instance, I can have a Neumann boundary condition for the first cell and a Dirichlet boundary condition for the last cell at the top boundary:
 # 
-# ***Import note*** If you set values for individual BC elements, by directly accessing the array elements, you must call `apply_BCs()`
 # In[22]:
 
 
@@ -283,7 +282,6 @@ phi.BCs.top.a[-1] = 0.0
 phi.BCs.top.b[-1] = 1.0
 phi.BCs.top.c[-1] = 0.0
 
-phi.apply_BCs() # do not forget this if you change BCs by directly accessing individual elements
 
 
 # In[23]:

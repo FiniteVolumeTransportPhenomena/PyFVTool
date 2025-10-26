@@ -308,6 +308,13 @@ class CellVariable:
         """(Re)initialize ghost cells according to the boundary conditions and
         the internal (inner) cell values.
         
+        It is necessary in certain special cases, in particular when the
+        CellVariable is used prior to using `solvePDE` (or without `solvePDE`
+        altogether).
+        
+        It is also necessary to call it if the CellVariable.value has been
+        changed by directly addressing individual array elements.
+        
         In general, superfluous calls to apply_BCs() will not hurt.
         
         Returns
