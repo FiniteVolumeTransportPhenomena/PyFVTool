@@ -12,6 +12,7 @@ use_solver(useUmfpack=False)
 
 from .mesh import MeshStructure
 from .cell import CellVariable
+from .utilities import TrackedArray
 
 
 
@@ -64,7 +65,7 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     else:
         solver = externalsolver
 
-    if phi.BCs.modified or phi.value_changed:
+    if phi.BCs.modified or phi.value.modified:
         phi.apply_BCs()
     
     # Construct BCs Term
@@ -96,7 +97,7 @@ def solvePDE(phi: CellVariable, eqnterms: list,
     phi_new_values = solver(M, RHS)
     
     # Update phi
-    phi._value = np.reshape(phi_new_values, phi.domain.dims+2)
+    phi._value = TrackedArray(np.reshape(phi_new_values, phi.domain.dims+2))
     phi.apply_BCs()
     
     return phi
@@ -169,12 +170,12 @@ def solveExplicitPDE(phi_old: CellVariable,
         Solution of the PDE
     
     """
-    if phi_old.BCs.modified or phi_old.value_changed:
+    if phi_old.BCs.modified or phi_old.value.modified:
         phi_old.apply_BCs()
     
     x = phi_old._value + dt*RHS.reshape(phi_old._value.shape)
     phi = CellVariable(phi_old.domain, 0.0, phi_old.BCs, 
                        BCsTerm_precalc = False)
-    phi._value = x
+    phi._value = TrackedArray(x)
     phi.apply_BCs()
     return phi

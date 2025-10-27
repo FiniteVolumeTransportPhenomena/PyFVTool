@@ -42,14 +42,23 @@ c.BCs.right.a[Nx//4:-Nx//4] = 0.0
 c.BCs.right.b[Nx//4:-Nx//4] = 1.0
 c.BCs.right.c[Nx//4:-Nx//4] = c_left
 
-assert c.BCs.right.modified==True
-assert c.BCs.modified == True
+assert not c.value.modified
+
+assert c.BCs.right.modified
+assert c.BCs.modified
 
 c.apply_BCs()
 
-assert c.BCs.modified == False
-assert c.BCs.right.modified==False
+assert not c.BCs.modified
+assert not c.BCs.right.modified
 
+
+
+assert not c.value.modified
+
+c.value[Nx//4:-Nx//4] = 0.0
+
+assert c.value.modified
 
 
 
@@ -83,6 +92,16 @@ c.BCs.front.c = 2.0
 c.BCs.front.periodic = False
 
 
+assert not c.value.modified
+c.value[:, 1, -1] = 23.7
+assert c.value.modified
+c.value.modified = False
+assert not c.value.modified
+c.value[:, 1, -1] = 23.7
+assert c.value.modified
+
+
+
 assert c.BCs.front.modified == True
 
 c.BCs.back.a = 1.0
@@ -98,6 +117,7 @@ c.apply_BCs()
 
 assert c.BCs.modified == False
 
+assert not c.value.modified
 
 successful_finish = True
 

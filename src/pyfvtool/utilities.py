@@ -132,14 +132,21 @@ class TrackedArray(np.ndarray):
     A NumPy array subclass that tracks whether its values have been modified.
     
     The `modified` property is set to True whenever elements are changed via
-    item assignment (e.g., arr[0] = 5). It can be manually set or reset using
-    direct assignment (e.g., arr.modified = False).
+    item assignment (e.g., arr[0] = 5). Modifications to views or slices also
+    mark the base array as modified. Can be manually set or reset using direct
+    assignment (e.g., arr.modified = False).
+    
+    **Limitation**: Only modifications through item assignment (arr[...] = value)
+    are automatically tracked. Other in-place operations such as np.copyto(),
+    np.put(), np.place(), arr.fill(), arr.sort(), and in-place ufuncs will NOT
+    automatically set the modified flag. After using such operations, manually
+    set arr.modified = True if tracking is needed.
     
     Attributes
     ----------
     modified : bool
-        True if the array has been modified since creation or since the last
-        manual reset. Initially False. Can be set directly.
+        True if the array (or any view of it) has been modified since creation
+        or since the last manual reset. Initially False. Can be set directly.
     
     Examples
     --------
@@ -150,11 +157,12 @@ class TrackedArray(np.ndarray):
     >>> arr.modified
     True
     >>> arr.modified = False  # Reset the flag
-    >>> arr.modified
-    False
-    >>> arr.modified = True   # Manually mark as modified
+    >>> arr[1:3][0] = 5  # Modification through a view
     >>> arr.modified
     True
+    >>> # Manual tracking for operations that bypass __setitem__
+    >>> np.copyto(arr, [7, 8, 9])
+    >>> arr.modified = True  # Must set manually
     """
     def __new__(cls, input_array):
         obj = np.asarray(input_array).view(cls)
@@ -162,10 +170,7 @@ class TrackedArray(np.ndarray):
         return obj
     
     def __array_finalize__(self, obj):
-        """Called whenever a new array instance is created.
-        
-        Needed for copy.deepcopy() to work correctly.
-        """
+        """Called whenever a new array instance is created."""
         if obj is None:
             return
         # Inherit _modified from parent, or initialize to False
@@ -173,18 +178,25 @@ class TrackedArray(np.ndarray):
     
     def __setitem__(self, key, value):
         super().__setitem__(key, value)
+        # Mark this array and its base (if it's a view) as modified
         self._modified = True
+        if self.base is not None and isinstance(self.base, TrackedArray):
+            self.base._modified = True
     
     @property
     def modified(self):
         """Return whether the array has been modified."""
+        # Check both this array and its base
+        if self.base is not None and isinstance(self.base, TrackedArray):
+            return self._modified or self.base._modified
         return self._modified
     
     @modified.setter
     def modified(self, value):
         """Set the modification tracking flag."""
         self._modified = bool(value)
-        
-        
+        # Also set on base if this is a view
+        if self.base is not None and isinstance(self.base, TrackedArray):
+            self.base._modified = bool(value)
 
 

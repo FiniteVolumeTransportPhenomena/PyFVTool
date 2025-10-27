@@ -12,6 +12,7 @@ from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import SphericalGrid1D, PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries, boundaryConditionsTerm
+from .utilities import TrackedArray
 
 
 
@@ -74,7 +75,6 @@ class CellVariable:
         
         self.domain = mesh_struct
         self._value = None
-        self.value_changed = False
 
         if np.isscalar(cell_value):
             phi_val = cell_value*np.ones(mesh_struct.dims)
@@ -85,7 +85,7 @@ class CellVariable:
         elif np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
             # Values for ghost cells already included,
             # simply fill
-            self._value = cell_value
+            self._value = TrackedArray(cell_value)
         else:
             raise ValueError(f"The cell size {cell_value.shape} is not valid "\
                              f"for a mesh of size {mesh_struct.dims}.")
@@ -98,10 +98,13 @@ class CellVariable:
 
         if self._value is None:
             # initialize self._value incl. ghost cells
-            self._value = cellValuesWithBoundaries(phi_val, self.BCs)
+            self._value = TrackedArray(cellValuesWithBoundaries(phi_val, 
+                                                                self.BCs))
             # see also: apply_BCs() 
         if self.BCsTerm_precalc:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
+            
+        self.value.modified = False
 
     @property
     def value(self):
@@ -114,7 +117,6 @@ class CellVariable:
         
     @value.setter
     def value(self, values):
-        self.value_changed = True
         if issubclass(type(self.domain), Grid1D):
             self._value[1:-1] = values
         elif issubclass(type(self.domain), Grid2D):
@@ -324,21 +326,21 @@ class CellVariable:
         None.
 
         The 'modified' attribute of the BCs is reset, as well as the
-        `value_changed` attribute of the CellVariable
+        `modified` attribute of the `CellVariable.value`
 
         """
-        self._value = cellValuesWithBoundaries(self.value,
-                                              self.BCs)
+        self._value = TrackedArray(cellValuesWithBoundaries(self.value,
+                                                            self.BCs))
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
  
         self.BCs.modified = False
-        
-        self.value_changed = False
+        self.value.modified = False
         
         
     def update_value(self, new_cell):
         np.copyto(self._value, new_cell._value)
+        self._value.modified = True
   
     
     def copy(self):
