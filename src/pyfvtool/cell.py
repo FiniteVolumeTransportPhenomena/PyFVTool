@@ -70,11 +70,14 @@ class CellVariable:
             An initialized instance of CellVariable.
 
         """
-        
         self.BCsTerm_precalc = BCsTerm_precalc
-        
         self.domain = mesh_struct
         self._value = None
+        # After initialization, make sure that `_value` is a TrackedArray.
+        # Also, when directly re-assigning `_value` use TrackedArray. Since
+        # `_value` is only accessed by PyFVTool code internally, and never 
+        # by the normal user, this note is only of importance to those who 
+        # directly change the PyFVTool code base.
 
         if np.isscalar(cell_value):
             phi_val = cell_value*np.ones(mesh_struct.dims)
@@ -100,10 +103,8 @@ class CellVariable:
             # initialize self._value incl. ghost cells
             self._value = TrackedArray(cellValuesWithBoundaries(phi_val, 
                                                                 self.BCs))
-            # see also: apply_BCs() 
         if self.BCsTerm_precalc:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
-            
         self.value.modified = False
 
     @property
@@ -316,17 +317,14 @@ class CellVariable:
         Or when `solvePDE()` is not used at all, typically when working with
         the 'expert-level' function `solveMatrixPDE()`.
         
-        It is also necessary to call `apply_BCs()` if the CellVariable.value 
-        has been modified by directly addressing individual array elements.
-        
         In general, superfluous calls to apply_BCs() will not hurt.
         
         Returns
         -------
         None.
 
-        The 'modified' attribute of the BCs is reset, as well as the
-        `modified` attribute of the `CellVariable.value`
+        The `modified` attribute of the `CellVariableBCs` is reset, as well as
+        the `modified` attribute of the `CellVariable.value`
 
         """
         self._value = TrackedArray(cellValuesWithBoundaries(self.value,

@@ -202,7 +202,7 @@ c.BCs.left.c[:] = 0.0
 # c.BCs.bottom.periodic = True
 c.BCs.back.periodic = True
 c.BCs.front.periodic = True
-c.apply_BCs() # working with solveMatrixPDE() instead of solvePDE(),
+c.apply_BCs() # working with 'expert' solveMatrixPDE() instead of solvePDE(),
               #  so need to call apply_BCs for updating ghost cells
 Mbc, RHSbc = pf.boundaryConditionsTerm(c.BCs)
 
@@ -343,7 +343,7 @@ c.value[0, np.random.randint(0, Ntheta, 20), np.random.randint(0, Nz, 20)] = 100
 # top and bottom boundaries are periodic
 c.BCs.top.periodic = True
 c.BCs.bottom.periodic = True
-c.apply_BCs() # c.value changed, explicit call to apply_BCs
+c.apply_BCs() # using `solveMatrixPDE`, explicit call to apply_BCs
 Mbc, RHSbc = pf.boundaryConditionsTerm(c.BCs)
 
 # create a velocity field of random values between 0 and v_wind_max

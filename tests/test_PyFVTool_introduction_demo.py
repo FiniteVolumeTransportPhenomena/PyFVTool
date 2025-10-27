@@ -532,8 +532,6 @@ BC.left.a[:], BC.left.b[:], BC.left.c[:] = 0.0, 1.0, 0.0
 # switch the right boundary to inhomogeneous Dirichlet
 BC.right.a[:], BC.right.b[:], BC.right.c[:] = 0.0, 1.0, 1.0 
 
-# In this 'low-level' case, no need to call any `apply_BCs()` function.
-
 
 # In[36]:
 
@@ -665,7 +663,10 @@ dt = 0.1  # time step
 final_t = 100.0
 
 
-# Here, we first create the term matrices that will not change as we progress stepwise in time, *i.e.* diffusion term. The matrix equation terms ($\mathbf{M}$ and $\textrm{rhs}$) corresponding to the boundary condition are handled automatically by PyFVTool via `apply_BCs()` and `solvePDE()`.
+# Here, we first create the term matrices that will not change as we progress 
+# stepwise in time, *i.e.* diffusion term. The matrix equation terms 
+# ($\mathbf{M}$ and $\textrm{rhs}$) corresponding to the boundary condition 
+# are handled automatically by PyFVTool via `solvePDE()`.
 
 # In[43]:
 
@@ -779,6 +780,10 @@ x = mesh1.cellcenters.x
 # the same IC and BCs for solving with different numerical schemes
 phiinit = pf.CellVariable(mesh1, 0.0)
 
+# test modification flags
+assert not phiinit.value.modified
+assert not phiinit.BCs.modified
+
 phiinit.value[(0.04 <= x) & (x < 0.24)] = 1.0
 phiinit.value[(0.36 <= x) & (x < 0.8)] = np.sin(x[(0.36 <= x) & (x < 0.8)]*10*np.pi) 
 
@@ -786,9 +791,10 @@ phiinit.value[(0.36 <= x) & (x < 0.8)] = np.sin(x[(0.36 <= x) & (x < 0.8)]*10*np
 phiinit.BCs.left.periodic = True 
 phiinit.BCs.right.periodic = True
 
-phiinit.apply_BCs() # necessary because phiinit.value was changed by directly accessing
-                    # array elements
 
+# test modification flags
+assert phiinit.value.modified
+assert phiinit.BCs.modified
 
 # In[49]:
 
