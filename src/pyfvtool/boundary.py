@@ -9,7 +9,7 @@ from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .utilities import int_range
-
+from .utilities import TrackedArray
 
 
 #%%
@@ -34,13 +34,20 @@ class BoundaryFace:
         coefficient of the boundary condition
     periodic : boolean
         True if the boundary is periodic
+    modified : boolean
+        True if boundary condition values have been changed since last calculation
+        of BC terms and ghost cells, indicating need for a BC refresh
     """
     
-    def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, periodic=False):
-        self.a = a
-        self.b = b
-        self.c = c
-        self.periodic = periodic
+    def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, 
+                 periodic=False):
+        if (type(a) is not np.ndarray) or (type(b) is not np.ndarray)\
+            or (type(c) is not np.ndarray):
+                raise TypeError('a, b, c must be np.ndarray')
+        self._a = TrackedArray(a)
+        self._b = TrackedArray(b)
+        self._c = TrackedArray(c)
+        self._periodic = periodic
 
     def __str__(self):
         temp = vars(self)
@@ -53,6 +60,54 @@ class BoundaryFace:
         for item in temp:
             print(item, ':', temp[item])
         return ""
+    
+    @property
+    def modified(self):
+        change = self._a.modified\
+                 or self._b.modified\
+                 or self._c.modified
+        return change
+    
+    @modified.setter
+    def modified(self, val):
+        modval = bool(val)
+        self._a.modified = modval
+        self._b.modified = modval
+        self._c.modified = modval
+    
+    @property
+    def a(self):
+        return self._a
+    
+    @a.setter
+    def a(self, val):
+        self._a[:] = val
+        
+    @property
+    def b(self):
+        return self._b
+
+    @b.setter       
+    def b(self, val):
+        self._b[:] = val
+
+    @property
+    def c(self):
+        return self._c
+
+    @c.setter       
+    def c(self, val):
+        self._c[:] = val
+        
+    @property
+    def periodic(self):
+        return self._periodic
+
+    @periodic.setter       
+    def periodic(self, val):
+        self.modified = True
+        self._periodic = bool(val)
+
 
 
 class BoundaryConditionsBase:
@@ -102,6 +157,32 @@ class BoundaryConditionsBase:
         for item in temp:
             print(item, ':', temp[item])
         return ""
+
+    @property
+    def modified(self):
+        """
+        True if any of the BoundaryFace conditions has changed since last 
+        apply_BCs()
+        """
+        # To keep things simple, we always include all possible faces,
+        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
+        # they are not used in a specific geometry.
+        return (self.left.modified or self.right.modified\
+                or self.top.modified or self.bottom.modified\
+                or self.front.modified or self.back.modified)
+            
+    @modified.setter
+    def modified(self, val):
+        # To keep things simple, we always include all possible faces,
+        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
+        # they are not used in a specific geometry.
+        self.left.modified = False
+        self.right.modified = False
+        self.top.modified = False
+        self.bottom.modified = False
+        self.front.modified = False
+        self.back.modified = False
+
 
 
 class BoundaryConditions1D(BoundaryConditionsBase):

@@ -1,0 +1,127 @@
+# -*- coding: utf-8 -*-
+"""
+Test TrackedArray in BCs and CellVariable
+"""
+
+import numpy as np
+
+import pyfvtool as pf
+
+
+
+successful_finish = False
+
+
+# Calculation parameters
+Nx = 20 # number of finite volume cells
+Lx = 1.0 # [m] length of the domain 
+c_init = 4.2
+c_left = -8.4
+
+# Define mesh
+mesh = pf.Grid1D(Nx, Lx)
+
+# Create a cell variable with initial concentration
+# By default, 'no flux' boundary conditions are applied
+c = pf.CellVariable(mesh, c_init)
+
+# Switch the left boundary to Dirichlet: fixed concentration
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = c_left
+
+assert c.BCs.left.modified==True
+
+c.BCs.left.modified = False
+
+assert c.BCs.left.modified==False
+
+
+# Switch the right boundary to partial Dirichlet: fixed concentration
+c.BCs.right.a[Nx//4:-Nx//4] = 0.0
+c.BCs.right.b[Nx//4:-Nx//4] = 1.0
+c.BCs.right.c[Nx//4:-Nx//4] = c_left
+
+assert not c.value.modified
+
+assert c.BCs.right.modified
+assert c.BCs.modified
+
+c.apply_BCs()
+
+assert not c.BCs.modified
+assert not c.BCs.right.modified
+
+
+
+assert not c.value.modified
+
+c.value[Nx//4:-Nx//4] = 0.0
+
+assert c.value.modified
+
+
+
+# 3D
+L = 0.01  # a 1 cm domain
+Nx = 10   # number of cells
+m = pf.Grid3D(Nx, Nx, Nx, L, L, L)  
+c = pf.CellVariable(m, 0.0)
+
+# Now switch from Neumann boundary conditions to Dirichlet conditions:
+# left boundary: homogeneous Dirichlet left-side 
+c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
+# right boundary: inhomogeneous Dirchlet right-side
+c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
+
+assert c.BCs.left.modified == True
+assert c.BCs.right.modified == True
+
+c.BCs.top.a[:] = 0.0
+c.BCs.top.b[:] = 1.0
+c.BCs.top.c[:] = 2.0
+
+c.BCs.bottom.periodic = True
+
+assert c.BCs.top.modified == True
+assert c.BCs.bottom.modified == True
+
+c.BCs.front.a[:] = 0.0
+c.BCs.front.b = 1.0
+c.BCs.front.c = 2.0
+c.BCs.front.periodic = False
+
+
+assert not c.value.modified
+c.value[:, 1, -1] = 23.7
+assert c.value.modified
+c.value.modified = False
+assert not c.value.modified
+c.value[:, 1, -1] = 23.7
+assert c.value.modified
+
+
+
+assert c.BCs.front.modified == True
+
+c.BCs.back.a = 1.0
+c.BCs.back.b = 1.0
+c.BCs.back.c = 1.0
+c.BCs.front.periodic = True
+
+assert c.BCs.back.modified == True
+
+assert c.BCs.modified == True
+
+c.apply_BCs()
+
+assert c.BCs.modified == False
+
+assert not c.value.modified
+
+successful_finish = True
+
+# pytest
+def test_success():
+    assert successful_finish
+

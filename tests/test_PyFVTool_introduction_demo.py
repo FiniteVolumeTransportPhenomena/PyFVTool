@@ -231,21 +231,20 @@ print(phi.BCs.right)  # same as left boundary --> homogeneous Neumann BC at righ
 
 # Both the left and right BCs have the same values for $a$, $b$ and $c$. These are the default BCs that are created: Neumann-style BCs with a zero value of the derivative at the boundary. Such BCs are also called "zero flux boundary conditions".
 
-# Boundary conditions can be adapted "on the fly", but once the values have been changed, be sure to call the `apply_BCs()` method, such that all internal information in the `CellVariable` is updated to reflect the new BCs. 
+# Boundary conditions can be adapted "on the fly".
 # 
-# **Important note:** For properly setting the BCs, even in this 1D Cartesian case, be sure to assign values to the individual array elements using `[:]`. Forgetting the `[:]` here may lead to errors.
+# 
 
 # In[19]:
 
 
-phi.BCs.left.a[:] = 0.0
-phi.BCs.left.b[:] = 1.0  # homogeneous Dirichlet boundary condition
-phi.BCs.left.c[:] = 0.0  
+phi.BCs.left.a = 0.0
+phi.BCs.left.b = 1.0  # homogeneous Dirichlet boundary condition
+phi.BCs.left.c = 0.0  
 
 # Periodic boundary conditions override the other settings (take precedence)
 phi.BCs.left.periodic = True
 
-phi.apply_BCs()
 
 print(phi.BCs.left)
 
@@ -270,7 +269,6 @@ print(phi.BCs.top)
 
 # Yes, that's right. a, b, and c are vectors. It means that you can have different boundary conditions for different cell faces at each boundary. For instance, I can have a Neumann boundary condition for the first cell and a Dirichlet boundary condition for the last cell at the top boundary:
 # 
-
 # In[22]:
 
 
@@ -284,7 +282,6 @@ phi.BCs.top.a[-1] = 0.0
 phi.BCs.top.b[-1] = 1.0
 phi.BCs.top.c[-1] = 0.0
 
-phi.apply_BCs()
 
 
 # In[23]:
@@ -306,16 +303,16 @@ print(np.hstack((np.atleast_2d(phi.BCs.top.a).T,
 
 # The same procedure can be followed for a 3D grid. However, $a$, $b$, and $c$ values are 2D matrices for a 3D grid. This will be discussed in more details when we reach the practical examples. 
 # 
-# **Important note:** As already mentioned, if you need to assign a boundary condition to the entire boundary, use `[:]` in your assignment. For instance, to define a Dirichlet boundary for the right boundary, you may write the following.
+# For instance, to define a Dirichlet boundary for the right boundary, you may write the following.
 
 # In[24]:
 
 
-phi.BCs.right.a[:] = 0
-phi.BCs.right.b[:] = 1
-phi.BCs.right.c[:] = 0
+phi.BCs.right.a = 0.0
+phi.BCs.right.b = 1.0
+phi.BCs.right.c = 0.0
 
-phi.apply_BCs()
+
 
 print('  a  b  c (right)')
 print('---------------')
@@ -348,22 +345,21 @@ c = pf.CellVariable(m, 0.0)
 
 # Now switch from the default 'no flux' boundary conditions to Dirichlet conditions, on both sides of the domain.
 # 
-# **IMPORTANT** Do not forget to call `apply_BCs()`!!
+
 
 # In[26]:
 
 
 # left boundary 
-c.BCs.left.a[:] = 0.0
-c.BCs.left.b[:] = 1.0
-c.BCs.left.c[:] = 0.0
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = 0.0
 
 # right boundary
-c.BCs.right.a[:] = 0.0
-c.BCs.right.b[:] = 1.0
-c.BCs.right.c[:] = 1.0   
+c.BCs.right.a = 0.0
+c.BCs.right.b = 1.0
+c.BCs.right.c = 1.0   
 
-c.apply_BCs()
 
 print(c.BCs.left)
 print(c.BCs.right)
@@ -438,11 +434,10 @@ c = pf.CellVariable(m, 0.0)
 
 # Now switch from Neumann boundary conditions to Dirichlet conditions:
 # left boundary: homogeneous Dirichlet left-side 
-c.BCs.left.a[:], c.BCs.left.b[:], c.BCs.left.c[:] = 0.0, 1.0, 0.0
+c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
 # right boundary: inhomogeneous Dirchlet right-side
-c.BCs.right.a[:], c.BCs.right.b[:], c.BCs.right.c[:] = 0.0, 1.0, 1.0
+c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
 
-c.apply_BCs() # DO NOT FORGET THIS!!
 
 # Create a face-variable for the diffusion coefficient
 D = pf.CellVariable(m, 1e-5)  # define the diffusivity
@@ -472,11 +467,10 @@ c = pf.CellVariable(m, 0.0)
 
 # Now switch from Neumann boundary conditions to Dirichlet conditions:
 # left boundary: homogeneous Dirichlet left-side 
-c.BCs.left.a[:], c.BCs.left.b[:], c.BCs.left.c[:] = 0.0, 1.0, 0.0
+c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
 # right boundary: inhomogeneous Dirchlet right-side
-c.BCs.right.a[:], c.BCs.right.b[:], c.BCs.right.c[:] = 0.0, 1.0, 1.0
+c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
 
-c.apply_BCs() # DO NOT FORGET THIS!!
 
 # Create a face-variable for the diffusion coefficient
 D = pf.CellVariable(m, 1e-5)  # define the diffusivity
@@ -537,8 +531,6 @@ BC.left.a[:], BC.left.b[:], BC.left.c[:] = 0.0, 1.0, 0.0
 
 # switch the right boundary to inhomogeneous Dirichlet
 BC.right.a[:], BC.right.b[:], BC.right.c[:] = 0.0, 1.0, 1.0 
-
-# In this 'low-level' case, no need to call any `apply_BCs()` function.
 
 
 # In[36]:
@@ -640,15 +632,14 @@ c = pf.CellVariable(m, c_init)
 
 # Switch the left and right boundaries to Dirichlet
 # left boundary
-c.BCs.left.a[:] = 0.0
-c.BCs.left.b[:] = 1.0
-c.BCs.left.c[:] = 1.0
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = 1.0
 # right boundary
-c.BCs.right.a[:] = 0.0
-c.BCs.right.b[:] = 1.0
-c.BCs.right.c[:] = 0.0 
+c.BCs.right.a = 0.0
+c.BCs.right.b = 1.0
+c.BCs.right.c = 0.0 
 
-c.apply_BCs()
 
 
 # In[41]:
@@ -672,7 +663,10 @@ dt = 0.1  # time step
 final_t = 100.0
 
 
-# Here, we first create the term matrices that will not change as we progress stepwise in time, *i.e.* diffusion term. The matrix equation terms ($\mathbf{M}$ and $\textrm{rhs}$) corresponding to the boundary condition are handled automatically by PyFVTool via `apply_BCs()` and `solvePDE()`.
+# Here, we first create the term matrices that will not change as we progress 
+# stepwise in time, *i.e.* diffusion term. The matrix equation terms 
+# ($\mathbf{M}$ and $\textrm{rhs}$) corresponding to the boundary condition 
+# are handled automatically by PyFVTool via `solvePDE()`.
 
 # In[43]:
 
@@ -786,6 +780,10 @@ x = mesh1.cellcenters.x
 # the same IC and BCs for solving with different numerical schemes
 phiinit = pf.CellVariable(mesh1, 0.0)
 
+# test modification flags
+assert not phiinit.value.modified
+assert not phiinit.BCs.modified
+
 phiinit.value[(0.04 <= x) & (x < 0.24)] = 1.0
 phiinit.value[(0.36 <= x) & (x < 0.8)] = np.sin(x[(0.36 <= x) & (x < 0.8)]*10*np.pi) 
 
@@ -793,8 +791,10 @@ phiinit.value[(0.36 <= x) & (x < 0.8)] = np.sin(x[(0.36 <= x) & (x < 0.8)]*10*np
 phiinit.BCs.left.periodic = True 
 phiinit.BCs.right.periodic = True
 
-phiinit.apply_BCs()
 
+# test modification flags
+assert phiinit.value.modified
+assert phiinit.BCs.modified
 
 # In[49]:
 

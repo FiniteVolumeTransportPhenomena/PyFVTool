@@ -101,10 +101,9 @@ mesh = pf.Grid1D(Nx, Lx)
 c = pf.CellVariable(mesh, c_init)
 
 # Switch the left boundary to Dirichlet: fixed concentration
-c.BCs.left.a[:] = 0.0
-c.BCs.left.b[:] = 1.0
-c.BCs.left.c[:] = c_left
-c.apply_BCs()
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = c_left
 
 # Assign diffusivity to cells
 D_cell = pf.CellVariable(mesh, D_val)

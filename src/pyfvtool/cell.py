@@ -12,6 +12,7 @@ from .mesh import CylindricalGrid1D, CylindricalGrid2D
 from .mesh import SphericalGrid1D, PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .boundary import BoundaryConditionsBase, BoundaryConditions
 from .boundary import cellValuesWithBoundaries, boundaryConditionsTerm
+from .utilities import TrackedArray
 
 
 
@@ -69,11 +70,14 @@ class CellVariable:
             An initialized instance of CellVariable.
 
         """
-        
         self.BCsTerm_precalc = BCsTerm_precalc
-        
         self.domain = mesh_struct
         self._value = None
+        # After initialization, make sure that `_value` is a TrackedArray.
+        # Also, when directly re-assigning `_value` use TrackedArray. Since
+        # `_value` is only accessed by PyFVTool code internally, and never 
+        # by the normal user, this note is only of importance to those who 
+        # directly change the PyFVTool code base.
 
         if np.isscalar(cell_value):
             phi_val = cell_value*np.ones(mesh_struct.dims)
@@ -84,7 +88,7 @@ class CellVariable:
         elif np.all(np.array(cell_value.shape)==mesh_struct.dims+2):
             # Values for ghost cells already included,
             # simply fill
-            self._value = cell_value
+            self._value = TrackedArray(cell_value)
         else:
             raise ValueError(f"The cell size {cell_value.shape} is not valid "\
                              f"for a mesh of size {mesh_struct.dims}.")
@@ -96,11 +100,12 @@ class CellVariable:
             raise Exception('Incorrect number of arguments')
 
         if self._value is None:
-            # see also: apply_BCs() - code may be merged
-            self._value = cellValuesWithBoundaries(phi_val, self.BCs)
-
+            # initialize self._value incl. ghost cells
+            self._value = TrackedArray(cellValuesWithBoundaries(phi_val, 
+                                                                self.BCs))
         if self.BCsTerm_precalc:
             self._BCsTerm  = boundaryConditionsTerm(self.BCs)
+        self.value.modified = False
 
     @property
     def value(self):
@@ -304,24 +309,36 @@ class CellVariable:
 
 
     def apply_BCs(self):
-        """Initialize ghost cells according to the boundary conditions and
-        the internal (inner) cell values
+        """(Re)initialize ghost cells according to the boundary conditions and
+        the internal (inner) cell values.
         
-        See also __init__()        
-
+        It is necessary to explicitly call this method in certain special cases, 
+        in particular when the CellVariable is used prior to using `solvePDE()`. 
+        Or when `solvePDE()` is not used at all, typically when working with
+        the 'expert-level' function `solveMatrixPDE()`.
+        
+        In general, superfluous calls to apply_BCs() will not hurt.
+        
         Returns
         -------
         None.
 
+        The `modified` attribute of the `CellVariableBCs` is reset, as well as
+        the `modified` attribute of the `CellVariable.value`
+
         """
-        self._value = cellValuesWithBoundaries(self.value,
-                                              self.BCs)
+        self._value = TrackedArray(cellValuesWithBoundaries(self.value,
+                                                            self.BCs))
         if self.BCsTerm_precalc:
             self._BCsTerm = boundaryConditionsTerm(self.BCs)
-
-
+ 
+        self.BCs.modified = False
+        self.value.modified = False
+        
+        
     def update_value(self, new_cell):
         np.copyto(self._value, new_cell._value)
+        self._value.modified = True
   
     
     def copy(self):

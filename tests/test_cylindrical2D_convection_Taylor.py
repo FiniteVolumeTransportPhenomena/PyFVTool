@@ -202,14 +202,13 @@ t=0.
 
 # In[20]:
 
+assert not phi.value.modified # test modified flag    
 
 # initial condition
 for i in range(loadix0, loadix1):
     phi.value[:, i] = 1.0
 
-# re-apply BCs?
-phi.apply_BCs()
-
+assert phi.value.modified # test modified flag
 
 # In[21]:
 
