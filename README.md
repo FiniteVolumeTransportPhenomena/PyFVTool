@@ -5,12 +5,12 @@ PyFVTool discretizes and numerically solves the conservative form of transient [
 The partial differential equations that can be solved numerically with PyFVTool have the general form
 
 ```math
-\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\nabla \cdot \left(\mathbf{u}\phi\right)}_{\text{Advection term}}+\underbrace{\nabla \cdot (-\mathcal{D}\nabla\phi)}_{\text{Diffusion term}}+\underbrace{\beta\phi}_{\text{Linear source term}}+\underbrace{\gamma}_{\text{Constant source term}}=0
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\vec{\nabla} \cdot \left(\vec{u}\phi\right)}_{\textrm{Advection term}}+\underbrace{\vec{\nabla} \cdot (-D\vec{\nabla}\phi)}_{\textrm{Diffusion term}}+\underbrace{\beta\phi}_{\textrm{Linear source term}}+\underbrace{\gamma}_{\textrm{Constant source term}}=0
 ```
 with the following general form of boundary conditions (specified by constants `a`, `b`, and `c`):
 
 ```math
-a\nabla\phi \cdot \mathbf{e}+b\phi=c
+a(\vec{\nabla}\phi \cdot \hat{n})+b\phi=c
 ```
 An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
 
