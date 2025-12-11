@@ -1,14 +1,13 @@
-# minimalist pyproject.toml
+# minimalist pyproject.toml for PyFVTool
 
 [project]
 name = "pyfvtool"
 version = "0.4.2"
 authors = [
-    { name="Ali A. Eftekhari", email="e.eftekhari@gmail.com" },
-    { name="Gavin M. Weir"},
-    { name="Martinus H. V. Werts"}
+    { name="Ali A. Eftekhari", email="aliak@dtu.dk" },
+    { name="Martinus H. V. Werts", email="martinus.werts@univ-angers.fr" }
 ]
-description = "Finite volume toolbox in Python"
+description = "Finite-volume toolbox in Python"
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
