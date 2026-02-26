@@ -36,9 +36,11 @@ Welcome to PyFVTool!
    notebook-examples/how-to-use-oneMKL-PARDISO-solver.ipynb
    notebook-examples/spherical_coordinate_examples.ipynb
    notebook-examples/spherical1D_diffusion.ipynb
-   notebook-examples/tutorial-poisson_example.ipynb
-   notebook-examples/tutorial-variables_in_space.ipynb
-   notebook-examples/tutorial-wave_equation_1D.ipynb
+    notebook-examples/tutorial-poisson_example.ipynb
+    notebook-examples/tutorial-variables_in_space.ipynb
+    notebook-examples/tutorial-wave_equation_1D.ipynb
+    notebook-examples/unstructured2D_diffusion.ipynb
+    notebook-examples/unstructured3D_diffusion.ipynb
    
    
 .. toctree::

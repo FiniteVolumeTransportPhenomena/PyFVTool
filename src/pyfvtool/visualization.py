@@ -3,21 +3,21 @@ import numpy as np
 from .mesh import Grid1D, Grid2D, Grid3D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
+from .mesh import UnstructuredMesh2D, UnstructuredMesh3D
 from .cell import CellVariable
 from warnings import warn
 
 import matplotlib.pyplot as plt
+from matplotlib import tri
+from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 
 
-
-def visualizeCells(phi: CellVariable,
-                   vmin = None,
-                   vmax = None,
-                   cmap = "viridis",
-                   shading = "gouraud"):
+def visualizeCells(
+    phi: CellVariable, vmin=None, vmax=None, cmap="viridis", shading="gouraud"
+):
     """
     Visualize the cell variable.
-    
+
     Parameters
     ----------
     phi: CellVariable
@@ -30,7 +30,7 @@ def visualizeCells(phi: CellVariable,
          Colormap
     shading: str
          Shading method
-    
+
     Examples
     --------
     >>> import pyfvtool as pf
@@ -49,100 +49,146 @@ def visualizeCells(phi: CellVariable,
             vmin = phi0.min()
         if vmax is None:
             vmax = phi0.max()
-        plt.pcolormesh(x, y, phi0.T, 
-                       vmin=vmin, vmax=vmax,
-                       cmap=cmap, shading=shading)
+        plt.pcolormesh(x, y, phi0.T, vmin=vmin, vmax=vmax, cmap=cmap, shading=shading)
         # plt.show()
 
-    elif (type(phi.domain) is PolarGrid2D):
+    elif type(phi.domain) is PolarGrid2D:
         x, y, phi0 = phi.plotprofile()
         plt.subplot(111, polar="true")
         plt.pcolor(y, x, phi0)
         # plt.show()
 
-    elif (type(phi.domain) is Grid3D):
+    elif type(phi.domain) is Grid3D:
         x, y, z, phi0 = phi.plotprofile()
         vmin = np.min(phi0)
         vmax = np.max(phi0)
-        mynormalize = lambda a:((a - vmin)/(vmax-vmin))
+        mynormalize = lambda a: (a - vmin) / (vmax - vmin)
         Nx, Ny, Nz = phi.domain.dims
-        a= np.ones((Nx+2,Ny+2,Nz+2))
-        X = x*a
-        Y = y*a
-        Z = z*a
+        a = np.ones((Nx + 2, Ny + 2, Nz + 2))
+        X = x * a
+        Y = y * a
+        Z = z * a
 
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection = "3d")
+        ax = fig.add_subplot(111, projection="3d")
 
-        ax.plot_surface(X[0,:,:], Y[0,:,:], Z[0,:,:],
-                        facecolors=plt.cm.viridis(mynormalize(phi0[0,:,:])),
-                        alpha=0.8)
-        ax.plot_surface(X[-1,:,:], Y[-1,:,:], Z[-1,:,:],
-                        facecolors=plt.cm.viridis(mynormalize(phi0[-1,:,:])),
-                        alpha=0.8)
-        ax.plot_surface(X[:,0,:], Y[:,0,:], Z[:,0,:],
-                        facecolors=plt.cm.viridis(mynormalize(phi0[:,0,:])),
-                        alpha=0.8)
-        ax.plot_surface(X[:,-1,:], Y[:,-1,:], Z[:,-1,:],
-                        facecolors=plt.cm.viridis(mynormalize(phi0[:,-1,:])),
-                        alpha=0.8)
-        ax.plot_surface(X[:,:,0], Y[:,:,0], Z[:,:,0],
-                        facecolors=plt.cm.viridis(mynormalize(phi0[:,:,0])),
-                        alpha=0.8)
-        ax.plot_surface(X[:,:,-1], Y[:,:,-1], Z[:,:,-1],
-                        facecolors=plt.cm.viridis(mynormalize(phi0[:,:,-1])),
-                        alpha=0.8)
+        ax.plot_surface(
+            X[0, :, :],
+            Y[0, :, :],
+            Z[0, :, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[0, :, :])),
+            alpha=0.8,
+        )
+        ax.plot_surface(
+            X[-1, :, :],
+            Y[-1, :, :],
+            Z[-1, :, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[-1, :, :])),
+            alpha=0.8,
+        )
+        ax.plot_surface(
+            X[:, 0, :],
+            Y[:, 0, :],
+            Z[:, 0, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, 0, :])),
+            alpha=0.8,
+        )
+        ax.plot_surface(
+            X[:, -1, :],
+            Y[:, -1, :],
+            Z[:, -1, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, -1, :])),
+            alpha=0.8,
+        )
+        ax.plot_surface(
+            X[:, :, 0],
+            Y[:, :, 0],
+            Z[:, :, 0],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
+            alpha=0.8,
+        )
+        ax.plot_surface(
+            X[:, :, -1],
+            Y[:, :, -1],
+            Z[:, :, -1],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
+            alpha=0.8,
+        )
         # plt.show()
 
-    elif (type(phi.domain) is CylindricalGrid3D):
+    elif type(phi.domain) is CylindricalGrid3D:
         r, theta, z, phi0 = phi.plotprofile()
         Nx, Ny, Nz = phi.domain.dims
-        x = r*np.cos(theta)
-        y = r*np.sin(theta)
+        x = r * np.cos(theta)
+        y = r * np.sin(theta)
         vmin = np.min(phi0)
         vmax = np.max(phi0)
-        mynormalize = lambda a:((a - vmin)/(vmax-vmin))
-        a = np.ones((Nx+2, Ny+2, Nz+2))
-        X = x*a
-        Y = y*a
-        Z = z*a
+        mynormalize = lambda a: (a - vmin) / (vmax - vmin)
+        a = np.ones((Nx + 2, Ny + 2, Nz + 2))
+        X = x * a
+        Y = y * a
+        Z = z * a
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
         alfa = 1.0
-        ax.plot_surface(X[:, 0, :], Y[:, 0, :], Z[:, 0, :],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, 0, :])),
-                       alpha=alfa)
-        ax.plot_surface(X[:, int(Ny/2)+1, :], Y[:, int(Ny/2)+1, :], Z[:, int(Ny/2)+1, :],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, int(Ny/2)+1, :])),
-                       alpha=alfa)
-        ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
-                       alpha=alfa)
-        ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
-                       alpha=alfa)
-        ax.plot_surface(X[:, :, int(Nz/2)], Y[:, :, int(Nz/2)], Z[:, :, int(Nz/2)],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, :, int(Nz/2)])),
-                       alpha=alfa)
-        ax.plot_surface(X[:, :, -1], Y[:, :, -1], Z[:, :, -1],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
-                       alpha=alfa)
+        ax.plot_surface(
+            X[:, 0, :],
+            Y[:, 0, :],
+            Z[:, 0, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, 0, :])),
+            alpha=alfa,
+        )
+        ax.plot_surface(
+            X[:, int(Ny / 2) + 1, :],
+            Y[:, int(Ny / 2) + 1, :],
+            Z[:, int(Ny / 2) + 1, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, int(Ny / 2) + 1, :])),
+            alpha=alfa,
+        )
+        ax.plot_surface(
+            X[:, :, 0],
+            Y[:, :, 0],
+            Z[:, :, 0],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
+            alpha=alfa,
+        )
+        ax.plot_surface(
+            X[:, :, 0],
+            Y[:, :, 0],
+            Z[:, :, 0],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
+            alpha=alfa,
+        )
+        ax.plot_surface(
+            X[:, :, int(Nz / 2)],
+            Y[:, :, int(Nz / 2)],
+            Z[:, :, int(Nz / 2)],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, :, int(Nz / 2)])),
+            alpha=alfa,
+        )
+        ax.plot_surface(
+            X[:, :, -1],
+            Y[:, :, -1],
+            Z[:, :, -1],
+            facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
+            alpha=alfa,
+        )
         # plt.show()
 
-    elif (type(phi.domain) is SphericalGrid3D):
+    elif type(phi.domain) is SphericalGrid3D:
         warn("SphericalGrid3D visualization is not working properly yet.")
         r, theta, PHI, phi0 = phi.plotprofile()
         Nx, Ny, Nz = phi.domain.dims
-        x = r*np.sin(theta)*np.cos(PHI)
-        y = r*np.sin(theta)*np.sin(PHI)
-        z = r*np.cos(theta)
+        x = r * np.sin(theta) * np.cos(PHI)
+        y = r * np.sin(theta) * np.sin(PHI)
+        z = r * np.cos(theta)
         vmin = np.min(phi0)
         vmax = np.max(phi0)
-        mynormalize = lambda a:((a - vmin)/(vmax-vmin))
-        a = np.ones((Nx+2, Ny+2, Nz+2))
-        X = x*a
-        Y = y*a
-        Z = z*a
+        mynormalize = lambda a: (a - vmin) / (vmax - vmin)
+        a = np.ones((Nx + 2, Ny + 2, Nz + 2))
+        X = x * a
+        Y = y * a
+        Z = z * a
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
         alfa = 1.0
@@ -161,10 +207,62 @@ def visualizeCells(phi: CellVariable,
         # ax.plot_surface(X[:, :, int(Nz/2)], Y[:, :, int(Nz/2)], Z[:, :, int(Nz/2)],
         #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, int(Nz/2)])),
         #                alpha=alfa)
-        ax.plot_surface(X[-1, :, :], Y[-1, :, :], Z[-1, :, :],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[-1, :, :])),
-                       alpha=alfa)
-        
+        ax.plot_surface(
+            X[-1, :, :],
+            Y[-1, :, :],
+            Z[-1, :, :],
+            facecolors=plt.cm.viridis(mynormalize(phi0[-1, :, :])),
+            alpha=alfa,
+        )
+
+    elif isinstance(phi.domain, UnstructuredMesh2D):
+        x, y, phi0 = phi.plotprofile()
+        # x, y are cell centers (flat arrays), phi0 interior values
+        mesh = phi.domain
+        triang = tri.Triangulation(mesh._nodes[:, 0], mesh._nodes[:, 1], mesh._cells)
+        if vmin is None:
+            vmin = phi0.min()
+        if vmax is None:
+            vmax = phi0.max()
+        plt.tripcolor(triang, phi0, vmin=vmin, vmax=vmax, cmap=cmap, shading="flat")
+        # plt.show()
+
+    elif isinstance(phi.domain, UnstructuredMesh3D):
+        # For tetrahedral mesh, plot boundary faces colored by owner cell value
+        warn("UnstructuredMesh3D visualization is experimental.")
+        mesh = phi.domain
+        # Get boundary faces
+        bnd_faces = mesh.boundary_faces
+        # For each boundary face, get owner cell index
+        owners = mesh.owner[bnd_faces]
+        # Get cell values (interior only)
+        phi0 = phi.value  # shape (num_cells,)
+        face_values = phi0[owners]
+        # Get face nodes (shape (N_faces, 3) for 3D triangles)
+        face_nodes = mesh._face_nodes[bnd_faces]  # (N_bnd, 3)
+        nodes = mesh._nodes  # (N_nodes, 3)
+        # Create a triangulation for boundary faces
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="3d")
+        # Normalize face values for colormap
+        if vmin is None:
+            vmin = face_values.min()
+        if vmax is None:
+            vmax = face_values.max()
+        norm = plt.Normalize(vmin, vmax)
+        cmap_obj = plt.get_cmap(cmap)
+        face_colors = cmap_obj(norm(face_values))
+        # Create polygons for each boundary triangle
+        polys = nodes[face_nodes]  # shape (N_bnd, 3, 3)
+        # Create Poly3DCollection
+        coll = Poly3DCollection(polys, facecolors=face_colors, linewidth=0)
+        ax.add_collection3d(coll)
+        # Set axis limits
+        ax.set_xlim(nodes[:, 0].min(), nodes[:, 0].max())
+        ax.set_ylim(nodes[:, 1].min(), nodes[:, 1].max())
+        ax.set_zlim(nodes[:, 2].min(), nodes[:, 2].max())
+        # plt.show()
+
     else:
         # just in case...
-        raise ValueError('Unsupported mesh: '+str(type(phi.domain)))
+        raise ValueError("Unsupported mesh: " + str(type(phi.domain)))
