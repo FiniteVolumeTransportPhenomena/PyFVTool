@@ -1,93 +1,84 @@
-# Boundary condition classes
-
+# Boundary condition classes — connectivity-based unified representation
+#
+# BoundaryConditions stores a dict mapping boundary tag strings to
+# BoundaryFace objects.  For structured meshes, convenience properties
+# (.left, .right, .bottom, .top, .back, .front) are syntactic sugar
+# that index into this dict.
+#
+# The Robin BC convention is:
+#   a * dphi/dn + b * phi = c
+# where n is the outward unit normal on the boundary face.
 
 import numpy as np
 from scipy.sparse import csr_array
 
 from .mesh import MeshStructure
-from .mesh import Grid1D, Grid2D, Grid3D
-from .mesh import CylindricalGrid2D
-from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
-from .utilities import int_range
 from .utilities import TrackedArray
 
 
-#%%
-#
-# Classes handling definition of boundary conditions
-#
+# -----------------------------------------------------------------------
+#  BoundaryFace — stores a, b, c arrays for one group of boundary faces
+# -----------------------------------------------------------------------
 
 
 class BoundaryFace:
-    """
-    Class describing the boundary condition of a single face
-    
-    
-    Attributes
+    """Boundary condition coefficients for a named group of faces.
+
+    The Robin boundary condition is:
+
+        ``a * dphi/dn + b * phi = c``
+
+    Parameters
     ----------
-    
-    a : numpy.ndarray 
-        coefficient of the boundary condition
-    b : numpy.ndarray
-        coefficient of the boundary condition
-    c : numpy.ndarray
-        coefficient of the boundary condition
-    periodic : boolean
-        True if the boundary is periodic
-    modified : boolean
-        True if boundary condition values have been changed since last calculation
-        of BC terms and ghost cells, indicating need for a BC refresh
+    a, b, c : ndarray
+        Coefficient arrays, each of length equal to the number of faces
+        in this boundary group.
+    periodic : bool
+        True if this boundary group is periodic.
     """
-    
-    def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, 
-                 periodic=False):
-        if (type(a) is not np.ndarray) or (type(b) is not np.ndarray)\
-            or (type(c) is not np.ndarray):
-                raise TypeError('a, b, c must be np.ndarray')
-        self._a = TrackedArray(a)
-        self._b = TrackedArray(b)
-        self._c = TrackedArray(c)
+
+    def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, periodic=False):
+        if (
+            not isinstance(a, np.ndarray)
+            or not isinstance(b, np.ndarray)
+            or not isinstance(c, np.ndarray)
+        ):
+            raise TypeError("a, b, c must be np.ndarray")
+        self._a = TrackedArray(a.ravel().astype(float))
+        self._b = TrackedArray(b.ravel().astype(float))
+        self._c = TrackedArray(c.ravel().astype(float))
         self._periodic = periodic
 
     def __str__(self):
-        temp = vars(self)
-        for item in temp:
-            print(item, ':', temp[item])
-        return ""
+        return f"BoundaryFace(n={len(self._a)}, periodic={self._periodic})"
 
     def __repr__(self):
-        temp = vars(self)
-        for item in temp:
-            print(item, ':', temp[item])
-        return ""
-    
+        return str(self)
+
     @property
     def modified(self):
-        change = self._a.modified\
-                 or self._b.modified\
-                 or self._c.modified
-        return change
-    
+        return self._a.modified or self._b.modified or self._c.modified
+
     @modified.setter
     def modified(self, val):
         modval = bool(val)
         self._a.modified = modval
         self._b.modified = modval
         self._c.modified = modval
-    
+
     @property
     def a(self):
         return self._a
-    
+
     @a.setter
     def a(self, val):
         self._a[:] = val
-        
+
     @property
     def b(self):
         return self._b
 
-    @b.setter       
+    @b.setter
     def b(self, val):
         self._b[:] = val
 
@@ -95,1896 +86,460 @@ class BoundaryFace:
     def c(self):
         return self._c
 
-    @c.setter       
+    @c.setter
     def c(self, val):
         self._c[:] = val
-        
+
     @property
     def periodic(self):
         return self._periodic
 
-    @periodic.setter       
+    @periodic.setter
     def periodic(self, val):
         self.modified = True
         self._periodic = bool(val)
 
 
+# -----------------------------------------------------------------------
+#  BoundaryConditions — tag-based dict of BoundaryFace objects
+# -----------------------------------------------------------------------
 
-class BoundaryConditionsBase:
-    """
-    Base class for the boundary conditions
-     
-    
-    Attributes
-    ----------
-       
-    mesh :  MeshStructure
-        mesh structure
-    left : BoundaryFace
-        boundary condition for the left face
-    right : BoundaryFace
-        boundary condition for the right face
-    bottom : BoundaryFace
-        boundary condition for the bottom face
-    top : BoundaryFace
-        boundary condition for the top face
-    back : BoundaryFace
-        boundary condition for the back face
-    front : BoundaryFace
-        boundary condition for the back face
-    """
-    
-    def __init__(self, mesh: MeshStructure,
-                 left: BoundaryFace, right: BoundaryFace,
-                 bottom: BoundaryFace, top: BoundaryFace,
-                 back: BoundaryFace, front: BoundaryFace):
-        self.domain = mesh
-        self.left = left
-        self.right = right
-        self.bottom = bottom
-        self.top = top
-        self.back = back
-        self.front = front
-
-    def __str__(self):
-        temp = vars(self)
-        for item in temp:
-            print(item, ':', temp[item])
-        return ""
-
-    def __repr__(self):
-        temp = vars(self)
-        for item in temp:
-            print(item, ':', temp[item])
-        return ""
-
-    @property
-    def modified(self):
-        """
-        True if any of the BoundaryFace conditions has changed since last 
-        apply_BCs()
-        """
-        # To keep things simple, we always include all possible faces,
-        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
-        # they are not used in a specific geometry.
-        return (self.left.modified or self.right.modified\
-                or self.top.modified or self.bottom.modified\
-                or self.front.modified or self.back.modified)
-            
-    @modified.setter
-    def modified(self, val):
-        # To keep things simple, we always include all possible faces,
-        # even for 1D and 2D, since all BoundaryFaces always exist, even when 
-        # they are not used in a specific geometry.
-        self.left.modified = False
-        self.right.modified = False
-        self.top.modified = False
-        self.bottom.modified = False
-        self.front.modified = False
-        self.back.modified = False
+# Structured-mesh face names that get convenience property access
+_STRUCTURED_NAMES = ("left", "right", "bottom", "top", "back", "front")
 
 
+class BoundaryConditions:
+    """Boundary conditions for a mesh, stored as a dict of tag -> BoundaryFace.
 
-class BoundaryConditions1D(BoundaryConditionsBase):
-    def __init__(self, mesh: Grid1D):
-        left = BoundaryFace(np.array([1.0]), np.array([0.0]), np.array([0.0]))
-        right = BoundaryFace(np.array([1.0]), np.array([0.0]), np.array([0.0]))
-        bottom = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        top = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        back = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        front = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        super().__init__(mesh, left, right, bottom, top, back, front)
+    For structured meshes, the factory function auto-creates the standard
+    tags ("left", "right", "bottom", "top", "back", "front") with Neumann
+    (a=1, b=0, c=0) defaults.  These are accessible as properties::
 
+        BC = BoundaryConditions(mesh)
+        BC.left.a[:] = 0   # Dirichlet
+        BC.left.b[:] = 1
+        BC.left.c[:] = T_left
 
-class BoundaryConditions2D(BoundaryConditionsBase):
-    def __init__(self, mesh: Grid2D):
-        Nx, Ny = mesh.dims
-        left = BoundaryFace(np.ones(Ny), np.zeros(Ny), np.zeros((1, Ny)))
-        right = BoundaryFace(np.ones(Ny), np.zeros(Ny), np.zeros(Ny))
-        bottom = BoundaryFace(np.ones(Nx), np.zeros(Nx), np.zeros(Nx))
-        top = BoundaryFace(np.ones(Nx), np.zeros(Nx), np.zeros(Nx))
-        back = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        front = BoundaryFace(np.array([]), np.array([]), np.array([]))
-        super().__init__(mesh, left, right, bottom, top, back, front)
+    For unstructured meshes, users assign BCs by tag::
 
-
-class BoundaryConditions3D(BoundaryConditionsBase):
-    def __init__(self, mesh: Grid3D):
-        Nx, Ny, Nz = mesh.dims
-        left = BoundaryFace(np.ones((Ny, Nz)), np.zeros((Ny, Nz)), np.zeros((Ny, Nz)))
-        right = BoundaryFace(np.ones((Ny, Nz)), np.zeros((Ny, Nz)), np.zeros((Ny, Nz)))
-        bottom = BoundaryFace(np.ones((Nx, Nz)), np.zeros((Nx, Nz)), np.zeros((Nx, Nz)))
-        top = BoundaryFace(np.ones((Nx, Nz)), np.zeros((Nx, Nz)), np.zeros((Nx, Nz)))
-        back = BoundaryFace(np.ones((Nx, Ny)), np.zeros((Nx, Ny)), np.zeros((Nx, Ny)))
-        front = BoundaryFace(np.ones((Nx, Ny)), np.zeros((Nx, Ny)), np.zeros((Nx, Ny)))
-        super().__init__(mesh, left, right, bottom, top, back, front)
-
-
-def BoundaryConditions(mesh: MeshStructure):
-    """Create an object for holding boundary conditions (factory function)
-    
+        BC["inlet"].a[:] = 0
+        BC["inlet"].b[:] = 1
+        BC["inlet"].c[:] = T_inlet
 
     Parameters
     ----------
     mesh : MeshStructure
-        Mesh used for space discretization.
-
-    Returns
-    -------
-    Subclass instance of BoundaryConditionsBase class
-        Object holding all information defining boundary conditions.
-
+        The mesh on which these BCs are defined.
     """
-        
-    if issubclass(type(mesh), Grid1D):
-        return BoundaryConditions1D(mesh)
-    elif issubclass(type(mesh), Grid2D):
-        return BoundaryConditions2D(mesh)
-    elif issubclass(type(mesh), Grid3D):
-        return BoundaryConditions3D(mesh)
+
+    def __init__(self, mesh: MeshStructure):
+        self.domain = mesh
+        self._faces = {}  # tag -> BoundaryFace
+
+        # Auto-create BoundaryFace for each tag in the mesh
+        for tag, face_indices in mesh.boundary_tags.items():
+            n = len(face_indices)
+            # Default: Neumann (a=1, b=0, c=0) => dphi/dn = 0
+            self._faces[tag] = BoundaryFace(np.ones(n), np.zeros(n), np.zeros(n))
+
+    # ---- dict-like access -----------------------------------------------
+
+    def __getitem__(self, tag: str) -> BoundaryFace:
+        return self._faces[tag]
+
+    def __setitem__(self, tag: str, face: BoundaryFace):
+        if not isinstance(face, BoundaryFace):
+            raise TypeError("Value must be a BoundaryFace instance")
+        self._faces[tag] = face
+
+    def __contains__(self, tag: str) -> bool:
+        return tag in self._faces
+
+    def tags(self):
+        """Return list of boundary tag names."""
+        return list(self._faces.keys())
+
+    def items(self):
+        """Return (tag, BoundaryFace) pairs."""
+        return self._faces.items()
+
+    # ---- convenience properties for structured meshes --------------------
+
+    @property
+    def left(self) -> BoundaryFace:
+        return self._faces["left"]
+
+    @left.setter
+    def left(self, val: BoundaryFace):
+        self._faces["left"] = val
+
+    @property
+    def right(self) -> BoundaryFace:
+        return self._faces["right"]
+
+    @right.setter
+    def right(self, val: BoundaryFace):
+        self._faces["right"] = val
+
+    @property
+    def bottom(self) -> BoundaryFace:
+        return self._faces["bottom"]
+
+    @bottom.setter
+    def bottom(self, val: BoundaryFace):
+        self._faces["bottom"] = val
+
+    @property
+    def top(self) -> BoundaryFace:
+        return self._faces["top"]
+
+    @top.setter
+    def top(self, val: BoundaryFace):
+        self._faces["top"] = val
+
+    @property
+    def back(self) -> BoundaryFace:
+        return self._faces["back"]
+
+    @back.setter
+    def back(self, val: BoundaryFace):
+        self._faces["back"] = val
+
+    @property
+    def front(self) -> BoundaryFace:
+        return self._faces["front"]
+
+    @front.setter
+    def front(self, val: BoundaryFace):
+        self._faces["front"] = val
+
+    @property
+    def modified(self):
+        """True if any BoundaryFace has been modified since last reset."""
+        return any(bf.modified for bf in self._faces.values())
+
+    @modified.setter
+    def modified(self, val):
+        for bf in self._faces.values():
+            bf.modified = val
+
+    def __str__(self):
+        tags_str = ", ".join(f"{tag}({len(bf.a)})" for tag, bf in self._faces.items())
+        return f"BoundaryConditions({tags_str})"
+
+    def __repr__(self):
+        return str(self)
 
 
-
-#%%
-#
-# Calculation of the values in the ghost cells, taking into account the 
-# boundary conditions. Return array with all internal and ghost cell values.
-#
+# -----------------------------------------------------------------------
+#  cellValuesWithBoundaries — unified, connectivity-based
+# -----------------------------------------------------------------------
 
 
-def cellValuesWithBoundaries1D(phi, BC):
-    """
-    cellValuesWithBoundaries for 1D mesh
-    """
-    
-    # extract data from the mesh structure
-    # Nx = MeshStructure.numberofcells
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
+def cellValuesWithBoundaries(phi_internal, BC):
+    """Compute ghost-cell values from BCs and return the full value array.
 
-    # boundary condition (a d\\phi/dx + b \\phi = c, a column vector of [d a])
-    # a (phi(i)-phi(i-1))/dx + b (phi(i)+phi(i-1))/2 = c
-    # phi(i) (a/dx+b/2) + phi(i-1) (-a/dx+b/2) = c
-    # Right boundary, i=m+2
-    # phi(i) (a/dx+b/2) = c- phi(i-1) (-a/dx+b/2)
-    # Left boundary, i=2
-    #  phi(i-1) (-a/dx+b/2) = c - phi(i) (a/dx+b/2)
-    # define the new phi
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        phiBC = np.hstack([(BC.left.c.item()-phi[0]*(BC.left.a.item()/dx_1+BC.left.b.item()/2))/(-BC.left.a.item()/dx_1+BC.left.b.item()/2), 
-        phi,
-        (BC.right.c.item()-phi[-1]*(-BC.right.a.item()/dx_end+BC.right.b.item()/2))/(BC.right.a.item()/dx_end+BC.right.b.item()/2)])
-    else:
-        phiBC = np.hstack([phi[-1], phi, phi[0]])
-    return phiBC
+    Given interior cell values and boundary conditions, compute the
+    ghost-cell values using the Robin BC formula and return the combined
+    array ``[interior_values, ghost_values]``.
 
+    The Robin BC at a boundary face is:
 
-def cellValuesWithBoundaries2D(phi, BC):
-    """
-    cellValuesWithBoundaries for 2D mesh
-    """
-    
-    # extract data from the mesh structure
-    Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
+        ``a * (phi_G - phi_P) / d_CF + b * (phi_G + phi_P) / 2 = c``
 
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2))
-    phiBC[1:Nx+1, 1:Ny+1] = phi
+    Solving for phi_G:
 
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= (BC.top.c-phi[:,-1]*(-BC.top.a/dy_end+BC.top.b/2))/(BC.top.a/dy_end+BC.top.b/2)
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= (BC.bottom.c-phi[:,0]*(BC.bottom.a/dy_1+BC.bottom.b/2))/(-BC.bottom.a/dy_1+BC.bottom.b/2)
-    else:
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= phi[:,0]
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= phi[:,-1]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= (BC.right.c-phi[-1,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= (BC.left.c-phi[0,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= phi[0,:]
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= phi[-1,:]
-    return phiBC
-
-
-def cellValuesWithBoundaries3D(phi, BC):
-    """
-    cellValuesWithBoundaries for 3D mesh
-    """
-    
-    Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    dz_1 = BC.domain.cellsize._z[0]
-    dz_end = BC.domain.cellsize._z[-1]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
-    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/dy_end+BC.top.b/2))/(BC.top.a/dy_end+BC.top.b/2))[:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/dy_1+BC.bottom.b/2))/(-BC.bottom.a/dy_1+BC.bottom.b/2))[:, np.newaxis, :]
-    else:
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,0,:][:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:][:, np.newaxis, :]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[0,:,:]
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[-1,:,:]
-
-    if (not BC.bottom.periodic) and (not BC.top.periodic):
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/dz_end+BC.front.b/2))/(BC.front.a/dz_end+BC.front.b/2))[:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/dz_1+BC.back.b/2))/(-BC.back.a/dz_1+BC.back.b/2))[:, :, np.newaxis]
-    else:
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0][:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= phi[:,:,-1][:, :, np.newaxis]
-    return phiBC
-
-
-def cellValuesWithBoundariesCylindrical3D(phi, BC):
-    """
-    cellValuesWithBoundaries for Cylindrical3D mesh
-    """
-    
-    Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    dz_1 = BC.domain.cellsize._z[0]
-    dz_end = BC.domain.cellsize._z[-1]
-    rp = BC.domain.cellcenters._x[:, np.newaxis]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
-    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2))[:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))[:, np.newaxis, :]
-    else:
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,0,:][:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:][:, np.newaxis, :]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[0,:,:]
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[-1,:,:]
-
-    if (not BC.bottom.periodic) and (not BC.top.periodic):
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/dz_end+BC.front.b/2))/(BC.front.a/dz_end+BC.front.b/2))[:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/dz_1+BC.back.b/2))/(-BC.back.a/dz_1+BC.back.b/2))[:, :, np.newaxis]
-    else:
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0][:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= phi[:,:,-1][:, :, np.newaxis]
-    return phiBC
-
-
-def cellValuesWithBoundariesPolar2D(phi, BC):
-    """
-    cellValuesWithBoundaries for Polar2D mesh
-    """
-    
-    # extract data from the mesh structure
-    Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    rp = BC.domain.cellcenters._x
-
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2))
-    phiBC[1:Nx+1, 1:Ny+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= (BC.top.c-phi[:,-1]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2)
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= (BC.bottom.c-phi[:,0]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2)
-    else:
-        # top boundary
-        j=Ny+1
-        i = int_range(1, Nx)
-        phiBC[i,j]= phi[:,0]
-
-        # Bottom boundary
-        j=0
-        phiBC[i,j]= phi[:,-1]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= (BC.right.c-phi[-1,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= (BC.left.c-phi[0,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        phiBC[i,j]= phi[0,:]
-
-        # Left boundary
-        i = 0
-        phiBC[i,j]= phi[-1,:]
-    return phiBC
-
-def cellValuesWithBoundariesSpherical3D(phi, BC):
-    """
-    cellValuesWithBoundaries for Spherical3D mesh
-    """
-    # TBD
-    
-    Nx, Ny, Nz = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    dz_1 = BC.domain.cellsize._z[0]
-    dz_end = BC.domain.cellsize._z[-1]
-    rp = BC.domain.cellcenters._x[:, np.newaxis]
-    thetap = BC.domain.cellcenters._y[np.newaxis, :]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    
-    # define the output matrix
-    phiBC = np.zeros((Nx+2, Ny+2, Nz+2))
-    phiBC[1:Nx+1, 1:Ny+1, 1:Nz+1] = phi
-
-    # Assign values to the boundary values
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.top.c-phi[:,-1,:]*(-BC.top.a/(dy_end*rp)+BC.top.b/2))/(BC.top.a/(dy_end*rp)+BC.top.b/2))[:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= ((BC.bottom.c-phi[:,0,:]*(BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))/(-BC.bottom.a/(dy_1*rp)+BC.bottom.b/2))[:, np.newaxis, :]
-    else:
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,0,:][:, np.newaxis, :]
-
-        # Bottom boundary
-        j=0
-        i = i_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[:,-1,:][:, np.newaxis, :]
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.right.c-phi[-1,:,:]*(-BC.right.a/dx_end+BC.right.b/2))/(BC.right.a/dx_end+BC.right.b/2)
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= (BC.left.c-phi[0,:,:]*(BC.left.a/dx_1+BC.left.b/2))/(-BC.left.a/dx_1+BC.left.b/2)
-    else:
-        # Right boundary
-        i = Nx+1
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[0,:,:]
-
-        # Left boundary
-        i = 0
-        j = j_ind
-        k = k_ind
-        phiBC[i,j,k]= phi[-1,:,:]
-
-    if (not BC.bottom.periodic) and (not BC.top.periodic):
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= ((BC.front.c-phi[:,:,-1]*(-BC.front.a/(rp*np.sin(thetap)*dz_end)+BC.front.b/2))/(BC.front.a/(rp*np.sin(thetap)*dz_end)+BC.front.b/2))[:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= ((BC.back.c-phi[:,:,0]*(BC.back.a/(rp*np.sin(thetap)*dz_1)+BC.back.b/2))/(-BC.back.a/(rp*np.sin(thetap)*dz_1)+BC.back.b/2))[:, :, np.newaxis]
-    else:
-        # front boundary
-        i = i_ind
-        j = j_ind
-        k = Nz+1
-        phiBC[i,j,k]= phi[:,:,0][:, :, np.newaxis]
-
-        # back boundary
-        i = i_ind
-        j = j_ind
-        k = 0
-        phiBC[i,j,k]= phi[:,:,-1][:, :, np.newaxis]
-    return phiBC
-
-
-def cellValuesWithBoundaries(phi, BC) -> np.ndarray:
-    """
-    Return all cell values with the boundary values calculated given the
-    boundary conditions.
+        ``phi_G = (c - phi_P * (-a/d_CF + b/2)) / (a/d_CF + b/2)``
 
     Parameters
     ----------
-    phi : array_like
-        internal cell values
-    BC : BoundaryCondition
-        Boundary condition object
-    
+    phi_internal : ndarray, shape (num_cells,)
+        Interior cell values (or a flat array that is at least num_cells long).
+    BC : BoundaryConditions
+        Boundary conditions.
+
     Returns
     -------
-    phiBC : array_like
-        All cell values (internal and boundary), including boundaries
+    phi_all : ndarray, shape (num_cells + num_ghost_cells,)
+        Combined interior + ghost cell values.
     """
-    
-    if issubclass(type(BC.domain), Grid1D):
-        return cellValuesWithBoundaries1D(phi, BC)
-    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is CylindricalGrid2D):
-        return cellValuesWithBoundaries2D(phi, BC)
-    elif (type(BC.domain) is PolarGrid2D):
-        return cellValuesWithBoundariesPolar2D(phi, BC)
-    elif (type(BC.domain) is Grid3D):
-        return cellValuesWithBoundaries3D(phi, BC)
-    elif (type(BC.domain) is CylindricalGrid3D):
-        return cellValuesWithBoundariesCylindrical3D(phi, BC)
-    elif (type(BC.domain) is SphericalGrid3D):
-        return cellValuesWithBoundariesSpherical3D(phi, BC)
+    mesh = BC.domain
+    N = mesh.num_cells
+    Ng = mesh.num_ghost_cells
+
+    # Ensure phi_internal is at least length N
+    if hasattr(phi_internal, "_value"):
+        # It's a CellVariable — extract the interior portion
+        phi_int = phi_internal._value[:N]
+    elif isinstance(phi_internal, np.ndarray):
+        phi_int = phi_internal.ravel()[:N]
     else:
-        raise Exception("The cellValuesWithBoundaries function is not defined for this mesh type.")
+        phi_int = np.asarray(phi_internal).ravel()[:N]
+
+    phi_all = np.zeros(N + Ng)
+    phi_all[:N] = phi_int
+
+    # For each boundary tag, compute ghost cell values
+    for tag, bf in BC.items():
+        face_indices = mesh.boundary_tags[tag]
+        if len(face_indices) == 0:
+            continue
+
+        owner_cells = mesh.owner[face_indices]
+        ghost_cells = mesh.neighbor[face_indices]  # >= N
+        d = mesh.d_CF[face_indices]  # distance owner-center to ghost-center
+
+        phi_P = phi_all[owner_cells]  # owner (interior) cell values
+
+        if bf.periodic:
+            # For periodic BCs, we need to find the paired boundary.
+            # The periodic partner information is stored in
+            # mesh._periodic_pairs if available; otherwise we handle
+            # it tag-by-tag below.
+            _apply_periodic_ghost(phi_all, mesh, tag, face_indices)
+        else:
+            # Robin: a*(phi_G - phi_P)/d + b*(phi_G + phi_P)/2 = c
+            # phi_G*(a/d + b/2) = c - phi_P*(-a/d + b/2)
+            # phi_G = (c - phi_P*(-a/d + b/2)) / (a/d + b/2)
+            # Apply boundary normal sign to match MATLAB FVTool convention
+            sign = mesh.boundary_normal_sign.get(tag, 1.0)
+            a = bf.a * sign
+            b = bf.b
+            c = bf.c
+            denom = a / d + b / 2.0
+            numer = c - phi_P * (-a / d + b / 2.0)
+            phi_all[ghost_cells] = numer / denom
+
+    return phi_all
+
+
+def _apply_periodic_ghost(phi_all, mesh, tag, face_indices):
+    """Fill ghost cells for periodic boundary using the paired tag.
+
+    For structured meshes, periodic pairs are:
+      left <-> right, bottom <-> top, back <-> front
+    The ghost cell on one side gets the value of the interior cell on
+    the other side (mirrored).
+    """
+    pairs = {
+        "left": "right",
+        "right": "left",
+        "bottom": "top",
+        "top": "bottom",
+        "back": "front",
+        "front": "back",
+    }
+    partner_tag = pairs.get(tag)
+    if partner_tag is None or partner_tag not in mesh.boundary_tags:
+        raise ValueError(f"Cannot find periodic partner for boundary tag '{tag}'.")
+
+    partner_faces = mesh.boundary_tags[partner_tag]
+    # Ghost cell on this side = interior cell on partner side
+    ghost_cells = mesh.neighbor[face_indices]
+    partner_owners = mesh.owner[partner_faces]
+    phi_all[ghost_cells] = phi_all[partner_owners]
+
+
+# -----------------------------------------------------------------------
+#  boundaryConditionsTerm — unified, connectivity-based
+# -----------------------------------------------------------------------
 
-
-
-#%%
-#
-# Calculation of matrix equation terms for the boundary conditions
-#
-
-
-"""
-Discretizing boundary conditions to csr array
-Example:
-row = np.array([0, 0, 1, 2, 2, 2])
-col = np.array([0, 2, 2, 0, 1, 2])
-data = np.array([1, 2, 3, 4, 5, 6])
-csr_array((data, (row, col)), shape=(3, 3)).toarray()
-array([[1, 0, 2],
-       [0, 0, 3],
-       [4, 5, 6]])
-"""
-
-
-def boundaryConditionsTerm1D(BC: BoundaryConditions1D):
-    Nx = BC.domain.dims[0]
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    G = int_range(1, Nx+2)-1
-
-    nb = 8  # number of boundary nodes
-    ii = np.zeros(nb, dtype=int)
-    jj = np.zeros(nb, dtype=int)
-    s = np.zeros(nb, dtype=float)
-
-    BCRHS = np.zeros(Nx+2)  # RHS vector
-    q = -1  # a counter in case I'm wrong with my count of nonzero elements
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # right boundary
-        i = Nx+1  # -1 for python 0-based indexing
-        q += 1
-        ii[q] = G[i]
-        jj[q] = G[i]
-        s[q] = BC.right.b.item()/2 + BC.right.a.item()/dx_end
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[i-1]
-        s[q] = BC.right.b.item()/2 - BC.right.a.item()/dx_end
-        BCRHS[G[i]] = BC.right.c.item()
-
-        # Left boundary
-        i = 0
-        q += 1
-        ii[q] = G[i]
-        jj[q] = G[i+1]
-        s[q] = -(BC.left.b.item()/2 + BC.left.a.item()/dx_1)
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[i]
-        s[q] = -(BC.left.b.item()/2 - BC.left.a.item()/dx_1)
-        BCRHS[G[i]] = -BC.left.c.item()
-    elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
-        # Right boundary
-        i = Nx+1
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[i]
-        s[q] = 1
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[i-1]
-        s[q] = -1
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[0]
-        s[q] = dx_end/dx_1
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[1]
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i]] = 0
-        # Left boundary
-        i = 0
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[i]
-        s[q] = 1.0
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[1]
-        s[q] = 1.0
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[Nx]
-        s[q] = -1.0
-        q = q+1
-        ii[q] = G[i]
-        jj[q] = G[Nx+1]
-        s[q] = -1.0
-        BCRHS[G[i]] = 0
-    # Build the sparse matrix of the boundary conditions
-    q += 1
-    BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), shape=(Nx+2, Nx+2))
-    return BCMatrix, BCRHS
-
-def boundaryConditionsTerm2D(BC: BoundaryConditions2D):
-    Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    G = BC.domain.cell_numbers()
-
-    nb = 8*(Nx+Ny+2)  # number of boundary nodes
-    ii = np.zeros(nb, dtype=int)
-    jj = np.zeros(nb, dtype=int)
-    s = np.zeros(nb, dtype=float)
-
-    BCRHS = np.zeros((Nx+2)*(Ny+2))  # RHS vector
-    q = -1  # a counter in case I'm wrong with my count of nonzero elements
-    #  assign value to the corner nodes (useless cells)
-    q = int_range(0, 3)
-    ii[q] = BC.domain.corners
-    jj[q] = BC.domain.corners
-    s[q] = np.max(BC.top.b/2 + BC.top.a/dy_end)
-    BCRHS[BC.domain.corners] = 0.0
-
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i=int_range(1,Nx)
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j]  
-        s[q] = (BC.top.b/2 + BC.top.a/dy_end).ravel()
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j-1] 
-        s[q] = (BC.top.b/2 - BC.top.a/dy_end).ravel()
-        BCRHS[G[i,j]] = (BC.top.c).ravel()
-
-        # Bottom boundary
-        j=0
-        # i=1:Nx already defined
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j+1]  
-        s[q] = -(BC.bottom.b/2 + BC.bottom.a/dy_1).ravel()
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j] 
-        s[q] = -(BC.bottom.b/2 - BC.bottom.a/dy_1).ravel()
-        BCRHS[G[i,j]] = (-BC.bottom.c).ravel()
-    elif BC.top.periodic or BC.bottom.periodic: # periodic boundary
-        # top boundary
-        j=Ny+1
-        # i=int_range(1,Nx)
-        i=int_range(1,Nx)
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j]  
-        s[q] = 1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j-1]  
-        s[q] = -1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,0] 
-        s[q] = dy_end/dy_1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,1] 
-        s[q] = -dy_end/dy_1
-        BCRHS[G[i,j]] = 0
-
-        # Bottom boundary
-        j=0
-        # i=int_range(1,Nx)
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j]  
-        s[q] = 1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j+1]  
-        s[q] = 1
-        q = q[-1]+i
-        ii[q] = G[i,j]
-        jj[q] = G[i,Ny+1] 
-        s[q] = -1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,Ny+2]
-        s[q] = -1
-        BCRHS[G[i,j]] = 0
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # right boundary
-        i = Nx+1  # -1 for python 0-based indexing
-        j = int_range(1, Ny)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = BC.right.b/2 + BC.right.a/dx_end
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i-1,j]
-        s[q] = BC.right.b/2 - BC.right.a/dx_end
-        BCRHS[G[i,j]] = BC.right.c
-
-        # Left boundary
-        i = 0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i+1,j]
-        s[q] = -(BC.left.b/2 + BC.left.a/dx_1)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = -(BC.left.b/2 - BC.left.a/dx_1)
-        BCRHS[G[i,j]] = -BC.left.c
-    elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = 1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i-1,j]
-        s[q] = -1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[0,j]
-        s[q] = dx_end/dx_1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[1,j]
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j]] = 0
-        # Left boundary
-        i = 0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = 1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i+1,j]
-        s[q] = 1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[Nx,j]
-        s[q] = -1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[Nx+1,j]
-        s[q] = -1.0
-        BCRHS[G[i,j]] = 0.0
-    # Build the sparse matrix of the boundary conditions
-    q = q[-1] + 1
-    BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
-                         shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
-    return BCMatrix, BCRHS
-
-
-def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
-    # extract data from the mesh structure
-    Nx, Ny, Nz = BC.domain.dims
-    G=BC.domain.cell_numbers()
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    dz_1 = BC.domain.cellsize._z[0]
-    dz_end = BC.domain.cellsize._z[-1]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    # number of boundary nodes (axact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
-    nb = 8*((Nx+1)*(Ny+1)+(Nx+1)*(Nz+1)+(Ny+1)*(Nz+1))
-
-    # define the vectors to be used for the creation of the sparse matrix
-    ii = np.zeros(nb, dtype=int)
-    jj = np.zeros(nb, dtype=int)
-    s = np.zeros(nb, dtype=float)
-
-    # define the RHS column vector
-    BCRHS = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
-
-    # assign value to the corner nodes (useless cells)
-    q = int_range(0, 7)
-    ii[q] = BC.domain.corners 
-    jj[q] = BC.domain.corners
-    s[q] = 1.0
-    BCRHS[BC.domain.corners] = 0.0
-
-    # assign values to the edges (useless cells)
-    q = q[-1]+int_range(1, np.size(BC.domain.edges))
-    ii[q] = BC.domain.edges 
-    jj[q] = BC.domain.edges
-    s[q] = 1.0
-    BCRHS[BC.domain.edges] = 0.0
-
-    # Assign values to the boundary condition matrix and the RHS vector based
-    # on the BC structure
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.top.b/2 + BC.top.a/dy_end).ravel()
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j-1,k].ravel()
-        s[q] = (BC.top.b/2 - BC.top.a/dy_end).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.top.c).ravel()
-
-        # Bottom boundary
-        j=0
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j+1,k].ravel()
-        s[q] = -(BC.bottom.b/2 + BC.bottom.a/dy_1).ravel()
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.bottom.b/2 - BC.bottom.a/dy_1).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.bottom.c).ravel()
-    elif BC.top.periodic or BC.bottom.periodic: # periodic
-        # top boundary
-        j=Ny+1
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j-1,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,0,k].ravel()
-        s[q] = dy_end/dy_1
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,1,k].ravel()
-        s[q] = -dy_end/dy_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Bottom boundary
-        j=0
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j+1,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,Ny,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,Ny+1,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-    if (not BC.right.periodic) and (not BC.left.periodic):
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.right.b/2 + BC.right.a/dx_end).ravel()
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = (BC.right.b/2 - BC.right.a/dx_end).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.right.c).ravel()
-
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = -(BC.left.b/2 + BC.left.a/dx_1).ravel()
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.left.b/2 - BC.left.a/dx_1).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.left.c).ravel()
-    elif BC.right.periodic or BC.left.periodic: # periodic
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[0,j,k].ravel()
-        s[q] = dx_end/dx_1
-        q = q[-1]+int_range[1,Ny*Nz]
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[1,j,k].ravel()
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx+1,j,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-    if (not BC.front.periodic) and (not BC.back.periodic):
-        # Front boundary
-        k=Nz+1
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.front.b/2 + BC.front.a/dz_end).ravel()
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k-1].ravel()
-        s[q] = (BC.front.b/2 - BC.front.a/dz_end).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.front.c).ravel()
-
-        # Back boundary
-        k=0
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k+1].ravel()
-        s[q] = -(BC.back.b/2 + BC.back.a/dz_1).ravel()
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.back.b/2 - BC.back.a/dz_1).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.back.c).ravel()
-    elif BC.front.periodic or BC.back.periodic: # periodic
-        # Front boundary
-        k=Nz+1
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k-1].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,0].ravel()
-        s[q] = dz_end/dz_1
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,1].ravel()
-        s[q] = -dz_end/dz_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Back boundary
-        k=0
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k+1].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,Nz].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,Nz+1].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-    # Build the sparse matrix of the boundary conditions
-    q = q[-1]+1
-    BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
-                         shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
-    return BCMatrix, BCRHS
-
-
-def boundaryConditionsTermPolar2D(BC: BoundaryConditions2D):
-    Nx, Ny = BC.domain.dims
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    rp = BC.domain.cellcenters._x
-    G = BC.domain.cell_numbers()
-
-    nb = 8*(Nx+Ny+2)  # number of boundary nodes
-    ii = np.zeros(nb, dtype=int)
-    jj = np.zeros(nb, dtype=int)
-    s = np.zeros(nb, dtype=float)
-
-    BCRHS = np.zeros((Nx+2)*(Ny+2))  # RHS vector
-    q = -1  # a counter in case I'm wrong with my count of nonzero elements
-    #  assign value to the corner nodes (useless cells)
-    q = int_range(0, 3)
-    ii[q] = BC.domain.corners
-    jj[q] = BC.domain.corners
-    s[q] = np.max(BC.top.b/2 + BC.top.a/dy_end)
-    BCRHS[BC.domain.corners] = 0.0
-
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i=int_range(1,Nx)
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j]  
-        s[q] = (BC.top.b/2 + BC.top.a/(dy_end*rp))
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j-1] 
-        s[q] = (BC.top.b/2 - BC.top.a/(dy_end*rp))
-        BCRHS[G[i,j]] = (BC.top.c)
-
-        # Bottom boundary
-        j=0
-        # i=1:Nx already defined
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j+1]  
-        s[q] = -(BC.bottom.b/2 + BC.bottom.a/(rp*dy_1))
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j] 
-        s[q] = -(BC.bottom.b/2 - BC.bottom.a/(rp*dy_1))
-        BCRHS[G[i,j]] = (-BC.bottom.c)
-    elif BC.top.periodic or BC.bottom.periodic: # periodic boundary
-        # top boundary
-        j=Ny+1
-        # i=int_range(1,Nx)
-        i=int_range(1,Nx)
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j]  
-        s[q] = 1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j-1]  
-        s[q] = -1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,0] 
-        s[q] = dy_end/dy_1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,1] 
-        s[q] = -dy_end/dy_1
-        BCRHS[G[i,j]] = 0
-
-        # Bottom boundary
-        j=0
-        # i=int_range(1,Nx)
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j]  
-        s[q] = 1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,j+1]  
-        s[q] = 1
-        q = q[-1]+i
-        ii[q] = G[i,j]
-        jj[q] = G[i,Ny+1] 
-        s[q] = -1
-        q = q[-1]+i
-        ii[q] = G[i,j]  
-        jj[q] = G[i,Ny+2]
-        s[q] = -1
-        BCRHS[G[i,j]] = 0
-
-    if (not BC.left.periodic) and (not BC.right.periodic):
-        # right boundary
-        i = Nx+1  # -1 for python 0-based indexing
-        j = int_range(1, Ny)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = BC.right.b/2 + BC.right.a/dx_end
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i-1,j]
-        s[q] = BC.right.b/2 - BC.right.a/dx_end
-        BCRHS[G[i,j]] = BC.right.c
-
-        # Left boundary
-        i = 0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i+1,j]
-        s[q] = -(BC.left.b/2 + BC.left.a/dx_1)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = -(BC.left.b/2 - BC.left.a/dx_1)
-        BCRHS[G[i,j]] = -BC.left.c
-    elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = 1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i-1,j]
-        s[q] = -1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[0,j]
-        s[q] = dx_end/dx_1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[1,j]
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j]] = 0
-        # Left boundary
-        i = 0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = 1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i+1,j]
-        s[q] = 1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[Nx,j]
-        s[q] = -1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[Nx+1,j]
-        s[q] = -1.0
-        BCRHS[G[i,j]] = 0.0
-    # Build the sparse matrix of the boundary conditions
-    q = q[-1] + 1
-    BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
-                         shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
-    return BCMatrix, BCRHS
-
-
-def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
-    # extract data from the mesh structure
-    Nx, Ny, Nz = BC.domain.dims
-    G=BC.domain.cell_numbers()
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    dz_1 = BC.domain.cellsize._z[0]
-    dz_end = BC.domain.cellsize._z[-1]
-    rp = BC.domain.cellcenters._x[:, np.newaxis]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    # number of boundary nodes (axact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
-    nb = 8*((Nx+1)*(Ny+1)+(Nx+1)*(Nz+1)+(Ny+1)*(Nz+1))
-
-    # define the vectors to be used for the creation of the sparse matrix
-    ii = np.zeros(nb, dtype=int)
-    jj = np.zeros(nb, dtype=int)
-    s = np.zeros(nb, dtype=float)
-
-    # define the RHS column vector
-    BCRHS = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
-
-    # assign value to the corner nodes (useless cells)
-    q = int_range(0, 7)
-    ii[q] = BC.domain.corners 
-    jj[q] = BC.domain.corners
-    s[q] = 1.0
-    BCRHS[BC.domain.corners] = 0.0
-
-    # assign values to the edges (useless cells)
-    q = q[-1]+int_range(1, np.size(BC.domain.edges))
-    ii[q] = BC.domain.edges 
-    jj[q] = BC.domain.edges
-    s[q] = 1.0
-    BCRHS[BC.domain.edges] = 0.0
-
-    # Assign values to the boundary condition matrix and the RHS vector based
-    # on the BC structure
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.top.b/2 + BC.top.a/(dy_end*rp)).ravel()
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j-1,k].ravel()
-        s[q] = (BC.top.b/2 - BC.top.a/(dy_end*rp)).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.top.c).ravel()
-
-        # Bottom boundary
-        j=0
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j+1,k].ravel()
-        s[q] = -(BC.bottom.b/2 + BC.bottom.a/(dy_1*rp)).ravel()
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.bottom.b/2 - BC.bottom.a/(dy_1*rp)).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.bottom.c).ravel()
-    elif BC.top.periodic or BC.bottom.periodic: # periodic
-        # top boundary
-        j=Ny+1
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j-1,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,0,k].ravel()
-        s[q] = dy_end/dy_1
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,1,k].ravel()
-        s[q] = -dy_end/dy_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Bottom boundary
-        j=0
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j+1,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,Ny,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,Ny+1,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-    if (not BC.right.periodic) and (not BC.left.periodic):
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.right.b/2 + BC.right.a/dx_end).ravel()
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = (BC.right.b/2 - BC.right.a/dx_end).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.right.c).ravel()
-
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = -(BC.left.b/2 + BC.left.a/dx_1).ravel()
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.left.b/2 - BC.left.a/dx_1).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.left.c).ravel()
-    elif BC.right.periodic or BC.left.periodic: # periodic
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[0,j,k].ravel()
-        s[q] = dx_end/dx_1
-        q = q[-1]+int_range[1,Ny*Nz]
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[1,j,k].ravel()
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx+1,j,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-    if (not BC.front.periodic) and (not BC.back.periodic):
-        # Front boundary
-        k=Nz+1
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.front.b/2 + BC.front.a/dz_end).ravel()
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k-1].ravel()
-        s[q] = (BC.front.b/2 - BC.front.a/dz_end).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.front.c).ravel()
-
-        # Back boundary
-        k=0
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k+1].ravel()
-        s[q] = -(BC.back.b/2 + BC.back.a/dz_1).ravel()
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.back.b/2 - BC.back.a/dz_1).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.back.c).ravel()
-    elif BC.front.periodic or BC.back.periodic: # periodic
-        # Front boundary
-        k=Nz+1
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k-1].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,0].ravel()
-        s[q] = dz_end/dz_1
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,1].ravel()
-        s[q] = -dz_end/dz_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Back boundary
-        k=0
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k+1].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,Nz].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,Nz+1].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-    # Build the sparse matrix of the boundary conditions
-    q = q[-1]+1
-    BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
-                         shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
-    return BCMatrix, BCRHS
-
-def boundaryConditionsTermSpherical3D(BC: BoundaryConditions3D):
-    # extract data from the mesh structure
-    Nx, Ny, Nz = BC.domain.dims
-    G=BC.domain.cell_numbers()
-    dx_1 = BC.domain.cellsize._x[0]
-    dx_end = BC.domain.cellsize._x[-1]
-    dy_1 = BC.domain.cellsize._y[0]
-    dy_end = BC.domain.cellsize._y[-1]
-    dz_1 = BC.domain.cellsize._z[0]
-    dz_end = BC.domain.cellsize._z[-1]
-    rp = BC.domain.cellcenters._x[:, np.newaxis]
-    thetap = BC.domain.cellcenters._y[np.newaxis, :]
-
-    i_ind = int_range(1,Nx)[:, np.newaxis, np.newaxis]
-    j_ind = int_range(1,Ny)[np.newaxis, :, np.newaxis]
-    k_ind = int_range(1,Nz)[np.newaxis, np.newaxis, :]
-    # number of boundary nodes (exact number is 2[(m+1)(n+1)*(n+1)*(p+1)+(m+1)*p+1]:
-    nb = 8*((Nx+1)*(Ny+1)+(Nx+1)*(Nz+1)+(Ny+1)*(Nz+1))
-
-    # define the vectors to be used for the creation of the sparse matrix
-    ii = np.zeros(nb, dtype=int)
-    jj = np.zeros(nb, dtype=int)
-    s = np.zeros(nb, dtype=float)
-
-    # define the RHS column vector
-    BCRHS = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
-
-    # assign value to the corner nodes (useless cells)
-    q = int_range(0, 7)
-    ii[q] = BC.domain.corners 
-    jj[q] = BC.domain.corners
-    s[q] = 1.0
-    BCRHS[BC.domain.corners] = 0.0
-
-    # assign values to the edges (useless cells)
-    q = q[-1]+int_range(1, np.size(BC.domain.edges))
-    ii[q] = BC.domain.edges 
-    jj[q] = BC.domain.edges
-    s[q] = 1.0
-    BCRHS[BC.domain.edges] = 0.0
-
-    # Assign values to the boundary condition matrix and the RHS vector based
-    # on the BC structure
-    if (not BC.top.periodic) and (not BC.bottom.periodic):
-        # top boundary
-        j=Ny+1
-        i = i_ind
-        k = k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.top.b/2 + BC.top.a/(dy_end*rp)).ravel()
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j-1,k].ravel()
-        s[q] = (BC.top.b/2 - BC.top.a/(dy_end*rp)).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.top.c).ravel()
-
-        # Bottom boundary
-        j=0
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j+1,k].ravel()
-        s[q] = -(BC.bottom.b/2 + BC.bottom.a/(dy_1*rp)).ravel()
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.bottom.b/2 - BC.bottom.a/(dy_1*rp)).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.bottom.c).ravel()
-    elif BC.top.periodic or BC.bottom.periodic: # periodic
-        # top boundary
-        j=Ny+1
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j-1,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,0,k].ravel()
-        s[q] = dy_end/dy_1
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,1,k].ravel()
-        s[q] = -dy_end/dy_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Bottom boundary
-        j=0
-        i=i_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j+1,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,Ny,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,Ny+1,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-    if (not BC.right.periodic) and (not BC.left.periodic):
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.right.b/2 + BC.right.a/dx_end).ravel()
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = (BC.right.b/2 - BC.right.a/dx_end).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.right.c).ravel()
-
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = -(BC.left.b/2 + BC.left.a/dx_1).ravel()
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.left.b/2 - BC.left.a/dx_1).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.left.c).ravel()
-    elif BC.right.periodic or BC.left.periodic: # periodic
-        # for a spherical coordinate system, the left and right boundaries (in the radial direction) cannot be periodic?
-        # or at least I cannot imagine them being periodic
-        # TODO: add a warning here; do the same for all radial boundaries
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[0,j,k].ravel()
-        s[q] = dx_end/dx_1
-        q = q[-1]+int_range[1,Ny*Nz]
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[1,j,k].ravel()
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx+1,j,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-    if (not BC.front.periodic) and (not BC.back.periodic):
-        # Front boundary
-        k=Nz+1
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = (BC.front.b/2 + BC.front.a/(rp*np.sin(thetap)*dz_end)).ravel()
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k-1].ravel()
-        s[q] = (BC.front.b/2 - BC.front.a/(rp*np.sin(thetap)*dz_end)).ravel()
-        BCRHS[G[i,j,k].ravel()] = (BC.front.c).ravel()
-
-        # Back boundary
-        k=0
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k+1].ravel()
-        s[q] = -(BC.back.b/2 + BC.back.a/(rp*np.sin(thetap)*dz_1)).ravel()
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = -(BC.back.b/2 - BC.back.a/(rp*np.sin(thetap)*dz_1)).ravel()
-        BCRHS[G[i,j,k].ravel()] = -(BC.back.c).ravel()
-    elif BC.front.periodic or BC.back.periodic: # periodic
-        # Front boundary
-        k=Nz+1
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k-1].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,0].ravel()
-        s[q] = dz_end/dz_1
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,1].ravel()
-        s[q] = -dz_end/dz_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-        # Back boundary
-        k=0
-        i = i_ind
-        j = j_ind
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k+1].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,Nz].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Nx*Ny)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,Nz+1].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
-
-    # Build the sparse matrix of the boundary conditions
-    q = q[-1]+1
-    BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
-                         shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
-    return BCMatrix, BCRHS
 
 def boundaryConditionsTerm(BC):
-    """
-    Generate the terms of the matrix equation representing the boundary conditions
+    """Build the sparse matrix and RHS vector for boundary conditions.
+
+    For each boundary face, the ghost-cell row in the system matrix
+    encodes the Robin BC:
+
+        ``a * (phi_G - phi_P) / d_CF + b * (phi_G + phi_P) / 2 = c``
+
+    which gives:
+
+        ``phi_G * (a/d + b/2) + phi_P * (-a/d + b/2) = c``
+
+    For periodic BCs the ghost cell equation is:
+
+        ``phi_G - phi_partner_interior = 0``
+
+    combined with a gradient-matching equation on the other side.
 
     Parameters
     ----------
-    BC : instance of subclass of BoundaryConditions
-        Boundary conditions
+    BC : BoundaryConditions
+        Boundary conditions.
 
     Returns
     -------
-    BCMatrix : csr_array
-        Matrix elements representing the boundary conditions
-    BCRHS : numpy.ndarray (1D)
-        RHS column vector representing the boundary conditions
-
+    BCMatrix : csr_array, shape (N_total, N_total)
+        Sparse matrix with BC equations in ghost-cell rows.
+    BCRHS : ndarray, shape (N_total,)
+        RHS vector with BC source terms in ghost-cell rows.
     """
-    
-    if issubclass(type(BC.domain), Grid1D):
-        return boundaryConditionsTerm1D(BC)
-    elif (type(BC.domain) is Grid2D) or (type(BC.domain) is CylindricalGrid2D):
-        return boundaryConditionsTerm2D(BC)
-    elif (type(BC.domain) is PolarGrid2D):
-        return boundaryConditionsTermPolar2D(BC)
-    elif (type(BC.domain) is Grid3D):
-        return boundaryConditionsTerm3D(BC)
-    elif (type(BC.domain) is CylindricalGrid3D):
-        return boundaryConditionsTermCylindrical3D(BC)
-    elif (type(BC.domain) is SphericalGrid3D):
-        return boundaryConditionsTermSpherical3D(BC)
+    mesh = BC.domain
+    N = mesh.num_cells
+    Ng = mesh.num_ghost_cells
+    N_total = N + Ng
+
+    # Pre-count: each non-periodic boundary face generates 2 entries
+    # (ghost-ghost diagonal and ghost-owner off-diagonal).
+    # Periodic faces generate more entries (up to 4 per face).
+    n_entries = 0
+    for tag, bf in BC.items():
+        face_indices = mesh.boundary_tags[tag]
+        nf = len(face_indices)
+        if nf == 0:
+            continue
+        # Both periodic and Robin need 2 entries per face
+        n_entries += 2 * nf
+
+    ii = np.empty(n_entries, dtype=int)
+    jj = np.empty(n_entries, dtype=int)
+    ss = np.empty(n_entries, dtype=float)
+    BCRHS = np.zeros(N_total)
+
+    q = 0  # write cursor
+
+    for tag, bf in BC.items():
+        face_indices = mesh.boundary_tags[tag]
+        nf = len(face_indices)
+        if nf == 0:
+            continue
+
+        owner_cells = mesh.owner[face_indices]
+        ghost_cells = mesh.neighbor[face_indices]
+        d = mesh.d_CF[face_indices]
+
+        if bf.periodic:
+            q = _periodic_bc_term(
+                ii,
+                jj,
+                ss,
+                BCRHS,
+                q,
+                mesh,
+                tag,
+                face_indices,
+                owner_cells,
+                ghost_cells,
+                d,
+            )
+        else:
+            # Robin BC in ghost-cell row:
+            #   phi_G * (a/d + b/2) + phi_P * (-a/d + b/2) = c
+            # We write this with a sign convention that keeps the
+            # diagonal coefficient positive.
+            # Apply boundary normal sign to match MATLAB FVTool convention
+            sign = mesh.boundary_normal_sign.get(tag, 1.0)
+            a = bf.a * sign
+            b = bf.b
+            c = bf.c
+            diag_coeff = a / d + b / 2.0  # coefficient of phi_G
+            off_coeff = -a / d + b / 2.0  # coefficient of phi_P
+
+            # ghost row, ghost column (diagonal)
+            ii[q : q + nf] = ghost_cells
+            jj[q : q + nf] = ghost_cells
+            ss[q : q + nf] = diag_coeff
+            q += nf
+
+            # ghost row, owner column (off-diagonal)
+            ii[q : q + nf] = ghost_cells
+            jj[q : q + nf] = owner_cells
+            ss[q : q + nf] = off_coeff
+            q += nf
+
+            # RHS
+            BCRHS[ghost_cells] = c
+
+    BCMatrix = csr_array((ss[:q], (ii[:q], jj[:q])), shape=(N_total, N_total))
+    return BCMatrix, BCRHS
+
+
+def _periodic_bc_term(
+    ii, jj, ss, BCRHS, q, mesh, tag, face_indices, owner_cells, ghost_cells, d
+):
+    """Write periodic BC entries into the COO arrays.
+
+    For a periodic pair (e.g. left/right), the ghost cell on one side
+    gets the value of the interior cell on the opposite side:
+
+        ``phi_G = phi_partner_owner``   =>   ``phi_G - phi_partner_owner = 0``
+
+    Both sides are processed independently, so the system is symmetric:
+    the left ghost equals the right interior and vice versa.
+
+    For structured meshes with matching face counts on both sides, faces
+    are paired index-by-index.
+    """
+    pairs = {
+        "left": "right",
+        "right": "left",
+        "bottom": "top",
+        "top": "bottom",
+        "back": "front",
+        "front": "back",
+    }
+    partner_tag = pairs.get(tag)
+    if partner_tag is None or partner_tag not in mesh.boundary_tags:
+        raise ValueError(f"Cannot find periodic partner for boundary tag '{tag}'.")
+
+    partner_face_indices = mesh.boundary_tags[partner_tag]
+    partner_owners = mesh.owner[partner_face_indices]
+    nf = len(face_indices)
+
+    # Ghost row: phi_G * 1 - phi_partner_owner * 1 = 0
+    ii[q : q + nf] = ghost_cells
+    jj[q : q + nf] = ghost_cells
+    ss[q : q + nf] = 1.0
+    q += nf
+
+    ii[q : q + nf] = ghost_cells
+    jj[q : q + nf] = partner_owners
+    ss[q : q + nf] = -1.0
+    q += nf
+
+    BCRHS[ghost_cells] = 0.0
+
+    return q
+
+
+# -----------------------------------------------------------------------
+#  Convenience: apply_BCs — update ghost cells on a CellVariable
+# -----------------------------------------------------------------------
+
+
+def apply_BCs(phi, BC):
+    """Update the ghost-cell values of a CellVariable from BCs.
+
+    Parameters
+    ----------
+    phi : CellVariable
+        The variable whose ghost cells will be updated in-place.
+    BC : BoundaryConditions
+        Boundary conditions.
+    """
+    mesh = BC.domain
+    N = mesh.num_cells
+    phi_int = phi._value[:N]
+
+    for tag, bf in BC.items():
+        face_indices = mesh.boundary_tags[tag]
+        if len(face_indices) == 0:
+            continue
+
+        owner_cells = mesh.owner[face_indices]
+        ghost_cells = mesh.neighbor[face_indices]
+        d = mesh.d_CF[face_indices]
+
+        if bf.periodic:
+            _apply_periodic_ghost(phi._value, mesh, tag, face_indices)
+        else:
+            # Apply boundary normal sign to match MATLAB FVTool convention
+            sign = mesh.boundary_normal_sign.get(tag, 1.0)
+            a = bf.a * sign
+            b = bf.b
+            c = bf.c
+            phi_P = phi._value[owner_cells]
+            denom = a / d + b / 2.0
+            numer = c - phi_P * (-a / d + b / 2.0)
+            phi._value[ghost_cells] = numer / denom

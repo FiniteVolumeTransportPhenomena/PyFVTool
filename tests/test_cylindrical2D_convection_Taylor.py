@@ -6,20 +6,20 @@
 
 
 # # Convection in 2D cylindrical geometry: Taylor dispersion
-# 
+#
 # *MW, 230906, 240503*
 
 # ## Introduction
-# 
+#
 # This Notebook presents a first finite-volume modelisation of the dispersion of a solute in a fluid in a thin, long cylindrical tube undergoing Poiseuille flow. This dispersion is described, theoretically and experimentally, in the seminal paper by Taylor [1]. Further background can be found in that paper.
-# 
+#
 # In the present Notebook, only the purely convective case is studied. A finite-volume solution of the corresponding partial differential equation is obtained using PyFVTool. This result is compared to the analytic expression obtained by Taylor [1].
-# 
+#
 # ## To do
-# 
+#
 # - Optimize numerical solution scheme and parameters
 # - Try and compare different FV discretizations of the convective term
-# 
+#
 # ## References
 # [1] G. I. Taylor. 'Dispersion of Soluble Matter in Solvent Flowing Slowly through a Tube.', *Proc. Royal Soc. A* **1953**, *219*, 186–203. https://doi.org/10.1098/rspa.1953.0139
 
@@ -30,7 +30,7 @@
 
 import numpy as np
 from typing import Any
-from numpy.typing import NDArray # type hints need numpy >= 1.21
+from numpy.typing import NDArray  # type hints need numpy >= 1.21
 
 
 # In[2]:
@@ -61,9 +61,13 @@ import pyfvtool as pf
 
 # calculate simple finite-volume integral over r
 def integral_dr(phi0):
-    v = phi0.cellvolume
-    c = phi0.value
-    return (v*c).sum(axis=0)
+    v = phi0.shaped_value if hasattr(phi0, "shaped_value") else phi0.value
+    cv = phi0.domain.cell_volumes
+    dims = getattr(phi0.domain, "dims", None)
+    if dims is not None and len(dims) > 1:
+        cv = cv.reshape(tuple(int(d) for d in dims))
+        v = v.reshape(tuple(int(d) for d in dims)) if v.ndim == 1 else v
+    return (cv * v).sum(axis=0)
 
 
 # ### Functions for evaluation of the analytic expression by Taylor ('A3')
@@ -72,25 +76,26 @@ def integral_dr(phi0):
 
 
 # analytic expression from Taylor 1953
-def TaylorA3(x: float, t: float, 
-             X: float, C_0: float, u_0: float) -> float:
-    assert (t >= X/u_0), 't < X/u_0 not implemented'
+def TaylorA3(x: float, t: float, X: float, C_0: float, u_0: float) -> float:
+    assert t >= X / u_0, "t < X/u_0 not implemented"
     if (x >= 0) and (x < X):
-        C_m = C_0 * x/(u_0*t)
-    elif (x >= X) and (x < u_0*t):
-        C_m = C_0 * X/(u_0*t)
-    elif (x >= u_0*t) and (x < u_0*t + X):
-        C_m = C_0*((X + u_0*t - x)/(u_0*t))
+        C_m = C_0 * x / (u_0 * t)
+    elif (x >= X) and (x < u_0 * t):
+        C_m = C_0 * X / (u_0 * t)
+    elif (x >= u_0 * t) and (x < u_0 * t + X):
+        C_m = C_0 * ((X + u_0 * t - x) / (u_0 * t))
     else:
         C_m = 0.0
     return C_m
-           
-def TaylorA3_vec(xvec: NDArray[(Any,)], t: float, 
-                  X: float, C_0: float, u_0: float) -> NDArray[(Any,)]:
+
+
+def TaylorA3_vec(
+    xvec: NDArray[(Any,)], t: float, X: float, C_0: float, u_0: float
+) -> NDArray[(Any,)]:
     C_m_vec = np.zeros_like(xvec)
     for ix, x in enumerate(xvec):
         C_m_vec[ix] = TaylorA3(x, t, X, C_0, u_0)
-    return C_m_vec  
+    return C_m_vec
 
 
 # ## Finite-volume scheme with PyFVTool
@@ -100,9 +105,9 @@ def TaylorA3_vec(xvec: NDArray[(Any,)], t: float,
 # In[7]:
 
 
-Lr = 7.5e-05 # [m] radius of cylinder
-Lz = 0.3 # [m] length of cylinder
-umax = 2*9.4314e-3 # [m s^-1] max flow velocity = 2 time average flow velocity
+Lr = 7.5e-05  # [m] radius of cylinder
+Lz = 0.3  # [m] length of cylinder
+umax = 2 * 9.4314e-3  # [m s^-1] max flow velocity = 2 time average flow velocity
 
 
 # In[8]:
@@ -125,7 +130,7 @@ loadix1 = 40
 
 
 # timestep parameters
-deltat = 0.01 # [s] per time step
+deltat = 0.01  # [s] per time step
 
 
 # In[11]:
@@ -157,13 +162,13 @@ zz = msh.facecenters.z
 # In[14]:
 
 
-uu =  umax*(1 - (rr**2)/(Lr**2)) # does not depend on zz
+uu = umax * (1 - (rr**2) / (Lr**2))  # does not depend on zz
 
 
 # In[15]:
 
 
-u =  pf.FaceVariable(msh, 1.0)
+u = pf.FaceVariable(msh, 1.0)
 
 
 # In[16]:
@@ -178,12 +183,12 @@ u.zvalue[:] = uu[:, np.newaxis]
 
 # for i in [1, 10, -1]:
 #     plt.plot(rr*1e6, u.zvalue[:, i])
-# plt.xlabel('$r$ / µm') 
+# plt.xlabel('$r$ / µm')
 # plt.ylabel('$u_z(r)$ / m s$^{-1}$');
 
 
 # #### Solution variable
-# 
+#
 # *Standard 'no flux' boundary conditions. The convective flow field, however, will still transport matter out of the calculation domain.*
 
 # In[18]:
@@ -197,18 +202,18 @@ phi = pf.CellVariable(msh, 0.0)
 # In[19]:
 
 
-t=0.
+t = 0.0
 
 
 # In[20]:
 
-assert not phi.value.modified # test modified flag    
+assert not phi.value.modified  # test modified flag
 
 # initial condition
 for i in range(loadix0, loadix1):
-    phi.value[:, i] = 1.0
+    phi.shaped_value[:, i] = 1.0
 
-assert phi.value.modified # test modified flag
+assert phi.value.modified  # test modified flag
 
 # In[21]:
 
@@ -239,13 +244,12 @@ def step_solver(Nstp):
     global t
 
     # convectionterm = pf.convectionTerm(u) # really ugly results?
-    convectionterm = pf.convectionUpwindTerm(u) # numerical diffusion
+    convectionterm = pf.convectionUpwindTerm(u)  # numerical diffusion
 
     for i in range(Nstp):
         # Transient term needs to be re-evaluated at each time step
         transientterm = pf.transientTerm(phi, deltat, 1.0)
-        eqnterms = [transientterm,
-                    convectionterm]
+        eqnterms = [transientterm, convectionterm]
         pf.solvePDE(phi, eqnterms)
         t += deltat
 
@@ -296,7 +300,7 @@ print(t, initInt, phi.domainIntegral())
 
 
 # ## Comparison between the finite-volume result and the analytic solution
-# 
+#
 # Taylor [1] considers the radially averaged concentration profile along the tube as a function of time. We compare that to the radially integrated finite-volume result. (The ratio between the radial integral and radial average is simply constant).
 
 # In[32]:
@@ -304,7 +308,7 @@ print(t, initInt, phi.domainIntegral())
 
 DX = phi.domain.facecenters.z[loadix0]
 X = phi.domain.facecenters.z[loadix1] - DX
-C_0 = phiprofs[0][1][(loadix0+loadix1)//2] # slot#0 contains initial condition
+C_0 = phiprofs[0][1][(loadix0 + loadix1) // 2]  # slot#0 contains initial condition
 
 
 # In[33]:
@@ -318,12 +322,12 @@ zzz = np.linspace(0, Lz, 500)
 
 for ix, (tprof, phiprof) in enumerate(phiprofs):
     if ix == 2:
-        lbl1 = 'FVM'
-        lbl2 = 'analytic'
+        lbl1 = "FVM"
+        lbl2 = "analytic"
     else:
         lbl1 = None
         lbl2 = None
-    # plt.plot(phi.domain.cellcenters.z, phiprof, 
+    # plt.plot(phi.domain.cellcenters.z, phiprof,
     #          label=lbl1)
     # if tprof >= X/umax:
     #     plt.plot(zzz, TaylorA3_vec(zzz-DX, tprof, X, C_0, umax),
@@ -341,8 +345,8 @@ for ix, (tprof, phiprof) in enumerate(phiprofs):
 
 (tprof, phiprof) = phiprofs[-1]
 z_num, c_num = phi.domain.cellcenters.z, phiprof
-c_an_z_num = TaylorA3_vec(z_num-DX, tprof, X, C_0, umax)
-norm_err = (c_an_z_num - c_num)/c_an_z_num.max()
+c_an_z_num = TaylorA3_vec(z_num - DX, tprof, X, C_0, umax)
+norm_err = (c_an_z_num - c_num) / c_an_z_num.max()
 
 
 # In[36]:
@@ -354,10 +358,11 @@ norm_err = (c_an_z_num - c_num)/c_an_z_num.max()
 # plt.ylim(-0.01,0.01)
 
 
-#%% pytest
+# %% pytest
+
 
 def test_success():
     # very basic benchmark for testing integrity of Notebook and calculations
     # checks if the normalized error is below a certain threshold (0.15% of max)
     # over a range of z (between 1/3 and 1/2 of full scale)
-    assert np.all(np.abs(norm_err[Nz//3:Nz//2]) < 0.0015)
+    assert np.all(np.abs(norm_err[Nz // 3 : Nz // 2]) < 0.0015)

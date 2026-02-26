@@ -1,581 +1,250 @@
-"""This module contains functions for averaging node values to face values.
+"""Cell-to-face averaging functions.
 
-functions:
-    cell_size_array
-    
-    linearMean - linear interpolation of adjacent node values to face positions
-    
-    arithmeticMean - interpolate node values to face values via arithmetic averaging
-    
-    geometricMean - interpolate node values to face values via geometric averaging
+All functions take a :class:`CellVariable` (and optionally a
+:class:`FaceVariable` for upwind/TVD) and return a :class:`FaceVariable`
+with values interpolated to face centres.
 
-    harmonicMean - interpolate node values to face values via harmonic averaging
-    
-    upwindMean - interpolate node values to face value based on local background velocity at face position
-    
-    tvdMean - NotImplemented
+Functions use the connectivity-based representation (``owner``,
+``neighbor``, ``face_interpolation_weight``) so a single code path
+handles all mesh types and dimensions.
+
+Functions
+---------
+linearMean : linear (distance-weighted) interpolation
+arithmeticMean : alias for linearMean
+geometricMean : geometric (log-linear) interpolation
+harmonicMean : harmonic interpolation
+upwindMean : upwind (donor-cell) interpolation
+tvdMean : TVD interpolation with flux limiter
+
+Notes
+-----
+Ghost-cell values in ``phi._value`` **must** be up-to-date before
+calling any averaging function.  Use :func:`boundary.apply_BCs` or
+:func:`boundary.cellValuesWithBoundaries` first.
 """
+
 import numpy as np
 
-
-from .mesh import MeshStructure
-from .mesh import Grid1D, Grid2D, Grid3D
 from .cell import CellVariable
 from .face import FaceVariable
 
-def cell_size_array(m: MeshStructure):
-    if issubclass(type(m), Grid1D):
-        dx = m.cellsize._x
-        return dx
-    elif issubclass(type(m), Grid2D):
-        dx = m.cellsize._x[:,np.newaxis]
-        dy = m.cellsize._y[np.newaxis,:]
-        return dx, dy
-    elif issubclass(type(m), Grid3D):
-        dx = m.cellsize._x[:,np.newaxis,np.newaxis]
-        dy = m.cellsize._y[np.newaxis,:,np.newaxis]
-        dz = m.cellsize._z[np.newaxis,np.newaxis,:]
-        return dx, dy, dz
 
-    
 def linearMean(phi: CellVariable) -> FaceVariable:
-    """
-    Linearly interpolate a mesh-variable defined on mesh-nodes to mesh-faces.   
-    
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the value on the cell faces via linear interpolation, for a uniform Mesh.  
+    """Linearly interpolate cell values to face centres.
+
+    Uses distance-based weighting:
+
+        phi_f = w * phi[owner] + (1 - w) * phi[neighbor]
+
+    where ``w = d_fF / d_CF`` (the face interpolation weight stored on
+    the mesh).
 
     Parameters
     ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
+    phi : CellVariable
+        Cell-centred field.  Ghost-cell values must be current.
 
     Returns
     -------
-    out : {FaceVariable object}
-        Interpolated node values at face positions
+    FaceVariable
+        Interpolated values at face centres.
 
     See Also
     --------
-    arithmeticMean : interpolate node values to face values via arithmetic averaging of node values
-    geometricMean : interpolate node values to face values via geometric averaging of node values
-    harmonicMean : interpolate node values to face values via harmonic averaging of node values
-
-    Notes
-    -----
-
-    Examples
-    --------
-    >>>     
-    
-    """    
-    if issubclass(type(phi.domain), Grid1D):
-        dx = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-                     (dx[1:]*phi._value[0:-1]+dx[0:-1] *
-                      phi._value[1:])/(dx[1:]+dx[0:-1]),
-                     np.array([]),
-                     np.array([]))
-    elif issubclass(type(phi.domain), Grid2D):
-        dx, dy = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-                     (dx[1:]*phi._value[0:-1, 1:-1]+dx[0:-1] *
-                      phi._value[1:, 1:-1])/(dx[1:]+dx[0:-1]),
-                     (dy[:,1:]*phi._value[1:-1, 0:-1]+dy[:,0:-1] *
-                      phi._value[1:-1, 1:])/(dy[:,1:]+dy[:,0:-1]),
-                     np.array([]))
-    elif issubclass(type(phi.domain), Grid3D):
-        dx, dy, dz = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-                     (dx[1:]*phi._value[0:-1, 1:-1, 1:-1]+dx[0:-1] *
-                      phi._value[1:, 1:-1, 1:-1])/(dx[1:]+dx[0:-1]),
-                     (dy[:,1:]*phi._value[1:-1, 0:-1, 1:-1]+dy[:,0:-1] *
-                      phi._value[1:-1, 1:, 1:-1])/(dy[:,0:-1]+dy[:,1:]),
-                     (dz[:,:,1:]*phi._value[1:-1, 1:-1, 0:-1]+dz[:,:,0:-1] *
-                      phi._value[1:-1, 1:-1, 1:])/(dz[:,:,0:-1]+dz[:,:,1:]))
-
-    
-def arithmeticMean(phi: CellVariable):
+    arithmeticMean, geometricMean, harmonicMean
     """
-    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by arithmetic averaging adjacent node values.   
-    
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the arithmetic average on the cell faces, for a uniform Mesh. 
-            phi[face] = 1/#_adjacent_nodes * \\sum(phi[adjacent nodes]) 
-                --> 
-            phi[face] = 0.5 * (phi[face-0.5*dx] + phi[face+0.5*dx])
-                --> 
-            phi[face] =  (cell_width[-]*phi[-] + cell_width[+]*phi[+])/(cell_width[-]+cell_width[+])
-            
+    m = phi.domain
+    w = m.face_interpolation_weight  # (num_faces,)
+    phi_O = phi._value[m.owner]  # owner values
+    phi_N = phi._value[m.neighbor]  # neighbor values
+    phi_f = w * phi_O + (1.0 - w) * phi_N
+    return FaceVariable(m, phi_f)
+
+
+def arithmeticMean(phi: CellVariable) -> FaceVariable:
+    """Interpolate cell values to faces via arithmetic (distance-weighted) mean.
+
+    This is identical to :func:`linearMean` — the arithmetic mean
+    weighted by cell sizes reduces to distance-weighted linear
+    interpolation on a finite-volume mesh.
 
     Parameters
     ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
+    phi : CellVariable
+        Cell-centred field.  Ghost-cell values must be current.
 
     Returns
     -------
-    out : {FaceVariable object}
-        Arithmetic average of node values
+    FaceVariable
+        Interpolated values at face centres.
 
     See Also
     --------
-    linearMean : estimate node values to face values via linear-interpolation of node values
-    geometricMean : interpolate node values to face values via geometric averaging of node values
-    harmonicMean : interpolate node values to face values via harmonic averaging of node values
-
-    Notes
-    -----
-    The arithmetic mean emphasizes (is sensitive to) outliers with large values.
-    
-    Weighting the average by the cell length in the appropriate dimension is necessary for multi-dimensional grids, and is a necessary step in the extension to non-uniform grid spacing in 1-dimension. 
-
-    Examples
-    --------
-    >>>     
-    
+    linearMean, geometricMean, harmonicMean
     """
-    if issubclass(type(phi.domain), Grid1D):
-        dx = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            (dx[0:-1]*phi._value[0:-1]+dx[1:]*phi._value[1:])/(dx[1:]+dx[0:-1]),
-            np.array([]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid2D):
-        dx, dy = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            (dx[0:-1]*phi._value[0:-1,1:-1]+dx[1:]*phi._value[1:,1:-1])/(dx[1:]+dx[0:-1]),
-            (dy[:,0:-1]*phi._value[1:-1,0:-1]+dy[:,1:]*phi._value[1:-1,1:])/(dy[:,1:]+dy[:,0:-1]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid3D):
-        dx, dy, dz = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            (dx[0:-1]*phi._value[0:-1,1:-1,1:-1]+dx[1:]*phi._value[1:,1:-1,1:-1])/(dx[1:]+dx[0:-1]),
-            (dy[:,0:-1]*phi._value[1:-1,0:-1,1:-1]+dy[:,1:]*phi._value[1:-1,1:,1:-1])/(dy[:,0:-1]+dy[:,1:]),
-            (dz[:,:,0:-1]*phi._value[1:-1,1:-1,0:-1]+dz[:,:,1:]*phi._value[1:-1,1:-1,1:])/(dz[:,:,0:-1]+dz[:,:,1:]))
+    return linearMean(phi)
 
-    
-def geometricMean(phi: CellVariable):
-    """
-    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by geometric averaging adjacent node values.   
-    
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the geometric average on the cell faces, for a uniform Mesh. 
-            phi[face] = ( \\prod(phi_nodes) )^(1/#_adjacent_nodes)
-                --> 
-            phi[face] = (phi[face-0.5*dx]*phi[face+0.5*dx])^(0.5)
-                --> 
-            phi[face] =  exp(
-                    ( cell_width[-] * ln(phi[-]) + cell_width[+] * ln(phi[+]) ) / ( cell_width[-] + cell_width[+] )
-                )
+
+def geometricMean(phi: CellVariable) -> FaceVariable:
+    """Interpolate cell values to faces via geometric mean.
+
+    .. math::
+
+        \\phi_f = \\exp\\bigl(w \\ln \\phi_O + (1-w) \\ln \\phi_N\\bigr)
+
+    where :math:`w` is the face interpolation weight.
+
+    Values equal to zero are handled specially: if either owner or
+    neighbor value is zero the face value is set to zero.
 
     Parameters
     ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
+    phi : CellVariable
+        Cell-centred field.  Ghost-cell values must be current.
+        All values should be non-negative.
 
     Returns
     -------
-    out : {FaceVariable object}
-        Geometric mean of node values at face positions
+    FaceVariable
+        Geometric-mean interpolated values at face centres.
 
     See Also
     --------
-    linearMean : estimate node values to face values via linear-interpolation of node values    
-    arithmeticMean : interpolate node values to face values via arithmetic averaging of node values
-    harmonicMean : interpolate node values to face values via harmonic averaging of node values
-
-    Notes
-    -----
-    The geometric mean is equivalent to the arithmetic mean on a log-scale. 
-                phi_face = ( \\prod(phi_nodes) )^(1/N_nodes)
-                         = exp( ln( arithmeticMean(...) ) )
-
-    It is always intermediate to the harmonic or arithmetic means, and tends to the central value of th eset by 'weight'.
-
-    Weighting the average by the cell length in the appropriate dimension is necessary for multi-dimensional grids, and is a necessary step in the extension to non-uniform grid spacing in 1-dimension. 
-
-    Examples
-    --------
-    >>>     
-    
+    linearMean, harmonicMean
     """
-    if issubclass(type(phi.domain), Grid1D):
-        dx = cell_size_array(phi.domain)
-        n= phi.domain.dims[0]
-        phix=np.zeros(n+1)
-        for i in np.arange(0,n+1):
-            if phi._value[i]==0.0 or phi._value[i+1]==0.0:
-                phix[i]=0.0
-            else:
-                phix[i]=np.exp((dx[i]*np.log(phi._value[i])+dx[i+1]*np.log(phi._value[i+1]))/(dx[i+1]+dx[i]))
-        return FaceVariable(phi.domain,
-            phix,
-            np.array([]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid2D):
-        dx, dy = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            np.exp((dx[0:-1]*np.log(phi._value[0:-1,1:-1])+dx[1:]*np.log(phi._value[1:,1:-1]))/(dx[1:]+dx[0:-1])),
-            np.exp((dy[:,0:-1]*np.log(phi._value[1:-1,0:-1])+dy[:,1:]*np.log(phi._value[1:-1,1:]))/(dy[:,1:]+dy[:,0:-1])),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid3D):
-        dx, dy, dz = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            np.exp((dx[0:-1]*np.log(phi._value[0:-1,1:-1,1:-1])+dx[1:]*np.log(phi._value[1:,1:-1,1:-1]))/(dx[1:]+dx[0:-1])),
-            np.exp((dy[:,0:-1]*np.log(phi._value[1:-1,0:-1,1:-1])+dy[:,1:]*np.log(phi._value[1:-1,1:,1:-1]))/(dy[:,0:-1]+dy[:,1:])),
-            np.exp((dz[:,:,0:-1]*np.log(phi._value[1:-1,1:-1,0:-1])+dz[:,:,1:]*np.log(phi._value[1:-1,1:-1,1:]))/(dz[:,:,0:-1]+dz[:,:,1:])))
-    
-    
+    m = phi.domain
+    w = m.face_interpolation_weight
+    phi_O = phi._value[m.owner]
+    phi_N = phi._value[m.neighbor]
 
-def harmonicMean(phi: CellVariable):
-    """
-    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by harmonic averaging adjacent node values.   
-    
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the harmonic average on the cell faces, for a uniform Mesh. 
-            phi[face] = \\sum(1.0/phi_nodes)^(-1)
-                --> 
-            phi[face] = (1/phi[face-0.5*dx] + 1/phi[face+0.5*dx])^(-1)
-                --> 
-            phi[face] = ( cell_width[-] + cell_width[+] ) / (  cell_width[-]/phi[-] + cell_width[+]/phi[+]  ) 
+    # Mask out zeros to avoid log(0)
+    nonzero = (phi_O != 0.0) & (phi_N != 0.0)
+    phi_f = np.zeros(m.num_faces)
+    # Safe log only where both values are nonzero
+    phi_f[nonzero] = np.exp(
+        w[nonzero] * np.log(phi_O[nonzero])
+        + (1.0 - w[nonzero]) * np.log(phi_N[nonzero])
+    )
+    return FaceVariable(m, phi_f)
+
+
+def harmonicMean(phi: CellVariable) -> FaceVariable:
+    """Interpolate cell values to faces via harmonic mean.
+
+    .. math::
+
+        \\phi_f = \\frac{1}{w / \\phi_O + (1-w) / \\phi_N}
+
+    where :math:`w` is the face interpolation weight.
+
+    Values equal to zero are handled specially: if either owner or
+    neighbor value is zero the face value is set to zero.
 
     Parameters
     ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
+    phi : CellVariable
+        Cell-centred field.  Ghost-cell values must be current.
 
     Returns
     -------
-    out : {FaceVariable object}
-        Harmonic average of node values
+    FaceVariable
+        Harmonic-mean interpolated values at face centres.
 
     See Also
     --------
-    linearMean : estimate node values to face values via linear-interpolation of node values    
-    geometricMean : interpolate node values to face values via geometric averaging of node values
-    arithmeticMean : interpolate node values to face values via arithmetic averaging of node values
+    linearMean, geometricMean
 
     Notes
     -----
-    The harmonic mean emphasizes (is sensitive to) outliers with small values.
-
-    Examples
-    --------
-    >>>     
-    
+    The harmonic mean is sensitive to small values and is the
+    preferred averaging for diffusion coefficients with discontinuous
+    material properties.
     """
-    
-    # calculates the average values of a cell variable. The output is a
-    # face variable
+    m = phi.domain
+    w = m.face_interpolation_weight
+    phi_O = phi._value[m.owner]
+    phi_N = phi._value[m.neighbor]
 
-    if issubclass(type(phi.domain), Grid1D):
-        dx = cell_size_array(phi.domain)
-        n=phi.domain.dims[0]
-        phix=np.zeros(n+1)
-        for i in np.arange(0,n+1):
-            if phi._value[i]==0.0 or phi._value[i+1]==0.0:
-                phix[i]=0.0
-            else:
-                phix[i]=(dx[i+1]+dx[i])/(dx[i+1]/phi._value[i+1]+dx[i]/phi._value[i])
-        return FaceVariable(phi.domain,
-            phix,
-            np.array([]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid2D):
-        dx, dy = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            phi._value[1:,1:-1]*phi._value[0:-1,1:-1]*(dx[1:]+dx[0:-1])/(dx[1:]*phi._value[0:-1,1:-1]+dx[0:-1]*phi._value[1:,1:-1]),
-            phi._value[1:-1,1:]*phi._value[1:-1,0:-1]*(dy[:,1:]+dy[:,0:-1])/(dy[:,1:]*phi._value[1:-1,0:-1]+dy[:,0:-1]*phi._value[1:-1,1:]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid3D):
-        dx, dy, dz = cell_size_array(phi.domain)
-        return FaceVariable(phi.domain,
-            phi._value[1:,1:-1,1:-1]*phi._value[0:-1,1:-1,1:-1]*(dx[1:]+dx[0:-1])/(dx[1:]*phi._value[0:-1,1:-1,1:-1]+dx[0:-1]*phi._value[1:,1:-1,1:-1]),
-            phi._value[1:-1,1:,1:-1]*phi._value[1:-1,0:-1,1:-1]*(dy[:,0:-1]+dy[:,1:])/(dy[:,1:]*phi._value[1:-1,0:-1,1:-1]+dy[:,0:-1]*phi._value[1:-1,1:,1:-1]),
-            phi._value[1:-1,1:-1,1:]*phi._value[1:-1,1:-1,0:-1]*(dz[:,:,0:-1]+dz[:,:,1:])/(dz[:,:,1:]*phi._value[1:-1,1:-1,0:-1]+dz[:,:,0:-1]*phi._value[1:-1,1:-1,1:]))
-    
-    
-def upwindMean(phi: CellVariable, u: FaceVariable):
-    """
-    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by matching the node value carried by the flow.   
-    
-    This function gets the value of the field variable phi defined over the MeshStructure and determines the value on the cell faces by applying a zeroeth order hold in the direction of the flow. 
-            phi[face] = phi[adjacent node from flow]
+    # Mask out zeros to avoid division by zero
+    nonzero = (phi_O != 0.0) & (phi_N != 0.0)
+    phi_f = np.zeros(m.num_faces)
+    phi_f[nonzero] = 1.0 / (
+        w[nonzero] / phi_O[nonzero] + (1.0 - w[nonzero]) / phi_N[nonzero]
+    )
+    return FaceVariable(m, phi_f)
+
+
+def upwindMean(phi: CellVariable, u: FaceVariable) -> FaceVariable:
+    """Upwind (donor-cell) interpolation based on face flux direction.
+
+    For each face, the value is taken from the cell that the flow is
+    coming *from*:
+
+    * If ``u[face] > 0``: flow goes owner -> neighbor, so ``phi_f = phi[owner]``
+    * If ``u[face] < 0``: flow goes neighbor -> owner, so ``phi_f = phi[neighbor]``
+    * If ``u[face] == 0``: linear average ``0.5 * (phi[owner] + phi[neighbor])``
 
     Parameters
     ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
-        
-    u : {FaceVariable object}
-        Flow-velocity at mesh-faces    
+    phi : CellVariable
+        Cell-centred field.  Ghost-cell values must be current.
+    u : FaceVariable
+        Face velocity (or flux).  Positive direction is owner -> neighbor.
 
     Returns
     -------
-    out : {FaceVariable object}
-        Zeroeth order hold in flow direction
+    FaceVariable
+        Upwind-interpolated values at face centres.
 
     See Also
     --------
-    linearMean : estimate node values to face values via linear-interpolation of node values    
-    arithmeticMean : interpolate node values to face values via arithmetic averaging of node values    
-    geometricMean : interpolate node values to face values via geometric averaging of node values
-    harmonicMean : interpolate node values to face values via harmonic averaging of node values
-
-    Notes
-    -----
-    The upwind mean determines the direction of information flow based on the current local value of the background flow.
-
-    Examples
-    --------
-    >>>     
-    
-    """    
-    
-    # calculates the average values of a cell variable. The output is a
-    # face variable
-    # TBD: needs to be fixed. It must be a linear mean, adjusted for velocity
-    # currently, it assumes a uniform mesh.
-    phi_tmp = np.copy(phi._value)
-    if issubclass(type(phi.domain), Grid1D):
-        ux = u._xvalue
-        # assign the value of the left boundary to the left ghost cell
-        phi_tmp[0] = 0.5*(phi._value[0]+phi._value[1])
-        # assign the value of the right boundary to the right ghost cell
-        phi_tmp[-1] = 0.5*(phi._value[-1]+phi._value[-2])
-        return FaceVariable(phi.domain,
-            (ux>0.0)*phi_tmp[0:-1]+(ux<0.0)*phi_tmp[1:]+
-            0.5*(ux==0)*(phi._value[0:-1]+phi._value[1:]),
-            np.array([]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid2D):
-        ux = u._xvalue
-        uy = u._yvalue
-        # assign the value of the left boundary to the left ghost cells
-        phi_tmp[0,:] = 0.5*(phi._value[0,:]+phi._value[1,:])
-        # assign the value of the right boundary to the right ghost cells
-        phi_tmp[-1,:] = 0.5*(phi._value[-1,:]+phi._value[-2,:])
-        # assign the value of the bottom boundary to the bottom ghost cells
-        phi_tmp[:,0] = 0.5*(phi._value[:,0]+phi._value[:,1])
-        # assign the value of the top boundary to the top ghost cells
-        phi_tmp[:,-1] = 0.5*(phi._value[:,-1]+phi._value[:,-2])
-        return FaceVariable(phi.domain,
-            (ux>0.0)*phi_tmp[0:-1,1:-1]+
-            (ux<0.0)*phi_tmp[1:,1:-1]+
-            0.5*(ux==0.0)*(phi._value[0:-1,1:-1]+phi._value[1:,1:-1]),
-            (uy>0.0)*phi_tmp[1:-1,0:-1]+
-            (uy<0.0)*phi_tmp[1:-1,1:]+
-            0.5*(uy==0.0)*(phi._value[1:-1,0:-1]+phi._value[1:-1,1:]),
-            np.array([]))
-    elif issubclass(type(phi.domain), Grid3D):
-        ux = u._xvalue
-        uy = u._yvalue
-        uz = u._zvalue
-        # assign the value of the left boundary to the left ghost cells
-        phi_tmp[0,:,:] = 0.5*(phi._value[0,:,:]+phi._value[1,:,:])
-        # assign the value of the right boundary to the right ghost cells
-        phi_tmp[-1,:,:] = 0.5*(phi._value[-1,:,:]+phi._value[-2,:,:])
-        # assign the value of the bottom boundary to the bottom ghost cells
-        phi_tmp[:,0,:] = 0.5*(phi._value[:,0,:]+phi._value[:,1,:])
-        # assign the value of the top boundary to the top ghost cells
-        phi_tmp[:,-1,:] = 0.5*(phi._value[:,-1,:]+phi._value[:,-2,:])
-        # assign the value of the back boundary to the back ghost cells
-        phi_tmp[:,:,0] = 0.5*(phi._value[:,:,0]+phi._value[:,:,1])
-        # assign the value of the front boundary to the front ghost cells
-        phi_tmp[:,:,-1] = 0.5*(phi._value[:,:,-1]+phi._value[:,:,-2])
-        return FaceVariable(phi.domain,
-            (ux>0.0)*phi_tmp[0:-1,1:-1,1:-1]+
-            (ux<0.0)*phi_tmp[1:,1:-1,1:-1]+
-            0.5*(ux==0.0)*(phi._value[0:-1,1:-1,1:-1]+phi._value[1:,1:-1,1:-1]),
-            (uy>0.0)*phi_tmp[1:-1,0:-1,1:-1]+
-            (uy<0.0)*phi_tmp[1:-1,1:,1:-1]+
-            0.5*(uy==0.0)*(phi._value[1:-1,0:-1,1:-1]+phi._value[1:-1,1:,1:-1]),
-            (uz>0.0)*phi_tmp[1:-1,1:-1,0:-1]+
-            (uz<0.0)*phi_tmp[1:-1,1:-1,1:]+
-            0.5*(uz==0.0)*(phi._value[1:-1,1:-1,0:-1]+phi._value[1:-1,1:-1,1:]))
-
-
-# ================== TVD averaging scheme ==================
-def tvdMean(phi: CellVariable, u: FaceVariable, FL):
+    linearMean, tvdMean
     """
-    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by matching the node value carried by the flow on a grid with a Total Variation Diminishing (TVD) discretization.   
-    
-    This function gets the value of the field variable phi defined over the MeshStructure and determines the value on the cell faces by applying a flow-weighted average / including a linearization of the local flow (first order hold in the direction of the flow). 
+    m = phi.domain
+    phi_O = phi._value[m.owner]
+    phi_N = phi._value[m.neighbor]
+    uf = u._value
+
+    phi_f = np.where(
+        uf > 0.0,
+        phi_O,
+        np.where(
+            uf < 0.0,
+            phi_N,
+            0.5 * (phi_O + phi_N),
+        ),
+    )
+    return FaceVariable(m, phi_f)
+
+
+def tvdMean(phi: CellVariable, u: FaceVariable, FL) -> FaceVariable:
+    """TVD (Total Variation Diminishing) interpolation with flux limiter.
+
+    Applies second-order upwind-biased interpolation with a flux
+    limiter to suppress oscillations near discontinuities.
 
     Parameters
     ----------
-    phi : {CellVariable object}
-        Variable defined at mesh-nodes
-        
-    u : {FaceVariable object}
-        Flow-velocity at mesh-faces    
+    phi : CellVariable
+        Cell-centred field.  Ghost-cell values must be current.
+    u : FaceVariable
+        Face velocity (or flux).  Positive direction is owner -> neighbor.
+    FL : callable
+        Flux limiter function ``FL(r) -> limiter_value``.  Common
+        choices: Van Leer, superbee, minmod, etc.  Available from
+        :func:`utilities.fluxLimiter`.
 
     Returns
     -------
-    out : {FaceVariable object}
-        Interpolated value of phi at the mesh-faces
+    FaceVariable
+        TVD-interpolated values at face centres.
 
     See Also
     --------
-    upwindMean :  determines the direction of information flow based on the current local value of the background flow.
-
-    Notes
-    -----
-    The TVD mean determines the direction of information flow based on a local linearization of the current local value of the background velocity. s. https://en.wikipedia.org/wiki/Total_variation_diminishing
-
-    Examples
-    --------
-    >>>     
-    
-    """        
-    raise Exception("tvdMean is not implemented yet!")
-#     # u is a face variable
-#     # phi is a cell variable
-
-#     # a def to avoid division by zero
-#     eps1 = 1.0e-20
-#     fsign(phi_in) = (abs(phi_in)>=eps1)*phi_in+eps1*(phi_in==0.0)+eps1*(abs(phi_in)<eps1)*sign(phi_in)
-
-
-
-#     if issubclass(type(phi.domain), Mesh1D):
-#         # extract data from the mesh structure
-#         Nx = u.domain.dims[0]
-#         dx = 0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
-#         phi_p = np.zeros(Float64, Nx+1)
-#         phi_m = np.zeros(Float64, Nx+1)
-
-#         # extract the velocity data
-#         ux = u._xvalue
-
-#         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-#         dphi_p = (phi._value[1:Nx+2]-phi._value[0:Nx+1])/dx
-#         rp = dphi_p[0:-1]/fsign(dphi_p[1:])
-#         phi_p[1:Nx+1] = phi._value[1:Nx+1]+0.5*FL(rp)*(phi._value[2:Nx+2]-phi._value[1:Nx+1])
-#         phi_p[0] = (phi._value[0]+phi._value[2])/2.0 # left boundary
-
-#         # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
-#         rm = dphi_p[1:]/fsign(dphi_p[0:-1])
-#         phi_m[0:Nx] = phi._value[1:Nx+1]+0.5*FL(rm)*(phi._value[0:Nx]-phi._value[1:Nx+1])
-#         phi_m[Nx+1] = (phi._value[-1]+phi._value[-1])/2.0 # right boundary
-
-#         return FaceVariable(phi.domain,
-#             (ux>0.0)*phi_p+(ux<0.0)*phi_m+
-#             0.5*(ux==0)*(phi._value[0:-1]+phi._value[1:]),
-#             np.array([]),
-#             np.array([]))
-#     elif issubclass(type(phi.domain), Grid2D):
-#         # extract data from the mesh structure
-#         Nx = u.domain.dims[0]
-#         Ny = u.domain.dims[2]
-#         dx=0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
-#         dy=np.zeros( 1, Ny+1)
-#         dy[:]=0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])
-#         phi_p = np.zeros(Float64, Nx+1)
-#         phi_m = np.zeros(Float64, Nx+1)
-#         phiX_p = np.zeros(Float64, Nx+1, Ny)
-#         phiX_m = np.zeros(Float64, Nx+1,Ny)
-#         phiY_p = np.zeros(Float64, Nx,Ny+1)
-#         phiY_m = np.zeros(Float64, Nx,Ny+1)
-
-#         # extract the velocity data
-#         ux = u._xvalue
-#         uy = u._yvalue
-
-#         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-#         # x direction
-#         dphiX_p = (phi._value[1:Nx+2, 1:Ny+1]-phi._value[0:Nx+1, 1:Ny+1])/dx
-#         rX_p = dphiX_p[0:-1,:]/fsign(dphiX_p[1:,:])
-#         phiX_p[1:Nx+1,:] = phi._value[1:Nx+1, 1:Ny+1]+0.5*FL(rX_p)*
-#         (phi._value[2:Nx+2,1:Ny+1]-phi._value[1:Nx+1, 1:Ny+1])
-#         phiX_p[0, :] = (phi._value[0, 1:Ny+1]+phi._value[1, 1:Ny+1])/2.0  # left boundary
-#         # y direction
-#         dphiY_p = (phi._value[1:Nx+1, 1:Ny+2]-phi._value[1:Nx+1, 0:Ny+1])/dy
-#         rY_p = dphiY_p[:,0:-1]/fsign(dphiY_p[:,1:])
-#         phiY_p[:,1:Ny+1] = phi._value[1:Nx+1, 1:Ny+1]+0.5*FL(rY_p)*
-#             (phi._value[1:Nx+1,2:Ny+2]-phi._value[1:Nx+1, 1:Ny+1])
-#         phiY_p[:,1] = (phi._value[1:Nx+1,1]+phi._value[1:Nx+1,2])/2.0  # Bottom boundary
-
-#         # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
-#         # x direction
-#         rX_m = dphiX_p[1:,:]/fsign(dphiX_p[0:-1,:])
-#         phiX_m[0:Nx,:] = phi._value[1:Nx+1, 1:Ny+1]+0.5*FL(rX_m)*
-#             (phi._value[0:Nx, 1:Ny+1]-phi._value[1:Nx+1, 1:Ny+1])
-#         phiX_m[Nx+1,:] = (phi._value[-1, 1:Ny+1]+phi._value[-1, 1:Ny+1])/2.0  # right boundary
-#         # y direction
-#         rY_m = dphiY_p[:,1:]/fsign(dphiY_p[:,0:-1])
-#         phiY_m[:,0:Ny] = phi._value[1:Nx+1, 1:Ny+1]+0.5*FL(rY_m)*
-#             (phi._value[1:Nx+1, 0:Ny]-phi._value[1:Nx+1, 1:Ny+1])
-#         phiY_m[:, Ny+1] = (phi._value[1:Nx+1, -1]+phi._value[1:Nx+1, -1])/2.0  # top boundary
-
-#         return FaceVariable(phi.domain,
-#             (ux>0.0)*phiX_p+(ux<0.0)*phiX_m+
-#                 0.5*(ux==0.0)*(phi._value[0:Nx+1,1:Ny+1]+phi._value[1:Nx+2,1:Ny+1]),
-#             (uy>0.0)*phiY_p+(uy<0.0)*phiY_m+
-#                 0.5*(uy==0.0)*(phi._value[1:Nx+1,0:Ny+1]+phi._value[1:Nx+1,1:Ny+2]),
-#             np.array([]))
-
-#     elif issubclass(type(phi.domain), Grid3D):
-#         # extract data from the mesh structure
-#         Nx = u.domain.dims[0]
-#         Ny = u.domain.dims[2]
-#         Nz = u.domain.dims[3]
-#         dx=0.5*(u.domain.cellsize._x[0:-1]+u.domain.cellsize._x[1:])
-#         dy=np.zeros( 1, Ny+1)
-#         dy[:]=0.5*(u.domain.cellsize._y[0:-1]+u.domain.cellsize._y[1:])
-#         dz=np.zeros( 1, 1, Nz+1)
-#         dz[:]=0.5*(u.domain.cellsize._z[0:-1]+u.domain.cellsize._z[1:])
-#         # extract the velocity data
-#         ux = u._xvalue
-#         uy = u._yvalue
-#         uz = u._zvalue
-
-#         # define the tvd face vectors
-#         phiX_p = np.zeros(Float64, Nx+1,Ny,Nz)
-#         phiX_m = np.zeros(Float64, Nx+1,Ny,Nz)
-#         phiY_p = np.zeros(Float64, Nx,Ny+1,Nz)
-#         phiY_m = np.zeros(Float64, Nx,Ny+1,Nz)
-#         phiZ_p = np.zeros(Float64, Nx,Ny,Nz+1)
-#         phiZ_m = np.zeros(Float64, Nx,Ny,Nz+1)
-
-#         # calculate the upstream to downstream gradient ratios for u>0 (+ ratio)
-#         # x direction
-#         dphiX_p = (phi._value[1:Nx+2, 1:Ny+1, 1:Nz+1]-phi._value[0:Nx+1, 1:Ny+1, 1:Nz+1])/dx
-#         rX_p = dphiX_p[0:-1,:,:]/fsign(dphiX_p[1:,:,:])
-#         phiX_p[1:Nx+1,:,:] = phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1]+0.5*FL(rX_p)*
-#             (phi._value[2:Nx+2,1:Ny+1,1:Nz+1]-phi._value[1:Nx+1,1:Ny+1,1:Nz+1])
-#         phiX_p[0,:,:] = (phi._value[0,1:Ny+1,1:Nz+1]+phi._value[1,1:Ny+1,1:Nz+1])/2.0  # left boundary
-#         # y direction
-#         dphiY_p = (phi._value[1:Nx+1, 1:Ny+2, 1:Nz+1]-phi._value[1:Nx+1, 0:Ny+1, 1:Nz+1])/dy
-#         rY_p = dphiY_p[:,0:-1,:]/fsign(dphiY_p[:,1:,:])
-#         phiY_p[:,1:Ny+1,:] = phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1]+0.5*FL(rY_p)*
-#             (phi._value[1:Nx+1,2:Ny+2,1:Nz+1]-phi._value[1:Nx+1, 1:Ny+1,1:Nz+1])
-#         phiY_p[:,1,:] = (phi._value[1:Nx+1,1,1:Nz+1]+phi._value[1:Nx+1,2,1:Nz+1])/2.0  # Bottom boundary
-#         # z direction
-#         dphiZ_p = (phi._value[1:Nx+1, 1:Ny+1, 1:Nz+2]-phi._value[1:Nx+1, 1:Ny+1, 0:Nz+1])/dz
-#         rZ_p = dphiZ_p[:,:,0:-1]/fsign(dphiZ_p[:,:,1:])
-#         phiZ_p[:,:,1:Nz+1] = phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1]+0.5*FL(rZ_p)*
-#             (phi._value[1:Nx+1,1:Ny+1,2:Nz+2]-phi._value[1:Nx+1,1:Ny+1,1:Nz+1])
-#         phiZ_p[:,:,1] = (phi._value[1:Nx+1,1:Ny+1,1]+phi._value[1:Nx+1,1:Ny+1,2])/2.0  # Back boundary
-
-#         # calculate the upstream to downstream gradient ratios for u<0 (- ratio)
-#         # x direction
-#         rX_m = dphiX_p[1:,:,:]/fsign(dphiX_p[0:-1,:,:])
-#         phiX_m[0:Nx,:,:] = phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1]+0.5*FL(rX_m)*
-#             (phi._value[0:Nx, 1:Ny+1, 1:Nz+1]-phi._value[1:Nx+1, 1:Ny+1, 1:Nz+1])
-#         phiX_m[Nx+1,:,:] = (phi._value[-1,1:Ny+1,1:Nz+1]+phi._value[-1,1:Ny+1,1:Nz+1])/2.0  # right boundary
-#         # y direction
-#         rY_m = dphiY_p[:,1:,:]/fsign(dphiY_p[:,0:-1,:])
-#         phiY_m[:,0:Ny,:] = phi._value[1:Nx+1,1:Ny+1,1:Nz+1]+0.5*FL(rY_m)*
-#             (phi._value[1:Nx+1,0:Ny,1:Nz+1]-phi._value[1:Nx+1,1:Ny+1,1:Nz+1])
-#         phiY_m[:,Ny+1,:] = (phi._value[1:Nx+1, end,1:Nz+1]+phi._value[1:Nx+1, -1,1:Nz+1])/2.0  # top boundary
-#         # z direction
-#         rZ_m = dphiZ_p[:,:,1:]/fsign(dphiZ_p[:,:,0:-1])
-#         phiZ_m[:,:,0:Nz] = phi._value[1:Nx+1,1:Ny+1,1:Nz+1]+0.5*FL(rZ_m)*
-#             (phi._value[1:Nx+1,1:Ny+1,0:Nz]-phi._value[1:Nx+1,1:Ny+1,1:Nz+1])
-#         phiZ_m[:,:,Nz+1] = (phi._value[1:Nx+1,1:Ny+1,-1]+phi._value[1:Nx+1,1:Ny+1,-1])/2.0  # front boundary
-
-#         return FaceVariable(phi.domain,
-#             (ux>0.0)*phiX_p+(ux<0.0)*phiX_m+
-#                 0.5*(ux==0.0)*(phi._value[0:Nx+1,1:Ny+1,1:Nz+1]+phi._value[1:Nx+2,1:Ny+1,1:Nz+1]),
-#             (uy>0.0)*phiY_p+(uy<0)*phiY_m+
-#                 0.5*(uy==0.0)*(phi._value[1:Nx+1,0:Ny+1,1:Nz+1]+phi._value[1:Nx+1,1:Ny+2,1:Nz+1]),
-#             (uz>0.0)*phiZ_p+(uz<0)*phiZ_m+
-#                 0.5*(uz==0.0)*(phi._value[1:Nx+1,1:Ny+1,0:Nz+1]+phi._value[1:Nx+1,1:Ny+1,1:Nz+2]))
+    upwindMean
+    """
+    raise NotImplementedError(
+        "tvdMean is not yet implemented for the connectivity-based "
+        "representation.  Use upwindMean as a fallback."
+    )

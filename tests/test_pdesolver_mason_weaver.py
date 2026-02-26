@@ -1,8 +1,8 @@
 """
 Solving the Mason-Weaver equation
 
-see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.; 
-     Werts, M. H. V. "The Sedimentation of Colloidal Nanoparticles in 
+see: Midelet, J.; El-Sagheer, A. H.; Brown, T.; Kanaras, A. G.;
+     Werts, M. H. V. "The Sedimentation of Colloidal Nanoparticles in
      Solution and Its Study Using Quantitative Digital Photography.",
      Part. Part. Syst. Charact. 2017, 34, 1700095. doi:10.1002/ppsc.201700095.
 
@@ -20,10 +20,10 @@ sg = 0.2
 Nx = 100
 Lx = z_max
 dt = 0.01
-t_simulation = 10.
+t_simulation = 10.0
 Nskip = 20
 
-maxdev_ppq = 1000. # max rel deviation in parts per 10^15
+maxdev_ppq = 1000.0  # max rel deviation in parts per 10^15
 
 msh = pf.Grid1D(Nx, Lx)
 
@@ -48,20 +48,22 @@ D = pf.FaceVariable(msh, D_coeff)
 # time loop
 it = 0
 
-while (it*dt < t_simulation):
+while it * dt < t_simulation:
     # In the present implementation, also the 'constant' terms
     # (boundaryConditionsTerm, diffusionTerm and convectionTerm)
     # are re-constructed every cycle. This is done for clarity.
     # Code can be 'optimized' by constructing these terms outside
-    # of the loop and store their results. The difference in performance is 
+    # of the loop and store their results. The difference in performance is
     # probably minimal, since most of the CPU time is in the
     # actual solving of the matrix equation
-    eqnterms = [ pf.transientTerm(c, dt, 1.0),
-                -pf.diffusionTerm(D),
-                 pf.convectionTerm(u)]
+    eqnterms = [
+        pf.transientTerm(c, dt, 1.0),
+        -pf.diffusionTerm(D),
+        pf.convectionTerm(u),
+    ]
 
     pf.solvePDE(c, eqnterms)
-    it+=1
+    it += 1
     total_c.append(c.domainIntegral())
     # if (it % Nskip == 0):
     #     pf.visualizeCells(c)
@@ -78,7 +80,8 @@ while (it*dt < t_simulation):
 # plt.ylim(0, 1.2*np.max(total_c))
 # plt.title('mass conservation')
 
-total_dev = np.array(1e15*(total_c-total_c[0])/total_c[0])
+total_c = np.array(total_c)
+total_dev = np.array(1e15 * (total_c - total_c[0]) / total_c[0])
 # plt.figure(3)
 # plt.clf()
 # plt.plot(total_dev)
@@ -88,15 +91,17 @@ total_dev = np.array(1e15*(total_c-total_c[0])/total_c[0])
 # plt.title('deviation from mass conservation')
 
 # amplitude of steady-state solution
-z0 = D_coeff/sg
-B = z_max/(z0*(1.0-np.exp(-z_max/z0)))
+z0 = D_coeff / sg
+B = z_max / (z0 * (1.0 - np.exp(-z_max / z0)))
+
 
 def test_mass_conservation():
     # deviation from mass conservation should be less than 1 part in 1e12
     # in this case
     assert np.max(np.abs(total_dev)) < maxdev_ppq
 
+
 def test_amplitude():
     # simulation should have reach at least 90% of steady-state value
-    # 
-    assert np.max(c.value) > 0.9*B
+    #
+    assert np.max(c.value) > 0.9 * B

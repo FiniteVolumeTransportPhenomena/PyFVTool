@@ -1,29 +1,33 @@
+# Source terms — connectivity-based unified implementation
+#
+# With the new flat-array architecture, source terms operate on the
+# interior-cell portion of the value arrays (indices 0..num_cells-1).
+# Ghost-cell rows are left untouched (handled by boundaryConditionsTerm).
+
 import numpy as np
 from scipy.sparse import csr_array
 
-from .mesh import Grid1D, Grid2D, Grid3D
 from .cell import CellVariable
-from .boundary import BoundaryConditions
 
 
+def constantSourceTerm(gamma: CellVariable) -> np.ndarray:
+    """Constant source term in a PDE.
 
-def constantSourceTerm(gamma: CellVariable):
-    """
-    Constant source term in a PDE.
-    
-    The value of this source `gamma` may be different in each cell, but is 
-    constant during the evolution of the PDE.
-    
+    The value of this source ``gamma`` may be different in each cell,
+    but is constant during the evolution of the PDE.  Returns a RHS
+    vector of shape ``(N_total,)`` with the source values in the
+    interior-cell rows.
+
     Parameters
     ----------
-    gamma: CellVariable
-        Value of the source term
-    
+    gamma : CellVariable
+        Value of the source term.
+
     Returns
     -------
-    RHS: np.ndarray
-        Right hand side of the source term
-    
+    RHS : ndarray, shape (N_total,)
+        Right-hand side contribution.
+
     Examples
     --------
     >>> import pyfvtool as pf
@@ -32,101 +36,72 @@ def constantSourceTerm(gamma: CellVariable):
     >>> RHS = pf.constantSourceTerm(gamma)
     """
     m = gamma.domain
-    if issubclass(type(m), Grid1D):
-        Nx = m.dims[0]
-        G = m.cell_numbers()
-        row_index = G[1:Nx+1]  # main diagonal (only internal cells)
-        RHS = np.zeros(Nx+2)
-        RHS[row_index] = gamma._value[1:-1]
-    elif issubclass(type(m), Grid2D):
-        Nx, Ny = m.dims
-        G = m.cell_numbers()
-        # main diagonal (only internal cells)
-        row_index = G[1:Nx+1, 1:Ny+1].ravel()
-        RHS = np.zeros((Nx+2)*(Ny+2))
-        RHS[row_index] = gamma._value[1:-1, 1:-1].ravel()
-    elif issubclass(type(m), Grid3D):
-        Nx, Ny, Nz = m.dims
-        G = m.cell_numbers()
-        # main diagonal (only internal cells)
-        row_index = G[1:Nx+1, 1:Ny+1, 1:Nz+1].ravel()
-        RHS = np.zeros((Nx+2)*(Ny+2)*(Nz+2))
-        RHS[row_index] = gamma._value[1:-1, 1:-1, 1:-1].ravel()
+    N = m.num_cells
+    N_total = N + m.num_ghost_cells
+    RHS = np.zeros(N_total)
+    RHS[:N] = gamma.value  # .value returns _value[:num_cells]
     return RHS
 
 
+def linearSourceTerm(beta: CellVariable) -> csr_array:
+    """Linear source term in a PDE.
 
-def linearSourceTerm(beta: CellVariable):
-    """
-    Linear source term in a PDE.
-
-    The linear source term takes the form `beta*phi` where `phi` is the
-    solution variable and the factor `beta` a coefficient.
+    The linear source term takes the form ``beta * phi`` where ``phi``
+    is the solution variable and ``beta`` a coefficient.  Returns a
+    sparse diagonal matrix of shape ``(N_total, N_total)`` with the
+    ``beta`` values on the diagonal for interior cells.
 
     Parameters
     ----------
-    beta: CellVariable
-        Multiplicative coefficient for the solution variable
-    
+    beta : CellVariable
+        Multiplicative coefficient for the solution variable.
+
     Returns
     -------
-    RHS: np.ndarray
-        Right hand side of the source term
-    
+    M : csr_array, shape (N_total, N_total)
+        Sparse matrix contribution.
+
     Examples
     --------
     >>> import pyfvtool as pf
     >>> m = pf.Grid1D(10, 1.0)
     >>> beta = pf.CellVariable(m, 1.0)
-    >>> RHS = pf.linearSourceTerm(beta)
+    >>> M = pf.linearSourceTerm(beta)
     """
     m = beta.domain
-    if issubclass(type(m), Grid1D):
-        Nx = m.dims[0]
-        G = m.cell_numbers()
-        AP_diag = beta._value[1:-1]
-        row_index = G[1:Nx+1]  # main diagonal (only internal cells)
-        return csr_array((AP_diag, (row_index, row_index)),
-                         shape=((Nx+2), (Nx+2)))
-    elif issubclass(type(m), Grid2D):
-        Nx, Ny = m.dims
-        G = m.cell_numbers()
-        AP_diag = beta._value[1:-1, 1:-1].ravel()
-        # main diagonal (only internal cells)
-        row_index = G[1:Nx+1, 1:Ny+1].ravel()
-        return csr_array((AP_diag, (row_index, row_index)),
-                         shape=((Nx+2)*(Ny+2), (Nx+2)*(Ny+2)))
-    elif issubclass(type(m), Grid3D):
-        Nx, Ny, Nz = m.dims
-        G = m.cell_numbers()
-        AP_diag = beta._value[1:-1, 1:-1, 1:-1].ravel()
-        # main diagonal (only internal cells)
-        row_index = G[1:Nx+1, 1:Ny+1, 1:Nz+1].ravel()
-        return csr_array((AP_diag, (row_index, row_index)),
-                         shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
+    N = m.num_cells
+    N_total = N + m.num_ghost_cells
+    diag_vals = beta.value  # shape (N,)
+    row_idx = np.arange(N)
+    return csr_array((diag_vals, (row_idx, row_idx)), shape=(N_total, N_total))
 
 
+def transientTerm(phi_old: CellVariable, dt, alfa=1.0):
+    """Transient (time-derivative) term of a PDE.
 
-def transientTerm(phi_old: CellVariable, dt, alfa):
-    """
-    Transient term of a PDE.
+    Discretizes ``alfa * dphi/dt`` using backward Euler.  Returns a
+    matrix and RHS vector such that the transient contribution is::
+
+        M @ phi_new = RHS
+
+    where ``M = diag(alfa / dt)`` and ``RHS = alfa * phi_old / dt``.
 
     Parameters
     ----------
-    phi_old: CellVariable
-        Old value of the variable
-    dt: float
-        Time step size
-    alfa: float or CellVariable
-        Coefficient of the transient term
-    
+    phi_old : CellVariable
+        Solution at the previous time step.
+    dt : float
+        Time step size.
+    alfa : float or CellVariable, optional
+        Coefficient of the transient term (default 1.0).
+
     Returns
     -------
-    M: csr_array
-        Matrix of the transient term
-    RHS: np.ndarray
-        Right hand side of the transient term
-    
+    M : csr_array, shape (N_total, N_total)
+        Sparse matrix contribution.
+    RHS : ndarray, shape (N_total,)
+        Right-hand side contribution.
+
     Examples
     --------
     >>> import pyfvtool as pf
@@ -134,10 +109,10 @@ def transientTerm(phi_old: CellVariable, dt, alfa):
     >>> phi_old = pf.CellVariable(m, 0.0)
     >>> M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)
     """
-    if not (type(alfa) is CellVariable):
-        a = CellVariable(phi_old.domain, alfa,
-                         BoundaryConditions(phi_old.domain))
+    if not isinstance(alfa, CellVariable):
+        a = CellVariable(phi_old.domain, alfa)
     else:
         a = alfa
-    return linearSourceTerm(a/dt), constantSourceTerm(a*phi_old/dt)
-
+    M = linearSourceTerm(a / dt)
+    RHS = constantSourceTerm(a * phi_old / dt)
+    return M, RHS
