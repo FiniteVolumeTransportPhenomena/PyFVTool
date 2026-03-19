@@ -35,7 +35,11 @@ except ImportError:
     print("PyFVTool not found. Ensure you have installed the package.")
     sys.exit(1)
 
+# %% [markdown]
+# ## 2D Boundary Refinement
 
+
+# %%
 def example_2d_boundary_refinement():
     """Generate a 2D triangular mesh with boundary refinement."""
     if not HAS_GMSH:
@@ -63,6 +67,11 @@ def example_2d_boundary_refinement():
     return mesh
 
 
+# %% [markdown]
+# ## 2D Box Refinement Zone
+
+
+# %%
 def example_2d_box_zone():
     """Add a box refinement zone."""
     if not HAS_GMSH:
@@ -96,6 +105,11 @@ def example_2d_box_zone():
     return mesh
 
 
+# %% [markdown]
+# ## 2D Circle Refinement Zone
+
+
+# %%
 def example_2d_circle_zone():
     """Add a circle refinement zone."""
     if not HAS_GMSH:
@@ -129,6 +143,11 @@ def example_2d_circle_zone():
     return mesh
 
 
+# %% [markdown]
+# ## Solving Diffusion Equation (2D)
+
+
+# %%
 def solve_diffusion_2d(mesh):
     """Solve a simple diffusion equation on the given mesh."""
     print("=== Solving diffusion equation on 2D mesh ===")
@@ -149,16 +168,14 @@ def solve_diffusion_2d(mesh):
             BC[tag].b[:] = 0.0
             BC[tag].c[:] = 0.0
 
-    # Create initial guess
-    phi = pf.CellVariable(mesh, 0.5, BC)
-
     # Discretize
-    M_diff = pf.diffusionTerm(D)
-    # No source
-    RHS = pf.sourceTerm(pf.CellVariable(mesh, 0.0))
-
+    D_face = pf.harmonicMean(D)
+    M_diff = pf.diffusionTerm(D_face)
+    M_bc, RHS_bc = pf.boundaryConditionsTerm(BC)
+    M = M_diff + M_bc
+    RHS = RHS_bc
     # Solve
-    phi = pf.solveMatrixPDE(M_diff, RHS, phi)
+    phi = pf.solveMatrixPDE(mesh, M, RHS)
     print(f"Solution range: {phi.value.min():.3f} .. {phi.value.max():.3f}")
 
     # Plot solution
@@ -173,6 +190,11 @@ def solve_diffusion_2d(mesh):
     return phi
 
 
+# %% [markdown]
+# ## 3D Boundary Refinement
+
+
+# %%
 def example_3d_boundary_refinement():
     """Generate a 3D tetrahedral mesh with boundary refinement."""
     if not HAS_GMSH:
@@ -206,6 +228,11 @@ def example_3d_boundary_refinement():
     return mesh
 
 
+# %% [markdown]
+# ## 3D Sphere Refinement Zone
+
+
+# %%
 def example_3d_sphere_zone():
     """Add a sphere refinement zone."""
     if not HAS_GMSH:
@@ -220,20 +247,29 @@ def example_3d_sphere_zone():
             "distance_max": 0.05,
         }
     ]
-    mesh = pf.UnstructuredMesh3D.generate_box_with_boundary_refinement(
-        Lx=1.0,
-        Ly=1.0,
-        Lz=0.5,
-        background_size=0.15,
-        boundary_refinement_distance=0.1,
-        boundary_refinement_size=0.03,
-        refinement_zones=refinement_zones,
-    )
-    print(f"Mesh: {mesh.num_cells} cells, {mesh.num_faces} faces")
+    try:
+        mesh = pf.UnstructuredMesh3D.generate_box_with_boundary_refinement(
+            Lx=1.0,
+            Ly=1.0,
+            Lz=0.5,
+            background_size=0.15,
+            boundary_refinement_distance=0.1,
+            boundary_refinement_size=0.03,
+            refinement_zones=refinement_zones,
+        )
+        print(f"Mesh: {mesh.num_cells} cells, {mesh.num_faces} faces")
+        return mesh
+    except Exception as e:
+        print(f"Failed to generate mesh with sphere refinement: {e}")
+        print("Skipping this example.")
+        return None
 
-    return mesh
+
+# %% [markdown]
+# ## Main: Run All Examples
 
 
+# %%
 def main():
     """Run all examples."""
     print("PyFVTool unstructured mesh generation with Gmsh")

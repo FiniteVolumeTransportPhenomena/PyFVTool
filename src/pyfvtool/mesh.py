@@ -3097,7 +3097,7 @@ class UnstructuredMesh3D(MeshStructure):
         loop2 = gmsh.model.geo.addCurveLoop([l5, l6, l7, l8])
         top = gmsh.model.geo.addPlaneSurface([loop2])
         # left (x=0)
-        loop3 = gmsh.model.geo.addCurveLoop([l4, l12, -l8, -l9])
+        loop3 = gmsh.model.geo.addCurveLoop([l9, -l8, -l12, l4])
         left = gmsh.model.geo.addPlaneSurface([loop3])
         # right (x=Lx)
         loop4 = gmsh.model.geo.addCurveLoop([l2, l11, -l6, -l10])

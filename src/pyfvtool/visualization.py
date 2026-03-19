@@ -266,3 +266,127 @@ def visualizeCells(
     else:
         # just in case...
         raise ValueError("Unsupported mesh: " + str(type(phi.domain)))
+
+
+def plot_mesh_2d(mesh, ax=None, cell_value=None, show_cell_centers=False, **kwargs):
+    """
+    Plot a 2D unstructured mesh (triangular).
+
+    Parameters
+    ----------
+    mesh : UnstructuredMesh2D
+        The mesh to plot.
+    ax : matplotlib.axes.Axes, optional
+        Axes to plot on. If None, current axes is used.
+    cell_value : ndarray, shape (mesh.num_cells,), optional
+        Cell values for coloring. If None, only mesh edges are drawn.
+    show_cell_centers : bool, default False
+        If True, plot cell centers as points.
+    **kwargs : dict
+        Additional keyword arguments passed to tripcolor or triplot.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The axes used for plotting.
+    """
+    import matplotlib.pyplot as plt
+    from matplotlib import tri
+
+    if ax is None:
+        ax = plt.gca()
+
+    triang = tri.Triangulation(mesh._nodes[:, 0], mesh._nodes[:, 1], mesh._cells)
+
+    if cell_value is not None:
+        # Color by cell value
+        vmin = kwargs.pop("vmin", None)
+        vmax = kwargs.pop("vmax", None)
+        cmap = kwargs.pop("cmap", "viridis")
+        shading = kwargs.pop("shading", "flat")
+        im = ax.tripcolor(
+            triang,
+            cell_value,
+            vmin=vmin,
+            vmax=vmax,
+            cmap=cmap,
+            shading=shading,
+            **kwargs,
+        )
+    else:
+        # Draw mesh edges only
+        ax.triplot(triang, **kwargs)
+
+    if show_cell_centers:
+        ax.plot(mesh.cellcenters.x, mesh.cellcenters.y, "k.", markersize=2)
+
+    ax.set_aspect("equal")
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    return ax
+
+
+def plot_mesh_3d(mesh, ax=None, cell_value=None, **kwargs):
+    """
+    Plot boundary faces of a 3D unstructured mesh (tetrahedral).
+
+    Parameters
+    ----------
+    mesh : UnstructuredMesh3D
+        The mesh to plot.
+    ax : matplotlib.axes.Axes, optional
+        3D axes to plot on. If None, a new figure with 3D axes is created.
+    cell_value : ndarray, shape (mesh.num_cells,), optional
+        Cell values for coloring boundary faces by owner cell value.
+        If None, faces are drawn with a single color.
+    **kwargs : dict
+        Additional keyword arguments passed to Poly3DCollection.
+
+    Returns
+    -------
+    matplotlib.axes.Axes
+        The 3D axes used for plotting.
+    """
+    import matplotlib.pyplot as plt
+    from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+
+    if ax is None:
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="3d")
+
+    # Get boundary faces
+    bnd_faces = mesh.boundary_faces
+    face_nodes = mesh._face_nodes[bnd_faces]  # (N_bnd, 3)
+    nodes = mesh._nodes  # (N_nodes, 3)
+
+    # Create polygons for each boundary triangle
+    polys = nodes[face_nodes]  # shape (N_bnd, 3, 3)
+
+    if cell_value is not None:
+        # Color by owner cell value
+        owners = mesh.owner[bnd_faces]
+        face_values = cell_value[owners]
+        vmin = kwargs.pop("vmin", face_values.min())
+        vmax = kwargs.pop("vmax", face_values.max())
+        cmap = kwargs.pop("cmap", "viridis")
+        norm = plt.Normalize(vmin, vmax)
+        cmap_obj = plt.get_cmap(cmap)
+        face_colors = cmap_obj(norm(face_values))
+    else:
+        face_colors = kwargs.pop("facecolors", "lightgray")
+
+    linewidth = kwargs.pop("linewidth", 0)
+    coll = Poly3DCollection(
+        polys, facecolors=face_colors, linewidth=linewidth, **kwargs
+    )
+    ax.add_collection3d(coll)
+
+    # Set axis limits
+    ax.set_xlim(nodes[:, 0].min(), nodes[:, 0].max())
+    ax.set_ylim(nodes[:, 1].min(), nodes[:, 1].max())
+    ax.set_zlim(nodes[:, 2].min(), nodes[:, 2].max())
+    ax.set_xlabel("x")
+    ax.set_ylabel("y")
+    ax.set_zlabel("z")
+
+    return ax
