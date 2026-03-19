@@ -19,17 +19,20 @@ class TestUnstructuredMesh(unittest.TestCase):
         """Return (nodes, cells, boundary_tags) for a valid tetrahedral cube mesh."""
         import numpy as np
         from scipy.spatial import Delaunay
+
         # Unit cube vertices
-        nodes = np.array([
-            [0.0, 0.0, 0.0],
-            [1.0, 0.0, 0.0],
-            [0.0, 1.0, 0.0],
-            [0.0, 0.0, 1.0],
-            [1.0, 1.0, 0.0],
-            [1.0, 0.0, 1.0],
-            [0.0, 1.0, 1.0],
-            [1.0, 1.0, 1.0],
-        ])
+        nodes = np.array(
+            [
+                [0.0, 0.0, 0.0],
+                [1.0, 0.0, 0.0],
+                [0.0, 1.0, 0.0],
+                [0.0, 0.0, 1.0],
+                [1.0, 1.0, 0.0],
+                [1.0, 0.0, 1.0],
+                [0.0, 1.0, 1.0],
+                [1.0, 1.0, 1.0],
+            ]
+        )
         # Add interior point to avoid degenerate tetrahedra
         nodes = np.vstack([nodes, [0.5, 0.5, 0.5]])
         # Delaunay tetrahedralization
@@ -37,6 +40,7 @@ class TestUnstructuredMesh(unittest.TestCase):
         cells = tri.simplices
         # Create temporary mesh to compute face centers for tagging
         import pyfvtool as pf
+
         mesh_temp = pf.UnstructuredMesh3D(nodes, cells)
         # Tag boundaries by geometric location
         boundary_tags = {}
@@ -49,6 +53,7 @@ class TestUnstructuredMesh(unittest.TestCase):
         boundary_tags["front"] = np.where(fc[:, 2] < tol)[0]
         boundary_tags["back"] = np.where(fc[:, 2] > 1.0 - tol)[0]
         return nodes, cells, boundary_tags
+
     def test_single_triangle(self):
         """Basic creation of a single triangle mesh."""
         nodes = np.array([[0.0, 0.0], [1.0, 0.0], [0.0, 1.0]])
@@ -200,6 +205,7 @@ class TestUnstructuredMesh(unittest.TestCase):
         nodes, cells, boundary_tags = self._create_valid_cube_mesh()
         import pyfvtool as pf
         import numpy as np
+
         # Re-create mesh with these tags
         mesh2 = pf.UnstructuredMesh3D(nodes, cells, boundary_tags)
         BC = pf.BoundaryConditions(mesh2)
@@ -228,6 +234,7 @@ class TestUnstructuredMesh(unittest.TestCase):
         nodes, cells, boundary_tags = self._create_valid_cube_mesh()
         import pyfvtool as pf
         import numpy as np
+
         mesh2 = pf.UnstructuredMesh3D(nodes, cells, boundary_tags)
         BC = pf.BoundaryConditions(mesh2)
         BC.left.a[:] = 0.0
@@ -256,3 +263,110 @@ class TestUnstructuredMesh(unittest.TestCase):
         x_cells = mesh2._cell_centers[:, 0]
         phi_analytical = (np.exp(Pe * x_cells / L) - 1.0) / (np.exp(Pe) - 1.0)
         self.assertTrue(np.allclose(phi_sol.value, phi_analytical, atol=0.05))
+
+
+class TestGmshMeshGeneration(unittest.TestCase):
+    """Test Gmsh-based mesh generation methods (skip if Gmsh not installed)."""
+
+    @classmethod
+    def setUpClass(cls):
+        try:
+            import gmsh
+
+            cls.has_gmsh = True
+        except ImportError:
+            cls.has_gmsh = False
+
+    def test_generate_rectangle_with_boundary_refinement(self):
+        if not self.has_gmsh:
+            self.skipTest("Gmsh Python API not installed")
+        import pyfvtool as pf
+
+        mesh = pf.UnstructuredMesh2D.generate_rectangle_with_boundary_refinement(
+            Lx=2.0,
+            Ly=1.0,
+            background_size=0.2,
+            boundary_refinement_distance=0.2,
+            boundary_refinement_size=0.05,
+        )
+        self.assertIsInstance(mesh, pf.UnstructuredMesh2D)
+        self.assertGreater(mesh.num_cells, 10)
+        self.assertGreater(mesh.num_faces, 10)
+        # Check boundary tags exist
+        self.assertIn("left", mesh.boundary_tags)
+        self.assertIn("right", mesh.boundary_tags)
+        self.assertIn("bottom", mesh.boundary_tags)
+        self.assertIn("top", mesh.boundary_tags)
+
+    def test_generate_rectangle_with_box_zone(self):
+        if not self.has_gmsh:
+            self.skipTest("Gmsh Python API not installed")
+        import pyfvtool as pf
+
+        refinement_zones = [
+            {
+                "type": "box",
+                "parameters": {"xmin": 0.5, "xmax": 1.5, "ymin": 0.3, "ymax": 0.7},
+                "refinement_size": 0.01,
+                "distance_max": 0.1,
+            }
+        ]
+        mesh = pf.UnstructuredMesh2D.generate_rectangle_with_boundary_refinement(
+            Lx=2.0,
+            Ly=1.0,
+            background_size=0.2,
+            boundary_refinement_distance=0.2,
+            boundary_refinement_size=0.05,
+            refinement_zones=refinement_zones,
+        )
+        self.assertIsInstance(mesh, pf.UnstructuredMesh2D)
+        self.assertGreater(mesh.num_cells, 10)
+
+    def test_generate_box_with_boundary_refinement(self):
+        if not self.has_gmsh:
+            self.skipTest("Gmsh Python API not installed")
+        import pyfvtool as pf
+
+        mesh = pf.UnstructuredMesh3D.generate_box_with_boundary_refinement(
+            Lx=1.0,
+            Ly=1.0,
+            Lz=0.5,
+            background_size=0.2,
+            boundary_refinement_distance=0.1,
+            boundary_refinement_size=0.05,
+        )
+        self.assertIsInstance(mesh, pf.UnstructuredMesh3D)
+        self.assertGreater(mesh.num_cells, 10)
+        self.assertGreater(mesh.num_faces, 10)
+        # Check boundary tags exist (default mapping)
+        self.assertIn("left", mesh.boundary_tags)
+        self.assertIn("right", mesh.boundary_tags)
+        self.assertIn("bottom", mesh.boundary_tags)
+        self.assertIn("top", mesh.boundary_tags)
+        self.assertIn("front", mesh.boundary_tags)
+        self.assertIn("back", mesh.boundary_tags)
+
+    def test_generate_box_with_sphere_zone(self):
+        if not self.has_gmsh:
+            self.skipTest("Gmsh Python API not installed")
+        import pyfvtool as pf
+
+        refinement_zones = [
+            {
+                "type": "sphere",
+                "parameters": {"center": (0.5, 0.5, 0.25), "radius": 0.15},
+                "refinement_size": 0.01,
+                "distance_max": 0.05,
+            }
+        ]
+        mesh = pf.UnstructuredMesh3D.generate_box_with_boundary_refinement(
+            Lx=1.0,
+            Ly=1.0,
+            Lz=0.5,
+            background_size=0.2,
+            boundary_refinement_distance=0.1,
+            boundary_refinement_size=0.05,
+            refinement_zones=refinement_zones,
+        )
+        self.assertIsInstance(mesh, pf.UnstructuredMesh3D)
+        self.assertGreater(mesh.num_cells, 10)

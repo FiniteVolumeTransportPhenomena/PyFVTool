@@ -2167,6 +2167,7 @@ class UnstructuredMesh2D(MeshStructure):
     - ``UnstructuredMesh2D.from_gmsh(geo_file=None, geo_string=None, physical_group_map=None)``
     - ``UnstructuredMesh2D.from_meshpy(points, facets, holes=None, max_area=None, min_angle=None)``
     - ``UnstructuredMesh2D.from_dmsh(geo, max_edge_length=None)``
+    - ``UnstructuredMesh2D.generate_rectangle_with_boundary_refinement(Lx=1.0, Ly=1.0, background_size=0.1, boundary_refinement_distance=0.1, boundary_refinement_size=0.02, physical_group_map=None, refinement_zones=None)``
     """
 
     def __init__(self, nodes: np.ndarray, cells: np.ndarray, boundary_tags=None):
@@ -2241,6 +2242,61 @@ class UnstructuredMesh2D(MeshStructure):
         # Any remaining boundary faces not assigned? we can assign "other"
         # but for simplicity ignore.
         return tags
+
+    def assign_boundary_tags_from_gmsh_edges(
+        self, edge_to_phys, tag_to_idx, physical_group_map=None
+    ):
+        """Assign boundary tags based on Gmsh physical groups on edges.
+
+        Parameters
+        ----------
+        edge_to_phys : dict
+            Mapping from edge key (node_tag_a, node_tag_b) to physical group tag.
+        tag_to_idx : dict
+            Mapping from Gmsh node tag to index in self._nodes.
+        physical_group_map : dict, optional
+            Mapping from physical group tag to user-defined tag name.
+            If not provided, physical group tag numbers are used as strings.
+        """
+        import numpy as np
+
+        # Map physical group tag to tag name
+        tag_map = {}
+        for phys_tag in set(edge_to_phys.values()):
+            if physical_group_map and phys_tag in physical_group_map:
+                tag_name = physical_group_map[phys_tag]
+            else:
+                tag_name = str(phys_tag)
+            tag_map[phys_tag] = tag_name
+
+        edge_to_phys_idx = {}
+        for (tag_a, tag_b), phys_tag in edge_to_phys.items():
+            idx_a = tag_to_idx[tag_a]
+            idx_b = tag_to_idx[tag_b]
+            key = (idx_a, idx_b) if idx_a < idx_b else (idx_b, idx_a)
+            edge_to_phys_idx[key] = phys_tag
+
+        # Now iterate over boundary faces
+        new_tags = {}
+        for f_idx in self.boundary_faces:
+            a, b = self._face_nodes[f_idx]
+            key = (a, b) if a < b else (b, a)
+            if key in edge_to_phys_idx:
+                phys_tag = edge_to_phys_idx[key]
+                tag_name = tag_map[phys_tag]
+                new_tags.setdefault(tag_name, []).append(f_idx)
+            else:
+                # Edge not found? Should not happen for boundary faces.
+                # Assign default tag "boundary"
+                new_tags.setdefault("boundary", []).append(f_idx)
+
+        # Convert lists to numpy arrays
+        for tag_name, faces in new_tags.items():
+            new_tags[tag_name] = np.array(faces, dtype=int)
+
+        # Update mesh attributes
+        self.boundary_tags = new_tags
+        self.boundary_normal_sign = {tag: 1.0 for tag in new_tags}
 
     @classmethod
     def from_delaunay(cls, Nx: int, Ny: int, Lx: float, Ly: float):
@@ -2399,19 +2455,222 @@ class UnstructuredMesh2D(MeshStructure):
 
         gmsh.finalize()
 
-        # Now we need to map edges to boundary faces after connectivity building.
-        # Since we cannot know face indices yet, we'll pass boundary_tags as a dict
-        # mapping tag -> list of edge keys. The connectivity builder will match edges.
-        # We'll modify _build_unstructured_connectivity_2d to accept edge keys.
-        # For simplicity, we'll create boundary_tags dict with placeholder edge keys,
-        # then later in a wrapper we can convert. But that's complex.
-        # Alternative: build connectivity first with default tags, then reassign tags
-        # based on edge keys. We'll implement a helper function that updates boundary_tags.
-        # For now, return None (default "boundary").
-        boundary_tags = None
-        # TODO: implement proper mapping
+        # Create mesh with default tags (all boundary faces tagged "boundary")
+        mesh = cls(nodes, cells, boundary_tags=None)
+        # Assign boundary tags based on physical groups
+        mesh.assign_boundary_tags_from_gmsh_edges(
+            edge_to_phys, tag_to_idx, physical_group_map
+        )
+        return mesh
 
-        return cls(nodes, cells, boundary_tags)
+    @classmethod
+    def generate_rectangle_with_boundary_refinement(
+        cls,
+        Lx=1.0,
+        Ly=1.0,
+        background_size=0.1,
+        boundary_refinement_distance=0.1,
+        boundary_refinement_size=0.02,
+        physical_group_map=None,
+        refinement_zones=None,
+    ):
+        """Generate a rectangular triangular mesh with boundary refinement using Gmsh.
+
+        Parameters
+        ----------
+        Lx, Ly : float
+            Domain dimensions.
+        background_size : float
+            Mesh size far from boundaries.
+        boundary_refinement_distance : float
+            Distance from boundaries where refinement is applied.
+        boundary_refinement_size : float
+            Mesh size near boundaries.
+        physical_group_map : dict, optional
+            Mapping from Gmsh physical group numbers to tag names.
+            Default: {1: "left", 2: "right", 3: "bottom", 4: "top"}.
+        refinement_zones : list of dict, optional
+            List of refinement zone specifications. Each dict must contain:
+            'type' ('box' or 'circle'), 'parameters' (shape parameters),
+            'refinement_size' (target mesh size within zone), and optionally
+            'distance_max' (transition distance). Default: None.
+
+        Returns
+        -------
+        UnstructuredMesh2D
+            Triangular mesh with boundary tags.
+
+        Raises
+        ------
+        ImportError
+            If gmsh library is not installed.
+        """
+        try:
+            import gmsh
+        except ImportError:
+            raise ImportError(
+                "Gmsh Python API not installed. Please install with: uv pip install gmsh"
+            )
+        import numpy as np
+
+        gmsh.initialize()
+        gmsh.option.setNumber("General.Terminal", 0)
+
+        # Create rectangle geometry
+        gmsh.model.add("rectangle")
+        # Points
+        p1 = gmsh.model.geo.addPoint(0, 0, 0)
+        p2 = gmsh.model.geo.addPoint(Lx, 0, 0)
+        p3 = gmsh.model.geo.addPoint(Lx, Ly, 0)
+        p4 = gmsh.model.geo.addPoint(0, Ly, 0)
+        # Lines
+        l1 = gmsh.model.geo.addLine(p1, p2)  # bottom
+        l2 = gmsh.model.geo.addLine(p2, p3)  # right
+        l3 = gmsh.model.geo.addLine(p3, p4)  # top
+        l4 = gmsh.model.geo.addLine(p4, p1)  # left
+        # Curve loop and surface
+        loop = gmsh.model.geo.addCurveLoop([l1, l2, l3, l4])
+        surf = gmsh.model.geo.addPlaneSurface([loop])
+        gmsh.model.geo.synchronize()
+
+        # Physical groups for boundaries
+        # Assign tags: 1 left, 2 right, 3 bottom, 4 top
+        gmsh.model.addPhysicalGroup(1, [l4], tag=1)
+        gmsh.model.addPhysicalGroup(1, [l2], tag=2)
+        gmsh.model.addPhysicalGroup(1, [l1], tag=3)
+        gmsh.model.addPhysicalGroup(1, [l3], tag=4)
+        # Physical group for surface (required for 2D mesh)
+        gmsh.model.addPhysicalGroup(2, [surf], tag=5)
+
+        # Define size field for boundary refinement
+        # Distance field from boundary curves
+        dist_field = gmsh.model.mesh.field.add("Distance")
+        gmsh.model.mesh.field.setNumbers(dist_field, "CurvesList", [l1, l2, l3, l4])
+        # Threshold field that varies size based on distance
+        thresh_field = gmsh.model.mesh.field.add("Threshold")
+        gmsh.model.mesh.field.setNumber(thresh_field, "IField", dist_field)
+        gmsh.model.mesh.field.setNumber(thresh_field, "LcMin", boundary_refinement_size)
+        gmsh.model.mesh.field.setNumber(thresh_field, "LcMax", background_size)
+        gmsh.model.mesh.field.setNumber(thresh_field, "DistMin", 0.0)
+        gmsh.model.mesh.field.setNumber(
+            thresh_field, "DistMax", boundary_refinement_distance
+        )
+        field_ids = [thresh_field]
+
+        # Add refinement zones if specified
+        if refinement_zones:
+            for zone in refinement_zones:
+                ztype = zone.get("type")
+                params = zone.get("parameters", {})
+                size = zone.get("refinement_size")
+                dist_max = zone.get("distance_max", 0.0)
+                if ztype == "box":
+                    # Box field: constant size inside box, transition outside
+                    box_field = gmsh.model.mesh.field.add("Box")
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "XMin", params.get("xmin", 0.0)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "XMax", params.get("xmax", Lx)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "YMin", params.get("ymin", 0.0)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "YMax", params.get("ymax", Ly)
+                    )
+                    gmsh.model.mesh.field.setNumber(box_field, "ZMin", -1.0)
+                    gmsh.model.mesh.field.setNumber(box_field, "ZMax", 1.0)
+                    gmsh.model.mesh.field.setNumber(box_field, "VIn", size)
+                    gmsh.model.mesh.field.setNumber(box_field, "VOut", background_size)
+                    gmsh.model.mesh.field.setNumber(box_field, "Thickness", dist_max)
+                    field_ids.append(box_field)
+                elif ztype == "circle":
+                    # Distance field from center point
+                    cx, cy = params.get("center", (Lx / 2, Ly / 2))
+                    radius = params.get("radius", 0.1)
+                    # Create a point in Gmsh geometry (tag will be negative)
+                    pt = gmsh.model.geo.addPoint(cx, cy, 0)
+                    gmsh.model.geo.synchronize()
+                    dist_field_pt = gmsh.model.mesh.field.add("Distance")
+                    gmsh.model.mesh.field.setNumbers(dist_field_pt, "PointsList", [pt])
+                    thresh_field_pt = gmsh.model.mesh.field.add("Threshold")
+                    gmsh.model.mesh.field.setNumber(
+                        thresh_field_pt, "IField", dist_field_pt
+                    )
+                    gmsh.model.mesh.field.setNumber(thresh_field_pt, "LcMin", size)
+                    gmsh.model.mesh.field.setNumber(
+                        thresh_field_pt, "LcMax", background_size
+                    )
+                    gmsh.model.mesh.field.setNumber(thresh_field_pt, "DistMin", 0.0)
+                    gmsh.model.mesh.field.setNumber(
+                        thresh_field_pt, "DistMax", max(dist_max, radius)
+                    )
+                    field_ids.append(thresh_field_pt)
+                else:
+                    raise ValueError(f"Unknown refinement zone type: {ztype}")
+
+        # Combine all fields with Min
+        if len(field_ids) == 1:
+            gmsh.model.mesh.field.setAsBackgroundMesh(field_ids[0])
+        else:
+            min_field = gmsh.model.mesh.field.add("Min")
+            gmsh.model.mesh.field.setNumbers(min_field, "FieldsList", field_ids)
+            gmsh.model.mesh.field.setAsBackgroundMesh(min_field)
+
+        # Generate mesh
+        gmsh.model.mesh.generate(2)
+
+        # Extract mesh data (same as from_gmsh)
+        node_tags, node_coords, _ = gmsh.model.mesh.getNodes()
+        coords = np.array(node_coords).reshape(-1, 3)
+        nodes = coords[:, :2]
+        tag_to_idx = {tag: i for i, tag in enumerate(node_tags)}
+
+        elem_types, elem_tags, elem_node_tags = gmsh.model.mesh.getElements()
+        triangles = []
+        for etype, tags, node_tags_per_elem in zip(
+            elem_types, elem_tags, elem_node_tags
+        ):
+            if etype == 2:  # 3-node triangle
+                tri_nodes = np.array(node_tags_per_elem).reshape(-1, 3)
+                tri_idx = np.vectorize(lambda t: tag_to_idx[t])(tri_nodes)
+                triangles.append(tri_idx)
+        if not triangles:
+            raise ValueError("No triangular elements found in mesh.")
+        cells = np.vstack(triangles)
+
+        # Build mapping from edge key to physical group tag
+        edge_to_phys = {}
+        phys_groups = gmsh.model.getPhysicalGroups(dim=1)
+        for dim, tag in phys_groups:
+            entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
+            for entity_tag in entities:
+                elem_types2, elem_tags2, elem_node_tags2 = gmsh.model.mesh.getElements(
+                    dim=1, tag=entity_tag
+                )
+                for etype2, tags2, node_tags_per_elem2 in zip(
+                    elem_types2, elem_tags2, elem_node_tags2
+                ):
+                    if etype2 == 1:  # line
+                        edges = np.array(node_tags_per_elem2).reshape(-1, 2)
+                        for edge in edges:
+                            a, b = edge
+                            if a > b:
+                                a, b = b, a
+                            edge_to_phys[(a, b)] = tag
+
+        gmsh.finalize()
+
+        # Create mesh with default tags
+        mesh = cls(nodes, cells, boundary_tags=None)
+        # Assign boundary tags based on physical groups
+        if physical_group_map is None:
+            physical_group_map = {1: "left", 2: "right", 3: "bottom", 4: "top"}
+        mesh.assign_boundary_tags_from_gmsh_edges(
+            edge_to_phys, tag_to_idx, physical_group_map
+        )
+        return mesh
 
     @classmethod
     def from_meshpy(cls, points, facets, holes=None, max_area=None, min_angle=None):
@@ -2515,6 +2774,8 @@ class UnstructuredMesh3D(MeshStructure):
     ---------------------
     - ``UnstructuredMesh3D(nodes, cells, boundary_tags=None)``
     - ``UnstructuredMesh3D.from_delaunay(Nx, Ny, Nz, Lx, Ly, Lz)``
+    - ``UnstructuredMesh3D.from_gmsh(geo_file=None, geo_string=None, physical_group_map=None)``
+    - ``UnstructuredMesh3D.generate_box_with_boundary_refinement(Lx=1.0, Ly=1.0, Lz=1.0, background_size=0.2, boundary_refinement_distance=0.1, boundary_refinement_size=0.05, physical_group_map=None, refinement_zones=None)``
     """
 
     def __init__(self, nodes: np.ndarray, cells: np.ndarray, boundary_tags=None):
@@ -2534,6 +2795,63 @@ class UnstructuredMesh3D(MeshStructure):
         # Store nodes and cells for visualization
         self._nodes = nodes.copy()
         self._cells = cells.copy()
+
+    def assign_boundary_tags_from_gmsh_faces(
+        self, face_to_phys, tag_to_idx, physical_group_map=None
+    ):
+        """Assign boundary tags based on Gmsh physical groups on surfaces.
+
+        Parameters
+        ----------
+        face_to_phys : dict
+            Mapping from face key (node_tag_a, node_tag_b, node_tag_c) to physical group tag.
+        tag_to_idx : dict
+            Mapping from Gmsh node tag to index in self._nodes.
+        physical_group_map : dict, optional
+            Mapping from physical group tag to user-defined tag name.
+            If not provided, physical group tag numbers are used as strings.
+        """
+        import numpy as np
+
+        # Map physical group tag to tag name
+        tag_map = {}
+        for phys_tag in set(face_to_phys.values()):
+            if physical_group_map and phys_tag in physical_group_map:
+                tag_name = physical_group_map[phys_tag]
+            else:
+                tag_name = str(phys_tag)
+            tag_map[phys_tag] = tag_name
+
+        # Convert face keys from Gmsh node tags to node indices
+        face_to_phys_idx = {}
+        for (tag_a, tag_b, tag_c), phys_tag in face_to_phys.items():
+            idx_a = tag_to_idx[tag_a]
+            idx_b = tag_to_idx[tag_b]
+            idx_c = tag_to_idx[tag_c]
+            key = tuple(sorted((idx_a, idx_b, idx_c)))
+            face_to_phys_idx[key] = phys_tag
+
+        # Now iterate over boundary faces
+        new_tags = {}
+        for f_idx in self.boundary_faces:
+            a, b, c = self._face_nodes[f_idx]
+            key = tuple(sorted((a, b, c)))
+            if key in face_to_phys_idx:
+                phys_tag = face_to_phys_idx[key]
+                tag_name = tag_map[phys_tag]
+                new_tags.setdefault(tag_name, []).append(f_idx)
+            else:
+                # Face not found? Should not happen for boundary faces.
+                # Assign default tag "boundary"
+                new_tags.setdefault("boundary", []).append(f_idx)
+
+        # Convert lists to numpy arrays
+        for tag_name, faces in new_tags.items():
+            new_tags[tag_name] = np.array(faces, dtype=int)
+
+        # Update mesh attributes
+        self.boundary_tags = new_tags
+        self.boundary_normal_sign = {tag: 1.0 for tag in new_tags}
 
     @classmethod
     def from_delaunay(cls, Nx: int, Ny: int, Nz: int, Lx: float, Ly: float, Lz: float):
@@ -2572,6 +2890,394 @@ class UnstructuredMesh3D(MeshStructure):
 
         boundary_tags = None  # placeholder
         return cls(nodes, cells, boundary_tags)
+
+    @classmethod
+    def from_gmsh(cls, geo_file=None, geo_string=None, physical_group_map=None):
+        """Create a tetrahedral mesh from a Gmsh .geo file or geometry string.
+
+        Parameters
+        ----------
+        geo_file : str, optional
+            Path to a .geo file.
+        geo_string : str, optional
+            Geometry definition string (Gmsh .geo format).
+        physical_group_map : dict, optional
+            Mapping from Gmsh physical group numbers to tag names.
+            If not provided, physical group numbers are used as tags.
+
+        Returns
+        -------
+        UnstructuredMesh3D
+            Tetrahedral mesh with boundary tags derived from Gmsh physical groups.
+
+        Raises
+        ------
+        ImportError
+            If gmsh library is not installed.
+        ValueError
+            If neither geo_file nor geo_string is provided.
+        """
+        try:
+            import gmsh
+        except ImportError:
+            raise ImportError(
+                "Gmsh Python API not installed. Please install with: uv pip install gmsh"
+            )
+        import numpy as np
+
+        if geo_file is None and geo_string is None:
+            raise ValueError("Either geo_file or geo_string must be provided.")
+
+        gmsh.initialize()
+        gmsh.option.setNumber("General.Terminal", 0)  # suppress console output
+
+        if geo_file:
+            gmsh.open(geo_file)
+        else:
+            gmsh.model.add("geometry")
+            gmsh.model.geo.add(geo_string)
+            gmsh.model.geo.synchronize()
+
+        # Generate 3D mesh
+        gmsh.model.mesh.generate(3)
+
+        # Get nodes
+        node_tags, node_coords, _ = gmsh.model.mesh.getNodes()
+        # reshape coords: (x1, y1, z1, x2, y2, z2, ...) -> (N, 3)
+        coords = np.array(node_coords).reshape(-1, 3)
+        nodes = coords  # keep x,y,z
+        # map gmsh node tag to index
+        tag_to_idx = {tag: i for i, tag in enumerate(node_tags)}
+
+        # Get tetrahedral elements (type 4)
+        elem_types, elem_tags, elem_node_tags = gmsh.model.mesh.getElements()
+        tets = []
+        for etype, tags, node_tags_per_elem in zip(
+            elem_types, elem_tags, elem_node_tags
+        ):
+            if etype == 4:  # 4-node tetrahedron
+                # node_tags_per_elem is flat list of node tags for all tetrahedra
+                tet_nodes = np.array(node_tags_per_elem).reshape(-1, 4)
+                # map gmsh node tags to indices
+                tet_idx = np.vectorize(lambda t: tag_to_idx[t])(tet_nodes)
+                tets.append(tet_idx)
+        if not tets:
+            raise ValueError("No tetrahedral elements found in mesh.")
+        cells = np.vstack(tets)
+
+        # Build mapping from face key (sorted node indices) to physical group tag
+        # Collect all triangular elements (type 2) that belong to physical groups of dimension 2.
+        face_to_phys = {}  # (node_a, node_b, node_c) -> physical_tag
+        # Get physical groups of dimension 2 (surfaces)
+        phys_groups = gmsh.model.getPhysicalGroups(dim=2)
+        for dim, tag in phys_groups:
+            # Get entities (surfaces) associated with this physical group
+            entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
+            for entity_tag in entities:
+                # Get mesh elements (triangles) on this entity
+                elem_types2, elem_tags2, elem_node_tags2 = gmsh.model.mesh.getElements(
+                    dim=2, tag=entity_tag
+                )
+                for etype2, tags2, node_tags_per_elem2 in zip(
+                    elem_types2, elem_tags2, elem_node_tags2
+                ):
+                    if etype2 == 2:  # triangle
+                        faces = np.array(node_tags_per_elem2).reshape(-1, 3)
+                        for face in faces:
+                            a, b, c = face
+                            key = tuple(sorted((a, b, c)))
+                            face_to_phys[key] = tag
+
+        # If no physical groups found, default all boundary faces to tag 0
+        if not face_to_phys:
+            # Get all triangular elements (including internal faces?)
+            for etype, tags, node_tags_per_elem in zip(
+                elem_types, elem_tags, elem_node_tags
+            ):
+                if etype == 2:
+                    faces = np.array(node_tags_per_elem).reshape(-1, 3)
+                    for face in faces:
+                        a, b, c = face
+                        key = tuple(sorted((a, b, c)))
+                        face_to_phys[key] = 0  # default tag
+
+        gmsh.finalize()
+
+        # Create mesh with default tags (all boundary faces tagged "boundary")
+        mesh = cls(nodes, cells, boundary_tags=None)
+        # Assign boundary tags based on physical groups
+        mesh.assign_boundary_tags_from_gmsh_faces(
+            face_to_phys, tag_to_idx, physical_group_map
+        )
+        return mesh
+
+    @classmethod
+    def generate_box_with_boundary_refinement(
+        cls,
+        Lx=1.0,
+        Ly=1.0,
+        Lz=1.0,
+        background_size=0.2,
+        boundary_refinement_distance=0.1,
+        boundary_refinement_size=0.05,
+        physical_group_map=None,
+        refinement_zones=None,
+    ):
+        """Generate a tetrahedral mesh of a box with boundary refinement using Gmsh.
+
+        Parameters
+        ----------
+        Lx, Ly, Lz : float
+            Domain dimensions.
+        background_size : float
+            Mesh size far from boundaries.
+        boundary_refinement_distance : float
+            Distance from boundaries where refinement is applied.
+        boundary_refinement_size : float
+            Mesh size near boundaries.
+        physical_group_map : dict, optional
+            Mapping from Gmsh physical group numbers to tag names.
+            Default: {1: "left", 2: "right", 3: "bottom", 4: "top", 5: "front", 6: "back"}.
+        refinement_zones : list of dict, optional
+            List of refinement zone specifications. Each dict must contain:
+            'type' ('box', 'sphere', or 'cylinder'), 'parameters' (shape parameters),
+            'refinement_size' (target mesh size within zone), and optionally
+            'distance_max' (transition distance). Default: None.
+
+        Returns
+        -------
+        UnstructuredMesh3D
+            Tetrahedral mesh with boundary tags.
+
+        Raises
+        ------
+        ImportError
+            If gmsh library is not installed.
+        """
+        try:
+            import gmsh
+        except ImportError:
+            raise ImportError(
+                "Gmsh Python API not installed. Please install with: uv pip install gmsh"
+            )
+        import numpy as np
+
+        gmsh.initialize()
+        gmsh.option.setNumber("General.Terminal", 0)
+
+        # Create box geometry using elementary operations
+        gmsh.model.add("box")
+        # Points
+        p1 = gmsh.model.geo.addPoint(0, 0, 0)
+        p2 = gmsh.model.geo.addPoint(Lx, 0, 0)
+        p3 = gmsh.model.geo.addPoint(Lx, Ly, 0)
+        p4 = gmsh.model.geo.addPoint(0, Ly, 0)
+        p5 = gmsh.model.geo.addPoint(0, 0, Lz)
+        p6 = gmsh.model.geo.addPoint(Lx, 0, Lz)
+        p7 = gmsh.model.geo.addPoint(Lx, Ly, Lz)
+        p8 = gmsh.model.geo.addPoint(0, Ly, Lz)
+        # Edges
+        l1 = gmsh.model.geo.addLine(p1, p2)
+        l2 = gmsh.model.geo.addLine(p2, p3)
+        l3 = gmsh.model.geo.addLine(p3, p4)
+        l4 = gmsh.model.geo.addLine(p4, p1)
+        l5 = gmsh.model.geo.addLine(p5, p6)
+        l6 = gmsh.model.geo.addLine(p6, p7)
+        l7 = gmsh.model.geo.addLine(p7, p8)
+        l8 = gmsh.model.geo.addLine(p8, p5)
+        l9 = gmsh.model.geo.addLine(p1, p5)
+        l10 = gmsh.model.geo.addLine(p2, p6)
+        l11 = gmsh.model.geo.addLine(p3, p7)
+        l12 = gmsh.model.geo.addLine(p4, p8)
+        # Surfaces
+        # bottom (z=0)
+        loop1 = gmsh.model.geo.addCurveLoop([l1, l2, l3, l4])
+        bottom = gmsh.model.geo.addPlaneSurface([loop1])
+        # top (z=Lz)
+        loop2 = gmsh.model.geo.addCurveLoop([l5, l6, l7, l8])
+        top = gmsh.model.geo.addPlaneSurface([loop2])
+        # left (x=0)
+        loop3 = gmsh.model.geo.addCurveLoop([l4, l12, -l8, -l9])
+        left = gmsh.model.geo.addPlaneSurface([loop3])
+        # right (x=Lx)
+        loop4 = gmsh.model.geo.addCurveLoop([l2, l11, -l6, -l10])
+        right = gmsh.model.geo.addPlaneSurface([loop4])
+        # front (y=0)
+        loop5 = gmsh.model.geo.addCurveLoop([l1, l10, -l5, -l9])
+        front = gmsh.model.geo.addPlaneSurface([loop5])
+        # back (y=Ly)
+        loop6 = gmsh.model.geo.addCurveLoop([l3, l12, -l7, -l11])
+        back = gmsh.model.geo.addPlaneSurface([loop6])
+        # Volume
+        surf_loop = gmsh.model.geo.addSurfaceLoop(
+            [bottom, top, left, right, front, back]
+        )
+        volume = gmsh.model.geo.addVolume([surf_loop])
+        gmsh.model.geo.synchronize()
+
+        # Physical groups for boundaries
+        # Assign tags: 1 left, 2 right, 3 bottom, 4 top, 5 front, 6 back
+        gmsh.model.addPhysicalGroup(2, [left], tag=1)
+        gmsh.model.addPhysicalGroup(2, [right], tag=2)
+        gmsh.model.addPhysicalGroup(2, [bottom], tag=3)
+        gmsh.model.addPhysicalGroup(2, [top], tag=4)
+        gmsh.model.addPhysicalGroup(2, [front], tag=5)
+        gmsh.model.addPhysicalGroup(2, [back], tag=6)
+        # Physical group for volume
+        gmsh.model.addPhysicalGroup(3, [volume], tag=7)
+
+        # Define size field for boundary refinement
+        # Distance field from boundary surfaces
+        dist_field = gmsh.model.mesh.field.add("Distance")
+        gmsh.model.mesh.field.setNumbers(
+            dist_field, "SurfacesList", [left, right, bottom, top, front, back]
+        )
+        # Threshold field that varies size based on distance
+        thresh_field = gmsh.model.mesh.field.add("Threshold")
+        gmsh.model.mesh.field.setNumber(thresh_field, "IField", dist_field)
+        gmsh.model.mesh.field.setNumber(thresh_field, "LcMin", boundary_refinement_size)
+        gmsh.model.mesh.field.setNumber(thresh_field, "LcMax", background_size)
+        gmsh.model.mesh.field.setNumber(thresh_field, "DistMin", 0.0)
+        gmsh.model.mesh.field.setNumber(
+            thresh_field, "DistMax", boundary_refinement_distance
+        )
+        field_ids = [thresh_field]
+
+        # Add refinement zones if specified
+        if refinement_zones:
+            for zone in refinement_zones:
+                ztype = zone.get("type")
+                params = zone.get("parameters", {})
+                size = zone.get("refinement_size")
+                dist_max = zone.get("distance_max", 0.0)
+                if ztype == "box":
+                    # Box field: constant size inside box, transition outside
+                    box_field = gmsh.model.mesh.field.add("Box")
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "XMin", params.get("xmin", 0.0)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "XMax", params.get("xmax", Lx)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "YMin", params.get("ymin", 0.0)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "YMax", params.get("ymax", Ly)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "ZMin", params.get("zmin", 0.0)
+                    )
+                    gmsh.model.mesh.field.setNumber(
+                        box_field, "ZMax", params.get("zmax", Lz)
+                    )
+                    gmsh.model.mesh.field.setNumber(box_field, "VIn", size)
+                    gmsh.model.mesh.field.setNumber(box_field, "VOut", background_size)
+                    gmsh.model.mesh.field.setNumber(box_field, "Thickness", dist_max)
+                    field_ids.append(box_field)
+                elif ztype == "sphere":
+                    # Sphere field: constant size inside sphere
+                    cx, cy, cz = params.get("center", (Lx / 2, Ly / 2, Lz / 2))
+                    radius = params.get("radius", 0.1)
+                    sphere_field = gmsh.model.mesh.field.add("Sphere")
+                    gmsh.model.mesh.field.setNumber(sphere_field, "XCenter", cx)
+                    gmsh.model.mesh.field.setNumber(sphere_field, "YCenter", cy)
+                    gmsh.model.mesh.field.setNumber(sphere_field, "ZCenter", cz)
+                    gmsh.model.mesh.field.setNumber(sphere_field, "Radius", radius)
+                    gmsh.model.mesh.field.setNumber(sphere_field, "VIn", size)
+                    gmsh.model.mesh.field.setNumber(
+                        sphere_field, "VOut", background_size
+                    )
+                    gmsh.model.mesh.field.setNumber(sphere_field, "Thickness", dist_max)
+                    field_ids.append(sphere_field)
+                elif ztype == "cylinder":
+                    # Cylinder field: constant size inside cylinder
+                    # Axis defined by two points (p1, p2)
+                    p1 = params.get("p1", (0.0, 0.0, 0.0))
+                    p2 = params.get("p2", (0.0, 0.0, Lz))
+                    radius = params.get("radius", 0.1)
+                    cyl_field = gmsh.model.mesh.field.add("Cylinder")
+                    gmsh.model.mesh.field.setNumber(cyl_field, "XCenter", p1[0])
+                    gmsh.model.mesh.field.setNumber(cyl_field, "YCenter", p1[1])
+                    gmsh.model.mesh.field.setNumber(cyl_field, "ZCenter", p1[2])
+                    gmsh.model.mesh.field.setNumber(cyl_field, "XAxis", p2[0] - p1[0])
+                    gmsh.model.mesh.field.setNumber(cyl_field, "YAxis", p2[1] - p1[1])
+                    gmsh.model.mesh.field.setNumber(cyl_field, "ZAxis", p2[2] - p1[2])
+                    gmsh.model.mesh.field.setNumber(cyl_field, "Radius", radius)
+                    gmsh.model.mesh.field.setNumber(cyl_field, "VIn", size)
+                    gmsh.model.mesh.field.setNumber(cyl_field, "VOut", background_size)
+                    gmsh.model.mesh.field.setNumber(cyl_field, "Thickness", dist_max)
+                    field_ids.append(cyl_field)
+                else:
+                    raise ValueError(f"Unknown refinement zone type: {ztype}")
+
+        # Combine all fields with Min
+        if len(field_ids) == 1:
+            gmsh.model.mesh.field.setAsBackgroundMesh(field_ids[0])
+        else:
+            min_field = gmsh.model.mesh.field.add("Min")
+            gmsh.model.mesh.field.setNumbers(min_field, "FieldsList", field_ids)
+            gmsh.model.mesh.field.setAsBackgroundMesh(min_field)
+
+        # Generate 3D mesh
+        gmsh.model.mesh.generate(3)
+
+        # Extract mesh data (same as from_gmsh)
+        node_tags, node_coords, _ = gmsh.model.mesh.getNodes()
+        coords = np.array(node_coords).reshape(-1, 3)
+        nodes = coords  # keep x,y,z
+        tag_to_idx = {tag: i for i, tag in enumerate(node_tags)}
+
+        elem_types, elem_tags, elem_node_tags = gmsh.model.mesh.getElements()
+        tets = []
+        for etype, tags, node_tags_per_elem in zip(
+            elem_types, elem_tags, elem_node_tags
+        ):
+            if etype == 4:  # 4-node tetrahedron
+                tet_nodes = np.array(node_tags_per_elem).reshape(-1, 4)
+                tet_idx = np.vectorize(lambda t: tag_to_idx[t])(tet_nodes)
+                tets.append(tet_idx)
+        if not tets:
+            raise ValueError("No tetrahedral elements found in mesh.")
+        cells = np.vstack(tets)
+
+        # Build mapping from face key to physical group tag
+        face_to_phys = {}
+        phys_groups = gmsh.model.getPhysicalGroups(dim=2)
+        for dim, tag in phys_groups:
+            entities = gmsh.model.getEntitiesForPhysicalGroup(dim, tag)
+            for entity_tag in entities:
+                elem_types2, elem_tags2, elem_node_tags2 = gmsh.model.mesh.getElements(
+                    dim=2, tag=entity_tag
+                )
+                for etype2, tags2, node_tags_per_elem2 in zip(
+                    elem_types2, elem_tags2, elem_node_tags2
+                ):
+                    if etype2 == 2:  # triangle
+                        faces = np.array(node_tags_per_elem2).reshape(-1, 3)
+                        for face in faces:
+                            a, b, c = face
+                            key = tuple(sorted((a, b, c)))
+                            face_to_phys[key] = tag
+
+        gmsh.finalize()
+
+        # Create mesh with default tags
+        mesh = cls(nodes, cells, boundary_tags=None)
+        # Assign boundary tags based on physical groups
+        if physical_group_map is None:
+            physical_group_map = {
+                1: "left",
+                2: "right",
+                3: "bottom",
+                4: "top",
+                5: "front",
+                6: "back",
+            }
+        mesh.assign_boundary_tags_from_gmsh_faces(
+            face_to_phys, tag_to_idx, physical_group_map
+        )
+        return mesh
 
     def __repr__(self):
         return f"Unstructured tetrahedral mesh with {self.num_cells} cells, {self.num_faces} faces"
