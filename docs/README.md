@@ -9,9 +9,6 @@ Further documents will be collected here (in particular in [`/docs/source/`](sou
 
 ## Documentation TO-DO
 
-- Address all Sphinx `make clean; make html` warnings. Obtain a 'clean' output.
-- Structure the TOC tree well (e.g. Examples in a subtree)
-	- https://documentation.help/Sphinx/toctree.html
 - Set up a way of publishing the built documentation (ReadTheDocs? github.io? PDF?)
 - Tutorial documentation can nicely be written as Jupyter Notebooks.
   	- inspiration may be drawn from https://miepython.readthedocs.io -- [(source)](https://github.com/scottprahl/miepython)
@@ -25,37 +22,26 @@ Further documents will be collected here (in particular in [`/docs/source/`](sou
 See `CONTRIBUTING.md` for installation of the development environment, which also includes Sphinx and its plug-ins.
 
 
-### Sphinx set-up
-
-Sphinx has been set up as follows. The Sphinx set-up procedure is recorded here for future reference, but needs not be repeated, as the `docs` folder has already been configured.
-
-```
-sphinx-quickstart
-```
-
-`docs/conf.py` has been modified.
-
 
 ### Building the documentation
 
 From within the `docs` folder
 
+```bash
+sphinx-build -b html . _build/html
 ```
-make clean
-make html
+
+This will build everything, including the auto-API documentation, and the Jupyter notebooks (which will just be rendered, not explicitly re-run).
+
+The documentation in HTML will be in `docs/_build/html/`. Just open `docs/_build/html/index.html` in a web browser.
+
+It is also to use live-reload while writing:
+```bash
+# pip install sphinx-autobuild
+sphinx-autobuild . _build/html
 ```
 
-The documentation in HTML will be in `docs/build/html/`
 
-#### Regenerate RST source files for API documentation from PyFVTool docstrings
-
-Can perhaps be automated? Or only needs to be run once, with further manual editing.
-
-From within the `docs` folder
-
-```
-sphinx-apidoc ../src/pyfvtool -o ./source/pyfvtool_api_autodoc
-```
 
 
 
