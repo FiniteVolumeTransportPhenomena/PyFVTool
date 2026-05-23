@@ -35,11 +35,13 @@ quickstart
 :caption: User guide
 
 user_guide/meshes
+user_guide/coordinate_labels
 user_guide/cell_variables
 user_guide/boundary_conditions
 user_guide/discretization
 user_guide/solving
 user_guide/visualization
+user_guide/functions_and_classes
 ```
 
 ```{toctree}
@@ -62,4 +64,6 @@ api/index
 
 contributing
 changelog
+origin_story
 ```
+

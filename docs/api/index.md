@@ -4,26 +4,13 @@ This section documents the public API of PyFVTool. The text is generated automat
 
 *This section is in a preliminary state. For now, the code itself is the best documentation. Nonetheless, this section is a decent entry point.*
 
-## To do:
+
+## To do
 
 - update the `automodule` directives (in `docs/api/index.md`) to match the
 the actual filenames in the `src/pyfvtool/`.
 
 - `docs/api/index.md` is just a plain Markdown file, it can be edited freely. Add the missing modules and restructure however makes sense.
-
-
-
-
-## `pyfvtool` (top-level)
-
-There's nothing here, as there are no definitions in `__init__.py`, only imports. **TODO** We may remove this section.
-
-```{eval-rst}
-.. automodule:: pyfvtool
-   :members:
-   :undoc-members: False
-```
-
 
 
 

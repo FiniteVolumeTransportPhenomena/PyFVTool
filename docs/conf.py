@@ -65,6 +65,9 @@ source_suffix = {
 # The root document
 root_doc = 'index'
 
+# Exclude patterns
+exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'furo'   # Clean, modern theme used by many scientific projects
                        # Alternative: 'sphinx_rtd_theme'
