@@ -7,11 +7,11 @@ It discretizes and numerically solves the conservative form of transient PDEs of
 general form:
 
 $$
-\alpha\frac{\partial\phi}{\partial t}
-+ \nabla \cdot \left(\mathbf{u}\phi\right)
-+ \nabla \cdot (-\mathcal{D}\nabla\phi)
-+ \beta\phi
-+ \gamma = 0
+	\alpha\frac{\partial\phi}{\partial t}
+	+ \nabla \cdot \left(\mathbf{u}\phi\right)
+	+ \nabla \cdot (-\mathcal{D}\nabla\phi)
+	+ \beta\phi
+	+ \gamma = 0
 $$
 
 with general boundary conditions given as 
