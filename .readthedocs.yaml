@@ -1,5 +1,7 @@
 # .readthedocs.yaml
 
+# May need further tweaking.
+
 # Read the Docs configuration: https://docs.readthedocs.io/en/stable/config-file/v2.html
 
 version: 2
