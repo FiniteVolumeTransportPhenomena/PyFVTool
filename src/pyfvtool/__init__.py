@@ -1,14 +1,13 @@
-__version__ = "0.4.2"
+__version__ = "0.4.3"
 
 __author__ = [
     "Ali A. Eftekhari",
-    "Gavin M. Weir",
     "Martinus H. V. Werts"
 ]
 
-__contact__ = "e.eftekhari@gmail.com"
+__contact__ = "aliak@dtu.dk"
 
-__copyright__ = "Copyright 2023-2025, The Authors"
+__copyright__ = "Copyright 2023-2026, The Authors"
 
 __license__ = "MIT License"
 
