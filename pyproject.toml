@@ -2,7 +2,7 @@
 
 [project]
 name = "pyfvtool"
-version = "0.4.3"
+dynamic = ["version"] # version will be read from pyfvtool/__init__.py
 authors = [
     { name="Ali A. Eftekhari", email="aliak@dtu.dk" },
     { name="Martinus H. V. Werts", email="martinus.werts@univ-angers.fr" }
@@ -35,3 +35,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.dynamic]
+ # version will be read from pyfvtool/__init__.py
+version = {attr = "pyfvtool.__version__"}
