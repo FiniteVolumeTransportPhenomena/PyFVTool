@@ -1,15 +1,13 @@
 # API reference
 
-This section documents the public API of PyFVTool. The text is generated automatically from the source code docstrings.
-
-*This section is in a preliminary state. For now, the code itself is the best documentation. Nonetheless, this section is a decent entry point.*
+This section documents the public API of PyFVTool and is generated automatically from the source code docstrings.
 
 
-## To do
 
-- update the `automodule` directives (in `docs/api/index.md`) to match the
-the actual filenames in the `src/pyfvtool/`.
+## To do: API documentation
 
+- improve docstrings
+- re-verify the `automodule` directives (in `docs/api/index.md`) 
 - `docs/api/index.md` is just a plain Markdown file, it can be edited freely. Add the missing modules and restructure however makes sense.
 
 
