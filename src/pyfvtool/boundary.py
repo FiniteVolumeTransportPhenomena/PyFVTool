@@ -22,21 +22,6 @@ class BoundaryFace:
     """
     Class describing the boundary condition of a single face
     
-    
-    Attributes
-    ----------
-    
-    a : numpy.ndarray 
-        coefficient of the boundary condition
-    b : numpy.ndarray
-        coefficient of the boundary condition
-    c : numpy.ndarray
-        coefficient of the boundary condition
-    periodic : boolean
-        True if the boundary is periodic
-    modified : boolean
-        True if boundary condition values have been changed since last calculation
-        of BC terms and ghost cells, indicating need for a BC refresh
     """
     
     def __init__(self, a: np.ndarray, b: np.ndarray, c: np.ndarray, 
@@ -63,6 +48,7 @@ class BoundaryFace:
     
     @property
     def modified(self):
+        """Boolean to indicate if boundary conditions were modified since last update."""
         change = self._a.modified\
                  or self._b.modified\
                  or self._c.modified
@@ -77,6 +63,7 @@ class BoundaryFace:
     
     @property
     def a(self):
+        """Coefficient array `a` of the boundary condition."""
         return self._a
     
     @a.setter
@@ -85,6 +72,7 @@ class BoundaryFace:
         
     @property
     def b(self):
+        """Coefficient array `b` of the boundary condition."""
         return self._b
 
     @b.setter       
@@ -93,6 +81,7 @@ class BoundaryFace:
 
     @property
     def c(self):
+        """Coefficient array `c` of the boundary condition."""
         return self._c
 
     @c.setter       
@@ -101,6 +90,7 @@ class BoundaryFace:
         
     @property
     def periodic(self):
+        """Boolean. If True, use periodic boundary condition."""
         return self._periodic
 
     @periodic.setter       
