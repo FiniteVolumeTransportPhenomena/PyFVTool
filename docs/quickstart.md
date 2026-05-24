@@ -33,10 +33,9 @@ mesh = pf.Grid1D(Nx, Lx)
 c = pf.CellVariable(mesh, c_init)
 
 # 3. Set the left boundary to a fixed (Dirichlet) condition
-c.BCs.left.a[:] = 0.0
-c.BCs.left.b[:] = 1.0
-c.BCs.left.c[:] = c_left
-c.apply_BCs()
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = c_left
 
 # 4. Assign diffusivity and compute face-averaged values
 D_cell = pf.CellVariable(mesh, D_val)
@@ -60,13 +59,14 @@ pf.visualizeCells(c)
 |------|----------|---------|
 | 1 | `Grid1D` | Creates a uniform 1D Cartesian mesh |
 | 2 | `CellVariable` | Stores values at cell centres; holds boundary conditions |
-| 3 | `BCs` attributes | Specifies Robin BCs: $a \nabla c \cdot \mathbf{e} + b\,c = c_\text{val}$ |
+| 3 | `BCs` attributes | Specifiy BCs. Here, fixed-value (Dirichlet) on the left. |
 | 4 | `geometricMean` | Interpolates cell values to face values |
 | 5 | `transientTerm`, `diffusionTerm`, `solvePDE` | Assembles and solves the linear system |
 | 6 | `visualizeCells` | Plots the cell-centred values |
 
 ## Next steps
 
+- Browse the [Examples](examples/index) for more complete use cases.
 - See [Meshes](user_guide/meshes) for 2D and 3D grids, cylindrical, and spherical coordinates.
 - See [Boundary conditions](user_guide/boundary_conditions) for Dirichlet, Neumann, Robin, and periodic BCs.
-- Browse the [Examples](examples/index) for more complete use cases.
+
