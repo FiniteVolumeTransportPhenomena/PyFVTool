@@ -1,25 +1,8 @@
 # PyFVTool documentation
 
-In the present state of PyFVTool, documentation is scarce. A documentation system is being set-up using Sphinx. Docstrings are being added to the code, also enabling the `help` function in interactive Python sessions. 
+A documentation system using Sphinx has been being set-up. Docstrings are being added to the code, also enabling the `help` function in interactive Python sessions. 
 
 The [`/docs/source/notebook-examples/`](source/notebook-examples/) folder of the PyFVTool repository contains examples of how to set up finite-volume solvers using PyFVTool for a number of textbook cases. These Jupyter Notebooks are also integrated in the Sphinx documentation system.
-
-Further documents will be collected here (in particular in [`/docs/source/`](source/). Markdown can be used.
-
-
-## Documentation TO-DO
-
-- Set up a way of publishing the built documentation (ReadTheDocs? github.io? PDF?)
-- Tutorial documentation can nicely be written as Jupyter Notebooks.
-  	- inspiration may be drawn from https://miepython.readthedocs.io -- [(source)](https://github.com/scottprahl/miepython)
-  	- and https://sfepy.org -- [(source)](https://github.com/sfepy/sfepy)
-- Do not worry about tweaking Sphinx. This will happen as we go. Keep it simple!
-  	- see also: https://the-ultimate-sphinx-tutorial.readthedocs.io
-
-
-## Sphinx
-
-See `CONTRIBUTING.md` for installation of the development environment, which also includes Sphinx and its plug-ins.
 
 
 
@@ -35,11 +18,27 @@ This will build everything, including the auto-API documentation, and the Jupyte
 
 The documentation in HTML will be in `docs/_build/html/`. Just open `docs/_build/html/index.html` in a web browser.
 
-It is also to use live-reload while writing:
+It is also possible to use live-reload while writing:
 ```bash
 # pip install sphinx-autobuild
 sphinx-autobuild . _build/html
 ```
+
+## Documentation TO-DO
+
+- Set up a way of publishing the documentation (ReadTheDocs? github.io? PDF?)
+- Improve docstrings
+- Tutorial documentation can nicely be written as Jupyter Notebooks.
+  	- inspiration may be drawn from https://miepython.readthedocs.io -- [(source)](https://github.com/scottprahl/miepython)
+  	- and https://sfepy.org -- [(source)](https://github.com/sfepy/sfepy)
+- Do not worry about tweaking Sphinx. This will happen as we go. Keep it simple!
+  	- see also: https://the-ultimate-sphinx-tutorial.readthedocs.io
+
+
+## Sphinx included in the development Conda environment
+
+See `CONTRIBUTING.md` for installation of the development environment, which also includes Sphinx and its plug-ins.
+
 
 
 

@@ -10,11 +10,11 @@ folder, rendered here for convenient reading.
 ../../source/notebook-examples/cartesian1D_diffusion_advection_mason_weaver.ipynb
 ../../source/notebook-examples/cylindrical1D_diffusion_source_photothermal.ipynb
 ../../source/notebook-examples/cartesian1D_conv_diff_bench.ipynb
-../../source/notebook-examples/cartesian1D_diffusion_explicit.ipynb
 ../../source/notebook-examples/cartesian1D_diffusion.ipynb
+../../source/notebook-examples/cartesian1D_diffusion_explicit.ipynb
 ../../source/notebook-examples/cartesian1D_heat_equation_dirichlet.ipynb
-../../source/notebook-examples/cartesian1D_heat_equation_neumann_old_school.ipynb
 ../../source/notebook-examples/cartesian1D_heat_equation_neumann.ipynb
+../../source/notebook-examples/cartesian1D_heat_equation_neumann_old_school.ipynb
 ../../source/notebook-examples/cartesian1D_heat_equation_variant2.ipynb
 ../../source/notebook-examples/cylindrical1D_diffusion_steady.ipynb
 ../../source/notebook-examples/cylindrical1D_diffusion.ipynb
