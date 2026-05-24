@@ -1,6 +1,8 @@
 """This module contains functions for averaging node values to face values.
 
-functions:
+
+Functions:
+
     cell_size_array
     
     linearMean - linear interpolation of adjacent node values to face positions
@@ -14,6 +16,7 @@ functions:
     upwindMean - interpolate node values to face value based on local background velocity at face position
     
     tvdMean - NotImplemented
+    
 """
 import numpy as np
 
@@ -98,12 +101,13 @@ def arithmeticMean(phi: CellVariable):
     """
     Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by arithmetic averaging adjacent node values.   
     
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the arithmetic average on the cell faces, for a uniform Mesh. 
-            phi[face] = 1/#_adjacent_nodes * \\sum(phi[adjacent nodes]) 
-                --> 
-            phi[face] = 0.5 * (phi[face-0.5*dx] + phi[face+0.5*dx])
-                --> 
-            phi[face] =  (cell_width[-]*phi[-] + cell_width[+]*phi[+])/(cell_width[-]+cell_width[+])
+    This function gets the value of the field variable phi defined over the MeshStructure and calculates the arithmetic average on the cell faces, for a uniform Mesh::
+
+        phi[face] = 1/#_adjacent_nodes * \\sum(phi[adjacent nodes]) 
+            --> 
+        phi[face] = 0.5 * (phi[face-0.5*dx] + phi[face+0.5*dx])
+            --> 
+        phi[face] =  (cell_width[-]*phi[-] + cell_width[+]*phi[+])/(cell_width[-]+cell_width[+])
             
 
     Parameters
@@ -130,9 +134,12 @@ def arithmeticMean(phi: CellVariable):
 
     Examples
     --------
-    >>>     
-    
+    >>> import pyfvtool as pf
+    >>> mesh = pf.Grid1D(10, 1.0)
+    >>> phi = pf.CellVariable(mesh, 1.0)
+    >>> phi_face = pf.arithmeticMean(phi)
     """
+    
     if issubclass(type(phi.domain), Grid1D):
         dx = cell_size_array(phi.domain)
         return FaceVariable(phi.domain,
@@ -157,14 +164,15 @@ def geometricMean(phi: CellVariable):
     """
     Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by geometric averaging adjacent node values.   
     
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the geometric average on the cell faces, for a uniform Mesh. 
-            phi[face] = ( \\prod(phi_nodes) )^(1/#_adjacent_nodes)
-                --> 
-            phi[face] = (phi[face-0.5*dx]*phi[face+0.5*dx])^(0.5)
-                --> 
-            phi[face] =  exp(
-                    ( cell_width[-] * ln(phi[-]) + cell_width[+] * ln(phi[+]) ) / ( cell_width[-] + cell_width[+] )
-                )
+    This function gets the value of the field variable phi defined over the MeshStructure and calculates the geometric average on the cell faces, for a uniform Mesh::
+    
+        phi[face] = ( \\prod(phi_nodes) )^(1/#_adjacent_nodes)
+            --> 
+        phi[face] = (phi[face-0.5*dx]*phi[face+0.5*dx])^(0.5)
+            --> 
+        phi[face] =  exp(
+                ( cell_width[-] * ln(phi[-]) + cell_width[+] * ln(phi[+]) ) / ( cell_width[-] + cell_width[+] )
+            )
 
     Parameters
     ----------
@@ -229,12 +237,13 @@ def harmonicMean(phi: CellVariable):
     """
     Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by harmonic averaging adjacent node values.   
     
-    This function gets the value of the field variable phi defined over the MeshStructure and calculates the harmonic average on the cell faces, for a uniform Mesh. 
-            phi[face] = \\sum(1.0/phi_nodes)^(-1)
-                --> 
-            phi[face] = (1/phi[face-0.5*dx] + 1/phi[face+0.5*dx])^(-1)
-                --> 
-            phi[face] = ( cell_width[-] + cell_width[+] ) / (  cell_width[-]/phi[-] + cell_width[+]/phi[+]  ) 
+    This function gets the value of the field variable phi defined over the MeshStructure and calculates the harmonic average on the cell faces, for a uniform Mesh::
+    
+        phi[face] = \\sum(1.0/phi_nodes)^(-1)
+            --> 
+        phi[face] = (1/phi[face-0.5*dx] + 1/phi[face+0.5*dx])^(-1)
+            --> 
+        phi[face] = ( cell_width[-] + cell_width[+] ) / (  cell_width[-]/phi[-] + cell_width[+]/phi[+]  ) 
 
     Parameters
     ----------
