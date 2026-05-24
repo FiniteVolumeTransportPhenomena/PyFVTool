@@ -32,7 +32,7 @@ Remember to run `conda activate pyfvtool_user` each time before using PyFVTool.
 
 Add the following to the first cell of your notebook:
 
-```python
+```
 !pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
 ```
 

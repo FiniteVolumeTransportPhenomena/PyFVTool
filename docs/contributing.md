@@ -4,13 +4,25 @@ Contributions are welcome — including documentation improvements!
 
 ## Setting up a development environment
 
+### Create specific Conda environment
+
 ```bash
+conda create --name pyfvtool_dev python=3.12 mkl numpy scipy matplotlib spyder jupyterlab pytest tqdm
+conda activate pyfvtool_dev
+conda install sphinx furo myst-parser nbsphinx pandoc
+pip install sphinx-copybutton sphinx-autobuild
+```
+
+### Create a local git repo with an editable install 
+
+```bash
+conda activate pyfvtool_dev
 git clone https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
 cd PyFVTool
-conda create --name pyfvtool_dev python=3.12 numpy scipy matplotlib
-conda activate pyfvtool_dev
-pip install -e ".[docs]"
+pip install --editable .
 ```
+
+(Do not forget the trailing dot!)
 
 ## Building the docs locally
 
