@@ -14,11 +14,15 @@ $$
 + \gamma = 0
 $$
 
-with general Robin boundary conditions $a\nabla\phi \cdot \mathbf{e} + b\phi = c$.
+with general boundary conditions given as 
+
+$$
+a\nabla\phi \cdot \mathbf{e} + b\phi = c
+$$
 
 PyFVTool is oriented toward **heat and mass transport phenomena** on structured meshes,
 for cases where the flow velocity field is already known or absent. It is pure scientific
-Python — only `numpy`, `scipy`, and `matplotlib` are required.
+Python. Only `numpy`, `scipy`, and `matplotlib` are required.
 
 ---
 
