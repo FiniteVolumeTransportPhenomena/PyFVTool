@@ -9,7 +9,7 @@ sys.path.insert(0, os.path.abspath('../src'))
 
 # -- Project information -----------------------------------------------------
 project = 'PyFVTool'
-copyright = '2024, PyFVTool contributors'
+copyright = '2026, PyFVTool contributors'
 author = 'PyFVTool contributors'
 
 # -- General configuration ---------------------------------------------------
@@ -66,7 +66,14 @@ source_suffix = {
 root_doc = 'index'
 
 # Exclude patterns
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+#   Use the `**/` wildcard to exclude the specified files and folders
+#   anywhere in the docs tree
+exclude_patterns = ['_build', 
+                    'README.md',
+                    '**/Thumbs.db', 
+                    '**/.DS_Store',                    
+                    '**/.virtual_documents',
+                    '**/.ipynb_checkpoints']
 
 # -- Options for HTML output -------------------------------------------------
 html_theme = 'furo'   # Clean, modern theme used by many scientific projects
