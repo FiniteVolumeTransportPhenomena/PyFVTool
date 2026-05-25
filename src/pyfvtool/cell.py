@@ -309,13 +309,17 @@ class CellVariable:
 
 
     def apply_BCs(self):
-        """(Re)initialize ghost cells according to the boundary conditions and
-        the internal (inner) cell values.
+        """Update ghost cells according to the boundary conditions and the 
+        internal (inner) cell values.
         
-        It is necessary to explicitly call this method in certain special cases, 
-        in particular when the CellVariable is used prior to using `solvePDE()`. 
-        Or when `solvePDE()` is not used at all, typically when working with
-        the 'expert-level' function `solveMatrixPDE()`.
+        In standard use, i.e. when solving equations with `solvePDE()`, it is
+        NOT necessary to call this method, as the updates are handled 
+        automatically.
+        
+        In certain special 'expert-level' cases, specific calls to this method
+        may be necessary. For instance, when the CellVariable is used before 
+        calling `solvePDE()`. Or when when working with the function
+        `solveMatrixPDE()` instead of `solvePDE()`.
         
         In general, superfluous calls to apply_BCs() will not hurt.
         
