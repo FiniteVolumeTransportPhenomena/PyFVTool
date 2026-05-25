@@ -1,11 +1,8 @@
 __version__ = "0.4.4"
 
-__author__ = [
-    "Ali A. Eftekhari",
-    "Martinus H. V. Werts"
-]
+__author__ = ["Ali A. Eftekhari", "Martinus H. V. Werts"]
 
-__contact__ = "aliak@dtu.dk"
+__email__ = ["aliak@dtu.dk", "martinus.werts@univ-angers.fr"]
 
 __copyright__ = "Copyright 2023-2026, The Authors"
 
