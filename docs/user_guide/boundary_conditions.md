@@ -28,17 +28,14 @@ For a 1D mesh, the available boundaries are `.left` and `.right`:
 
 ```python
 # Dirichlet: fix concentration to 1.0 at the left boundary
-c.BCs.left.a[:] = 0.0
-c.BCs.left.b[:] = 1.0
-c.BCs.left.c[:] = 1.0
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = 1.0
 
 # Neumann: fixed flux of 0.5 at the right boundary
-c.BCs.right.a[:] = 1.0
-c.BCs.right.b[:] = 0.0
-c.BCs.right.c[:] = 0.5
-
-# Apply the BCs (required after any changes)
-c.apply_BCs()
+c.BCs.right.a = 1.0
+c.BCs.right.b = 0.0
+c.BCs.right.c = 0.5
 ```
 
 For 2D meshes, the available boundaries are `.left`, `.right`, `.bottom`, `.top`.
@@ -48,9 +45,3 @@ For 3D meshes, `.back` and `.front` are added.
 
 Periodic BCs can be specified where appropriate.
 Consult the examples notebooks for details.
-
-## When to call `apply_BCs()`
-
-Call `c.apply_BCs()` after any change to `c.BCs`, and before assembling the
-equation terms in the time loop. You do **not** need to call it every time step
-if the BCs are constant.
