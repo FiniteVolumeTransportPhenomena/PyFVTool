@@ -3,7 +3,7 @@
 
 ## User (API) coordinate labels vs internal (private) labels
 
-*If you are a casual user of this library, you do not need to read this section. It details the inner workings of PyFVTool. This knowledge is not required to simply use the PyFVTool as a library.*
+*If you are a casual user of this library, there is no need to read this section. It details the inner workings of PyFVTool. This knowledge is not required to simply use the PyFVTool as a library.*
 
 Internally, PyFVTool always uses an (x, y, z) convention for labeling coordinates, even for cylindrical and spherical grids. This is for historical reasons and efficient coding. Also, these three dimensions are always present, even in the case for 1D and 2D grids.
 

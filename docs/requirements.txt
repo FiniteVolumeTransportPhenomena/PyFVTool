@@ -1,0 +1,14 @@
+# Sphinx documentation dependencies
+# Install with: pip install -r docs/requirements.txt
+
+sphinx>=7.0
+furo                      # theme
+myst-parser               # Markdown support
+nbsphinx                  # Jupyter notebook rendering
+sphinx-copybutton         # copy button on code blocks
+pandoc                    # required by nbsphinx for notebook conversion
+
+# PyFVTool runtime deps (needed for autodoc to import the package)
+numpy>=2.0
+scipy
+matplotlib

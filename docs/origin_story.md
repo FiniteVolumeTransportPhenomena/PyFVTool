@@ -1,10 +1,11 @@
 # PyFVTool Origins
 
-The origin story of PyFVTool remains to be written, but can be reconstructed from many remaining digital artifacts that can be found by exploring GitHub and the Internets.
+The origin story of PyFVTool has not yet been told. It can likely be reconstructed from remaining digital artefacts, which may be found by exploration of GitHub and the Internets.
 
-## `dev_story.py`
 
-Fragments of the story of porting (Py)FVTool from MATLAB to Python remained in a log file `dev_story.py`, by the sage [A. A. Eftekhari](https://github.com/simulkade), last updated in [February 2023](https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/commit/01e211896063c9bc2d3622e2eecc9d821b26aff8). It is conserved here.
+## A precious digital artefact: `dev_story.py`
+
+Fragments of the story of porting (Py)FVTool from MATLAB to Python were discovered in a log file `dev_story.py`. This log file is attributed to the sage [A. A. Eftekhari](https://github.com/simulkade), last updated in [February 2023](https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/commit/01e211896063c9bc2d3622e2eecc9d821b26aff8). It is conserved here.
 
 ```python
 # from visualization import *

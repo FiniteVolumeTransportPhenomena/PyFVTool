@@ -5,10 +5,9 @@
 .ipynb_checkpoints/
 .virtual_documents/
 vscode/
-build/
+_build/
+local/
 
 # Git is case-sensitive on some operating systems
 PyFVTool.egg-info/
 pyfvtool.egg-info/
-
-local/

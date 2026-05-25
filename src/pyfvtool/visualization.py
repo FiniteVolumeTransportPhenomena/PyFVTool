@@ -41,7 +41,6 @@ def visualizeCells(phi: CellVariable,
     if isinstance(phi.domain, Grid1D):
         x, phi0 = phi.plotprofile()
         plt.plot(x, phi0)
-        # plt.show()
 
     elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
         x, y, phi0 = phi.plotprofile()
@@ -52,13 +51,11 @@ def visualizeCells(phi: CellVariable,
         plt.pcolormesh(x, y, phi0.T, 
                        vmin=vmin, vmax=vmax,
                        cmap=cmap, shading=shading)
-        # plt.show()
 
     elif (type(phi.domain) is PolarGrid2D):
         x, y, phi0 = phi.plotprofile()
         plt.subplot(111, polar="true")
         plt.pcolor(y, x, phi0)
-        # plt.show()
 
     elif (type(phi.domain) is Grid3D):
         x, y, z, phi0 = phi.plotprofile()
@@ -92,7 +89,6 @@ def visualizeCells(phi: CellVariable,
         ax.plot_surface(X[:,:,-1], Y[:,:,-1], Z[:,:,-1],
                         facecolors=plt.cm.viridis(mynormalize(phi0[:,:,-1])),
                         alpha=0.8)
-        # plt.show()
 
     elif (type(phi.domain) is CylindricalGrid3D):
         r, theta, z, phi0 = phi.plotprofile()
@@ -127,7 +123,6 @@ def visualizeCells(phi: CellVariable,
         ax.plot_surface(X[:, :, -1], Y[:, :, -1], Z[:, :, -1],
                        facecolors=plt.cm.viridis(mynormalize(phi0[:, :, -1])),
                        alpha=alfa)
-        # plt.show()
 
     elif (type(phi.domain) is SphericalGrid3D):
         warn("SphericalGrid3D visualization is not working properly yet.")
@@ -168,3 +163,6 @@ def visualizeCells(phi: CellVariable,
     else:
         # just in case...
         raise ValueError('Unsupported mesh: '+str(type(phi.domain)))
+        
+    plt.show()
+    

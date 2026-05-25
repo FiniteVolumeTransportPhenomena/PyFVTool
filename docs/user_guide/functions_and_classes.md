@@ -1,8 +1,11 @@
 # PyFVTool functions and classes
 
-Here, we may document the functions and classes needed for setting up set up finite-volume calculations with PyFVTool, organized according to category.
+Here, we are collecting an overview the functions and classes needed for setting up set up finite-volume calculations with PyFVTool, organized according to category.
 
-## Initial list (not necessarily complete yet)
+You can also have a look the [API documentation](../api/index.md).
+
+
+## Initial list (not necessarily complete!)
 
 See also `__init__.py` in the `pyfvtool` module directory.
 
