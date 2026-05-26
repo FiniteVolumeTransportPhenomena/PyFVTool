@@ -92,3 +92,9 @@ html_static_path = ['_static']
 # -- Options for autodoc -----------------------------------------------------
 # Suppress warnings for missing type annotations
 nitpicky = False
+
+# -- Additional options (GitHub workflows, etc.
+# Map ipython3 kernel name to python for syntax highlighting
+from pygments.lexers import get_lexer_by_name
+from sphinx.highlighting import lexers
+lexers['ipython3'] = get_lexer_by_name('python')
