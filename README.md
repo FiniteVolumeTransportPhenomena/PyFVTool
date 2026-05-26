@@ -31,7 +31,8 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
   * Divergence and gradient terms
 
-PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects.  There is not much documentation for the code yet (help wanted!). The [`./docs/source/notebook-examples/`](docs/source/notebook-examples/) folder is the best place to start. It contains annotated Jupyter Notebooks. From the examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
+PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects. Initial documentation can be found at https://finitevolumetransportphenomena.github.io/PyFVTool/. The documentation includes many [examples](https://finitevolumetransportphenomena.github.io/PyFVTool/examples/index.html) in the form of Jupyter notebooks. From these examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
+
 
 ## Installation
 
@@ -75,7 +76,7 @@ If you would like to work on the source code, it is possible to install a develo
 
 ## Example
 
-Here is a simple example of a 1D transient diffusion equation. Further examples can be found as Jupyter Notebooks in [`./docs/source/notebook-examples/`](docs/source/notebook-examples/).
+Here is a simple example of a 1D transient diffusion equation. Further [examples](https://finitevolumetransportphenomena.github.io/PyFVTool/examples/index.html) can be found in the [documentation](https://finitevolumetransportphenomena.github.io/PyFVTool/). These examples are also available as Jupyter notebook source files in [`./docs/source/notebook-examples/`](docs/source/notebook-examples/).
 
 
 ```python
