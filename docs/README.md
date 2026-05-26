@@ -26,7 +26,6 @@ sphinx-autobuild . _build/html
 
 ## Documentation TO-DO
 
-- Set up a way of publishing the documentation (ReadTheDocs? github.io? PDF?)
 - Improve docstrings
 - Tutorial documentation can nicely be written as Jupyter Notebooks.
   	- inspiration may be drawn from https://miepython.readthedocs.io -- [(source)](https://github.com/scottprahl/miepython)
