@@ -293,10 +293,10 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-from numpy import exp
-from scipy.special import jn_zeros, j0, j1
-import matplotlib.pyplot as plt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">jn_zeros</span><span class="p">,</span> <span class="n">j0</span><span class="p">,</span> <span class="n">j1</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -304,12 +304,12 @@ import matplotlib.pyplot as plt
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># explicity import all required routines from pyfvtool
-from pyfvtool import CylindricalGrid1D
-from pyfvtool import CellVariable
-from pyfvtool import transientTerm, diffusionTerm
-from pyfvtool import harmonicMean
-from pyfvtool import solvePDE
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># explicity import all required routines from pyfvtool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CylindricalGrid1D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">transientTerm</span><span class="p">,</span> <span class="n">diffusionTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">harmonicMean</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">solvePDE</span>
 </pre></div>
 </div>
 </div>
@@ -334,26 +334,26 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def crank522(r, t, a, D):
-    &#39;&#39;&#39;evaluate eqn 5.22 for a given r,t
-    a : radius of cylinder
-    D : diffusion coefficient
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">crank522</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&#39;&#39;&#39;evaluate eqn 5.22 for a given r,t</span>
+<span class="sd">    a : radius of cylinder</span>
+<span class="sd">    D : diffusion coefficient</span>
 
-    the following global variables need to be set
+<span class="sd">    the following global variables need to be set</span>
 
-    Nterm_crank : number of terms to be evaluated
-    &#39;&#39;&#39;
-    global Nterm_crank
+<span class="sd">    Nterm_crank : number of terms to be evaluated</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">global</span> <span class="n">Nterm_crank</span>
 
-    aalp = jn_zeros(0, Nterm_crank)
-    alpha = aalp/a
+    <span class="n">aalp</span> <span class="o">=</span> <span class="n">jn_zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nterm_crank</span><span class="p">)</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">aalp</span><span class="o">/</span><span class="n">a</span>
 
-    XJ0 = exp(-D * alpha**2 * t) * j0(r*alpha)
-    AJ1 = alpha * j1(aalp)
+    <span class="n">XJ0</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">D</span> <span class="o">*</span> <span class="n">alpha</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span> <span class="o">*</span> <span class="n">j0</span><span class="p">(</span><span class="n">r</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span>
+    <span class="n">AJ1</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">j1</span><span class="p">(</span><span class="n">aalp</span><span class="p">)</span>
 
-    S = np.sum(XJ0/AJ1)
+    <span class="n">S</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">XJ0</span><span class="o">/</span><span class="n">AJ1</span><span class="p">)</span>
 
-    return 1.0 - (2.0/a) * S
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">/</span><span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">S</span>
 </pre></div>
 </div>
 </div>
@@ -361,10 +361,10 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set world parameters
-a_val = 2.9
-D_val = 1.9
-Nterm_crank = 30
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set world parameters</span>
+<span class="n">a_val</span> <span class="o">=</span> <span class="mf">2.9</span>
+<span class="n">D_val</span> <span class="o">=</span> <span class="mf">1.9</span>
+<span class="n">Nterm_crank</span> <span class="o">=</span> <span class="mi">30</span>
 </pre></div>
 </div>
 </div>
@@ -372,8 +372,8 @@ Nterm_crank = 30
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># create radial axis for plotting analytic solution
-r_an = np.linspace(0.,a_val,200)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create radial axis for plotting analytic solution</span>
+<span class="n">r_an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span><span class="n">a_val</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -381,15 +381,15 @@ r_an = np.linspace(0.,a_val,200)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># evaluate crank522 at different points in time, and plot
-for t in [0.005, 0.01, 0.02, 0.03, 0.04, 0.06, 0.08, 0.1, 0.15,
-          0.2, 0.3, 0.4, 0.6, 0.8]:
-    c = np.array([crank522(rr, t, a_val, D_val) for rr in r_an])
-    plt.plot(r_an, c)
-plt.xlabel(&#39;rel. radial position&#39;)
-plt.ylabel(&#39;rel. temperature&#39;)
-plt.title(&#39;analytic solution&#39;)
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># evaluate crank522 at different points in time, and plot</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="mf">0.005</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">0.08</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span>
+          <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]:</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">crank522</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">a_val</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_an</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_an</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;rel. radial position&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rel. temperature&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;analytic solution&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -408,11 +408,11 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Nr = 50
-Lr = a_val
-c_outer = 1.0 # (outer) boundary concentration
-c0 = 0.0
-deltat = 0.001
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Nr</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">Lr</span> <span class="o">=</span> <span class="n">a_val</span>
+<span class="n">c_outer</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># (outer) boundary concentration</span>
+<span class="n">c0</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">deltat</span> <span class="o">=</span> <span class="mf">0.001</span>
 </pre></div>
 </div>
 </div>
@@ -420,7 +420,7 @@ deltat = 0.001
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mesh = CylindricalGrid1D(Nr, Lr)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">CylindricalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -429,7 +429,7 @@ deltat = 0.001
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>c = CellVariable(mesh, c0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">c0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -439,10 +439,10 @@ deltat = 0.001
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># switch the right (=outer) boundary to Dirichlet: fixed concentration
-c.BCs.right.a = 0.0
-c.BCs.right.b = 1.0
-c.BCs.right.c = c_outer
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># switch the right (=outer) boundary to Dirichlet: fixed concentration</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c_outer</span>
 </pre></div>
 </div>
 </div>
@@ -450,8 +450,8 @@ c.BCs.right.c = c_outer
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>D = CellVariable(mesh, D_val) # diffusion coefficient
-alfa = CellVariable(mesh, 1.0) # transientterm coefficient
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">D</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span> <span class="c1"># diffusion coefficient</span>
+<span class="n">alfa</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="c1"># transientterm coefficient</span>
 </pre></div>
 </div>
 </div>
@@ -459,7 +459,7 @@ alfa = CellVariable(mesh, 1.0) # transientterm coefficient
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t = 0.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </div>
@@ -468,26 +468,26 @@ alfa = CellVariable(mesh, 1.0) # transientterm coefficient
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>r_an = np.linspace(0., a_val,200) # axis for plotting analytic solution
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.</span><span class="p">,</span> <span class="n">a_val</span><span class="p">,</span><span class="mi">200</span><span class="p">)</span> <span class="c1"># axis for plotting analytic solution</span>
 
-sample_i = [5,10,20,30,40,60,80,100,150,200,300,400,600,800]
+<span class="n">sample_i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">60</span><span class="p">,</span><span class="mi">80</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">300</span><span class="p">,</span><span class="mi">400</span><span class="p">,</span><span class="mi">600</span><span class="p">,</span><span class="mi">800</span><span class="p">]</span>
 
-for i in range(0,1001):
-    if i in sample_i:
-        r, phi = c.plotprofile()
-        plt.plot(r, phi)
-        c_an = np.array([crank522(rr,t,a_val,D_val) for rr in r_an])
-        plt.plot(r_an,c_an, &#39;k:&#39;)
-    # calculate the value of D at the faces
-    # as the harmonic mean of the values at the centers
-    Dave = harmonicMean(D)
-    solvePDE(c,
-             [ transientTerm(c, deltat, alfa),
-              -diffusionTerm(Dave)])
-    t += deltat
-plt.xlabel(&#39;radial position $r$&#39;)
-plt.ylabel(&#39;rel. temperature $T$&#39;)
-plt.title(&#39;FVM (PyFVTool) solution. Dotted line = analytic&#39;);
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1001</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sample_i</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+        <span class="n">c_an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">crank522</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">a_val</span><span class="p">,</span><span class="n">D_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_an</span><span class="p">])</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_an</span><span class="p">,</span><span class="n">c_an</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">)</span>
+    <span class="c1"># calculate the value of D at the faces</span>
+    <span class="c1"># as the harmonic mean of the values at the centers</span>
+    <span class="n">Dave</span> <span class="o">=</span> <span class="n">harmonicMean</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
+    <span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span>
+             <span class="p">[</span> <span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">alfa</span><span class="p">),</span>
+              <span class="o">-</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">Dave</span><span class="p">)])</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">deltat</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position $r$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rel. temperature $T$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;FVM (PyFVTool) solution. Dotted line = analytic&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -506,12 +506,12 @@ plt.title(&#39;FVM (PyFVTool) solution. Dotted line = analytic&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>r_num, phi_num = c.plotprofile()
-phi_an_r_num = np.array([crank522(rr, t, a_val, D_val) for rr in r_num])
-norm_err = (phi_num - phi_an_r_num)/phi_an_r_num.max()
-plt.plot(r_num, norm_err, &#39;o&#39;)
-plt.xlabel(&#39;radial position $r$&#39;)
-plt.ylabel(&#39;norm. error FV vs analytic&#39;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_num</span><span class="p">,</span> <span class="n">phi_num</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
+<span class="n">phi_an_r_num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">crank522</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">a_val</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_num</span><span class="p">])</span>
+<span class="n">norm_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">phi_num</span> <span class="o">-</span> <span class="n">phi_an_r_num</span><span class="p">)</span><span class="o">/</span><span class="n">phi_an_r_num</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position $r$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;norm. error FV vs analytic&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -526,7 +526,7 @@ plt.ylabel(&#39;norm. error FV vs analytic&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>assert np.all(np.abs(norm_err) &lt; 0.0005)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_err</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0005</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

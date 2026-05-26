@@ -328,8 +328,8 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-import matplotlib.pyplot as plt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -337,16 +337,16 @@ import matplotlib.pyplot as plt
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># explicit imports as an alternative to `import pyfvtool as pf`
-from pyfvtool import Grid1D
-from pyfvtool import cellLocations, CellVariable
-from pyfvtool import faceLocations, FaceVariable
-from pyfvtool import BoundaryConditions
-from pyfvtool import diffusionTerm
-from pyfvtool import constantSourceTerm
-from pyfvtool import boundaryConditionsTerm
-from pyfvtool import solvePDE
-from pyfvtool import visualizeCells
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># explicit imports as an alternative to `import pyfvtool as pf`</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid1D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">cellLocations</span><span class="p">,</span> <span class="n">CellVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">faceLocations</span><span class="p">,</span> <span class="n">FaceVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundaryConditions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusionTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">constantSourceTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">boundaryConditionsTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">solvePDE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">visualizeCells</span>
 </pre></div>
 </div>
 </div>
@@ -354,11 +354,11 @@ from pyfvtool import visualizeCells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Define the domain and create a mesh structure
-L = 20      # domain length
-# Nx = 10000  # number of cells (original)
-Nx = 100000  # number of cells (test)
-m = Grid1D(Nx, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Define the domain and create a mesh structure</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mi">20</span>      <span class="c1"># domain length</span>
+<span class="c1"># Nx = 10000  # number of cells (original)</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">100000</span>  <span class="c1"># number of cells (test)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -366,8 +366,8 @@ m = Grid1D(Nx, L)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Solution variable
-c = CellVariable(m, 0.0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Solution variable</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -375,13 +375,13 @@ c = CellVariable(m, 0.0)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Boundary Conditions
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Boundary Conditions</span>
 
-# Left boundary
-c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
+<span class="c1"># Left boundary</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span>
 
-# Right boundary (Neumann zero-flux is the default in this package)
-c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 1.0, 0.0, 0.0
+<span class="c1"># Right boundary (Neumann zero-flux is the default in this package)</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </div>
@@ -389,9 +389,9 @@ c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 1.0, 0.0, 0.0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># define the transfer coeffs
-D_val = 1.0
-D = FaceVariable(m, D_val)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the transfer coeffs</span>
+<span class="n">D_val</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">FaceVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -399,9 +399,9 @@ D = FaceVariable(m, D_val)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># define source term
-def rho(x):
-    return -1.0*((x&gt;=-1.0)*(x&lt;=0))+(x&gt;0)*(x&lt;=1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define source term</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rho</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mf">1.0</span><span class="o">*</span><span class="p">((</span><span class="n">x</span><span class="o">&gt;=-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">&lt;=</span><span class="mi">0</span><span class="p">))</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">&lt;=</span><span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -409,7 +409,7 @@ def rho(x):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = m.cellcenters.x-0.5*L # shift the domain to [-10,10]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">x</span><span class="o">-</span><span class="mf">0.5</span><span class="o">*</span><span class="n">L</span> <span class="c1"># shift the domain to [-10,10]</span>
 </pre></div>
 </div>
 </div>
@@ -417,8 +417,8 @@ def rho(x):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>c = solvePDE(c, [-constantSourceTerm(CellVariable(m, rho(x))),
-                  diffusionTerm(D)])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="n">constantSourceTerm</span><span class="p">(</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">rho</span><span class="p">(</span><span class="n">x</span><span class="p">))),</span>
+                  <span class="n">diffusionTerm</span><span class="p">(</span><span class="n">D</span><span class="p">)])</span>
 </pre></div>
 </div>
 </div>
@@ -426,13 +426,13 @@ def rho(x):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># visualization
-plt.figure()
-plt.plot(x, c.value, &#39;k-&#39;, label=&#39;Potential distr. (num. sol.)&#39;)
-plt.plot(x, rho(x), &#39;b-&#39;, label=&#39;Charge distr.&#39;)
-plt.xlabel(&#39;Length [m]&#39;)
-plt.ylabel(r&#39;$\varphi$&#39;)
-plt.legend(fontsize=12, loc=&#39;best&#39;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualization</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;k-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Potential distr. (num. sol.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">rho</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Charge distr.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Length [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\varphi$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s1">&#39;best&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

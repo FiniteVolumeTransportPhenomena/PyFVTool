@@ -288,10 +288,10 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pyfvtool as pf
-import matplotlib.pyplot as plt
-import numpy as np
-from scipy.special import erf
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">erf</span>
 </pre></div>
 </div>
 </div>
@@ -299,9 +299,9 @@ from scipy.special import erf
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># define the domain
-L = 5.0  # domain length
-Nx = 100 # number of cells
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the domain</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mf">5.0</span>  <span class="c1"># domain length</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># number of cells</span>
 </pre></div>
 </div>
 </div>
@@ -309,7 +309,7 @@ Nx = 100 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>meshstruct = pf.Grid1D(Nx, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meshstruct</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -317,13 +317,13 @@ Nx = 100 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
-BC.left.a[:] = 0
-BC.left.b[:]=1
-BC.left.c[:]=1 # left boundary
-BC.right.a[:] = 0
-BC.right.b[:]=1
-BC.right.c[:]=0 # right boundary
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BC</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">)</span> <span class="c1"># all Neumann boundary condition structure</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span><span class="o">=</span><span class="mi">1</span> <span class="c1"># left boundary</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span><span class="o">=</span><span class="mi">0</span> <span class="c1"># right boundary</span>
 </pre></div>
 </div>
 </div>
@@ -331,7 +331,7 @@ BC.right.c[:]=0 # right boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = meshstruct.cellcenters.x
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">meshstruct</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">x</span>
 </pre></div>
 </div>
 </div>
@@ -339,10 +339,10 @@ BC.right.c[:]=0 # right boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## define the transfer coeffs
-D_val = 1.0
-alfa = pf.CellVariable(meshstruct, 1)
-Dave = pf.FaceVariable(meshstruct, D_val)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## define the transfer coeffs</span>
+<span class="n">D_val</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">alfa</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">Dave</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -350,9 +350,9 @@ Dave = pf.FaceVariable(meshstruct, D_val)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## define initial values
-c_old = pf.CellVariable(meshstruct, 0, BC) # initial values
-c = pf.CellVariable(meshstruct, 0, BC) # working values
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## define initial values</span>
+<span class="n">c_old</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span> <span class="c1"># initial values</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span> <span class="c1"># working values</span>
 </pre></div>
 </div>
 </div>
@@ -360,15 +360,15 @@ c = pf.CellVariable(meshstruct, 0, BC) # working values
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## loop
-dt = 0.001 # time step
-final_t = 0.5
-for t in np.arange(dt, final_t, dt):
-    # step 1: calculate divergence term
-    RHS = pf.divergenceTerm(Dave*pf.gradientTerm(c_old))
-    # step 2: calculate the new value for internal cells
-    c = pf.solveExplicitPDE(c_old, dt, RHS)
-    c_old.update_value(c)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## loop</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span> <span class="c1"># time step</span>
+<span class="n">final_t</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">final_t</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+    <span class="c1"># step 1: calculate divergence term</span>
+    <span class="n">RHS</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">divergenceTerm</span><span class="p">(</span><span class="n">Dave</span><span class="o">*</span><span class="n">pf</span><span class="o">.</span><span class="n">gradientTerm</span><span class="p">(</span><span class="n">c_old</span><span class="p">))</span>
+    <span class="c1"># step 2: calculate the new value for internal cells</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solveExplicitPDE</span><span class="p">(</span><span class="n">c_old</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">RHS</span><span class="p">)</span>
+    <span class="n">c_old</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -376,8 +376,8 @@ for t in np.arange(dt, final_t, dt):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># analytic solution
-c_analytic = 1-erf(x/(2*np.sqrt(D_val*t)))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># analytic solution</span>
+<span class="n">c_analytic</span> <span class="o">=</span> <span class="mi">1</span><span class="o">-</span><span class="n">erf</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">D_val</span><span class="o">*</span><span class="n">t</span><span class="p">)))</span>
 <br/></pre></div>
 </div>
 </div>
@@ -385,12 +385,12 @@ c_analytic = 1-erf(x/(2*np.sqrt(D_val*t)))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(1)
-plt.clf()
-plt.plot(x, c.value, &#39;k&#39;, label = &#39;PyFVTool (explicit)&#39;)
-plt.plot(x, c_analytic, &#39;r--&#39;, label = &#39;analytic&#39;)
-plt.legend()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;PyFVTool (explicit)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_analytic</span><span class="p">,</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;analytic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -408,9 +408,9 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># define the domain
-L = 5.0  # domain length
-N = 100 # number of cells
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define the domain</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mf">5.0</span>  <span class="c1"># domain length</span>
+<span class="n">N</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># number of cells</span>
 </pre></div>
 </div>
 </div>
@@ -418,7 +418,7 @@ N = 100 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>meshstruct = pf.CylindricalGrid2D(N, N, L, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meshstruct</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid2D</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -426,13 +426,13 @@ N = 100 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>BC = pf.BoundaryConditions(meshstruct) # all Neumann boundary condition structure
-BC.bottom.a[:] = 0.0
-BC.bottom.b[:] = 1.0
-BC.bottom.c[:] = 1.0 # bottom boundary
-BC.top.a[:] = 0.0
-BC.top.b[:] = 1.0
-BC.top.c[:] = 0.0 # top boundary
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">BC</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">)</span> <span class="c1"># all Neumann boundary condition structure</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">bottom</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">bottom</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">bottom</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># bottom boundary</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">BC</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># top boundary</span>
 </pre></div>
 </div>
 </div>
@@ -440,7 +440,7 @@ BC.top.c[:] = 0.0 # top boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>r = meshstruct.cellcenters.r
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">meshstruct</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span>
 </pre></div>
 </div>
 </div>
@@ -448,10 +448,10 @@ BC.top.c[:] = 0.0 # top boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## define the transfer coeffs
-D_val = 1.0
-alfa = pf.CellVariable(meshstruct, 1.0)
-Dave = pf.FaceVariable(meshstruct, D_val)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## define the transfer coeffs</span>
+<span class="n">D_val</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">alfa</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">Dave</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -459,9 +459,9 @@ Dave = pf.FaceVariable(meshstruct, D_val)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## define initial values
-c_old = pf.CellVariable(meshstruct, 0.0, BC) # initial values
-c = pf.CellVariable(meshstruct, 0.0, BC) # working values
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## define initial values</span>
+<span class="n">c_old</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span> <span class="c1"># initial values</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span> <span class="c1"># working values</span>
 </pre></div>
 </div>
 </div>
@@ -469,15 +469,15 @@ c = pf.CellVariable(meshstruct, 0.0, BC) # working values
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## loop
-dt = 0.001 # time step
-final_t = 100*dt
-for t in np.arange(dt, final_t, dt):
-    # step 1: calculate divergence term
-    RHS = pf.divergenceTerm(Dave*pf.gradientTerm(c_old))
-    # step 2: calculate the new value for internal cells
-    c = pf.solveExplicitPDE(c_old, dt, RHS)
-    c_old.update_value(c)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## loop</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.001</span> <span class="c1"># time step</span>
+<span class="n">final_t</span> <span class="o">=</span> <span class="mi">100</span><span class="o">*</span><span class="n">dt</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">dt</span><span class="p">,</span> <span class="n">final_t</span><span class="p">,</span> <span class="n">dt</span><span class="p">):</span>
+    <span class="c1"># step 1: calculate divergence term</span>
+    <span class="n">RHS</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">divergenceTerm</span><span class="p">(</span><span class="n">Dave</span><span class="o">*</span><span class="n">pf</span><span class="o">.</span><span class="n">gradientTerm</span><span class="p">(</span><span class="n">c_old</span><span class="p">))</span>
+    <span class="c1"># step 2: calculate the new value for internal cells</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solveExplicitPDE</span><span class="p">(</span><span class="n">c_old</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">RHS</span><span class="p">)</span>
+    <span class="n">c_old</span><span class="o">.</span><span class="n">update_value</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -485,12 +485,12 @@ for t in np.arange(dt, final_t, dt):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(2)
-plt.clf()
-plt.plot(r, c.value[1,:], &#39;k&#39;, label=&#39;PyFVTool Cyl2D&#39;)
-plt.plot(r, c_analytic, &#39;r--&#39;, label=&#39;analytic 1D&#39;)
-plt.legend()
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">,:],</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;PyFVTool Cyl2D&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c_analytic</span><span class="p">,</span> <span class="s1">&#39;r--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;analytic 1D&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

@@ -287,10 +287,10 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-from scipy.special import erf
-import matplotlib.pyplot as plt
-import pyfvtool as pf
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">erf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
 </pre></div>
 </div>
 </div>
@@ -298,14 +298,14 @@ import pyfvtool as pf
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Spoiler alert!
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Spoiler alert!</span>
 
-def T_analytic_dirichlet(x,t, alfa, T0, Ts):
-    return (T0-Ts)*erf(x/np.sqrt(4*alfa*t))+Ts
+<span class="k">def</span><span class="w"> </span><span class="nf">T_analytic_dirichlet</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span> <span class="n">T0</span><span class="p">,</span> <span class="n">Ts</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">T0</span><span class="o">-</span><span class="n">Ts</span><span class="p">)</span><span class="o">*</span><span class="n">erf</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">alfa</span><span class="o">*</span><span class="n">t</span><span class="p">))</span><span class="o">+</span><span class="n">Ts</span>
 
-def T_analytic_neumann(x,t, alfa, T0, k, qs):
-    return T0 + qs/k*np.sqrt(4*alfa*t/np.pi)*np.exp(-x**2/(4*alfa*t))\
-              - qs/k*x*(1-erf(x/np.sqrt(4*alfa*t)))
+<span class="k">def</span><span class="w"> </span><span class="nf">T_analytic_neumann</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span> <span class="n">T0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">qs</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">T0</span> <span class="o">+</span> <span class="n">qs</span><span class="o">/</span><span class="n">k</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">alfa</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">alfa</span><span class="o">*</span><span class="n">t</span><span class="p">))</span>\
+              <span class="o">-</span> <span class="n">qs</span><span class="o">/</span><span class="n">k</span><span class="o">*</span><span class="n">x</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">erf</span><span class="p">(</span><span class="n">x</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">alfa</span><span class="o">*</span><span class="n">t</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -313,19 +313,19 @@ def T_analytic_neumann(x,t, alfa, T0, k, qs):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Parameters
-L = 1.0 # [m] domain length
-k = 20.0 # 0.6 for water, 0.025 for air W/m/K
-rho = 8000.0 # kg/m^3
-c = 500.0 # J/kg/K (4200 for water, 1000 for air)
-alfa = k/(rho*c) # heat diffusion
-T0 = 300.0 # [K]
-Ts = 350.0 # [K]
-qs = 1000 # [W/m^2]
-t_sim = L**2/(20*alfa) # [s]
-time_steps = 50
-dt = t_sim/time_steps #
-Nx = 50 # number of cells
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Parameters</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># [m] domain length</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="c1"># 0.6 for water, 0.025 for air W/m/K</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mf">8000.0</span> <span class="c1"># kg/m^3</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mf">500.0</span> <span class="c1"># J/kg/K (4200 for water, 1000 for air)</span>
+<span class="n">alfa</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="p">(</span><span class="n">rho</span><span class="o">*</span><span class="n">c</span><span class="p">)</span> <span class="c1"># heat diffusion</span>
+<span class="n">T0</span> <span class="o">=</span> <span class="mf">300.0</span> <span class="c1"># [K]</span>
+<span class="n">Ts</span> <span class="o">=</span> <span class="mf">350.0</span> <span class="c1"># [K]</span>
+<span class="n">qs</span> <span class="o">=</span> <span class="mi">1000</span> <span class="c1"># [W/m^2]</span>
+<span class="n">t_sim</span> <span class="o">=</span> <span class="n">L</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="mi">20</span><span class="o">*</span><span class="n">alfa</span><span class="p">)</span> <span class="c1"># [s]</span>
+<span class="n">time_steps</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="n">t_sim</span><span class="o">/</span><span class="n">time_steps</span> <span class="c1">#</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># number of cells</span>
 </pre></div>
 </div>
 </div>
@@ -333,7 +333,7 @@ Nx = 50 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>m = pf.Grid1D(Nx, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -341,8 +341,8 @@ Nx = 50 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Cell variable with initial condition
-T = pf.CellVariable(m, T0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Cell variable with initial condition</span>
+<span class="n">T</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">T0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -350,20 +350,20 @@ T = pf.CellVariable(m, T0)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Boundary condition
-left_bc = &quot;Neumann&quot;
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Boundary condition</span>
+<span class="n">left_bc</span> <span class="o">=</span> <span class="s2">&quot;Neumann&quot;</span>
 
-BC = pf.BoundaryConditions(m)
-if left_bc == &quot;Dirichlet&quot;:
-    T.BCs.left.a[:] = 0.0
-    T.BCs.left.b[:] = 1.0
-    T.BCs.left.c[:] = Ts
-    T_analytic = lambda x,t: T_analytic_dirichlet(x, t, alfa, T0, Ts)
-else:
-    T.BCs.left.a[:] = k
-    T.BCs.left.b[:] = 0.0
-    T.BCs.left.c[:] = -qs
-    T_analytic = lambda x,t: T_analytic_neumann(x, t, alfa, T0, k, qs)
+<span class="n">BC</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">left_bc</span> <span class="o">==</span> <span class="s2">&quot;Dirichlet&quot;</span><span class="p">:</span>
+    <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ts</span>
+    <span class="n">T_analytic</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">:</span> <span class="n">T_analytic_dirichlet</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span> <span class="n">T0</span><span class="p">,</span> <span class="n">Ts</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">k</span>
+    <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">qs</span>
+    <span class="n">T_analytic</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="p">:</span> <span class="n">T_analytic_neumann</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span> <span class="n">T0</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">qs</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -371,9 +371,9 @@ else:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># physical parameters
-alfa_cell = pf.CellVariable(m, alfa)
-alfa_face = pf.harmonicMean(alfa_cell)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># physical parameters</span>
+<span class="n">alfa_cell</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">alfa</span><span class="p">)</span>
+<span class="n">alfa_face</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">harmonicMean</span><span class="p">(</span><span class="n">alfa_cell</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -381,11 +381,11 @@ alfa_face = pf.harmonicMean(alfa_cell)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t=0
-while t&lt;t_sim:
-    pf.solvePDE(T, [ pf.transientTerm(T, dt, 1.0),
-                    -pf.diffusionTerm(alfa_face)])
-    t +=dt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span><span class="o">=</span><span class="mi">0</span>
+<span class="k">while</span> <span class="n">t</span><span class="o">&lt;</span><span class="n">t_sim</span><span class="p">:</span>
+    <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="p">[</span> <span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+                    <span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">alfa_face</span><span class="p">)])</span>
+    <span class="n">t</span> <span class="o">+=</span><span class="n">dt</span>
 </pre></div>
 </div>
 </div>
@@ -393,10 +393,10 @@ while t&lt;t_sim:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = m.facecenters.x
-T_face = pf.linearMean(T)
-T_num = T_face.xvalue
-T_an = T_analytic(x, t_sim)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">x</span>
+<span class="n">T_face</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">linearMean</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="n">T_num</span> <span class="o">=</span> <span class="n">T_face</span><span class="o">.</span><span class="n">xvalue</span>
+<span class="n">T_an</span> <span class="o">=</span> <span class="n">T_analytic</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">t_sim</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -404,14 +404,14 @@ T_an = T_analytic(x, t_sim)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.figure(1)
-plt.clf()
-plt.title(&#39;Left BC: &#39;+left_bc)
-plt.plot(x, T_an, x, T_num, &#39;o&#39;)
-plt.legend({&#39;Analytic&#39;, &#39;PyFVTool FVM&#39;})
-plt.xlabel(&#39;x [m]&#39;)
-plt.ylabel(&#39;T [K]&#39;)
-plt.show()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Left BC: &#39;</span><span class="o">+</span><span class="n">left_bc</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T_an</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">T_num</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">({</span><span class="s1">&#39;Analytic&#39;</span><span class="p">,</span> <span class="s1">&#39;PyFVTool FVM&#39;</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;T [K]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -426,8 +426,8 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>er = np.sum(np.abs(T_num-T_an)/T_an)/Nx
-print(er)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">er</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">T_num</span><span class="o">-</span><span class="n">T_an</span><span class="p">)</span><span class="o">/</span><span class="n">T_an</span><span class="p">)</span><span class="o">/</span><span class="n">Nx</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">er</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

@@ -291,9 +291,9 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pyfvtool as pf
-import matplotlib.pyplot as plt
-import numpy as np
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </pre></div>
 </div>
 </div>
@@ -301,9 +301,9 @@ import numpy as np
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## define the domain
-L = 1.0  # domain length
-Nx = 25 # number of cells
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## define the domain</span>
+<span class="n">L</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># domain length</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">25</span> <span class="c1"># number of cells</span>
 </pre></div>
 </div>
 </div>
@@ -311,7 +311,7 @@ Nx = 25 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>meshstruct = pf.Grid1D(Nx, L)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">meshstruct</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">L</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -319,7 +319,7 @@ Nx = 25 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>c_central = pf.CellVariable(meshstruct, 0.0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c_central</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -327,13 +327,13 @@ Nx = 25 # number of cells
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Set boundary conditions
-c_central.BCs.left.a = 0.0
-c_central.BCs.left.b = 1.0
-c_central.BCs.left.c = 0.0 # left boundary
-c_central.BCs.right.a = 0.0
-c_central.BCs.right.b = 1.0
-c_central.BCs.right.c = 1.0 # right boundary
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set boundary conditions</span>
+<span class="n">c_central</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">c_central</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c_central</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1"># left boundary</span>
+<span class="n">c_central</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">c_central</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c_central</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># right boundary</span>
 </pre></div>
 </div>
 </div>
@@ -341,7 +341,7 @@ c_central.BCs.right.c = 1.0 # right boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>c_upwind = c_central.copy() # separate copy for comparison
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c_upwind</span> <span class="o">=</span> <span class="n">c_central</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># separate copy for comparison</span>
 </pre></div>
 </div>
 </div>
@@ -349,7 +349,7 @@ c_central.BCs.right.c = 1.0 # right boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = meshstruct.cellcenters.x
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">meshstruct</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">x</span>
 </pre></div>
 </div>
 </div>
@@ -357,10 +357,10 @@ c_central.BCs.right.c = 1.0 # right boundary
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## define the transfer coeffs
-D_val = 1.0
-D = pf.CellVariable(meshstruct, D_val)
-Dave = pf.harmonicMean(D) # convert a cell variable to face variable
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## define the transfer coeffs</span>
+<span class="n">D_val</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span>
+<span class="n">Dave</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">harmonicMean</span><span class="p">(</span><span class="n">D</span><span class="p">)</span> <span class="c1"># convert a cell variable to face variable</span>
 </pre></div>
 </div>
 </div>
@@ -368,7 +368,7 @@ Dave = pf.harmonicMean(D) # convert a cell variable to face variable
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>alfa = pf.CellVariable(meshstruct, 1.0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">alfa</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -376,8 +376,8 @@ Dave = pf.harmonicMean(D) # convert a cell variable to face variable
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>u = 10.0
-u_face = pf.FaceVariable(meshstruct, u)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">u_face</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">meshstruct</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -385,12 +385,12 @@ u_face = pf.FaceVariable(meshstruct, u)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>## solve
-pf.solvePDE(c_central, [ pf.convectionTerm(u_face),
-                        -pf.diffusionTerm(Dave)])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">## solve</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c_central</span><span class="p">,</span> <span class="p">[</span> <span class="n">pf</span><span class="o">.</span><span class="n">convectionTerm</span><span class="p">(</span><span class="n">u_face</span><span class="p">),</span>
+                        <span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">Dave</span><span class="p">)])</span>
 
-pf.solvePDE(c_upwind, [ pf.convectionUpwindTerm(u_face),
-                       -pf.diffusionTerm(Dave)]);
+<span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c_upwind</span><span class="p">,</span> <span class="p">[</span> <span class="n">pf</span><span class="o">.</span><span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">u_face</span><span class="p">),</span>
+                       <span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">Dave</span><span class="p">)]);</span>
 </pre></div>
 </div>
 </div>
@@ -398,7 +398,7 @@ pf.solvePDE(c_upwind, [ pf.convectionUpwindTerm(u_face),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>c_analytic = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c_analytic</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">u</span><span class="o">*</span><span class="n">x</span><span class="o">/</span><span class="n">D_val</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">u</span><span class="o">*</span><span class="n">L</span><span class="o">/</span><span class="n">D_val</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -406,10 +406,10 @@ pf.solvePDE(c_upwind, [ pf.convectionUpwindTerm(u_face),
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(x, c_central.value, label=&quot;Central&quot;)
-plt.plot(x, c_upwind.value, label=&quot;Upwind&quot;)
-plt.plot(x, c_analytic, &#39;^&#39;, label = &quot;Analytic&quot;)
-plt.legend();
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_central</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Central&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_upwind</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Upwind&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">c_analytic</span><span class="p">,</span> <span class="s1">&#39;^&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Analytic&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>

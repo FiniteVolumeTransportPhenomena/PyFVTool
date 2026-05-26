@@ -288,9 +288,9 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-from numpy import exp
-import matplotlib.pyplot as plt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">exp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -298,13 +298,13 @@ import matplotlib.pyplot as plt
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># explicity import all required routines from pyfvtool
-from pyfvtool import CylindricalGrid1D
-from pyfvtool import CellVariable
-from pyfvtool import transientTerm, diffusionTerm
-from pyfvtool import harmonicMean
-from pyfvtool import constantSourceTerm
-from pyfvtool import solvePDE
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># explicity import all required routines from pyfvtool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CylindricalGrid1D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">transientTerm</span><span class="p">,</span> <span class="n">diffusionTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">harmonicMean</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">constantSourceTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">solvePDE</span>
 </pre></div>
 </div>
 </div>
@@ -329,10 +329,10 @@ from pyfvtool import solvePDE
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>R = 2.1
-k_val = 3.7 # heat transfer coefficient
-S_val = 4.2 # source strength
-T_outer = 0.0  # (outer) boundary temperature
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">R</span> <span class="o">=</span> <span class="mf">2.1</span>
+<span class="n">k_val</span> <span class="o">=</span> <span class="mf">3.7</span> <span class="c1"># heat transfer coefficient</span>
+<span class="n">S_val</span> <span class="o">=</span> <span class="mf">4.2</span> <span class="c1"># source strength</span>
+<span class="n">T_outer</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># (outer) boundary temperature</span>
 </pre></div>
 </div>
 </div>
@@ -344,8 +344,8 @@ T_outer = 0.0  # (outer) boundary temperature
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Nr = 50
-Lr = R
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Nr</span> <span class="o">=</span> <span class="mi">50</span>
+<span class="n">Lr</span> <span class="o">=</span> <span class="n">R</span>
 </pre></div>
 </div>
 </div>
@@ -353,7 +353,7 @@ Lr = R
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mesh = CylindricalGrid1D(Nr, Lr)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">CylindricalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -362,7 +362,7 @@ Lr = R
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>k = CellVariable(mesh, k_val) # heat transfer coefficient
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">k_val</span><span class="p">)</span> <span class="c1"># heat transfer coefficient</span>
 </pre></div>
 </div>
 </div>
@@ -370,7 +370,7 @@ Lr = R
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>S = CellVariable(mesh, S_val)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">S_val</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -380,7 +380,7 @@ Lr = R
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>T = CellVariable(mesh, 0.0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -388,10 +388,10 @@ Lr = R
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># switch the right (=outer) boundary to Dirichlet: fixed temperature
-T.BCs.right.a = 0.0
-T.BCs.right.b = 1.0
-T.BCs.right.c = T_outer
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># switch the right (=outer) boundary to Dirichlet: fixed temperature</span>
+<span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">T_outer</span>
 </pre></div>
 </div>
 </div>
@@ -400,7 +400,7 @@ T.BCs.right.c = T_outer
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>k_face = harmonicMean(k)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">k_face</span> <span class="o">=</span> <span class="n">harmonicMean</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -409,8 +409,8 @@ T.BCs.right.c = T_outer
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>eqnterms = [-diffusionTerm(k_face),
-             constantSourceTerm(S)]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">eqnterms</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">k_face</span><span class="p">),</span>
+             <span class="n">constantSourceTerm</span><span class="p">(</span><span class="n">S</span><span class="p">)]</span>
 </pre></div>
 </div>
 </div>
@@ -419,7 +419,7 @@ T.BCs.right.c = T_outer
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>solvePDE(T, eqnterms);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solvePDE</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -428,7 +428,7 @@ T.BCs.right.c = T_outer
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rnum, Tnum = T.plotprofile()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rnum</span><span class="p">,</span> <span class="n">Tnum</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -439,8 +439,8 @@ T.BCs.right.c = T_outer
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>r_an = np.linspace(0, R)
-T_an = (S_val/(4*k_val))*(R**2 - r_an**2)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">R</span><span class="p">)</span>
+<span class="n">T_an</span> <span class="o">=</span> <span class="p">(</span><span class="n">S_val</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">k_val</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">R</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">r_an</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -448,11 +448,11 @@ T_an = (S_val/(4*k_val))*(R**2 - r_an**2)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(rnum, Tnum, &#39;ro&#39;, label=&#39;FVM&#39;)
-plt.plot(r_an, T_an, &#39;k&#39;, label=&#39;analytic&#39;)
-plt.ylabel(&#39;rel. temp. $T$&#39;)
-plt.xlabel(&#39;radial position $r$&#39;)
-plt.legend(); # semicolon avoids output of &#39;&lt;matplotlib.legend.Legend...&gt;&#39; descriptor
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rnum</span><span class="p">,</span> <span class="n">Tnum</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;FVM&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_an</span><span class="p">,</span> <span class="n">T_an</span><span class="p">,</span> <span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;analytic&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rel. temp. $T$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position $r$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span> <span class="c1"># semicolon avoids output of &#39;&lt;matplotlib.legend.Legend...&gt;&#39; descriptor</span>
 </pre></div>
 </div>
 </div>
@@ -470,8 +470,8 @@ plt.legend(); # semicolon avoids output of &#39;&lt;matplotlib.legend.Legend...&
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># analytic solution evaluated at cell positions
-T_an_rnum = (S_val/(4*k_val))*(R**2 - rnum**2)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># analytic solution evaluated at cell positions</span>
+<span class="n">T_an_rnum</span> <span class="o">=</span> <span class="p">(</span><span class="n">S_val</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">k_val</span><span class="p">))</span><span class="o">*</span><span class="p">(</span><span class="n">R</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">rnum</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -479,8 +479,8 @@ T_an_rnum = (S_val/(4*k_val))*(R**2 - rnum**2)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># normalized error
-norm_err = (Tnum-T_an_rnum)/T_an_rnum.max()
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># normalized error</span>
+<span class="n">norm_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tnum</span><span class="o">-</span><span class="n">T_an_rnum</span><span class="p">)</span><span class="o">/</span><span class="n">T_an_rnum</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -488,9 +488,9 @@ norm_err = (Tnum-T_an_rnum)/T_an_rnum.max()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(rnum, norm_err, &#39;o&#39;)
-plt.ylabel(&#39;error relative to maximum $T$&#39;)
-plt.xlabel(&#39;radial position $r$&#39;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rnum</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;error relative to maximum $T$&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position $r$&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -505,7 +505,7 @@ plt.xlabel(&#39;radial position $r$&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(np.abs(norm_err) &lt; 0.0001)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_err</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0001</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -525,7 +525,7 @@ plt.xlabel(&#39;radial position $r$&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>assert np.all(np.abs(norm_err) &lt; 0.001)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_err</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

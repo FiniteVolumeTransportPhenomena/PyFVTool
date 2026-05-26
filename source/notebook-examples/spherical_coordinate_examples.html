@@ -288,13 +288,13 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import sys
-import os
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
-import numpy as np
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-from tqdm import tqdm
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">mpl_toolkits.mplot3d</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm</span><span class="w"> </span><span class="kn">import</span> <span class="n">tqdm</span>
 </pre></div>
 </div>
 </div>
@@ -302,7 +302,7 @@ from tqdm import tqdm
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pyfvtool as pf
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
 </pre></div>
 </div>
 </div>
@@ -312,8 +312,8 @@ number was used.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Set the random seed explicitly
-np.random.seed(seed=12345)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set the random seed explicitly</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">12345</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -323,10 +323,10 @@ np.random.seed(seed=12345)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>X = np.array([0.01, 0.1, 0.3, 0.5, 0.55, 1.0])
-Y = np.array([0.0, 0.1, 1.0, 1.5, 2.9, 3.0, np.pi, np.pi])
-Z = np.array([0.0, 0.01, 0.1, 0.5, 0.7, 0.95, 1.0, 1.25, 1.39, 2.0])
-m_non = pf.SphericalGrid3D(X, Y, Z)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">])</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">1.39</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+<span class="n">m_non</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -334,19 +334,19 @@ m_non = pf.SphericalGrid3D(X, Y, Z)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># test the volume calculations
-x = np.linspace(0.0, 1.0, 10)
-y = np.linspace(0.0, 2*np.pi, 10)
-z = np.linspace(0.0, 2*np.pi, 20)
-mc = pf.CylindricalGrid3D(x, y, z)
-vc = mc._getCellVolumes()
-v_cyl = np.pi*x[-1]**2*z[-1]
-print(v_cyl, np.sum(vc))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># test the volume calculations</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+<span class="n">mc</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">vc</span> <span class="o">=</span> <span class="n">mc</span><span class="o">.</span><span class="n">_getCellVolumes</span><span class="p">()</span>
+<span class="n">v_cyl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">z</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v_cyl</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vc</span><span class="p">))</span>
 
-mp = pf.PolarGrid2D(x, y)
-vp = mp._getCellVolumes()
-v_pol = np.pi*x[-1]*x[-1]
-print(v_pol, np.sum(vp))
+<span class="n">mp</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">PolarGrid2D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="n">vp</span> <span class="o">=</span> <span class="n">mp</span><span class="o">.</span><span class="n">_getCellVolumes</span><span class="p">()</span>
+<span class="n">v_pol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v_pol</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vp</span><span class="p">))</span>
 <br/></pre></div>
 </div>
 </div>
@@ -363,13 +363,13 @@ print(v_pol, np.sum(vp))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>x = np.linspace(0.0, 1.0, 5)
-y = np.linspace(0.0, np.pi, 10)
-z = np.linspace(0.0, 2*np.pi, 10)
-ms = pf.SphericalGrid3D(x, y, z)
-vs = ms._getCellVolumes()
-v_sph = 4/3*np.pi*x[-1]**3
-print(v_sph, np.sum(vs))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">ms</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">)</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="n">ms</span><span class="o">.</span><span class="n">_getCellVolumes</span><span class="p">()</span>
+<span class="n">v_sph</span> <span class="o">=</span> <span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">v_sph</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">vs</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -390,41 +390,41 @@ print(v_sph, np.sum(vs))
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Calculation parameters
-def diffusion_spherical(mesh, t_simulation=7200.0, dt=60.0):
-    c_left = 1.0  # left boundary concentration
-    c_init = 0.0  # initial concentration
-    D_val = 1e-5  # diffusion coefficient (gas phase)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculation parameters</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">diffusion_spherical</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">t_simulation</span><span class="o">=</span><span class="mf">7200.0</span><span class="p">,</span> <span class="n">dt</span><span class="o">=</span><span class="mf">60.0</span><span class="p">):</span>
+    <span class="n">c_left</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># left boundary concentration</span>
+    <span class="n">c_init</span> <span class="o">=</span> <span class="mf">0.0</span>  <span class="c1"># initial concentration</span>
+    <span class="n">D_val</span> <span class="o">=</span> <span class="mf">1e-5</span>  <span class="c1"># diffusion coefficient (gas phase)</span>
 
-    # Create a cell variable with initial concentration
-    # By default, &#39;no flux&#39; boundary conditions are applied
-    c = pf.CellVariable(mesh, c_init)
+    <span class="c1"># Create a cell variable with initial concentration</span>
+    <span class="c1"># By default, &#39;no flux&#39; boundary conditions are applied</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">c_init</span><span class="p">)</span>
 
-    # Switch the right boundary to Dirichlet: fixed concentration
-    c.BCs.right.a = 0.0
-    c.BCs.right.b = 1.0
-    c.BCs.right.c = c_left
-    if type(mesh) == pf.SphericalGrid3D:
-        # make top and bottom boundaries periodic
-        c.BCs.back.periodic = True
-        c.BCs.front.periodic = True
+    <span class="c1"># Switch the right boundary to Dirichlet: fixed concentration</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c_left</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span> <span class="o">==</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">:</span>
+        <span class="c1"># make top and bottom boundaries periodic</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">back</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">front</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
 
-    # Assign diffusivity to cells
-    D_cell = pf.CellVariable(mesh, D_val)
-    D_face = pf.geometricMean(
-        D_cell
-    )  # average value of diffusivity at the interfaces between cells
+    <span class="c1"># Assign diffusivity to cells</span>
+    <span class="n">D_cell</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span>
+    <span class="n">D_face</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">geometricMean</span><span class="p">(</span>
+        <span class="n">D_cell</span>
+    <span class="p">)</span>  <span class="c1"># average value of diffusivity at the interfaces between cells</span>
 
-    # Time loop
-    t = 0
-    while t &lt; t_simulation:
-        # Compose discretized terms for matrix equation
-        eqnterms = [pf.transientTerm(c, dt, 1.0), -pf.diffusionTerm(D_face)]
+    <span class="c1"># Time loop</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_simulation</span><span class="p">:</span>
+        <span class="c1"># Compose discretized terms for matrix equation</span>
+        <span class="n">eqnterms</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">D_face</span><span class="p">)]</span>
 
-        # Solve PDE
-        pf.solvePDE(c, eqnterms)
-        t += dt
-    return c
+        <span class="c1"># Solve PDE</span>
+        <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>
+    <span class="k">return</span> <span class="n">c</span>
 </pre></div>
 </div>
 </div>
@@ -432,21 +432,21 @@ def diffusion_spherical(mesh, t_simulation=7200.0, dt=60.0):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Calculation parameters
-Nx = 20  # number of finite volume cells
-Ntheta = 6  # number of cells in the theta direction; avoid theta=0 and theta=pi
-Nphi = 5  # number of cells in the phi direction
-Lx = 1.0  # [m] length of the domain
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Calculation parameters</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of finite volume cells</span>
+<span class="n">Ntheta</span> <span class="o">=</span> <span class="mi">6</span>  <span class="c1"># number of cells in the theta direction; avoid theta=0 and theta=pi</span>
+<span class="n">Nphi</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># number of cells in the phi direction</span>
+<span class="n">Lx</span> <span class="o">=</span> <span class="mf">1.0</span>  <span class="c1"># [m] length of the domain</span>
 
-# Define mesh
-mesh1 = pf.SphericalGrid1D(Nx, Lx)
-c1 = diffusion_spherical(mesh1)
-mesh3 = pf.SphericalGrid3D(Nx, Ntheta, Nphi, Lx, np.pi, 2 * np.pi)
-c3 = diffusion_spherical(mesh3)
-mesh1_rad = pf.CylindricalGrid1D(Nx, Lx)
-c1_rad = diffusion_spherical(mesh1_rad)
-mesh3_cyl = pf.CylindricalGrid3D(Nx, Ntheta, Nphi, Lx, 2 * np.pi, 2 * np.pi)
-c3_cyl = diffusion_spherical(mesh3_cyl)
+<span class="c1"># Define mesh</span>
+<span class="n">mesh1</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Lx</span><span class="p">)</span>
+<span class="n">c1</span> <span class="o">=</span> <span class="n">diffusion_spherical</span><span class="p">(</span><span class="n">mesh1</span><span class="p">)</span>
+<span class="n">mesh3</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="n">Nphi</span><span class="p">,</span> <span class="n">Lx</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">c3</span> <span class="o">=</span> <span class="n">diffusion_spherical</span><span class="p">(</span><span class="n">mesh3</span><span class="p">)</span>
+<span class="n">mesh1_rad</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Lx</span><span class="p">)</span>
+<span class="n">c1_rad</span> <span class="o">=</span> <span class="n">diffusion_spherical</span><span class="p">(</span><span class="n">mesh1_rad</span><span class="p">)</span>
+<span class="n">mesh3_cyl</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid3D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="n">Nphi</span><span class="p">,</span> <span class="n">Lx</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+<span class="n">c3_cyl</span> <span class="o">=</span> <span class="n">diffusion_spherical</span><span class="p">(</span><span class="n">mesh3_cyl</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -454,14 +454,14 @@ c3_cyl = diffusion_spherical(mesh3_cyl)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(mesh1.cellcenters.r, c1.value, &quot;--&quot;, label=&quot;1D spherical&quot;)
-plt.plot(mesh3.cellcenters.r, c3.value[:, 0, 0], label=&quot;3D spherical&quot;)
-plt.plot(mesh1_rad.cellcenters.r, c1_rad.value, &quot;--&quot;, label=&quot;1D Cylindrical&quot;)
-plt.plot(mesh3_cyl.cellcenters.r, c3_cyl.value[:, 0, 0], label=&quot;3D cylindrical&quot;)
-plt.xlabel(&quot;r [m]&quot;)
-plt.ylabel(&quot;Concentration [-]&quot;)
-plt.ylim(-0.05, 1.05)
-plt.legend();
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c1</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1D spherical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh3</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c3</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;3D spherical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh1_rad</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c1_rad</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1D Cylindrical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh3_cyl</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c3_cyl</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;3D cylindrical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;r [m]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Concentration [-]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
@@ -480,16 +480,16 @@ plt.legend();
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>r_earth = 6.371e6  # Earth radius [m]
-v_wind_max = 10.0  # wind speed [m/s]
-# ignoring diffusion
-Nr = 20  # number of cells in the r direction
-Ntheta = 36  # number of cells in the theta direction
-Nphi = 36  # number of cells in the phi direction
-Lr = 20e3  # [m] length of the domain in the r direction
-r_face = np.linspace(r_earth, r_earth + Lr, Nr + 1)
-theta_face = np.linspace(0, np.pi, Ntheta + 1)
-phi_face = np.linspace(0, 2 * np.pi, Nphi + 1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_earth</span> <span class="o">=</span> <span class="mf">6.371e6</span>  <span class="c1"># Earth radius [m]</span>
+<span class="n">v_wind_max</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># wind speed [m/s]</span>
+<span class="c1"># ignoring diffusion</span>
+<span class="n">Nr</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of cells in the r direction</span>
+<span class="n">Ntheta</span> <span class="o">=</span> <span class="mi">36</span>  <span class="c1"># number of cells in the theta direction</span>
+<span class="n">Nphi</span> <span class="o">=</span> <span class="mi">36</span>  <span class="c1"># number of cells in the phi direction</span>
+<span class="n">Lr</span> <span class="o">=</span> <span class="mf">20e3</span>  <span class="c1"># [m] length of the domain in the r direction</span>
+<span class="n">r_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">r_earth</span><span class="p">,</span> <span class="n">r_earth</span> <span class="o">+</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">Nr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">theta_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">Ntheta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">phi_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">Nphi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -497,10 +497,10 @@ phi_face = np.linspace(0, 2 * np.pi, Nphi + 1)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mesh = pf.SphericalGrid3D(r_face, theta_face, phi_face)
-c = pf.CellVariable(mesh, 0.0)
-# assign a concentration of 1.0 to 20 random locations
-c.value[0, np.random.randint(0, Ntheta, 50), np.random.randint(0, Nphi, 50)] = 1000.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">(</span><span class="n">r_face</span><span class="p">,</span> <span class="n">theta_face</span><span class="p">,</span> <span class="n">phi_face</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="c1"># assign a concentration of 1.0 to 20 random locations</span>
+<span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nphi</span><span class="p">,</span> <span class="mi">50</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1000.0</span>
 </pre></div>
 </div>
 </div>
@@ -508,25 +508,25 @@ c.value[0, np.random.randint(0, Ntheta, 50), np.random.randint(0, Nphi, 50)] = 1
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Set boundary conditions
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set boundary conditions</span>
 
-# left boundary is a fixed concentration
-c.BCs.left.a[:] = 0.0
-c.BCs.left.b[:] = 1.0
-c.BCs.left.c[:] = 0.0
+<span class="c1"># left boundary is a fixed concentration</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-## assign a concentration of 1.0 to a patch of left boundary
-# c.BCs.left.c[0:10, 0:10] = 1.0
-## right boundary is a fixed concentration
-# c.BCs.right.a[:] = 0.0
-# c.BCs.right.b[:] = 1.0
-# c.BCs.right.c[:] = 0.0
-## top and bottom boundaries are periodic
-# c.BCs.top.periodic = True
-# c.BCs.bottom.periodic = True
+<span class="c1">## assign a concentration of 1.0 to a patch of left boundary</span>
+<span class="c1"># c.BCs.left.c[0:10, 0:10] = 1.0</span>
+<span class="c1">## right boundary is a fixed concentration</span>
+<span class="c1"># c.BCs.right.a[:] = 0.0</span>
+<span class="c1"># c.BCs.right.b[:] = 1.0</span>
+<span class="c1"># c.BCs.right.c[:] = 0.0</span>
+<span class="c1">## top and bottom boundaries are periodic</span>
+<span class="c1"># c.BCs.top.periodic = True</span>
+<span class="c1"># c.BCs.bottom.periodic = True</span>
 
-c.BCs.back.periodic = True
-c.BCs.front.periodic = True
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">back</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">front</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </div>
@@ -534,9 +534,9 @@ c.BCs.front.periodic = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># create a constant velocity field
-v = pf.FaceVariable(mesh, [0.1, 10, 10])
-convectionterm = pf.convectionUpwindTerm(v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a constant velocity field</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+<span class="n">convectionterm</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -544,15 +544,15 @@ convectionterm = pf.convectionUpwindTerm(v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Time loop
-t = 0
-dt = 10000.0
-n_steps = 5
-for i in tqdm(range(n_steps), bar_format=&quot;{desc}: {percentage:3.0f}% completed&quot;):
-    eqn = [pf.transientTerm(c, dt, 1.0),
-           convectionterm]
-    c = pf.solvePDE(c, eqn)
-    t += dt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Time loop</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">10000.0</span>
+<span class="n">n_steps</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">),</span> <span class="n">bar_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{desc}</span><span class="s2">: </span><span class="si">{percentage:3.0f}% c</span><span class="s2">ompleted&quot;</span><span class="p">):</span>
+    <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+           <span class="n">convectionterm</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>
 </pre></div>
 </div>
 </div>
@@ -568,7 +568,7 @@ for i in tqdm(range(n_steps), bar_format=&quot;{desc}: {percentage:3.0f}% comple
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(c.value[0, :, :])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
 </pre></div>
 </div>
 </div>
@@ -601,30 +601,30 @@ for i in tqdm(range(n_steps), bar_format=&quot;{desc}: {percentage:3.0f}% comple
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># visualize the result: use a polar plot for plotting a &#39;slice&#39; at a certain value of &#39;phi&#39;
-# (lemon - or mellon - style slice)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the result: use a polar plot for plotting a &#39;slice&#39; at a certain value of &#39;phi&#39;</span>
+<span class="c1"># (lemon - or mellon - style slice)</span>
 
-# select the &#39;phi&#39; using its index
-iphi = 5
+<span class="c1"># select the &#39;phi&#39; using its index</span>
+<span class="n">iphi</span> <span class="o">=</span> <span class="mi">5</span>
 
-r = mesh.cellcenters.r
-theta = mesh.cellcenters.theta
-phi = mesh.cellcenters.phi
+<span class="n">r</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">theta</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">phi</span>
 
-R, Theta = np.meshgrid(r, theta)
-X = R * np.sin(Theta)
-Y = R * np.cos(Theta)
-Z = c.value[:, :, iphi].transpose()
-fig = plt.figure()
-phideg = np.rad2deg(phi[iphi])
-fig.suptitle(f&#39;phi = {phideg}°&#39;)
-ax = fig.add_subplot(111, polar=True)
-# set the color range between 0 and 1
-cax = ax.pcolormesh(Theta, R, Z, cmap=&quot;viridis&quot;)
-fig.colorbar(cax, label=&quot;Concentration [-]&quot;)
-# zoom in to the region of interest
-ax.set_ylim([r_earth - Lr, r_earth + Lr])
-plt.show()
+<span class="n">R</span><span class="p">,</span> <span class="n">Theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">iphi</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">phideg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">iphi</span><span class="p">])</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;phi = </span><span class="si">{</span><span class="n">phideg</span><span class="si">}</span><span class="s1">°&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># set the color range between 0 and 1</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Concentration [-]&quot;</span><span class="p">)</span>
+<span class="c1"># zoom in to the region of interest</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">r_earth</span> <span class="o">-</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">r_earth</span> <span class="o">+</span> <span class="n">Lr</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -639,41 +639,41 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># First version of a 3D plotting routine
-# Plot a spherical view of a single layer at height/depth &#39;r&#39;
-# (onion-layer style)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First version of a 3D plotting routine</span>
+<span class="c1"># Plot a spherical view of a single layer at height/depth &#39;r&#39;</span>
+<span class="c1"># (onion-layer style)</span>
 
-# select r by index
-ir = 10 # halfway
+<span class="c1"># select r by index</span>
+<span class="n">ir</span> <span class="o">=</span> <span class="mi">10</span> <span class="c1"># halfway</span>
 
-data = c.value[ir, :, :]
+<span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="n">ir</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
 
-# Generate theta and phi values
-theta = np.linspace(0, np.pi, data.shape[0])
-phi = np.linspace(0, 2 * np.pi, data.shape[1])
-theta, phi = np.meshgrid(theta, phi)
+<span class="c1"># Generate theta and phi values</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
 
-# Convert spherical coordinates to Cartesian coordinates
-x = np.sin(theta) * np.cos(phi)
-y = np.sin(theta) * np.sin(phi)
-z = np.cos(theta)
+<span class="c1"># Convert spherical coordinates to Cartesian coordinates</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
 
-# Create a 3D plot
-fig = plt.figure()
-fig.suptitle(f&#39;r = {mesh.cellcenters.r[ir]}&#39;)
-ax = fig.add_subplot(111, projection=&quot;3d&quot;)
+<span class="c1"># Create a 3D plot</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;r = </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="n">ir</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
 
-# Plot the surface
-ax.plot_surface(
-    x, y, z, facecolors=plt.cm.viridis(data), rstride=1, cstride=1, antialiased=False
-)
+<span class="c1"># Plot the surface</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 
-# rotate the plot
-ax.view_init(elev=20, azim=80)
+<span class="c1"># rotate the plot</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
 
 
-# Show the plot (perhaps interactively when not in Jupyter Lab?)
-plt.show()
+<span class="c1"># Show the plot (perhaps interactively when not in Jupyter Lab?)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -688,7 +688,7 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(c.value.min(), c.value.max())
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -709,17 +709,17 @@ plt.show()
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>r_earth = 6.371e6  # Earth radius [m]
-v_wind_max = 10.0  # wind speed [m/s]
-L = r_earth
-# ignoring diffusion
-Nr = 20  # number of cells in the r direction
-Ntheta = 16  # number of cells in the theta direction
-Nz = 16  # number of cells in the phi direction
-Lr = 20e3  # [m] length of the domain in the r direction
-r_face = np.linspace(0, Lr, Nr + 1)
-theta_face = np.linspace(0, 2 * np.pi, Ntheta + 1)
-L_face = np.linspace(0, L, Nz + 1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_earth</span> <span class="o">=</span> <span class="mf">6.371e6</span>  <span class="c1"># Earth radius [m]</span>
+<span class="n">v_wind_max</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># wind speed [m/s]</span>
+<span class="n">L</span> <span class="o">=</span> <span class="n">r_earth</span>
+<span class="c1"># ignoring diffusion</span>
+<span class="n">Nr</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of cells in the r direction</span>
+<span class="n">Ntheta</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># number of cells in the theta direction</span>
+<span class="n">Nz</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># number of cells in the phi direction</span>
+<span class="n">Lr</span> <span class="o">=</span> <span class="mf">20e3</span>  <span class="c1"># [m] length of the domain in the r direction</span>
+<span class="n">r_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">Nr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">theta_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">Ntheta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">L_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">Nz</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -727,10 +727,10 @@ L_face = np.linspace(0, L, Nz + 1)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mesh = pf.CylindricalGrid3D(r_face, theta_face, L_face)
-c = pf.CellVariable(mesh, 0.0)
-# assign a concentration of 1.0 to 20 random locations
-c.value[0, np.random.randint(0, Ntheta, 20), np.random.randint(0, Nz, 20)] = 1000.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid3D</span><span class="p">(</span><span class="n">r_face</span><span class="p">,</span> <span class="n">theta_face</span><span class="p">,</span> <span class="n">L_face</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="c1"># assign a concentration of 1.0 to 20 random locations</span>
+<span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nz</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]</span> <span class="o">=</span> <span class="mf">1000.0</span>
 </pre></div>
 </div>
 </div>
@@ -738,10 +738,10 @@ c.value[0, np.random.randint(0, Ntheta, 20), np.random.randint(0, Nz, 20)] = 100
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># BC
-# top and bottom boundaries are periodic
-c.BCs.top.periodic = True
-c.BCs.bottom.periodic = True
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># BC</span>
+<span class="c1"># top and bottom boundaries are periodic</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">bottom</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </div>
@@ -749,12 +749,12 @@ c.BCs.bottom.periodic = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># create a velocity field of random values between 0 and v_wind_max
-v = pf.FaceVariable(mesh, [0, 0.001, 0.0])
-# v.thetavalue = np.random.rand(Nr, Ntheta+1, Nz) * v_wind_max
-# v.thetavalue[:, 0, :] = 0.0  # no wind at the poles
-# v.thetavalue[:, -1, :] = 0.0  # no wind at the poles
-convectionterm = pf.convectionUpwindTerm(v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create a velocity field of random values between 0 and v_wind_max</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+<span class="c1"># v.thetavalue = np.random.rand(Nr, Ntheta+1, Nz) * v_wind_max</span>
+<span class="c1"># v.thetavalue[:, 0, :] = 0.0  # no wind at the poles</span>
+<span class="c1"># v.thetavalue[:, -1, :] = 0.0  # no wind at the poles</span>
+<span class="n">convectionterm</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -762,15 +762,15 @@ convectionterm = pf.convectionUpwindTerm(v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Time loop
-t = 0
-dt = 100000.0
-t_simulation = 1 * dt
-while t &lt; t_simulation:
-    eqn = [pf.transientTerm(c, dt, 1.0),
-           convectionterm]
-    c = pf.solvePDE(c, eqn)
-    t += dt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Time loop</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">100000.0</span>
+<span class="n">t_simulation</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">*</span> <span class="n">dt</span>
+<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_simulation</span><span class="p">:</span>
+    <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+           <span class="n">convectionterm</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>
 </pre></div>
 </div>
 </div>
@@ -778,7 +778,7 @@ while t &lt; t_simulation:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(c.value[0, :, :])
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:])</span>
 </pre></div>
 </div>
 </div>
@@ -861,15 +861,15 @@ while t &lt; t_simulation:
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># hollow sphere
-r_in = 0.5
-r_out = 1.0
-Nr = 20  # number of cells in the r direction
-Ntheta = 16  # number of cells in the theta direction
-Nphi = 16  # number of cells in the phi direction
-r_face = np.linspace(r_in, r_out, Nr + 1)
-theta_face = np.linspace(0.0, np.pi, Ntheta + 1)
-phi_face = np.linspace(0.0, 2 * np.pi, Nphi + 1)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># hollow sphere</span>
+<span class="n">r_in</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">r_out</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">Nr</span> <span class="o">=</span> <span class="mi">20</span>  <span class="c1"># number of cells in the r direction</span>
+<span class="n">Ntheta</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># number of cells in the theta direction</span>
+<span class="n">Nphi</span> <span class="o">=</span> <span class="mi">16</span>  <span class="c1"># number of cells in the phi direction</span>
+<span class="n">r_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">r_in</span><span class="p">,</span> <span class="n">r_out</span><span class="p">,</span> <span class="n">Nr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">theta_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">Ntheta</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">phi_face</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">Nphi</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -877,8 +877,8 @@ phi_face = np.linspace(0.0, 2 * np.pi, Nphi + 1)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mesh = pf.SphericalGrid3D(r_face, theta_face, phi_face)
-c = pf.CellVariable(mesh, 0.0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">(</span><span class="n">r_face</span><span class="p">,</span> <span class="n">theta_face</span><span class="p">,</span> <span class="n">phi_face</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -886,18 +886,18 @@ c = pf.CellVariable(mesh, 0.0)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># assign a concentration of 1 to left boundary
-c.BCs.left.a[0:5, 0:5] = 0.0
-c.BCs.left.b[0:5, 0:5] = 1.0
-c.BCs.left.c[0:5, 0:5] = 1.0
-# right boundary is a fixed concentration
-c.BCs.right.a[:] = 0.0
-c.BCs.right.b[:] = 1.0
-c.BCs.right.c[:] = 0.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># assign a concentration of 1 to left boundary</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="c1"># right boundary is a fixed concentration</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
 
-# top and back boundaries are periodic
-c.BCs.top.periodic = True
-c.BCs.front.periodic = True
+<span class="c1"># top and back boundaries are periodic</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">top</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">front</span><span class="o">.</span><span class="n">periodic</span> <span class="o">=</span> <span class="kc">True</span>
 </pre></div>
 </div>
 </div>
@@ -905,11 +905,11 @@ c.BCs.front.periodic = True
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>v_wind_max = 0.01  # wind speed [m/s]
-v = pf.FaceVariable(mesh, [0.05, 0.05, 0.05])
-# v.phiavalue = np.random.rand(Nr, Ntheta, Nphi + 1) * v_wind_max
-# v.thetavalue = np.random.rand(Nr, Ntheta + 1, Nphi) * v_wind_max
-convectionterm = pf.convectionUpwindTerm(v)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">v_wind_max</span> <span class="o">=</span> <span class="mf">0.01</span>  <span class="c1"># wind speed [m/s]</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">])</span>
+<span class="c1"># v.phiavalue = np.random.rand(Nr, Ntheta, Nphi + 1) * v_wind_max</span>
+<span class="c1"># v.thetavalue = np.random.rand(Nr, Ntheta + 1, Nphi) * v_wind_max</span>
+<span class="n">convectionterm</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -917,15 +917,15 @@ convectionterm = pf.convectionUpwindTerm(v)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Time loop
-t = 0
-dt = 1.0
-n_step = 50
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Time loop</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">n_step</span> <span class="o">=</span> <span class="mi">50</span>
 
-for i in tqdm(range(n_step), bar_format=&quot;{desc}: {percentage:3.0f}% completed&quot;):
-    eqn = [pf.transientTerm(c, dt, 1.0),
-           convectionterm]
-    c = pf.solvePDE(c, eqn)
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_step</span><span class="p">),</span> <span class="n">bar_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{desc}</span><span class="s2">: </span><span class="si">{percentage:3.0f}% c</span><span class="s2">ompleted&quot;</span><span class="p">):</span>
+    <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+           <span class="n">convectionterm</span><span class="p">]</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -941,18 +941,18 @@ for i in tqdm(range(n_step), bar_format=&quot;{desc}: {percentage:3.0f}% complet
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># visualize the result
-r = mesh.cellcenters.r
-theta = mesh.cellcenters.theta
-R, Theta = np.meshgrid(r, theta)
-X = R * np.sin(Theta)
-Y = R * np.cos(Theta)
-Z = c.value[:, :, 1].transpose() # TO DO: make sure that you extract the values for a certain &#39;phi&#39;...
-fig = plt.figure()
-ax = fig.add_subplot(111, polar=True)
-# set the color range between 0 and 1
-cax = ax.pcolormesh(Theta, R, Z, cmap=&quot;viridis&quot;)
-fig.colorbar(cax, label=&quot;Concentration [-]&quot;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the result</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">theta</span>
+<span class="n">R</span><span class="p">,</span> <span class="n">Theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="c1"># TO DO: make sure that you extract the values for a certain &#39;phi&#39;...</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># set the color range between 0 and 1</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Concentration [-]&quot;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -967,7 +967,7 @@ fig.colorbar(cax, label=&quot;Concentration [-]&quot;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(c.value.min(), c.value.max())
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
 </pre></div>
 </div>
 </div>
@@ -983,34 +983,34 @@ fig.colorbar(cax, label=&quot;Concentration [-]&quot;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Assuming c.value[5, :, :] is the data with size 16x16
-data = c.value[1, :, :]  # Replace this with your actual data
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Assuming c.value[5, :, :] is the data with size 16x16</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>  <span class="c1"># Replace this with your actual data</span>
 
-# Generate theta and phi values
-theta = np.linspace(0, np.pi, data.shape[0])
-phi = np.linspace(0, 2 * np.pi, data.shape[1])
-theta, phi = np.meshgrid(theta, phi)
+<span class="c1"># Generate theta and phi values</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
 
-# Convert spherical coordinates to Cartesian coordinates
-x = np.sin(theta) * np.cos(phi)
-y = np.sin(theta) * np.sin(phi)
-z = np.cos(theta)
+<span class="c1"># Convert spherical coordinates to Cartesian coordinates</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span>
+<span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
 
-# Create a 3D plot
-fig = plt.figure()
-ax = fig.add_subplot(111, projection=&quot;3d&quot;)
+<span class="c1"># Create a 3D plot</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
 
-# Plot the surface
-ax.plot_surface(
-    x, y, z, facecolors=plt.cm.viridis(data), rstride=1, cstride=1, antialiased=False
-)
+<span class="c1"># Plot the surface</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="n">plt</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">viridis</span><span class="p">(</span><span class="n">data</span><span class="p">),</span> <span class="n">rstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cstride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">antialiased</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 
-# rotate the plot
-ax.view_init(elev=50, azim=80)
+<span class="c1"># rotate the plot</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">view_init</span><span class="p">(</span><span class="n">elev</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">azim</span><span class="o">=</span><span class="mi">80</span><span class="p">)</span>
 
 
-# Show the plot
-plt.show()
+<span class="c1"># Show the plot</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>

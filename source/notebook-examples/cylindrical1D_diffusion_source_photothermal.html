@@ -325,11 +325,11 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-from numpy import pi, exp
-from scipy.special import expi
-from scipy.integrate import quad
-import matplotlib.pyplot as plt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">exp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.special</span><span class="w"> </span><span class="kn">import</span> <span class="n">expi</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">scipy.integrate</span><span class="w"> </span><span class="kn">import</span> <span class="n">quad</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 </pre></div>
 </div>
 </div>
@@ -338,8 +338,8 @@ import matplotlib.pyplot as plt
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def S(r, P, w):
-  return (2*P)/(pi*w**2) * exp(-2*r**2/w**2)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">S</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">):</span>
+  <span class="k">return</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">P</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -348,11 +348,11 @@ import matplotlib.pyplot as plt
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>P = 1.0e-3 # 1 mW
-w = 50e-6 # 50 µm waist
-k = 0.598 # W/(m.K)
-rho = 998.23 # kg/m3
-cp = 4184. # J/(K.kg)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">=</span> <span class="mf">1.0e-3</span> <span class="c1"># 1 mW</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mf">50e-6</span> <span class="c1"># 50 µm waist</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mf">0.598</span> <span class="c1"># W/(m.K)</span>
+<span class="n">rho</span> <span class="o">=</span> <span class="mf">998.23</span> <span class="c1"># kg/m3</span>
+<span class="n">cp</span> <span class="o">=</span> <span class="mf">4184.</span> <span class="c1"># J/(K.kg)</span>
 </pre></div>
 </div>
 </div>
@@ -361,7 +361,7 @@ cp = 4184. # J/(K.kg)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t_c = (w**2*cp*rho)/(4*k)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_c</span> <span class="o">=</span> <span class="p">(</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">cp</span><span class="o">*</span><span class="n">rho</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">k</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -369,7 +369,7 @@ cp = 4184. # J/(K.kg)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(f&#39;t_c = {t_c*1000.:.3f} ms&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;t_c = </span><span class="si">{</span><span class="n">t_c</span><span class="o">*</span><span class="mf">1000.</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> ms&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -386,10 +386,10 @@ t_c = 4.365 ms
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rrx = np.linspace(0, w*5, 500)
-plt.plot(rrx, S(rrx, P, w))
-plt.ylabel(&#39;irradiance [W/m2]&#39;)
-plt.xlabel(&#39;radial position [m]&#39;); # semicolon to avoid print text object descriptor to output
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rrx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rrx</span><span class="p">,</span> <span class="n">S</span><span class="p">(</span><span class="n">rrx</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;irradiance [W/m2]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position [m]&#39;</span><span class="p">);</span> <span class="c1"># semicolon to avoid print text object descriptor to output</span>
 </pre></div>
 </div>
 </div>
@@ -405,15 +405,15 @@ plt.xlabel(&#39;radial position [m]&#39;); # semicolon to avoid print text objec
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def DeltaT_Carter(r, t, P, w, k, t_c):
-    &quot;&quot;&quot;
-    Carter1984 expression
-    &quot;&quot;&quot;
-    alpha = 1.0 # for now. TODO
-    A = 1/(4*pi*k)
-    B = P*alpha
-    C = expi(-2*r**2/w**2) - expi(((-1/(1 + 2*t/t_c)) * (2*r**2/w**2)))
-    return A*B*C
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">DeltaT_Carter</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">t_c</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Carter1984 expression</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># for now. TODO</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">P</span><span class="o">*</span><span class="n">alpha</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">expi</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">expi</span><span class="p">(((</span><span class="o">-</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span><span class="o">*</span><span class="n">t</span><span class="o">/</span><span class="n">t_c</span><span class="p">))</span> <span class="o">*</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">B</span><span class="o">*</span><span class="n">C</span>
 </pre></div>
 </div>
 </div>
@@ -422,43 +422,43 @@ plt.xlabel(&#39;radial position [m]&#39;); # semicolon to avoid print text objec
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>def tlintgd(ti, tc, r2w2):
-    &quot;&quot;&quot;
-    integrand for photothermal heat profile analytic solution
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">tlintgd</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="n">tc</span><span class="p">,</span> <span class="n">r2w2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    integrand for photothermal heat profile analytic solution</span>
 
-    ti : float
-    t&#39; in the formula (integration variable)
-    tc : float
-         t_c as specified in formula t_c=(w**2*c*rho)/(4*k)
-    r2w2 : float
-           r2w2 = r**2/w**2 (to avoid recalculation)
+<span class="sd">    ti : float</span>
+<span class="sd">    t&#39; in the formula (integration variable)</span>
+<span class="sd">    tc : float</span>
+<span class="sd">         t_c as specified in formula t_c=(w**2*c*rho)/(4*k)</span>
+<span class="sd">    r2w2 : float</span>
+<span class="sd">           r2w2 = r**2/w**2 (to avoid recalculation)</span>
 
-    more optimisation may be possible (2/tc factor) but wait for now
-    &quot;&quot;&quot;
-    A = (1.0/(1.0 + (2*ti/tc)))
-    B = exp((-2*r2w2)/(1.0 + (2*ti/tc)))
-    return A*B
+<span class="sd">    more optimisation may be possible (2/tc factor) but wait for now</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ti</span><span class="o">/</span><span class="n">tc</span><span class="p">)))</span>
+    <span class="n">B</span> <span class="o">=</span> <span class="n">exp</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">r2w2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ti</span><span class="o">/</span><span class="n">tc</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">B</span>
 
-def _DeltaT_Sheldon(r, t, P, w, k, cp, rho, tc):
-    &quot;&quot;&quot;
-    Sheldon1982 expression (scalar only)
-    &quot;&quot;&quot;
-    alpha = 1.0 # for now. TODO
-    A = (2*P*alpha)/(pi*cp*rho*w**2)
-    r2w2 = r**2 / w**2
-    C,_ = quad(tlintgd, 0.0, t, args = (tc, r2w2))
-    return A*C
+<span class="k">def</span><span class="w"> </span><span class="nf">_DeltaT_Sheldon</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">tc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sheldon1982 expression (scalar only)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># for now. TODO</span>
+    <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">cp</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">r2w2</span> <span class="o">=</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">C</span><span class="p">,</span><span class="n">_</span> <span class="o">=</span> <span class="n">quad</span><span class="p">(</span><span class="n">tlintgd</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">tc</span><span class="p">,</span> <span class="n">r2w2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">C</span>
 
-def DeltaT_Sheldon(r, t, P, w, k, cp, rho, tc):
-    &quot;&quot;&quot;
-    Sheldon1982 expression (scalar/vector)
-    &quot;&quot;&quot;
-    if type(r)==np.ndarray:
-        result = np.array([_DeltaT_Sheldon(rrr, t, P, w, k, cp, rho, t_c)\
-                           for rrr in r])
-    else:
-        result = _DeltaT_Sheldon(r, t, P, w, k, cp, rho, t_c)
-    return result
+<span class="k">def</span><span class="w"> </span><span class="nf">DeltaT_Sheldon</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">tc</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Sheldon1982 expression (scalar/vector)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_DeltaT_Sheldon</span><span class="p">(</span><span class="n">rrr</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">)</span>\
+                           <span class="k">for</span> <span class="n">rrr</span> <span class="ow">in</span> <span class="n">r</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">_DeltaT_Sheldon</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
 <br/></pre></div>
 </div>
 </div>
@@ -467,8 +467,8 @@ def DeltaT_Sheldon(r, t, P, w, k, cp, rho, tc):
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>rr1 = np.linspace(1e-8, w*10, 500) # not starting at zero
-rr0 = np.linspace(0, w*10, 500)   # starting at zero (Sheldon expression works here, Carter not)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rr1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">w</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span> <span class="c1"># not starting at zero</span>
+<span class="n">rr0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>   <span class="c1"># starting at zero (Sheldon expression works here, Carter not)</span>
 </pre></div>
 </div>
 </div>
@@ -476,14 +476,14 @@ rr0 = np.linspace(0, w*10, 500)   # starting at zero (Sheldon expression works h
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t = 0.1
-plt.plot(rr1, DeltaT_Carter(rr1, t, P, w, k, t_c),
-         &#39;r-&#39;, label=&#39;Carter1984 (expon. integ.)&#39;)
-plt.plot(rr0, DeltaT_Sheldon(rr0, t, P, w, k, cp, rho, t_c),
-         &#39;k:&#39;, label=&#39;Sheldon1982 (simple integ.)&#39;)
-plt.xlabel(&#39;radial position / m&#39;)
-plt.ylabel(&#39;temp. change / K&#39;)
-plt.legend();
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.1</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr1</span><span class="p">,</span> <span class="n">DeltaT_Carter</span><span class="p">(</span><span class="n">rr1</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span>
+         <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Carter1984 (expon. integ.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span>
+         <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sheldon1982 (simple integ.)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position / m&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;temp. change / K&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 </div>
 </div>
@@ -501,13 +501,13 @@ plt.legend();
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># explicity import all required routines from pyfvtool
-from pyfvtool import CylindricalGrid1D, BoundaryConditions
-from pyfvtool import CellVariable
-from pyfvtool import transientTerm, diffusionTerm
-from pyfvtool import harmonicMean, boundaryConditionsTerm
-from pyfvtool import constantSourceTerm
-from pyfvtool import solvePDE
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># explicity import all required routines from pyfvtool</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CylindricalGrid1D</span><span class="p">,</span> <span class="n">BoundaryConditions</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">transientTerm</span><span class="p">,</span> <span class="n">diffusionTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">harmonicMean</span><span class="p">,</span> <span class="n">boundaryConditionsTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">constantSourceTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">solvePDE</span>
 </pre></div>
 </div>
 </div>
@@ -516,11 +516,11 @@ from pyfvtool import solvePDE
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set FVM-specific parameters
-Nr = 100 # number of FV cells
-Lr = 10.0*w # width of domain (for now, simply evenly spaced. TODO: improve meshing)
-T0 = 0. # initial rel. temperature
-deltat = 0.001 # FVM time step
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set FVM-specific parameters</span>
+<span class="n">Nr</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># number of FV cells</span>
+<span class="n">Lr</span> <span class="o">=</span> <span class="mf">10.0</span><span class="o">*</span><span class="n">w</span> <span class="c1"># width of domain (for now, simply evenly spaced. TODO: improve meshing)</span>
+<span class="n">T0</span> <span class="o">=</span> <span class="mf">0.</span> <span class="c1"># initial rel. temperature</span>
+<span class="n">deltat</span> <span class="o">=</span> <span class="mf">0.001</span> <span class="c1"># FVM time step</span>
 </pre></div>
 </div>
 </div>
@@ -528,9 +528,9 @@ deltat = 0.001 # FVM time step
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># TODO: more attention to alpha (see previously)
-# for now, set to 1.0
-alpha = 1.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: more attention to alpha (see previously)</span>
+<span class="c1"># for now, set to 1.0</span>
+<span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span>
 </pre></div>
 </div>
 </div>
@@ -538,8 +538,8 @@ alpha = 1.0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># create grid
-mesh = CylindricalGrid1D(Nr, Lr)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create grid</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">CylindricalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -547,7 +547,7 @@ mesh = CylindricalGrid1D(Nr, Lr)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fv_T = CellVariable(mesh, T0) # CellVariable with standard no-flux boundary conditions
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fv_T</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">T0</span><span class="p">)</span> <span class="c1"># CellVariable with standard no-flux boundary conditions</span>
 </pre></div>
 </div>
 </div>
@@ -555,8 +555,8 @@ mesh = CylindricalGrid1D(Nr, Lr)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>dotqval = alpha*S(mesh.cellcenters.r, P, w)
-fv_dotq = CellVariable(mesh, dotqval)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dotqval</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="n">S</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span>
+<span class="n">fv_dotq</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">dotqval</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -564,8 +564,8 @@ fv_dotq = CellVariable(mesh, dotqval)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fv_k_cell = CellVariable(mesh, k)
-fv_k_face = harmonicMean(fv_k_cell)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fv_k_cell</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">fv_k_face</span> <span class="o">=</span> <span class="n">harmonicMean</span><span class="p">(</span><span class="n">fv_k_cell</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -573,7 +573,7 @@ fv_k_face = harmonicMean(fv_k_cell)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>fv_transcoeff =  CellVariable(mesh, cp*rho)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fv_transcoeff</span> <span class="o">=</span>  <span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">cp</span><span class="o">*</span><span class="n">rho</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -581,10 +581,10 @@ fv_k_face = harmonicMean(fv_k_cell)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># create constant matrix contributions
-# (diffusion term, source term)
-diffterm = diffusionTerm(fv_k_face)
-srcterm = constantSourceTerm(fv_dotq)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create constant matrix contributions</span>
+<span class="c1"># (diffusion term, source term)</span>
+<span class="n">diffterm</span> <span class="o">=</span> <span class="n">diffusionTerm</span><span class="p">(</span><span class="n">fv_k_face</span><span class="p">)</span>
+<span class="n">srcterm</span> <span class="o">=</span> <span class="n">constantSourceTerm</span><span class="p">(</span><span class="n">fv_dotq</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -592,35 +592,35 @@ srcterm = constantSourceTerm(fv_dotq)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>t = 0.
-fv_T.value = T0 # (re)set initial conditions
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.</span>
+<span class="n">fv_T</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="n">T0</span> <span class="c1"># (re)set initial conditions</span>
 
-rr0 = np.linspace(0, w*10, 500)
-sample_i = [0, 1, 2, 5, 10, 20, 50, 100]
-OKlegend = False
-for i in range(0,101):
-    if i in sample_i:
-        r, phi = fv_T.plotprofile()
-        ln0, = plt.plot(r, phi)
-        ln1, = plt.plot(rr0, DeltaT_Sheldon(rr0, i*deltat, P, w, k, cp, rho, t_c), &#39;k:&#39;)
-        if not OKlegend:
-            OKlegend = True
-            ln0.set_label(&#39;FVM&#39;)
-            ln1.set_label(&#39;analytic&#39;)
-    # create time-dependent matrix contributions (transientTerm)
-    transientterm = transientTerm(fv_T, deltat, fv_transcoeff)
+<span class="n">rr0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+<span class="n">sample_i</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+<span class="n">OKlegend</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">101</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sample_i</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">fv_T</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
+        <span class="n">ln0</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
+        <span class="n">ln1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">deltat</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span> <span class="s1">&#39;k:&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">OKlegend</span><span class="p">:</span>
+            <span class="n">OKlegend</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">ln0</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;FVM&#39;</span><span class="p">)</span>
+            <span class="n">ln1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;analytic&#39;</span><span class="p">)</span>
+    <span class="c1"># create time-dependent matrix contributions (transientTerm)</span>
+    <span class="n">transientterm</span> <span class="o">=</span> <span class="n">transientTerm</span><span class="p">(</span><span class="n">fv_T</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">fv_transcoeff</span><span class="p">)</span>
 
-    # solve equation for one time step, updating fv_T solution variable
-    eqnterms = [ transientterm,
-                -diffterm,
-                 srcterm]
-    solvePDE(fv_T, eqnterms)
-    t += deltat
+    <span class="c1"># solve equation for one time step, updating fv_T solution variable</span>
+    <span class="n">eqnterms</span> <span class="o">=</span> <span class="p">[</span> <span class="n">transientterm</span><span class="p">,</span>
+                <span class="o">-</span><span class="n">diffterm</span><span class="p">,</span>
+                 <span class="n">srcterm</span><span class="p">]</span>
+    <span class="n">solvePDE</span><span class="p">(</span><span class="n">fv_T</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">deltat</span>
 
-if OKlegend:
-    plt.legend()
-plt.xlabel(&#39;radial position / m&#39;)
-plt.ylabel(&#39;temp. change / K&#39;);
+<span class="k">if</span> <span class="n">OKlegend</span><span class="p">:</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position / m&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;temp. change / K&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -638,13 +638,13 @@ plt.ylabel(&#39;temp. change / K&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># take last calculated time `t`
-r_num, phi_num = fv_T.plotprofile()
-phi_an_r_num = DeltaT_Sheldon(r_num, t, P, w, k, cp, rho, t_c)
-norm_err = (phi_num - phi_an_r_num)/phi_an_r_num.max()
-plt.plot(r_num, norm_err, &#39;o&#39;)
-plt.xlabel(&#39;radial position / m&#39;)
-plt.ylabel(&#39;norm. error FV vs analytic&#39;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># take last calculated time `t`</span>
+<span class="n">r_num</span><span class="p">,</span> <span class="n">phi_num</span> <span class="o">=</span> <span class="n">fv_T</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
+<span class="n">phi_an_r_num</span> <span class="o">=</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">)</span>
+<span class="n">norm_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">phi_num</span> <span class="o">-</span> <span class="n">phi_an_r_num</span><span class="p">)</span><span class="o">/</span><span class="n">phi_an_r_num</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position / m&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;norm. error FV vs analytic&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -659,7 +659,7 @@ plt.ylabel(&#39;norm. error FV vs analytic&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>assert np.all(np.abs(norm_err) &lt; 0.0025)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_err</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.0025</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>

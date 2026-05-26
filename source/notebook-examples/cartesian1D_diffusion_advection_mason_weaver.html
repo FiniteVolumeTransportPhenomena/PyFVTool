@@ -304,10 +304,10 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import numpy as np
-import matplotlib.pyplot as plt
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 
-import pyfvtool as pf
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
 </pre></div>
 </div>
 </div>
@@ -315,10 +315,10 @@ import pyfvtool as pf
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># physical parameters defining the Mason-Weaver system
-z_max = 1.0
-D_coeff = 0.015
-sg = 0.2
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># physical parameters defining the Mason-Weaver system</span>
+<span class="n">z_max</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">D_coeff</span> <span class="o">=</span> <span class="mf">0.015</span>
+<span class="n">sg</span> <span class="o">=</span> <span class="mf">0.2</span>
 </pre></div>
 </div>
 </div>
@@ -326,12 +326,12 @@ sg = 0.2
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># FVM calculation parameters
-Nx = 100
-Lx = z_max
-dt = 0.01
-t_simulation = 10.
-Nskip = 50 # for plotting
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># FVM calculation parameters</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">Lx</span> <span class="o">=</span> <span class="n">z_max</span>
+<span class="n">dt</span> <span class="o">=</span> <span class="mf">0.01</span>
+<span class="n">t_simulation</span> <span class="o">=</span> <span class="mf">10.</span>
+<span class="n">Nskip</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1"># for plotting</span>
 </pre></div>
 </div>
 </div>
@@ -339,7 +339,7 @@ Nskip = 50 # for plotting
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>msh = pf.Grid1D(Nx, Lx)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">msh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Lx</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -347,8 +347,8 @@ Nskip = 50 # for plotting
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Solution variable (default no flux BCs)
-c = pf.CellVariable(msh, 1.0)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Solution variable (default no flux BCs)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -356,9 +356,9 @@ c = pf.CellVariable(msh, 1.0)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># start list, monitoring the total amount of matter in system
-# (integral of concentration over full volume)
-total_c = [c.domainIntegral()]
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># start list, monitoring the total amount of matter in system</span>
+<span class="c1"># (integral of concentration over full volume)</span>
+<span class="n">total_c</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">domainIntegral</span><span class="p">()]</span>
 </pre></div>
 </div>
 </div>
@@ -366,11 +366,11 @@ total_c = [c.domainIntegral()]
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># advection field (constant sedimentation)
-u = pf.FaceVariable(msh, (sg,))
-# closed boundaries: no flow at extremities
-u.xvalue[0] = 0.0
-u.xvalue[-1] = 0.0
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># advection field (constant sedimentation)</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="p">(</span><span class="n">sg</span><span class="p">,))</span>
+<span class="c1"># closed boundaries: no flow at extremities</span>
+<span class="n">u</span><span class="o">.</span><span class="n">xvalue</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">u</span><span class="o">.</span><span class="n">xvalue</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>
 </pre></div>
 </div>
 </div>
@@ -378,8 +378,8 @@ u.xvalue[-1] = 0.0
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># diffusion field (constant diffusion)
-D = pf.FaceVariable(msh, D_coeff)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># diffusion field (constant diffusion)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">FaceVariable</span><span class="p">(</span><span class="n">msh</span><span class="p">,</span> <span class="n">D_coeff</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -387,34 +387,34 @@ D = pf.FaceVariable(msh, D_coeff)
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># plot initial condition
-plt.plot(c.cellcenters.x, c.value, &#39;k:&#39;, label = &#39;initial condition&#39;)
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot initial condition</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;initial condition&#39;</span><span class="p">)</span>
 
-# time loop
-it = 0
+<span class="c1"># time loop</span>
+<span class="n">it</span> <span class="o">=</span> <span class="mi">0</span>
 
-while (it*dt &lt; t_simulation):
-    # In the present implementation, also the &#39;constant&#39; terms
-    # (boundaryConditionsTerm, diffusionTerm and convectionTerm)
-    # are re-constructed every cycle. This is done for clarity.
-    # Code can be &#39;optimized&#39; by constructing these terms outside
-    # of the loop and store their results. The difference in performance is
-    # probably minimal, since most of the CPU time is in the
-    # actual solving of the matrix equation
-    eqnterms = [ pf.transientTerm(c, dt, 1.0),
-                -pf.diffusionTerm(D),
-                 pf.convectionTerm(u)]
+<span class="k">while</span> <span class="p">(</span><span class="n">it</span><span class="o">*</span><span class="n">dt</span> <span class="o">&lt;</span> <span class="n">t_simulation</span><span class="p">):</span>
+    <span class="c1"># In the present implementation, also the &#39;constant&#39; terms</span>
+    <span class="c1"># (boundaryConditionsTerm, diffusionTerm and convectionTerm)</span>
+    <span class="c1"># are re-constructed every cycle. This is done for clarity.</span>
+    <span class="c1"># Code can be &#39;optimized&#39; by constructing these terms outside</span>
+    <span class="c1"># of the loop and store their results. The difference in performance is</span>
+    <span class="c1"># probably minimal, since most of the CPU time is in the</span>
+    <span class="c1"># actual solving of the matrix equation</span>
+    <span class="n">eqnterms</span> <span class="o">=</span> <span class="p">[</span> <span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+                <span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">D</span><span class="p">),</span>
+                 <span class="n">pf</span><span class="o">.</span><span class="n">convectionTerm</span><span class="p">(</span><span class="n">u</span><span class="p">)]</span>
 
-    pf.solvePDE(c, eqnterms)
-    it+=1
-    total_c.append(c.domainIntegral())
-    if (it % Nskip == 0):
-        plt.plot(c.cellcenters.x, c.value)
+    <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">)</span>
+    <span class="n">it</span><span class="o">+=</span><span class="mi">1</span>
+    <span class="n">total_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">domainIntegral</span><span class="p">())</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">it</span> <span class="o">%</span> <span class="n">Nskip</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span>
 
-plt.xlabel(&#39;depth / a.u.&#39;)
-plt.ylabel(&#39;local concentration / a.u.&#39;)
-plt.legend(frameon=False)
-plt.title(&#39;Finite-volume solution to the Mason-Weaver equation&#39;);
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;depth / a.u.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;local concentration / a.u.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Finite-volume solution to the Mason-Weaver equation&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -429,11 +429,11 @@ plt.title(&#39;Finite-volume solution to the Mason-Weaver equation&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>plt.plot(total_c)
-plt.ylabel(&#39;total amount of c&#39;)
-plt.xlabel(&#39;time step&#39;)
-plt.ylim(0, 1.2*np.max(total_c))
-plt.title(&#39;mass conservation&#39;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">total_c</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;total amount of c&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">total_c</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;mass conservation&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -448,12 +448,12 @@ plt.title(&#39;mass conservation&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>total_dev = np.array(1e15*(total_c-total_c[0])/total_c[0])
-plt.plot(total_dev)
-plt.ylabel(&#39;deviation total amount of c [parts per 10^15]&#39;)
-plt.ylim(-200, 200)
-plt.xlabel(&#39;time step&#39;)
-plt.title(&#39;deviation from mass conservation&#39;);
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">total_dev</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mf">1e15</span><span class="o">*</span><span class="p">(</span><span class="n">total_c</span><span class="o">-</span><span class="n">total_c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">total_c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">total_dev</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;deviation total amount of c [parts per 10^15]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;time step&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;deviation from mass conservation&#39;</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -468,11 +468,11 @@ plt.title(&#39;deviation from mass conservation&#39;);
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># deviation from mass conservation should be less than 1 part in 1e12
-# in this case
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># deviation from mass conservation should be less than 1 part in 1e12</span>
+<span class="c1"># in this case</span>
 
-maxdev_ppq = 1000. # max rel deviation in parts per 10^15
-assert np.max(np.abs(total_dev)) &lt; maxdev_ppq
+<span class="n">maxdev_ppq</span> <span class="o">=</span> <span class="mf">1000.</span> <span class="c1"># max rel deviation in parts per 10^15</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">total_dev</span><span class="p">))</span> <span class="o">&lt;</span> <span class="n">maxdev_ppq</span>
 </pre></div>
 </div>
 </div>
@@ -480,13 +480,13 @@ assert np.max(np.abs(total_dev)) &lt; maxdev_ppq
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># amplitude of steady-state solution
-z0 = D_coeff/sg
-B = z_max/(z0*(1.0-np.exp(-z_max/z0)))
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># amplitude of steady-state solution</span>
+<span class="n">z0</span> <span class="o">=</span> <span class="n">D_coeff</span><span class="o">/</span><span class="n">sg</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">z_max</span><span class="o">/</span><span class="p">(</span><span class="n">z0</span><span class="o">*</span><span class="p">(</span><span class="mf">1.0</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">z_max</span><span class="o">/</span><span class="n">z0</span><span class="p">)))</span>
 
-# simulation should have reached at least 90% of steady-state value
-#
-assert np.max(c.value) &gt; 0.9*B
+<span class="c1"># simulation should have reached at least 90% of steady-state value</span>
+<span class="c1">#</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="o">*</span><span class="n">B</span>
 </pre></div>
 </div>
 </div>
