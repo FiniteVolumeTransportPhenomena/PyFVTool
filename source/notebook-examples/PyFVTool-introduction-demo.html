@@ -1,0 +1,1869 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../">
+  <head><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../../genindex.html"><link rel="search" title="Search" href="../../search.html"><link rel="next" title="Solving the Mason-Weaver equation" href="cartesian1D_diffusion_advection_mason_weaver.html"><link rel="prev" title="Examples" href="../../examples/index.html">
+
+    <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
+        <title>An introductory demonstration of PyFVTool - PyFVTool documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=d111a655" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=7bdb33bb" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/nbsphinx-code-cells.css?v=2aa19091" />
+    <link rel="stylesheet" type="text/css" href="../../_static/styles/furo-extensions.css?v=8dab3a3b" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f2f2f2;
+  --color-code-foreground: #1e1e1e;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle site navigation sidebar">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc" aria-label="Toggle table of contents sidebar">
+<label class="overlay sidebar-overlay" for="__navigation"></label>
+<label class="overlay toc-overlay" for="__toc"></label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <span class="icon"><svg><use href="#svg-menu"></use></svg></span>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../index.html"><div class="brand">PyFVTool  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
+  
+  <span class="sidebar-brand-text">PyFVTool  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">User guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/meshes.html">Meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/coordinate_labels.html">Labeling of coordinates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/cell_variables.html">Cell variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/boundary_conditions.html">Boundary conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/discretization.html">Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/solving.html">Solving PDEs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/functions_and_classes.html">PyFVTool functions and classes</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="current">
+<li class="toctree-l1 current has-children"><a class="reference internal" href="../../examples/index.html">Examples</a><input aria-label="Toggle navigation of Examples" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul class="current">
+<li class="toctree-l2 current current-page"><a class="current reference internal" href="#">An introductory demonstration of PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_diffusion_advection_mason_weaver.html">Solving the Mason-Weaver equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cylindrical1D_diffusion_source_photothermal.html">Heat diffusion with a (photothermal) heating source in 1D-cylindrical geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_conv_diff_bench.html">1D Convection-diffusion example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_diffusion.html">Cartesian 1D: Solve a 1D diffusion equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_diffusion_explicit.html">Cartesian 1D: Solve 1D diffusion with the explicit solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_heat_equation_dirichlet.html">The heat equation in a 1D Cartesian system (Dirichlet BC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_heat_equation_neumann.html">The heat equation in a 1D Cartesian system (Neumann BC)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_heat_equation_neumann_old_school.html">“Old-school” PyFVTool: the heat equation in a 1D Cartesian system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial-poisson_example.html">Poisson equation example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial-variables_in_space.html">Simple geometry example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tutorial-wave_equation_1D.html">1D wave equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="how-to-use-oneMKL-PARDISO-solver.html">Using Intel oneMKL PARDISO as an external sparse direct solver for PyFVTool</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api/index.html">API reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../origin_story.html">PyFVTool Origins</a></li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="view-this-page">
+  <a class="muted-link" href="../../_sources/source/notebook-examples/PyFVTool-introduction-demo.ipynb.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <section id="An-introductory-demonstration-of-PyFVTool">
+<h1>An introductory demonstration of PyFVTool<a class="headerlink" href="#An-introductory-demonstration-of-PyFVTool" title="Link to this heading">¶</a></h1>
+<p>The general form of the partial differential equations solved in PyFVTool is</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\alpha \frac{\partial \varphi}{\partial t} + \nabla\cdot\left(\vec{u}\varphi\right) + \nabla\cdot\left(-D\nabla\varphi\right) + \beta \varphi = \gamma\]</div>
+</div>
+<p>with general boundary conditions</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[a\nabla\varphi\cdot \vec{e} + b\varphi = c\]</div>
+</div>
+<p>.</p>
+<p>PyFVTool works in a standard scientific Python environment, so make NumPy and Matplotlib available.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import matplotlib.pyplot as plt
+import numpy as np
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># import the error function from scipy
+from scipy.special import erf
+</pre></div>
+</div>
+</div>
+<p>The recommended way of importing PyFVTool is to use <code class="docutils literal notranslate"><span class="pre">pf</span></code> as the shortcut.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>import pyfvtool as pf
+</pre></div>
+</div>
+</div>
+<section id="Create-a-1D-mesh-and-visualize-it">
+<h2>Create a 1D mesh and visualize it<a class="headerlink" href="#Create-a-1D-mesh-and-visualize-it" title="Link to this heading">¶</a></h2>
+<p>The simplest mesh is the Cartesian 1D grid, an example of which will be created here.</p>
+<p>The mesh-structure object is created via the <code class="docutils literal notranslate"><span class="pre">Grid1D</span></code> class.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>L = 1.0  # length of the domain
+Nx = 10  # number of cells in the domain
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>m = pf.Grid1D(Nx, L) # mesh-structure
+</pre></div>
+</div>
+</div>
+<p>We can have a look at the structure of the mesh that was created.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">_x</span></code>, <code class="docutils literal notranslate"><span class="pre">_y</span></code>, <code class="docutils literal notranslate"><span class="pre">_z</span></code> are the coordinate labels used internally by PyFVTool. These are not intended to be used directly by the user.</p>
+<p>The coordinate labels for the user are given in the <code class="docutils literal notranslate"><span class="pre">coordlabels</span></code> dictionary. In this particular <code class="docutils literal notranslate"><span class="pre">Grid1D</span></code> case, the user <code class="docutils literal notranslate"><span class="pre">x</span></code> label maps to the internal <code class="docutils literal notranslate"><span class="pre">_x</span></code> label. The other coordinates are not used, as the mesh is one-dimensional.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(m)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+dims: [10]
+cellsize: _x: [0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1]
+_y: [0.]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;}
+
+cellcenters: _x: [0.05 0.15 0.25 0.35 0.45 0.55 0.65 0.75 0.85 0.95]
+_y: [0.]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;}
+
+facecenters: _x: [0.  0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1. ]
+_y: [0.]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;}
+
+corners: [1]
+edges: [1]
+
+</pre></div></div>
+</div>
+<p>1D meshes can be created in two ways because the function is overloaded, as shown in the help docstring.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>help(pf.Grid1D)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Help on class Grid1D in module pyfvtool.mesh:
+
+class Grid1D(MeshStructure)
+ |  Grid1D(*args)
+ |
+ |  Mesh based on a 1D Cartesian grid (x)
+ |  =====================================
+ |
+ |  This class can be instantiated in different ways: from a list of cell face
+ |  locations or from the number of cells and domain length.
+ |
+ |  Instantiation Options:
+ |  ----------------------
+ |  - Grid1D(Nx, Lx)
+ |  - Grid1D(face_locationsX)
+ |
+ |
+ |  Parameters
+ |  ----------
+ |  Grid1D(Nx, Lx)
+ |      Nx : int
+ |          Number of cells in the x direction.
+ |      Lx : float
+ |          Length of the domain in the x direction.
+ |
+ |  Grid1D(face_locationsX)
+ |      face_locationsX : ndarray
+ |          Locations of the cell faces in the x direction.
+ |
+ |  Examples
+ |  --------
+ |  &gt;&gt;&gt; import numpy as np
+ |  &gt;&gt;&gt; from pyfvtool import Grid1D
+ |  &gt;&gt;&gt; mesh = Grid1D(10, 10.0)
+ |  &gt;&gt;&gt; print(mesh)
+ |
+ |  Method resolution order:
+ |      Grid1D
+ |      MeshStructure
+ |      builtins.object
+ |
+ |  Methods defined here:
+ |
+ |  __init__(self, *args)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |
+ |  __repr__(self)
+ |      Return repr(self).
+ |
+ |  cell_numbers(self)
+ |
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from MeshStructure:
+ |
+ |  __str__(self)
+ |      Return str(self).
+ |
+ |  ----------------------------------------------------------------------
+ |  Readonly properties inherited from MeshStructure:
+ |
+ |  cellvolume
+ |
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from MeshStructure:
+ |
+ |  __dict__
+ |      dictionary for instance variables
+ |
+ |  __weakref__
+ |      list of weak references to the object
+
+</pre></div></div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 1D, 2D, 3D, 1D radial (axial symmetry), and 2D cylindrical grids can be constructed:
+# help(pf.Grid1D)
+# help(pf.Grid2D)
+# help(pf.Grid3D)
+# help(pf.CylindricalGrid1D)
+# help(pf.CylindricalGrid2D)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Visualize the 1D discretization that we created above
+hfig, ax = plt.subplots(1,1, num=&#39;Grid discretization&#39;)
+ax.plot(m.cellcenters.x, np.ones(np.shape(m.cellcenters.x), dtype=float), &#39;or&#39;, label=&#39;cell centers&#39;)
+ax.plot(m.facecenters.x, np.ones(np.shape(m.facecenters.x), dtype=float), &#39;-+b&#39;, label=&#39;face centers&#39;)
+plt.legend(fontsize=12, loc=&#39;best&#39;)
+ax.set_title(&#39;Visualization of a 1D discretized domain&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_16_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_16_0.png" />
+</div>
+</div>
+</section>
+<section id="Create-a-2D-grid-and-visualize-it">
+<h2>Create a 2D grid and visualize it<a class="headerlink" href="#Create-a-2D-grid-and-visualize-it" title="Link to this heading">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Nx, Ny = 5, 7
+Lx, Ly = 10.0, 20.0
+m = pf.Grid2D(Nx, Ny, Lx, Ly)
+
+X, Y = np.meshgrid(m.cellcenters.x, m.cellcenters.y, indexing=&#39;ij&#39;)
+Xf, Yf = np.meshgrid(m.facecenters.x, m.facecenters.y, indexing=&#39;ij&#39;)
+
+plt.figure()
+plt.plot(X, Y, &#39;or&#39;, label=&#39;nodes&#39;)
+plt.plot(Xf, Yf, &#39;b-&#39;, label=&#39;faces (west/east)&#39;)
+plt.plot(Xf.T, Yf.T, &#39;b-&#39;, label=&#39;faces (north/south)&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_18_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_18_0.png" />
+</div>
+</div>
+</section>
+<section id="Create-a-3D-grid-and-visualize-it">
+<h2>Create a 3D grid and visualize it<a class="headerlink" href="#Create-a-3D-grid-and-visualize-it" title="Link to this heading">¶</a></h2>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Nx, Ny, Nz = 2, 3, 4
+Lx, Ly, Lz = 1.0, 2.0, 3.0
+
+m = pf.Grid3D(Nx, Ny, Nz, Lx, Ly, Lz)
+</pre></div>
+</div>
+</div>
+<p>We can obtain information of the positions of the cell centers.</p>
+<p>As can be seen, the user coordinate labels <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> map internally to <code class="docutils literal notranslate"><span class="pre">_x</span></code>, <code class="docutils literal notranslate"><span class="pre">_y</span></code>, <code class="docutils literal notranslate"><span class="pre">_z</span></code>. The correspondence is trivial in this case, but this is not so in the case of cylindrical or spherical coordinates.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>m.cellcenters
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+_x: [0.25 0.75]
+_y: [0.33333333 1.         1.66666667]
+_z: [0.375 1.125 1.875 2.625]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;, &#39;y&#39;: &#39;_y&#39;, &#39;z&#39;: &#39;_z&#39;}
+</pre></div></div>
+</div>
+<p>The (compact) information on the cell centers can be converted into a full grid in the following way.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>X, Y, Z = np.meshgrid(m.cellcenters.x,
+                      m.cellcenters.y,
+                      m.cellcenters.z,
+                      indexing=&#39;ij&#39;)
+Xf, Yf, Zf = np.meshgrid(m.facecenters.x,
+                         m.facecenters.y,
+                         m.facecenters.z,
+                         indexing=&#39;ij&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Plot the 3D grid
+
+# TO DO: make this interactive! this will require ipywidgets
+# This can probably only be done once these Notebooks are not used as pytest tests anymore.
+# The Notebooks used for tests should be converted to simple test scripts, and the Notebooks
+# can then simply be used as examples.
+
+hfig = plt.figure()
+ax = plt.axes(projection=&#39;3d&#39;)
+
+ax.plot3D(X.flatten(), Y.flatten(), Z.flatten(), &#39;ro&#39;, label=&#39;cell centers&#39;)
+ax.plot3D(Xf.flatten(), Yf.flatten(), Zf.flatten(), &#39;b+&#39;, label=&#39;cell corners&#39;)
+ax.legend(fontsize=12, loc=&#39;best&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_25_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_25_0.png" />
+</div>
+</div>
+</section>
+<section id="Boundary-conditions">
+<h2>Boundary conditions<a class="headerlink" href="#Boundary-conditions" title="Link to this heading">¶</a></h2>
+<p>One of the most important features of PyFVTool is the ability to implement different boundary conditions (BCs) for variables in the most convenient way.</p>
+<p>The implementation of BCs in PyFVTool enables the user to define either a periodic boundary condition or a general boundary condition of the following form:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[a (\nabla \phi .\mathbf{n}) + b \phi = c\]</div>
+</div>
+<p>In the above equation, <span class="math notranslate nohighlight">\(\phi\)</span> is the unknown, and <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> are constants. In practice, this boundary condition equation will be discretized to the following system of algebraic equations:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[M_{bc} \phi = {RHS}_{bc}\]</div>
+</div>
+<p>By adjusting the values of <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span>, one of the following well-known types of boundary conditions can easily be defined:</p>
+<ul class="simple">
+<li><p>Neumann (<span class="math notranslate nohighlight">\(a\)</span> is nonzero; <span class="math notranslate nohighlight">\(b\)</span> is 0)</p></li>
+<li><p>Dirichlet (<span class="math notranslate nohighlight">\(a\)</span> is zero; <span class="math notranslate nohighlight">\(b\)</span> is nonzero)</p></li>
+<li><p>Robin (<span class="math notranslate nohighlight">\(a\)</span> and <span class="math notranslate nohighlight">\(b\)</span> are both nonzero)</p></li>
+</ul>
+<p>First, let’s create a simple mesh again.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>Nx = 10  # number of cells in the domain
+Lx = 1.0  # length of the domain
+m = pf.Grid1D(Nx, Lx)  # createMesh and createMesh are identical
+</pre></div>
+</div>
+</div>
+<p>Then, on this mesh, we will define a solution variable, via the <code class="docutils literal notranslate"><span class="pre">CellVariable</span></code> class. We will initialize its value to be 0.0 everywhere.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>phi = pf.CellVariable(m, 0.0)
+</pre></div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">CellVariable</span></code> object carries with it boundary conditions, that have been created by default. These boundary conditions will be applied by PyFVTool where required.</p>
+<p>Let’s have a look at the BC structure.</p>
+<p>This also prints info on the mesh, which may be a bit confusing.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(phi.BCs) # display the BC structure
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+domain : dims: [10]
+cellsize: _x: [0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1 0.1]
+_y: [0.]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;}
+
+cellcenters: _x: [0.05 0.15 0.25 0.35 0.45 0.55 0.65 0.75 0.85 0.95]
+_y: [0.]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;}
+
+facecenters: _x: [0.  0.1 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 1. ]
+_y: [0.]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;}
+
+corners: [1]
+edges: [1]
+
+left : _a : [1.]
+_b : [0.]
+_c : [0.]
+_periodic : False
+
+right : _a : [1.]
+_b : [0.]
+_c : [0.]
+_periodic : False
+
+bottom : _a : []
+_b : []
+_c : []
+_periodic : False
+
+top : _a : []
+_b : []
+_c : []
+_periodic : False
+
+back : _a : []
+_b : []
+_c : []
+_periodic : False
+
+front : _a : []
+_b : []
+_c : []
+_periodic : False
+
+
+</pre></div></div>
+</div>
+<p>For simplicity, display only information for the left boundary, and then only information for the right boundary.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&quot;Left BC&quot;)
+print(phi.BCs.left)   # a non-zero, b and c == 0, --&gt; homogeneous Neumann BC at left boundary
+print()
+print(&quot;Right BC&quot;)
+print(phi.BCs.right)  # same as left boundary --&gt; homogeneous Neumann BC at right-boundary
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Left BC
+_a : [1.]
+_b : [0.]
+_c : [0.]
+_periodic : False
+
+
+Right BC
+_a : [1.]
+_b : [0.]
+_c : [0.]
+_periodic : False
+
+</pre></div></div>
+</div>
+<p>Both the left and right BCs have the same values for <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span>. These are the default BCs that are created: Neumann-style BCs with a zero value of the derivative at the boundary. Such BCs are also called “zero flux boundary conditions”.</p>
+<p>Boundary conditions can be adapted “on the fly”.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>phi.BCs.left.a = 0.0
+phi.BCs.left.b = 1.0  # homogeneous Dirichlet boundary condition
+phi.BCs.left.c = 0.0
+
+# Periodic boundary conditions override the other settings (take precedence)
+phi.BCs.left.periodic = True
+
+print(phi.BCs.left)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+_a : [0.]
+_b : [1.]
+_c : [0.]
+_periodic : True
+
+</pre></div></div>
+</div>
+<p>For boundary condition structures created for 2D and 3D grids, we will have left, right, bottom, top, back, and front boundaries and thus substructures. Let me show them to you in action:</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>m = pf.Grid2D(3, 4, 1.0, 2.0)  # Nx, Ny, Lx, Ly
+
+phi = pf.CellVariable(m, 0.0)
+
+print(phi.BCs)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+domain : dims: [3 4]
+cellsize: _x: [0.33333333 0.33333333 0.33333333 0.33333333 0.33333333]
+_y: [0.5 0.5 0.5 0.5 0.5 0.5]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;, &#39;y&#39;: &#39;_y&#39;}
+
+cellcenters: _x: [0.16666667 0.5        0.83333333]
+_y: [0.25 0.75 1.25 1.75]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;, &#39;y&#39;: &#39;_y&#39;}
+
+facecenters: _x: [0.         0.33333333 0.66666667 1.        ]
+_y: [0.  0.5 1.  1.5 2. ]
+_z: [0.]
+coordlabels: {&#39;x&#39;: &#39;_x&#39;, &#39;y&#39;: &#39;_y&#39;}
+
+corners: [ 0 24  5 29]
+edges: [1]
+
+left : _a : [1. 1. 1. 1.]
+_b : [0. 0. 0. 0.]
+_c : [[0. 0. 0. 0.]]
+_periodic : False
+
+right : _a : [1. 1. 1. 1.]
+_b : [0. 0. 0. 0.]
+_c : [0. 0. 0. 0.]
+_periodic : False
+
+bottom : _a : [1. 1. 1.]
+_b : [0. 0. 0.]
+_c : [0. 0. 0.]
+_periodic : False
+
+top : _a : [1. 1. 1.]
+_b : [0. 0. 0.]
+_c : [0. 0. 0.]
+_periodic : False
+
+back : _a : []
+_b : []
+_c : []
+_periodic : False
+
+front : _a : []
+_b : []
+_c : []
+_periodic : False
+
+
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(phi.BCs.top)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+_a : [1. 1. 1.]
+_b : [0. 0. 0.]
+_c : [0. 0. 0.]
+_periodic : False
+
+</pre></div></div>
+</div>
+<p>Yes, that’s right. a, b, and c are vectors. It means that you can have different boundary conditions for different cell faces at each boundary. For instance, I can have a Neumann boundary condition for the first cell and a Dirichlet boundary condition for the last cell at the top boundary:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># homogeneous Neumann
+phi.BCs.top.a[0] = 1.0
+phi.BCs.top.b[0] = 0.0
+phi.BCs.top.c[0] = 0.0
+
+# homogeneous Dirichlet
+phi.BCs.top.a[-1] = 0.0
+phi.BCs.top.b[-1] = 1.0
+phi.BCs.top.c[-1] = 0.0
+<br/></pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Some fancy display!
+print(&#39;  a  b  c (top)&#39;)
+print(&#39;---------------&#39;)
+print(np.hstack((np.atleast_2d(phi.BCs.top.a).T,
+                 np.atleast_2d(phi.BCs.top.b).T,
+                 np.atleast_2d(phi.BCs.top.c).T)))
+
+# top.  a     b     c
+#    ---------------
+#      1     0     0
+#      1     0     0
+#      0     1     0
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  a  b  c (top)
+---------------
+[[1. 0. 0.]
+ [1. 0. 0.]
+ [0. 1. 0.]]
+</pre></div></div>
+</div>
+<p>The same procedure can be followed for a 3D grid. However, <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> values are 2D matrices for a 3D grid. This will be discussed in more details when we reach the practical examples.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>phi.BCs.right.a = 0.0
+phi.BCs.right.b = 1.0
+phi.BCs.right.c = 0.0
+
+print(&#39;  a  b  c (right)&#39;)
+print(&#39;---------------&#39;)
+print(np.hstack((np.atleast_2d(phi.BCs.right.a).T,
+                 np.atleast_2d(phi.BCs.right.b).T,
+                 np.atleast_2d(phi.BCs.right.c).T)))
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+  a  b  c (right)
+---------------
+[[0. 1. 0.]
+ [0. 1. 0.]
+ [0. 1. 0.]
+ [0. 1. 0.]]
+</pre></div></div>
+</div>
+</section>
+<section id="Solve-a-diffusion-equation">
+<h2>Solve a diffusion equation<a class="headerlink" href="#Solve-a-diffusion-equation" title="Link to this heading">¶</a></h2>
+<p>As the first example, we solve a steady-state diffusion equation of the following form</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\nabla\cdot\left(-D\nabla c\right)=0\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(D\)</span> is the diffusivity and <span class="math notranslate nohighlight">\(c\)</span> is the concentration. Let me assume that we have a 1D domain, with Dirichlet boundary conditions at both boundaries, i.e., at <span class="math notranslate nohighlight">\(x\)</span>=0, <span class="math notranslate nohighlight">\(c\)</span>=1; and at <span class="math notranslate nohighlight">\(x\)</span>=<span class="math notranslate nohighlight">\(L\)</span>, <span class="math notranslate nohighlight">\(c\)</span>=0. First of all, we need to define our domain, discretize it, and define the boundaries at the borders.</p>
+<p><em>Note:</em> This is a boundary value problem and we will be solving for the steady-state solution, without any transient term.</p>
+<p>First create a 1D Cartesian grid and a solution variable called <code class="docutils literal notranslate"><span class="pre">c</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>L = 0.01  # a 1 cm domain
+Nx = 10   # number of cells
+m = pf.Grid1D(Nx, L)
+
+c = pf.CellVariable(m, 0.0)
+</pre></div>
+</div>
+</div>
+<p>Now switch from the default ‘no flux’ boundary conditions to Dirichlet conditions, on both sides of the domain.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># left boundary
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = 0.0
+
+# right boundary
+c.BCs.right.a = 0.0
+c.BCs.right.b = 1.0
+c.BCs.right.c = 1.0
+
+print(c.BCs.left)
+print(c.BCs.right)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+_a : [0.]
+_b : [1.]
+_c : [0.]
+_periodic : False
+
+_a : [0.]
+_b : [1.]
+_c : [1.]
+_periodic : False
+
+</pre></div></div>
+</div>
+<p>The next step is to define the diffusion coefficient. In this FVTool, the physical properties of the domain are defined for each cell, again as a <code class="docutils literal notranslate"><span class="pre">CellVariable</span></code> object.</p>
+<p><em>Remark.</em> This variable is not a solution variable, and even though the <code class="docutils literal notranslate"><span class="pre">CellVariable</span></code> will internally contain a default <code class="docutils literal notranslate"><span class="pre">BCs</span></code> structure, these ‘dummy’ boundary conditions will of course not be used, are of no consequence and can be forgotten.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>D = pf.CellVariable(m, 1e-5)  # assign a constant value of 1e-5 to diffusivity value on each cell
+</pre></div>
+</div>
+</div>
+<p>However, the diffusion coefficients must be known on the <em>face</em> of each cell.</p>
+<p>To obtain the values at the faces from the values at the centers, we have a few typical FVM averaging schemes at our disposal. For a 1D domain, we can use a harmonic mean scheme.</p>
+<p>Notes:</p>
+<ul class="simple">
+<li><p>this “averaging” is actually an interpolation. It takes the nearest neighbor harmonic mean</p></li>
+<li><p>the harmonic mean skews towards outliers with small values</p></li>
+</ul>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[28]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>D_face = pf.harmonicMean(D)  # average diffusivity value on the cell faces.
+</pre></div>
+</div>
+</div>
+<p>Now, we can convert the PDE to a, algebraic system of linear equations, i.e. a matrix equation to be solved.</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\nabla\cdot\left(-D\nabla c\right) \rightarrow \mathbf{M}\mathbf{c} = \textrm{rhs}\]</div>
+</div>
+<p><span class="math notranslate nohighlight">\(\mathbf{M}\)</span> is the matrix of coefficients that is going to be constructed by PyFVTool, on basis of the finite-volume formulation. In this manner, PyFVTool will also construct the vector <span class="math notranslate nohighlight">\(\textrm{rhs}\)</span> which is commonly called the right-hand side.</p>
+<p><span class="math notranslate nohighlight">\(\mathbf{M}\)</span> and <span class="math notranslate nohighlight">\(\textrm{rhs}\)</span> will be constructed from the definition of the solution variable, in particular its boundary conditions, and (in this case) from the diffusion term. The latter will be placed in a list of equation terms that will be supplied to the solver function <code class="docutils literal notranslate"><span class="pre">solvePDE()</span></code>. If you look at it in detail, <code class="docutils literal notranslate"><span class="pre">pf.diffusionTerm()</span></code> creates a matrix that will be added to the overall matrix <span class="math notranslate nohighlight">\(\mathbf{M}\)</span> for the matrix equation. This provides a mechanism for adding
+several different terms (diffusion, advection/convection, source/reaction) to the equation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">solvePDE()</span></code> will take care of constructing the matrix equation, and then calling the numerical (sparse matrix) solver.</p>
+<p>The vector <span class="math notranslate nohighlight">\(\mathbf{c}\)</span> will contain the finite-volume cell values of the concentration as the numerical solution of the matrix equation.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[29]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>eqnterms = [-pf.diffusionTerm(D_face)]
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[30]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>pf.solvePDE(c, eqnterms);
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># visualize the solution
+plt.figure()
+pf.visualizeCells(c)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_60_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_60_0.png" />
+</div>
+</div>
+<p>Just to get excited a little bit, only change the mesh definition command from <code class="docutils literal notranslate"><span class="pre">Grid1D(Nx,L)</span></code> to <code class="docutils literal notranslate"><span class="pre">Grid2D(Nx,Nx,L,L)</span></code>, run the code and see what happens.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[32]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 2D
+L = 0.01  # a 1 cm domain
+Nx = 10   # number of cells
+m = pf.Grid2D(Nx, Nx, L, L)
+c = pf.CellVariable(m, 0.0)
+
+# Now switch from Neumann boundary conditions to Dirichlet conditions:
+# left boundary: homogeneous Dirichlet left-side
+c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
+# right boundary: inhomogeneous Dirchlet right-side
+c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
+
+# Create a face-variable for the diffusion coefficient
+D = pf.CellVariable(m, 1e-5)  # define the diffusivity
+D_face = pf.harmonicMean(D)  # interpolate to face positions
+
+# Solve the problem in 2D
+eqnterms = [-pf.diffusionTerm(D_face)]
+pf.solvePDE(c, eqnterms)
+
+# Visualize the solution
+plt.figure()
+pf.visualizeCells(c)
+plt.colorbar();
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_62_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_62_0.png" />
+</div>
+</div>
+<p>For even more excitement, change to <code class="docutils literal notranslate"><span class="pre">Grid3D(Nx,Nx,Nx,L,L,L)</span></code>!</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># 3D
+L = 0.01  # a 1 cm domain
+Nx = 10   # number of cells
+m = pf.Grid3D(Nx, Nx, Nx, L, L, L)
+c = pf.CellVariable(m, 0.0)
+
+# Now switch from Neumann boundary conditions to Dirichlet conditions:
+# left boundary: homogeneous Dirichlet left-side
+c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
+# right boundary: inhomogeneous Dirchlet right-side
+c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
+
+
+# Create a face-variable for the diffusion coefficient
+D = pf.CellVariable(m, 1e-5)  # define the diffusivity
+D_face = pf.harmonicMean(D)  # interpolate to face positions
+
+# Solve the problem in 3D
+eqnterms = [-pf.diffusionTerm(D_face)]
+pf.solvePDE(c, eqnterms)
+
+# Visualize the solution
+hfig = plt.figure()
+# ax = hfig.add_subplot(projection=&#39;3d&#39;)
+pf.visualizeCells(c)
+# plt.colorbar()
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&lt;Figure size 640x480 with 0 Axes&gt;
+</pre></div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_64_1.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_64_1.png" />
+</div>
+</div>
+<p>This is usually the way we develop new mathematical models for a physical phenomenon. Write the equation, solve it in 1D, compare it to the analytical solution, then solve it numerically in 2D and 3D for more realistic cases with heterogeneous transfer coefficients and other nonidealities (and perhaps compare it to some experimental data)</p>
+</section>
+<section id="Solving-a-steady-state-convection-diffusion-problem,-building-up-the-matrix-equation-term-by-term">
+<h2>Solving a steady-state convection-diffusion problem, building up the matrix equation term-by-term<a class="headerlink" href="#Solving-a-steady-state-convection-diffusion-problem,-building-up-the-matrix-equation-term-by-term" title="Link to this heading">¶</a></h2>
+<p><em>This tutorial is adapted from a</em> <a class="reference external" href="https://www.ctcms.nist.gov/fipy/examples/convection/index.html">FiPy convection-diffusion example</a><em>.</em></p>
+<p>Here, we are going to add a convection term to the equation solved in the previous example. Additionally, we demonstrate a more ‘low level’ approach to setting up the solver, building up the matrix equation step-by-step by adding the relevant terms and finally solving the matrix equation. This gives a better idea how PyFVTool works internally.</p>
+<p>The differential equation reads</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\nabla\cdot\left(\mathbf{u} \phi -D\nabla \phi \right)=0\]</div>
+</div>
+<p>Here, <span class="math notranslate nohighlight">\(\mathbf{u}\)</span> is a velocity vector (face variable) and <span class="math notranslate nohighlight">\(D\)</span> is the diffusion coefficient (again a face variable). Please see the PDF document for an explanation of cell and face variables. We use Dirichlet (constant value) boundary conditions on the left and right boundaries. It is zero at the left boundary and one at the right boundary. The analytical solution of this differential equation reads</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[c = \frac{1-\exp(ux/D)}{1-\exp(uL/D)}\]</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[34]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Define the domain and mesh
+L = 1.0   # domain length
+Nx = 25  # number of cells
+meshstruct = pf.Grid1D(Nx, L)
+x = meshstruct.cellcenters.x   #  extract the cell center positions for plotting purposes
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[35]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>c = pf.CellVariable(meshstruct, 0.0)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[36]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># switch the left boundary to homogeneous Dirichlet
+c.BCs.left.a, c.BCs.left.b, c.BCs.left.c = 0.0, 1.0, 0.0
+c.BCs.right.a, c.BCs.right.b, c.BCs.right.c = 0.0, 1.0, 1.0
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[37]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Make an identical, separate copy for the upwind calculation
+# to ensure independent calculations
+c_upwind = c.copy()
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[38]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Define the transfer coefficients
+
+# Diffusion
+D_val = 1.0  # diffusion coefficient value
+D = pf.CellVariable(meshstruct, D_val)  # assign diff. coeff. to all the cells
+Dave = pf.harmonicMean(D)               # convert a cell variable to face variable
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[39]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Convection
+u = -10.0 # velocity value
+u_face = pf.FaceVariable(meshstruct, u)  # assign velocity value to cell faces
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[40]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># solve using the central scheme, updating the CellVariable
+pf.solvePDE(c, [ pf.convectionTerm(u_face),
+                -pf.diffusionTerm(Dave)]);
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[41]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># solve using the upwind scheme
+pf.solvePDE(c_upwind, [ pf.convectionUpwindTerm(u_face),
+                       -pf.diffusionTerm(Dave)]);
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[42]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># analytic solution
+c_analytical = (1-np.exp(u*x/D_val))/(1-np.exp(u*L/D_val))
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[43]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># visualization
+plt.figure()
+plt.plot(x, c.value, &#39;-&#39;, label=&#39;central&#39;)
+plt.plot(x, c_upwind.value, &#39;--&#39;, label=&#39;upwind&#39;)
+plt.plot(x, c_analytical, &#39;.&#39;, label=&#39;analytic&#39;)
+plt.legend(fontsize=12, loc=&#39;best&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_77_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_77_0.png" />
+</div>
+</div>
+<p>As you see here, we obtain a more accurate result by using a central difference discretization scheme for the convection term compared to the first order upwind.</p>
+</section>
+<section id="Solve-a-transient-diffusion-equation">
+<h2>Solve a transient diffusion equation<a class="headerlink" href="#Solve-a-transient-diffusion-equation" title="Link to this heading">¶</a></h2>
+<p>This example is adapted from the FiPy 1D diffusion example</p>
+<p>The transient diffusion equation reads</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\alpha\frac{\partial c}{\partial t}+\nabla \cdot \left(-D\nabla c\right)=0,\]</div>
+</div>
+<p>where <span class="math notranslate nohighlight">\(c\)</span> is the independent variable (concentration, temperature, etc) , <span class="math notranslate nohighlight">\(D\)</span> is the diffusion coefficient, and <span class="math notranslate nohighlight">\(\alpha\)</span> is a constant.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[44]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Define the domain and create a mesh structure
+L = 50.0   # domain length
+Nx = 20  # number of cells
+m = pf.Grid1D(Nx, L)
+x = m.cellcenters.x  # cell centers position
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[45]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Solution variable
+
+# Define the initial condition
+c_init = 0.0
+
+c = pf.CellVariable(m, c_init)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[46]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Switch the left and right boundaries to Dirichlet
+# left boundary
+c.BCs.left.a = 0.0
+c.BCs.left.b = 1.0
+c.BCs.left.c = 1.0
+# right boundary
+c.BCs.right.a = 0.0
+c.BCs.right.b = 1.0
+c.BCs.right.c = 0.0
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[47]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Define the transfer coefficients:
+D_val = 1.0
+D = pf.CellVariable(m, D_val)
+Dave = pf.harmonicMean(D)  # convert it to face variables
+
+# Define alfa, the coefficient of the transient term:
+alfa_val = 1.0
+alfa = pf.CellVariable(m, alfa_val)
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[48]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Now define the time step and the final time:
+dt = 0.1  # time step
+final_t = 100.0
+</pre></div>
+</div>
+</div>
+<p>Here, we first create the term matrices that will not change as we progress stepwise in time, <em>i.e.</em> diffusion term. The matrix equation terms (<span class="math notranslate nohighlight">\(\mathbf{M}\)</span> and <span class="math notranslate nohighlight">\(\textrm{rhs}\)</span>) corresponding to the boundary condition are handled automatically by PyFVTool via <code class="docutils literal notranslate"><span class="pre">solvePDE()</span></code>.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[49]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>diffterm = pf.diffusionTerm(Dave) # does not change when stepping in time
+</pre></div>
+</div>
+</div>
+<p>The transitionTerm function gives a matrix of coefficient and a RHS vector. The matrix of coefficient does not change in each time step, but the RHS does. Therefore, we need to call the <code class="docutils literal notranslate"><span class="pre">transientTerm()</span></code> function inside the time loop.</p>
+<p>Here’s the time stepping loop:</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[50]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>tt = []
+ci = []
+ca = []
+t = 0.
+while t &lt; final_t:
+    transterm = pf.transientTerm(c, dt, alfa) # re-evaluate at each time step
+    eqnterms = [ transterm,
+                -diffterm]
+    pf.solvePDE(c, eqnterms)
+    t += dt # solution time
+
+    tt.append(t)
+    ci.append(c.copy())  # store all solutions (copy all contents)
+    ca.append( 1.0-erf(x/(2*np.sqrt(D_val*t)))) # store analytic
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[51]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Visualize the final results
+plt.figure()
+plt.plot(x, ci[-1].value, &#39;o&#39;, label=&#39;Numerical&#39;)
+plt.plot(x, ca[-1], &#39;-&#39;, label=&#39;Analytic&#39;)
+plt.xlabel(&#39;Length [m]&#39;)
+plt.ylabel(&#39;c&#39;)
+plt.legend(fontsize=12, loc=&#39;best&#39;);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_90_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_90_0.png" />
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[52]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Plotting and visualization of the 1D transient diffusion solution
+hfig1, ax1 = plt.subplots()
+
+ax1.plot(x, ca[0], &#39;g-&#39;, label=&#39;first time step analytic&#39;)
+ax1.plot(x, ci[0].value, &#39;bo&#39;, label=&#39;first time step numerical &#39;)
+
+ax1.plot(x, ca[-1], &#39;k-&#39;, label=&#39;final analytic&#39;)
+ax1.plot(x, ci[-1].value, &#39;ro&#39;, label=&#39;final numerical&#39;)
+
+ax1.set_xlim((0, L))
+ax1.set_ylim((0.0, 1.0))
+
+ax1.set_xlabel(&#39;x&#39;)
+ax1.set_ylabel(&#39;c&#39;)
+ax1.set_title(&#39;Transient diffusion&#39;)
+ax1.legend(fontsize=8);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_91_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_91_0.png" />
+</div>
+</div>
+# ANIMATION NEEDS TO BE FIXED TO WORK IN JUPYTER NOTEBOOK
+
+# ========= #
+
+from matplotlib.animation import FuncAnimation
+
+# create a figure to handle the solution animation
+#   pre-generate the handles to the axes and the line
+hfig2 = plt.figure()
+ax2 = plt.axes(xlim=(0, L), ylim=(0.0, 1.0))
+line, = ax2.plot([], [], 'k-', lw=3, label='Numerical solution')
+circ, = ax2.plot([], [], 'o', lw=3, label='Analytic solution')
+
+ax2.set_xlabel('x')
+ax2.set_ylabel('c')
+ax2.set_title('1D transient diffusion solution')
+ax2.legend(fontsize=8)
+
+
+def init():
+    line.set_data([], [])
+    circ.set_data([], [])
+    return line, circ
+
+def animate(ii):
+    global x
+    global ci
+    global ca
+    global Nx
+    line.set_data(x, ci[ii].value
+    circ.set_data(x, ca[ii])
+    return line, circ
+
+anim = FuncAnimation(hfig2, animate, init_func=init,
+            frames=400, interval=20, blit=True)</section>
+<section id="Convection-equations;-different-discretization-schemes">
+<h2>Convection equations; different discretization schemes<a class="headerlink" href="#Convection-equations;-different-discretization-schemes" title="Link to this heading">¶</a></h2>
+<p>One special feature of this FVTool to be highlighted is its collection of discretization schemes for a linear convection term, which includes central difference (second order), upwind (first order), and TVD upwind scheme with various flux limiters.</p>
+<p>Convective terms in transport PDEs are notoriously difficult to handle numerically, since all discretization schemes for convection display to a certain extent a numerical artefact aptly called “numerical diffusion” (illustrated below). This is sometimes combined with unphysical oscillations appearing in the numerical solution (especially when trying to reduce numerical diffusion). Specific clever numerical schemes have been developed to mitigate both effects, but these come often at increased
+computational cost.</p>
+<p>Here, we are going to compare the performance of several schemes for solving a simple linear transient convection equation with an initial condition containing discontinuities. The discontinuties (or shocks) clearly bring out the numerical diffusion and the oscillations.</p>
+<p>We define a simple linear transient convection PDE, with an initial condition having discontinuties,</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\frac{\partial \varphi}{\partial t} + \nabla\cdot\left(\vec{u}\varphi\right) = \vec{0}\]</div>
+</div>
+<p>and periodic boundary conditions on a Cartesian 1D-domain with constant flow velocity coefficients <span class="math notranslate nohighlight">\(u\)</span>=0.3 m/s.</p>
+<p>The periodic boundary conditions make that the stuff that goes out on one side of the domain re-enters on the other side (like Pac-Man and the ghosts in the original arcade game). This provides a means to transport by convection the initial condition one complete cycle such that the numerical solution is superposed with the initial condition. In the case of pure 1D convection, the solution after one complete cycle should be identical to the initial condition.</p>
+<p>Initial condition:</p>
+<div class="math-wrapper docutils container">
+<div class="math notranslate nohighlight">
+\[\begin{split}\varphi\left(x, 0\right) \,=\, \begin{equation}
+\left\{
+  \begin{aligned}
+    &amp;0,\,\, &amp;0.0 \le \,&amp;x&lt;0.04 \\
+    &amp;1\,\,  &amp;0.04\le \,&amp;x&lt;0.24 \\
+    &amp;0\,\,  &amp;0.24\le \,&amp;x&lt;0.36 \\
+    &amp;\sin\left(10\,\pi\,x\right)\,\,  &amp;0.36\le \,&amp;x&lt;0.8 \\
+    &amp;0,\,\, &amp;0.8 \le \,&amp;x\le1.0 \\
+  \end{aligned}
+  \right.
+\end{equation}\end{split}\]</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[53]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># define a 1D domain and mesh
+W = 1.0
+Nx = 500
+mesh1 = pf.Grid1D(Nx, W)
+x = mesh1.cellcenters.x
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[54]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Set up a variable with initial values and BCs, that can be copied to have
+# the same IC and BCs for solving with different numerical schemes
+phiinit = pf.CellVariable(mesh1, 0.0)
+
+phiinit.value[(0.04 &lt;= x) &amp; (x &lt; 0.24)] = 1.0
+phiinit.value[(0.36 &lt;= x) &amp; (x &lt; 0.8)] = np.sin(x[(0.36 &lt;= x) &amp; (x &lt; 0.8)]*10*np.pi)
+
+# Periodic boundary conditions:
+phiinit.BCs.left.periodic = True
+phiinit.BCs.right.periodic = True
+</pre></div>
+</div>
+</div>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[55]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># velocity field
+u = 0.3   # m/s
+uf = pf.FaceVariable(mesh1, u)
+
+# transient term coefficient
+alfa = pf.CellVariable(mesh1, 1.0)
+</pre></div>
+</div>
+</div>
+<p>The time step and simulation length are set so that the solution has traveled exactly one cycle over the periodic boundaries.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[56]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># set time step and simulation length
+dt = 0.001  # [s], time step
+final_t = W/u
+</pre></div>
+</div>
+</div>
+<section id="Standard-central-difference-scheme-for-convection">
+<h3>Standard central difference scheme for convection<a class="headerlink" href="#Standard-central-difference-scheme-for-convection" title="Link to this heading">¶</a></h3>
+<p>The standard <code class="docutils literal notranslate"><span class="pre">convectionTerm()</span></code> in PyFVTool uses the second order central differencing (CD) scheme. This scheme is not always recommended, especially at high Péclet numbers where convection dominates (see Chapter 4 of Versteeeg &amp; Malalasekera (2007), “An Introduction to Computational Fluid Dynamics: The Finite Volume Method.”, 2nd Edition).</p>
+<p>The following solver uses the CD scheme.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[57]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Solver: standard central difference
+
+# Initialize solution variable
+phi = phiinit.copy()
+
+tt = 0.0
+count = 0
+
+phi_cendif = []
+
+# Constant matrix eqn terms:
+convterm = pf.convectionTerm(uf)   # standard central difference
+
+while (tt&lt;final_t) and (count &lt; 5000):
+    tt += dt
+    transientterm = pf.transientTerm(phi, dt, alfa)
+    eqnterms = [transientterm,
+                convterm]
+    pf.solvePDE(phi, eqnterms)
+    # Store the central difference solution for later animation
+    phi_cendif.append(phi)
+    count += 1
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Pure-upwind-scheme-for-convection">
+<h3>Pure upwind scheme for convection<a class="headerlink" href="#Pure-upwind-scheme-for-convection" title="Link to this heading">¶</a></h3>
+<p>Next, we use the same code, but replace the standard scheme with the (first order) upwind scheme, via <code class="docutils literal notranslate"><span class="pre">convectionUpwindTerm()</span></code>. This is a nice scheme for handling convection, but it suffers enormously from numerical diffusion.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[58]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Solver: upwind only
+
+# Initialize solution variable
+phi = phiinit.copy()
+
+tt = 0.0
+count = 0
+
+phi_uw = []
+
+# Constant matrix eqn terms:
+convupwindterm = pf.convectionUpwindTerm(uf)   # upwind convection term
+
+while (tt&lt;final_t) and (count &lt; 5000):
+    tt += dt
+    transientterm = pf.transientTerm(phi, dt, alfa)
+    eqnterms = [transientterm,
+                convupwindterm]
+    pf.solvePDE(phi, eqnterms)
+    # Store the upwind solution for later animation
+    phi_uw.append(phi)
+    count += 1
+</pre></div>
+</div>
+</div>
+</section>
+<section id="Upwind-scheme-with-TVD-correction-for-convection">
+<h3>Upwind scheme with TVD correction for convection<a class="headerlink" href="#Upwind-scheme-with-TVD-correction-for-convection" title="Link to this heading">¶</a></h3>
+<p>It is possible to reduce the numerical diffusion in the upwind scheme without introducing unphysical oscillations. This involves application of a TVD (<a class="reference external" href="https://en.wikipedia.org/wiki/Total_variation_diminishing">total variation diminishing</a>) scheme. The TVD scheme implemented in PyFVTool provides an ‘explicit’ correction term for the first degree upwind based on the values of phi in the previous time step.</p>
+<p>The TVD upwind scheme requires an inner loop with calls to <code class="docutils literal notranslate"><span class="pre">solvePDE()</span></code> to sweep the solution to convergence (this takes only a few cycles). During this inner loop the transient term keeps the coefficients used with the initial call to <code class="docutils literal notranslate"><span class="pre">solvePDE()</span></code> (and hence the ‘old’ value of the solution variable). Only the corrective TVD term for the upwind scheme <code class="docutils literal notranslate"><span class="pre">convectionTVDupwindRHSTerm()</span></code> needs to be recalculated at each cycle of the inner loop.</p>
+<p>A function <code class="docutils literal notranslate"><span class="pre">convectionTVDTerm()</span></code> existed in early versions of PyFVTool that returned both the matrix of coefficients and the RHS corrector. This turns out to be wasteful, since the matrix term comes directly from the upwind scheme and does not change in the inner ‘corrector’ loop (if at all!). Therefore, we now have the <code class="docutils literal notranslate"><span class="pre">convectionTVDupwindRHSTerm()</span></code> that returns only the corrector term, to be applied in combination with the <code class="docutils literal notranslate"><span class="pre">convectionUpwindTerm()</span></code>.</p>
+<p>Here, we use 3 iterations for the inner ‘corrector’ loop, but 5 may be more on the safe side. Strictly speaking, a convergence criterion would be needed for the inner TVD loop. However, in many existing codes (written for flow in porous media) a fixed number of iteration is used, usually 3. The “flow in porous media” community uses these tricks all the time simply because they work for their specific problem (often multiphase flow in porous media). However, it does not necessarily mean that this
+trick always works!</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[59]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Solver: upwind with TVD corrector (SUPERBEE flux limiter)
+
+# Initialize solution variable
+phi = phiinit.copy()
+
+tt = 0.0
+count = 0
+phi_tvd = []
+
+
+# Number of TVD inner loop cycles
+N_TVDloop = 3 # works fine, perhaps 5 is better
+
+# Choose a flux limiter
+FL = pf.fluxLimiter(&#39;SUPERBEE&#39;)
+
+# Constant matrix eqn terms:
+convupwindterm = pf.convectionUpwindTerm(uf)   # upwind convection term
+
+while (tt&lt;final_t) and (count &lt; 5000):
+    tt += dt
+
+    # Inner loop for TVD scheme
+    # The transientterm should be kept constant over the TVD inner loop
+    transientterm = pf.transientTerm(phi, dt, alfa)
+    for jj in range(N_TVDloop):
+        # TVD RHS term
+        tvdcorrterm = pf.convectionTVDupwindRHSTerm(uf, phi, FL)
+        # construct and solve equation
+        eqnterms = [transientterm,
+                    convupwindterm,
+                    tvdcorrterm]
+        pf.solvePDE(phi, eqnterms)
+    # After N_TVDloop cycles, the solution phi has converged
+
+    # Store the TVD solution for later animation
+    phi_tvd.append(phi)
+    count += 1
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[60]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span># Visualize the numerical solutions obtained with the different schemes
+hfig, ax = plt.subplots(1, 1)
+ax.plot(x, phiinit.value, &#39;k-&#39;, label=&#39;initial value&#39;)
+ax.plot(x, phi_cendif[-1].value, &#39;b-&#39;, label=&#39;centr. diff.&#39;)
+ax.plot(x, phi_uw[-1].value, &#39;-&#39;, color=&#39;orange&#39;, label=&#39;upwind&#39;);
+ax.plot(x, phi_tvd[-1].value, &#39;r-&#39;, label=&#39;TVD&#39;)
+ax.legend(fontsize=8);
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_107_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_107_0.png" />
+</div>
+</div>
+<p>In the figure, we can clearly see the strong numerical diffusion in the basic upwind scheme. Remember, that the correct solution of the PDE in these conditions should be identical to the initial condition.</p>
+<p>The central difference solution does not look too bad in this case, but has strange (and asymmetric) wiggles.</p>
+<p>TVD-upwind has much less numerical diffusion than simple upwind, without any oscillation, but requires 5 times(!) more calculations.</p>
+<p>Finally, we check mass conservation in this system.</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[61]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>print(&#39;Total mass in system&#39;)
+for name, totalmass in zip([&#39;initial&#39;,
+                            &#39;central differencing&#39;,
+                            &#39;upwind&#39;,
+                            &#39;TVD upwind&#39;],
+                           [phiinit.domainIntegral(),
+                            phi_cendif[-1].domainIntegral(),
+                            phi_uw[-1].domainIntegral(),
+                            phi_tvd[-1].domainIntegral()]):
+    print(f&#39;- {name:20s}   {totalmass:.4f}&#39;)
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Total mass in system
+- initial                0.1780
+- central differencing   0.1780
+- upwind                 0.1776
+- TVD upwind             0.1780
+</pre></div></div>
+</div>
+# ANIMATION NEEDS TO BE FIXED TO WORK IN JUPYTER NOTEBOOK
+
+# ========= #
+
+from matplotlib.animation import FuncAnimation
+
+# create a figure to handle the solution animation
+#   pre-generate the handles to the axes and the line
+hfig2 = plt.figure()
+ax2 = plt.axes(xlim=(0, W), ylim=(-1.25, 1.25))
+line, = ax2.plot([], [], 'ro', lw=3, label='TVD solution')
+circ, = ax2.plot([], [], '-', color='orange', lw=3, label='Upwind solution')
+
+ax2.set_xlabel('x')
+ax2.set_ylabel('c')
+ax2.set_title('1D transient convective-diffusion: Constant coeff.')
+ax2.legend(fontsize=8)
+
+
+def init():
+    line.set_data([], [])
+    circ.set_data([], [])
+    return line, circ
+
+def animate(ii):
+    global x
+    global ci
+    global ca
+    global Nx
+
+    circ.set_data(x, phi_tvd[ii])
+    line.set_data(x, phi_uw[ii].value)
+    return line, circ
+
+anim = FuncAnimation(hfig2, animate, init_func=init,
+            frames=400, interval=20, blit=True)</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="cartesian1D_diffusion_advection_mason_weaver.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Solving the Mason-Weaver equation</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../../examples/index.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Examples</div>
+                
+              </div>
+            </a>
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2026, PyFVTool contributors
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">An introductory demonstration of PyFVTool</a><ul>
+<li><a class="reference internal" href="#Create-a-1D-mesh-and-visualize-it">Create a 1D mesh and visualize it</a></li>
+<li><a class="reference internal" href="#Create-a-2D-grid-and-visualize-it">Create a 2D grid and visualize it</a></li>
+<li><a class="reference internal" href="#Create-a-3D-grid-and-visualize-it">Create a 3D grid and visualize it</a></li>
+<li><a class="reference internal" href="#Boundary-conditions">Boundary conditions</a></li>
+<li><a class="reference internal" href="#Solve-a-diffusion-equation">Solve a diffusion equation</a></li>
+<li><a class="reference internal" href="#Solving-a-steady-state-convection-diffusion-problem,-building-up-the-matrix-equation-term-by-term">Solving a steady-state convection-diffusion problem, building up the matrix equation term-by-term</a></li>
+<li><a class="reference internal" href="#Solve-a-transient-diffusion-equation">Solve a transient diffusion equation</a></li>
+<li><a class="reference internal" href="#Convection-equations;-different-discretization-schemes">Convection equations; different discretization schemes</a><ul>
+<li><a class="reference internal" href="#Standard-central-difference-scheme-for-convection">Standard central difference scheme for convection</a></li>
+<li><a class="reference internal" href="#Pure-upwind-scheme-for-convection">Pure upwind scheme for convection</a></li>
+<li><a class="reference internal" href="#Upwind-scheme-with-TVD-correction-for-convection">Upwind scheme with TVD correction for convection</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/scripts/furo.js?v=46bd48cc"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    </body>
+</html>
