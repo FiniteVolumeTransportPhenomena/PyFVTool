@@ -1,6 +1,6 @@
 # PyFVTool: Python toolbox for the finite volume method
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17904660.svg)](https://doi.org/10.5281/zenodo.17904660)
+[![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.17904660-blue.svg)](https://doi.org/10.5281/zenodo.17904660)
 
 PyFVTool discretizes and numerically solves the conservative form of transient [convection-diffusion-reaction](https://en.wikipedia.org/wiki/Convection%E2%80%93diffusion_equation) equations with variable velocity field/diffusion coefficients and source terms. PyFVTool uses the [finite volume method](https://en.wikipedia.org/wiki/Finite_volume_method) (FVM) to do this. 
 
