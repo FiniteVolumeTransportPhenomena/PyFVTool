@@ -23,6 +23,6 @@ than explicit schemes at the cost of solving a linear system each step.
 
 For nonlinear problems, **Picard iteration** (fixed-point iteration) could be used:
 linearize the nonlinear coefficients around the current solution, solve, update,
-and repeat until convergence. FiPy calls this "sweeping". In other FVM literature, this may be referred to as "nonlinear iterations".
+and repeat until convergence. [FiPy calls this "sweeping"](https://pages.nist.gov/fipy/en/latest/FAQ.html#iterations-timesteps-and-sweeps-oh-my). In other FVM literature, this may be referred to as "nonlinear iterations".
 
 With PyFVTool, Picard iteration has not yet been used, and there are at present no examples of solving nonlinear PDEs (hello, Navier-Stokes!) in PyFVTool.
