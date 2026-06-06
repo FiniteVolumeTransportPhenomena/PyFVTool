@@ -288,25 +288,18 @@
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">solvePDE</span></code> builds the global sparse matrix, applies boundary conditions, solves
 the linear system, and writes the updated values back into <code class="docutils literal notranslate"><span class="pre">c</span></code> in-place.</p>
-<section id="nonlinear-pdes">
-<h2>Nonlinear PDEs<a class="headerlink" href="#nonlinear-pdes" title="Link to this heading">¶</a></h2>
-<p>For nonlinear problems, use <strong>Picard iteration</strong> (fixed-point iteration):
-linearize the nonlinear coefficients around the current solution, solve, update,
-and repeat until convergence:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">max_iter</span><span class="p">):</span>
-    <span class="n">D_face</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">geometricMean</span><span class="p">(</span><span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">D_func</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)))</span>
-    <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">D_face</span><span class="p">),</span> <span class="n">pf</span><span class="o">.</span><span class="n">constantSourceTerm</span><span class="p">(</span><span class="n">S</span><span class="p">)]</span>
-    <span class="n">residual</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">residual</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
-        <span class="k">break</span>
-</pre></div>
-</div>
-</section>
 <section id="time-stepping">
 <h2>Time-stepping<a class="headerlink" href="#time-stepping" title="Link to this heading">¶</a></h2>
 <p>PyFVTool uses <strong>implicit (backward) Euler</strong> time integration by default via
 <code class="docutils literal notranslate"><span class="pre">transientTerm</span></code>. This is unconditionally stable, allowing larger time steps
 than explicit schemes at the cost of solving a linear system each step.</p>
+</section>
+<section id="nonlinear-pdes">
+<h2>Nonlinear PDEs<a class="headerlink" href="#nonlinear-pdes" title="Link to this heading">¶</a></h2>
+<p>For nonlinear problems, <strong>Picard iteration</strong> (fixed-point iteration) could be used:
+linearize the nonlinear coefficients around the current solution, solve, update,
+and repeat until convergence. FiPy calls this “sweeping”. In other FVM literature, this may be referred to as “nonlinear iterations”.</p>
+<p>With PyFVTool, Picard iteration has not yet been used, and there are at present no examples of solving nonlinear PDEs (hello, Navier-Stokes!) in PyFVTool.</p>
 </section>
 </section>
 
@@ -366,8 +359,8 @@ than explicit schemes at the cost of solving a linear system each step.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Solving PDEs</a><ul>
-<li><a class="reference internal" href="#nonlinear-pdes">Nonlinear PDEs</a></li>
 <li><a class="reference internal" href="#time-stepping">Time-stepping</a></li>
+<li><a class="reference internal" href="#nonlinear-pdes">Nonlinear PDEs</a></li>
 </ul>
 </li>
 </ul>
