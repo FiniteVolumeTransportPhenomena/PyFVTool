@@ -30,6 +30,7 @@ Python. Only `numpy`, `scipy`, and `matplotlib` are required.
 :maxdepth: 2
 :caption: Getting started
 
+scope_and_limitations
 installation
 quickstart
 ```
