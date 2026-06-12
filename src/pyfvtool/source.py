@@ -107,18 +107,19 @@ def linearSourceTerm(beta: CellVariable):
 
 
 
-def transientTerm(phi_old: CellVariable, dt, alfa = 1.0):
+def transientTerm(phi: CellVariable, dt, alpha = 1.0):
     """
     Transient term of a PDE.
 
     Parameters
     ----------
-    phi_old: CellVariable
-        Old value of the variable
+    phi: CellVariable
+        Cell variable (containing the value of the previous time step)
     dt: float
         Time step size
-    alfa: float or CellVariable
+    alpha: float or CellVariable
         Coefficient of the transient term
+        Default value is 1.0
     
     Returns
     -------
@@ -134,10 +135,10 @@ def transientTerm(phi_old: CellVariable, dt, alfa = 1.0):
     >>> phi_old = pf.CellVariable(m, 0.0)
     >>> M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)
     """
-    if not (type(alfa) is CellVariable):
-        a = CellVariable(phi_old.domain, alfa,
-                         BoundaryConditions(phi_old.domain))
+    if not (type(alpha) is CellVariable):
+        a = CellVariable(phi.domain, alpha,
+                         BoundaryConditions(phi.domain))
     else:
-        a = alfa
-    return linearSourceTerm(a/dt), constantSourceTerm(a*phi_old/dt)
+        a = alpha
+    return linearSourceTerm(a/dt), constantSourceTerm(a*phi/dt)
 
