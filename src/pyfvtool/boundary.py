@@ -101,6 +101,8 @@ class BoundaryFace:
     def defaultNoFlux(self):
         """
         Restore default "no flux" boundary condition
+        
+        Equivalent to a = 1.0; b = 0.0; c = 0.0
 
         Returns
         -------
@@ -116,6 +118,8 @@ class BoundaryFace:
         Set fixed value (Dirichlet) boundary condition
         
         Utility function.
+        
+        Equivalent to a = 0.0; b = 1.0; c = value
 
         Parameters
         ----------
@@ -130,10 +134,30 @@ class BoundaryFace:
         self.a = 0.0
         self.b = 1.0
         self.c = value
-        
-        
 
+    def fixedGradient(self, gradientvalue):
+        """
+        Set fixed gradient (Neumann) boundary condition
+        
+        Utility function.
+        
+        Equivalent to a = 1.0; b = 0.0; c = gradientvalue
 
+        Parameters
+        ----------
+        value : float or ndarray
+            Fixed boundary value(s) to be set.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.a = 1.0
+        self.b = 0.0
+        self.c = gradientvalue
+    
+        
 
 class BoundaryConditionsBase:
     """
