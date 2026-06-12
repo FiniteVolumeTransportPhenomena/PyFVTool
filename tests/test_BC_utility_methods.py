@@ -1,14 +1,13 @@
 """
 Testing of utility methods for setting boundary conditions
 
-Candidates:
-fixedValue (Dirichlet)
-fixedGradient (Neumann)
-NewtonLaw(k, h, T_ext)
-defaultNoFlux() a = 1.0, b = 0.0, c = 0.0
-
+- defaultNoFlux()
+- fixedValue (Dirichlet)
+- fixedGradient (Neumann)
+- NewtonLaw(k, h, T_ext)
 
 """
+
 import numpy as np
 
 import pyfvtool as pf
@@ -23,11 +22,11 @@ T_ext = 274.00
 k = 0.1 
 rhocp = 1.0
 alpha = k / rhocp
-S = 50.0 # TO DO: realistic values?
+S = 50.0 # TO DO: use realistic values?
 
 
 
-def test_default_no_flux():
+def test_default_bcs():
     mesh = pf.CylindricalGrid1D(Nr, Lr)
     Tcell = pf.CellVariable(mesh, T_init)
     
@@ -35,6 +34,27 @@ def test_default_no_flux():
         assert bc.a[0] == 1.0, "default BC: expected a=1.0"
         assert bc.b[0] == 0.0, "default BC: expected b=0.0"
         assert bc.c[0] == 0.0, "default BC: expected c=0.0"
+
+
+
+def test_default_no_flux():
+    # solve a simple 1D diffusion equation in closed system (no flux boundary conditions)
+    mesh = pf.Grid1D(100, 1.0)
+    Ccell = pf.CellVariable(mesh, 0.0)
+    Ccell.value[Ccell.cellcenters.x < 0.5] = 1.0 # all initial concentration in the left half
+    # switch BCs
+    Ccell.BCs.right.fixedValue(10.0)
+    # restore
+    Ccell.BCs.left.defaultNoFlux()
+    Ccell.BCs.right.defaultNoFlux()
+    init_Ctot = Ccell.domainIntegral()
+    # sweep to equilibrium: solve time-dependent PDE
+    for i in range(25):
+        pf.solvePDE(Ccell, [ pf.transientTerm(Ccell, 0.125),
+                            -pf.diffusionTerm(pf.FaceVariable(mesh, 1.0))])
+    final_Ctot = Ccell.domainIntegral()
+    assert np.allclose(init_Ctot, final_Ctot), f"scalar not conserved: {init_Ctot} versus {final_Ctot}"
+    assert np.allclose(Ccell.value, 0.5), "closed diffusion system did not reach equilibrium"
 
 
 
@@ -65,6 +85,7 @@ def test_fixed_value():
 
 
 if __name__ == "__main__":
+    test_default_bcs()
     test_default_no_flux()
     test_fixed_value()
     
@@ -72,9 +93,14 @@ if __name__ == "__main__":
     # WIP: next test developed interactively, will become a test_ function when finished
     ###
 
+    # Newton cooling example: 
+    #    http://olivier.granier.free.fr/MOOC-Anglais/Transferts/co/ex-CCP-6-transferts.html
+    # Interestingly, in PyFVTool we should do Cylindrical2D(r, z) to use the actual Newton BC
+    # In PyFVTool Grid1D, the cooling through the side wall would show up as a (linear) source term
+    # 
+
     ###
     ###
-    
 
     print("All tests passed.")
     

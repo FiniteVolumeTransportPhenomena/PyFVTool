@@ -98,6 +98,19 @@ class BoundaryFace:
         self.modified = True
         self._periodic = bool(val)
         
+    def defaultNoFlux(self):
+        """
+        Restore default "no flux" boundary condition
+
+        Returns
+        -------
+        None.
+
+        """
+        self.a = 1.0
+        self.b = 0.0
+        self.c = 0.0
+        
     def fixedValue(self, value):
         """
         Set fixed value (Dirichlet) boundary condition
@@ -114,7 +127,6 @@ class BoundaryFace:
         None.
 
         """
-
         self.a = 0.0
         self.b = 1.0
         self.c = value

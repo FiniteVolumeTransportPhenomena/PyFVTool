@@ -107,7 +107,7 @@ def linearSourceTerm(beta: CellVariable):
 
 
 
-def transientTerm(phi_old: CellVariable, dt, alfa):
+def transientTerm(phi_old: CellVariable, dt, alfa = 1.0):
     """
     Transient term of a PDE.
 
