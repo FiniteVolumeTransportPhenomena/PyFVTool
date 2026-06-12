@@ -1,6 +1,6 @@
 # Scope and limitations
 
-Before digging deeper into PyFVTool, it is useful to consider its scope and its limitations. These are not likely to evolve much in the near futre, since the developers' time is limited and also because there are other, well-established codes that become of interest when your problems move beyond the scope of PyFVTool.
+Before digging deeper into PyFVTool, it is useful to consider its scope and its limitations. These are not likely to evolve much in the near future, since the developers' time is limited and also because there are other, well-established codes that become of interest when your problems move beyond the scope of PyFVTool.
 
 
 ## Scope
