@@ -97,6 +97,29 @@ class BoundaryFace:
     def periodic(self, val):
         self.modified = True
         self._periodic = bool(val)
+        
+    def fixedValue(self, value):
+        """
+        Set fixed value (Dirichlet) boundary condition
+        
+        Utility function.
+
+        Parameters
+        ----------
+        value : float or ndarray
+            Fixed boundary value(s) to be set.
+
+        Returns
+        -------
+        None.
+
+        """
+
+        self.a = 0.0
+        self.b = 1.0
+        self.c = value
+        
+        
 
 
 

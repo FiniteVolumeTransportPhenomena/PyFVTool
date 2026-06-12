@@ -1,24 +1,27 @@
 """
 Testing of utility methods for setting boundary conditions
 
-set_FixedValue (Dirichlet)
-set_FixedGradient (Neumann)
-set_NewtonLaw(k, h, T_ext)
-set_DefaultNoFlux() a = 1.0, b = 0.0, c = 0.0
+Candidates:
+fixedValue (Dirichlet)
+fixedGradient (Neumann)
+NewtonLaw(k, h, T_ext)
+defaultNoFlux() a = 1.0, b = 0.0, c = 0.0
 
 
 """
-
 import numpy as np
 
 import pyfvtool as pf
+
+
 
 # system parameters
 Nr = 100
 Lr = 1.0
 T_init = 298.15
-T_ext = 200.00
-
+T_ext = 274.00
+alpha = 0.1 # TO DO: realistic values?
+S = 100.0 # TO DO: realistic values?
 
 
 
@@ -33,24 +36,34 @@ def test_default_no_flux():
 
 
 
-
-
-
 if __name__ == "__main__":
     test_default_no_flux()
 
+    ###
     # WIP: next test (FixedValue), will become a test_ function when finished
+    ###
     mesh = pf.CylindricalGrid1D(Nr, Lr)
-    Tcell = pf.CellVariable(mesh, T_init)
-    # Tcell.BCs.right.set_FixedValue(0.0)
+    Tcell = pf.CellVariable(mesh, T_init) 
+    
+    Tcell.BCs.right.fixedValue(T_ext)
+    
+    for bc in [Tcell.BCs.right]:
+        assert bc.a[0] == 0.0, "fixedValue BC error"
+        assert bc.b[0] == 1.0, "fixedValue BC error"
+        assert bc.c[0] == T_ext, "fixedValue BC error"
+        
     assert np.allclose(Tcell, T_init), "Cell does not have expected initial value"
     
-    # solve steady-state diffusion and check that result is indeed
-    # T_ext everywhere
-    
+    # solve steady-state diffusion with source
+    pf.solvePDE(Tcell, 
+                [-pf.diffusionTerm(pf.FaceVariable(mesh, alpha)),
+                  pf.constantSourceTerm(pf.CellVariable(mesh, S))])
+    #check that result is indeed
+    # a parabola approaching T_ext (use analytical solution)
 
+    ###
+    ###
+    
 
     print("All tests passed.")
-    
-    
     
