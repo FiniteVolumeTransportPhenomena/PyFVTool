@@ -14,24 +14,11 @@ import pyfvtool as pf
 
 
 
-# system parameters
-Nr = 100
-Lr = 1.0
-T_init = 298.15
-T_ext = 274.00
-k = 0.1 
-rhocp = 1.0
-alpha = k / rhocp
-S = 50.0 # TO DO: use realistic values?
-
-# additional parameters for Grid1D tests
-Nx = 100
-Lx = 1.0
-kbc = 12.14
-
-
-
 def test_default_bcs():
+    Nx = 100
+    Lx = 1.0
+    T_init = 298.15
+    
     mesh = pf.Grid1D(Nx, Lx)
     Tcell = pf.CellVariable(mesh, T_init)
     
@@ -43,6 +30,8 @@ def test_default_bcs():
 
 
 def test_default_no_flux():
+    Nx = 100
+    Lx = 1.0
     # solve a simple 1D diffusion equation in closed system (no flux boundary conditions)
     mesh = pf.Grid1D(Nx, Lx)
     Ccell = pf.CellVariable(mesh, 0.0)
@@ -64,6 +53,15 @@ def test_default_no_flux():
 
 
 def test_fixed_value():
+    Nr = 100
+    Lr = 1.0
+    T_init = 298.15
+    T_ext = 274.00
+    k = 0.1 
+    rhocp = 1.0
+    alpha = k / rhocp
+    S = 50.0 # TO DO: use realistic values?
+    
     mesh = pf.CylindricalGrid1D(Nr, Lr)
     Tcell = pf.CellVariable(mesh, T_init) 
     
@@ -86,11 +84,19 @@ def test_fixed_value():
     Terr = Tanalytic - Tcell.value
     
     assert np.all(abs(Terr) < 0.05) # small deviations persist in FVM solution
-    
+
 
 
 def test_fixed_gradient():
     # simple steady-state 1D
+    Nx = 100
+    Lx = 1.0
+    kbc = 12.14
+    T_ext = 274.00
+    k = 0.1 
+    rhocp = 1.0
+    alpha = k / rhocp
+    
     mesh = pf.Grid1D(Nx, Lx)
     Tcell = pf.CellVariable(mesh, 0.0) 
         
@@ -112,28 +118,19 @@ def test_fixed_gradient():
 
 
 
-if __name__ == "__main__":
-    test_default_bcs()
-    test_default_no_flux()
-    test_fixed_value()
-    test_fixed_gradient()
-    
-    import matplotlib.pyplot as plt
-    
-    ###
-    # WIP: next test developed interactively, will become a test_ function when finished
-    ###
-
-
+def test_newton_cooling(silent=True):
+    #
     # Newton cooling example: 
     #    http://olivier.granier.free.fr/MOOC-Anglais/Transferts/co/ex-CCP-6-transferts.html
+    #
     # Interestingly, in PyFVTool we should do Cylindrical2D(r, z) to use the 
     # actual Newton BC.
+    #
     # In PyFVTool Grid1D, the cooling through the side wall would show up as a 
     # (linear) source term. Interesting for a future exercise.
     # 
 
-    Nr = 50
+    Nr = 20
     Nz = 100
     # We use a very thin rod and high aspect ratio because the 1D analytic 
     # approximation (used for comparison)
@@ -151,51 +148,57 @@ if __name__ == "__main__":
     
     T_source = 400.0
     T_ext = 280.0
+    rixsel = Nr//2 # index of r position whose z profile is analysed
     Tdev_tol = 2.0 # acceptable deviation between FVM Cylindrical2D and analytic 1D model
-    
     
     mesh = pf.CylindricalGrid2D(Nr, Nz, Lr, Lz)
     Tcell = pf.CellVariable(mesh, 0.0)
     
-
+    # Finally, the 'top' boundary condition setting should be irrelevant
+    # because the cylinder should long enough such that the extremity is 
+    # already at T_ext. All BC types should give same result.
     # Tcell.BCs.top.fixedValue(T_ext)
     Tcell.BCs.bottom.fixedValue(T_source)
 
-    # Tcell.BCs.right.defaultNoFlux()
     Tcell.BCs.right.newtonCooling(k, h, T_ext)
-
     
     pf.solvePDE(Tcell, 
                 [-pf.diffusionTerm(pf.FaceVariable(mesh, alpha))])
     
-    
     rr, zz, Trrzz = Tcell.plotprofile()
     # in the future, convert to xarray.DataArray for easier processing
     
-    plt.figure(1)
-    plt.clf()
-    pf.visualizeCells(Tcell)
-    # in the future, come up with more fancy plotting
-
-    
-    plt.figure(2)
-    plt.clf()
-    plt.plot(zz, Trrzz[Nr//2, :]) 
-    # take center of domain as representative 'radially averaged" temperature 
+    # Take center of domain as representative 'radially averaged" temperature 
     # along the rod
-    
     # Compare with analytic 1D solution
     # see:  http://olivier.granier.free.fr/MOOC-Anglais/Transferts/co/ex-CCP-6-transferts.html
     D = np.sqrt((k*Lr)/(2*h))
     Tan = (T_source-T_ext)*np.exp(-zz/D) + T_ext   
-    plt.plot(zz, Tan)
+
+    if not silent:
+        import matplotlib.pyplot as plt
+        plt.figure(1)
+        plt.clf()
+        pf.visualizeCells(Tcell)
+        # in the future, come up with more fancy plotting
+    
+        plt.figure(2)
+        plt.clf()
+        plt.plot(zz, Trrzz[rixsel, :])     
+        plt.plot(zz, Tan)
+        
+        plt.show()
  
-    Tdev = Tan - Trrzz[Nr//2, :]
+    Tdev = Tan - Trrzz[rixsel, :]
     assert np.all(abs(Tdev) < Tdev_tol),\
         "deviation beyond tolerance between Cylindrical2D FVM and analytical 1D models"
 
-    ###
-    ###
 
+
+if __name__ == "__main__":
+    test_default_bcs()
+    test_default_no_flux()
+    test_fixed_value()
+    test_fixed_gradient()
+    test_newton_cooling(silent=False)
     print("All tests passed.")
-    
