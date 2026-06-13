@@ -1,10 +1,10 @@
 """
 Testing of utility methods for setting boundary conditions
 
-- defaultNoFlux()
+- defaultNoFlux
 - fixedValue (Dirichlet)
 - fixedGradient (Neumann)
-- NewtonLaw(k, h, T_ext)
+- newtonCooling(k, h, T_ext)
 
 """
 
@@ -118,6 +118,8 @@ if __name__ == "__main__":
     test_fixed_value()
     test_fixed_gradient()
     
+    import matplotlib.pyplot as plt
+    
     ###
     # WIP: next test developed interactively, will become a test_ function when finished
     ###
@@ -125,9 +127,72 @@ if __name__ == "__main__":
 
     # Newton cooling example: 
     #    http://olivier.granier.free.fr/MOOC-Anglais/Transferts/co/ex-CCP-6-transferts.html
-    # Interestingly, in PyFVTool we should do Cylindrical2D(r, z) to use the actual Newton BC
-    # In PyFVTool Grid1D, the cooling through the side wall would show up as a (linear) source term
+    # Interestingly, in PyFVTool we should do Cylindrical2D(r, z) to use the 
+    # actual Newton BC.
+    # In PyFVTool Grid1D, the cooling through the side wall would show up as a 
+    # (linear) source term. Interesting for a future exercise.
     # 
+
+    Nr = 50
+    Nz = 100
+    # We use a very thin rod and high aspect ratio because the 1D analytic 
+    # approximation (used for comparison)
+    # is based on the assumption of a very high aspect ratio.
+    # For a later modeling exercise, we can of course play with the aspect
+    # ratio to investigate how the 1D analytic solution starts deviating in
+    # cases of every lower aspect ratios.
+    Lr = 0.075 
+    Lz = 3.0
+    
+    k = 50.0  # [W m-1 K-1]
+    h = 100.0 # [W m-2 K-1]
+    rhocp = 3.3e6 # 
+    alpha = k / rhocp
+    
+    T_source = 400.0
+    T_ext = 280.0
+    Tdev_tol = 2.0 # acceptable deviation between FVM Cylindrical2D and analytic 1D model
+    
+    
+    mesh = pf.CylindricalGrid2D(Nr, Nz, Lr, Lz)
+    Tcell = pf.CellVariable(mesh, 0.0)
+    
+
+    # Tcell.BCs.top.fixedValue(T_ext)
+    Tcell.BCs.bottom.fixedValue(T_source)
+
+    # Tcell.BCs.right.defaultNoFlux()
+    Tcell.BCs.right.newtonCooling(k, h, T_ext)
+
+    
+    pf.solvePDE(Tcell, 
+                [-pf.diffusionTerm(pf.FaceVariable(mesh, alpha))])
+    
+    
+    rr, zz, Trrzz = Tcell.plotprofile()
+    # in the future, convert to xarray.DataArray for easier processing
+    
+    plt.figure(1)
+    plt.clf()
+    pf.visualizeCells(Tcell)
+    # in the future, come up with more fancy plotting
+
+    
+    plt.figure(2)
+    plt.clf()
+    plt.plot(zz, Trrzz[Nr//2, :]) 
+    # take center of domain as representative 'radially averaged" temperature 
+    # along the rod
+    
+    # Compare with analytic 1D solution
+    # see:  http://olivier.granier.free.fr/MOOC-Anglais/Transferts/co/ex-CCP-6-transferts.html
+    D = np.sqrt((k*Lr)/(2*h))
+    Tan = (T_source-T_ext)*np.exp(-zz/D) + T_ext   
+    plt.plot(zz, Tan)
+ 
+    Tdev = Tan - Trrzz[Nr//2, :]
+    assert np.all(abs(Tdev) < Tdev_tol),\
+        "deviation beyond tolerance between Cylindrical2D FVM and analytical 1D models"
 
     ###
     ###

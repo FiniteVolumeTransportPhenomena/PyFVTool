@@ -156,7 +156,36 @@ class BoundaryFace:
         self.a = 1.0
         self.b = 0.0
         self.c = gradientvalue
-    
+        
+    def newtonCooling(self, k, h, T_ext):
+        """
+        Apply Newton boundary conditions (specific case of Robin BCs)
+        
+        This applies Newton's law of cooling to a boundary
+        
+        Equivalent to a = k; b = h; c = h*T_ext
+
+        Parameters
+        ----------
+        k : float
+            Thermal conductivity.
+            SI units: W m-1 K-1
+        h : float
+            Convective heat transfer ('Newton') coefficient.
+            SI units: W m-2 K-1
+        T_ext : float
+            Temperature of the environment.
+            SI unit: K
+
+        Returns
+        -------
+        None.
+
+        """
+        self.a = k
+        self.b = h
+        self.c = h*T_ext
+
         
 
 class BoundaryConditionsBase:
