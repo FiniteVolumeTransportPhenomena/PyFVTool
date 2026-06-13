@@ -81,13 +81,14 @@ Here is a simple example of a 1D transient diffusion equation. Further [examples
 
 ```python
 import pyfvtool as pf
+import matplotlib.pyplot as plt
 
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
 
 
 # Calculation parameters
-Nx = 20 # number of finite volume cells
+Nx = 100 # number of finite volume cells
 Lx = 1.0 # [m] length of the domain 
 c_left = 1.0 # left boundary concentration
 c_init = 0.0 # initial concentration
@@ -104,16 +105,16 @@ mesh = pf.Grid1D(Nx, Lx)
 c = pf.CellVariable(mesh, c_init)
 
 # Switch the left boundary to Dirichlet: fixed concentration
-c.BCs.left.a = 0.0
-c.BCs.left.b = 1.0
-c.BCs.left.c = c_left
+c.BCs.left.fixedValue(c_left)
 
 # Assign diffusivity to cells
 D_cell = pf.CellVariable(mesh, D_val)
 D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
 
-# Time loop
-t = 0
+# Time loop (with integrated plotting)
+plt.figure(1)
+plt.clf()
+t = 0.0
 nplot = 0
 while t<t_simulation:
     # Compose discretized terms for matrix equation
@@ -127,4 +128,5 @@ while t<t_simulation:
     if (nplot % Nskip == 0):
         pf.visualizeCells(c)
     nplot+=1
+plt.show()
 ```
