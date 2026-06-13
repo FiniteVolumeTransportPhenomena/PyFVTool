@@ -1,4 +1,4 @@
-__version__ = "0.4.4"
+__version__ = "0.5.1"
 
 __author__ = ["Ali A. Eftekhari", "Martinus H. V. Werts"]
 
@@ -29,4 +29,3 @@ from .cell import cellLocations
 from .face import FaceVariable, faceeval
 from .face import faceLocations
 from .visualization import visualizeCells
-    
