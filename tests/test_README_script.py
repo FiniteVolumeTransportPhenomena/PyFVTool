@@ -38,9 +38,11 @@ c = pf.CellVariable(mesh, c_init)
 # Switch the left boundary to Dirichlet: fixed concentration
 c.BCs.left.fixedValue(c_left)
 
-# Assign diffusivity to cells
+# Assign diffusivity: the diffusivity is needed at the interface between cells.
+# The required `pf.FaceVariable` is obtained here using the `pf.geometricMean`
+# averager.
 D_cell = pf.CellVariable(mesh, D_val)
-D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
+D_face = pf.geometricMean(D_cell)
 
 # Time loop (with integrated plotting)
 # plt.figure(1)
