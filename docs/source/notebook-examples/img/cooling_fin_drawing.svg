@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 700 250"
+   width="100%"
+   height="100%"
+   version="1.1"
+   id="svg171"
+   sodipodi:docname="cooling_fin_drawing.svg"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs175" />
+  <sodipodi:namedview
+     id="namedview173"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="1.8788837"
+     inkscape:cx="421.52688"
+     inkscape:cy="-14.370235"
+     inkscape:window-width="2182"
+     inkscape:window-height="1305"
+     inkscape:window-x="1388"
+     inkscape:window-y="225"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg171" />
+  <rect
+     width="100%"
+     height="100%"
+     fill="#ffffff"
+     id="rect132" />
+  <text
+     xml:space="preserve"
+     style="font-size:24px;line-height:1.25;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O'"
+     x="595.6983"
+     y="158.50786"
+     id="text6063"><tspan
+       sodipodi:role="line"
+       id="tspan6061"
+       x="595.6983"
+       y="158.50786"
+       style="font-size:24px">&quot;top&quot;</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:24px;line-height:1.25;font-family:'Linux Biolinum O';-inkscape-font-specification:'Linux Biolinum O'"
+     x="155.18291"
+     y="160.8781"
+     id="text6063-3"><tspan
+       sodipodi:role="line"
+       id="tspan6061-2"
+       x="155.18291"
+       y="160.8781"
+       style="font-size:24px">&quot;bottom&quot;</tspan></text>
+  <g
+     id="block-B"
+     stroke="#000000"
+     stroke-width="2.5"
+     stroke-linejoin="round">
+    <path
+       d="M 120 40 L 150 20 L 150 170 L 120 190 Z"
+       fill="#dcdcdc"
+       id="path134" />
+    <path
+       d="M 60 40 L 90 20 L 150 20 L 120 40 Z"
+       fill="#ffffff"
+       id="path136" />
+    <rect
+       x="60"
+       y="40"
+       width="60"
+       height="150"
+       fill="#ffffff"
+       id="rect138" />
+  </g>
+  <g
+     font-family="Times New Roman, serif"
+     font-size="28"
+     fill="#000000"
+     text-anchor="middle"
+     id="g147">
+    <text
+       x="90"
+       y="115"
+       font-style="normal"
+       id="text141">B</text>
+    <text
+       x="90"
+       y="165"
+       font-style="normal"
+       id="text145">T<tspan
+   dy="8"
+   font-size="20"
+   id="tspan143">0</tspan></text>
+  </g>
+  <g
+     id="rod"
+     transform="translate(14,-4)">
+    <path
+       d="m 120,90 h 480 a 12,23 0 0 1 0,46 H 120 Z"
+       fill="#ffffff"
+       stroke="#000000"
+       stroke-width="2.5"
+       id="path149" />
+    <path
+       d="m 120,90 a 6,23 0 0 0 0,46"
+       fill="none"
+       stroke="#000000"
+       stroke-width="2.5"
+       id="path151"
+       style="fill:#ffffff;fill-opacity:1" />
+    <ellipse
+       cx="601.86279"
+       cy="113"
+       rx="10.137192"
+       ry="23"
+       fill="#ffffff"
+       stroke="#000000"
+       stroke-width="2.5"
+       id="ellipse153" />
+  </g>
+  <g
+     font-family="'Times New Roman', serif"
+     font-size="26px"
+     fill="#000000"
+     text-anchor="middle"
+     id="g162"
+     transform="translate(0,-2)">
+    <text
+       x="360"
+       y="120"
+       font-style="normal"
+       id="text156"
+       style="font-size:26.6667px"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Linux Libertine O';-inkscape-font-specification:'Linux Libertine O'"
+         id="tspan5994">T(<tspan
+   style="font-style:italic"
+   id="tspan6028">z</tspan>)</tspan></text>
+    <text
+       x="427.98346"
+       y="175.93723"
+       font-style="normal"
+       id="text160"
+       style="font-size:26.6667px"><tspan
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:'Linux Libertine O';-inkscape-font-specification:'Linux Libertine O'"
+         id="tspan6030">T</tspan><tspan
+         dy="8"
+         font-size="18px"
+         id="tspan158"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Linux Libertine O';-inkscape-font-specification:'Linux Libertine O'">ext</tspan></text>
+  </g>
+  <g
+     id="axis"
+     stroke="#000000"
+     stroke-width="1.99125"
+     transform="matrix(1.0088049,0,0,1,-7.2929806,32)">
+    <line
+       x1="145"
+       y1="30"
+       x2="630"
+       y2="30"
+       id="line164"
+       style="stroke-width:1.99125" />
+    <polygon
+       points="620,24 622,30 620,36 630,30 "
+       fill="#000000"
+       id="polygon166"
+       style="stroke-width:1.94885" />
+  </g>
+  <ellipse
+     cx="134.6544"
+     cy="108.96188"
+     rx="5.6132288"
+     ry="21.935539"
+     fill="#ffffff"
+     stroke="#000000"
+     stroke-width="2.5"
+     id="ellipse153-1"
+     style="stroke:none" />
+  <text
+     xml:space="preserve"
+     style="font-size:26.6667px;line-height:1.25;font-family:Aptos;-inkscape-font-specification:Aptos"
+     x="618.98456"
+     y="47.368553"
+     id="text5992"><tspan
+       sodipodi:role="line"
+       id="tspan5990"
+       x="618.98456"
+       y="47.368553"
+       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:26.6667px;font-family:'Linux Libertine O';-inkscape-font-specification:'Linux Libertine O Italic'">z</tspan></text>
+</svg>
