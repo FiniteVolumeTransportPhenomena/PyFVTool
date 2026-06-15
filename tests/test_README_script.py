@@ -51,7 +51,7 @@ t = 0.0
 nplot = 0
 while t<t_simulation:
     # Compose discretized terms for matrix equation
-    eqnterms = [ pf.transientTerm(c, dt, 1.0),
+    eqnterms = [ pf.transientTerm(c, dt),
                 -pf.diffusionTerm(D_face)]
 
     # Solve PDE
