@@ -222,6 +222,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.html">Cylindrical cooling fin with Newton cooling boundary condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
@@ -1657,10 +1658,77 @@ apply_BCs()</p>
 <dd><p>Coefficient array <cite>c</cite> of the boundary condition.</p>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="pyfvtool.boundary.BoundaryFace.defaultNoFlux">
+<span class="sig-name descname"><span class="pre">defaultNoFlux</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/boundary.html#BoundaryFace.defaultNoFlux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.defaultNoFlux" title="Link to this definition">¶</a></dt>
+<dd><p>Restore default “no flux” boundary condition</p>
+<p>Equivalent to a = 1.0; b = 0.0; c = 0.0</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyfvtool.boundary.BoundaryFace.fixedGradient">
+<span class="sig-name descname"><span class="pre">fixedGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradientvalue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/boundary.html#BoundaryFace.fixedGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.fixedGradient" title="Link to this definition">¶</a></dt>
+<dd><p>Set fixed gradient (Neumann) boundary condition</p>
+<p>Utility function.</p>
+<p>Equivalent to a = 1.0; b = 0.0; c = gradientvalue</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>ndarray</em>) – Fixed boundary value(s) to be set.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyfvtool.boundary.BoundaryFace.fixedValue">
+<span class="sig-name descname"><span class="pre">fixedValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/boundary.html#BoundaryFace.fixedValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.fixedValue" title="Link to this definition">¶</a></dt>
+<dd><p>Set fixed value (Dirichlet) boundary condition</p>
+<p>Utility function.</p>
+<p>Equivalent to a = 0.0; b = 1.0; c = value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>ndarray</em>) – Fixed boundary value(s) to be set.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="pyfvtool.boundary.BoundaryFace.modified">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">modified</span></span><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.modified" title="Link to this definition">¶</a></dt>
 <dd><p>Boolean to indicate if boundary conditions were modified since last update.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyfvtool.boundary.BoundaryFace.newtonCooling">
+<span class="sig-name descname"><span class="pre">newtonCooling</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_ext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/boundary.html#BoundaryFace.newtonCooling"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.newtonCooling" title="Link to this definition">¶</a></dt>
+<dd><p>Apply Newton boundary conditions (specific case of Robin BCs)</p>
+<p>This applies Newton’s law of cooling to a boundary</p>
+<p>Equivalent to a = k; b = h; c = h*T_ext</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Thermal conductivity.
+SI units: W m-1 K-1</p></li>
+<li><p><strong>h</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Convective heat transfer (‘Newton’) coefficient.
+SI units: W m-2 K-1</p></li>
+<li><p><strong>T_ext</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Temperature of the environment.
+SI unit: K</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py property">
@@ -2114,14 +2182,15 @@ solution variable and the factor <cite>beta</cite> a coefficient.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyfvtool.source.transientTerm">
-<span class="sig-prename descclassname"><span class="pre">pyfvtool.source.</span></span><span class="sig-name descname"><span class="pre">transientTerm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi_old</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><span class="pre">CellVariable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alfa</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/source.html#transientTerm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.source.transientTerm" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">pyfvtool.source.</span></span><span class="sig-name descname"><span class="pre">transientTerm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><span class="pre">CellVariable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/source.html#transientTerm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.source.transientTerm" title="Link to this definition">¶</a></dt>
 <dd><p>Transient term of a PDE.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>phi_old</strong> (<a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><em>CellVariable</em></a>) – Old value of the variable</p></li>
+<li><p><strong>phi</strong> (<a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><em>CellVariable</em></a>) – Cell variable (containing the value of the previous time step)</p></li>
 <li><p><strong>dt</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Time step size</p></li>
-<li><p><strong>alfa</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><em>CellVariable</em></a>) – Coefficient of the transient term</p></li>
+<li><p><strong>alpha</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><em>CellVariable</em></a>) – Coefficient of the transient term
+Default value is 1.0</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2685,7 +2754,11 @@ SuperLU solver will be used.</p></li>
 <li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.a"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.a</span></code></a></li>
 <li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.b"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.b</span></code></a></li>
 <li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.c"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.c</span></code></a></li>
+<li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.defaultNoFlux"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.defaultNoFlux()</span></code></a></li>
+<li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.fixedGradient"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.fixedGradient()</span></code></a></li>
+<li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.fixedValue"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.fixedValue()</span></code></a></li>
 <li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.modified"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.modified</span></code></a></li>
+<li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.newtonCooling"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.newtonCooling()</span></code></a></li>
 <li><a class="reference internal" href="#pyfvtool.boundary.BoundaryFace.periodic"><code class="docutils literal notranslate"><span class="pre">BoundaryFace.periodic</span></code></a></li>
 </ul>
 </li>

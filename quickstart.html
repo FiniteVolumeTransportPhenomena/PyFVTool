@@ -222,6 +222,7 @@
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.html">Cylindrical cooling fin with Newton cooling boundary condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
@@ -297,7 +298,7 @@ and a no-flux (closed) boundary on the right. The initial concentration is zero 
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pf</span>
 
 <span class="c1"># Parameters</span>
-<span class="n">Nx</span> <span class="o">=</span> <span class="mi">20</span>          <span class="c1"># number of finite volume cells</span>
+<span class="n">Nx</span> <span class="o">=</span> <span class="mi">50</span>          <span class="c1"># number of finite volume cells</span>
 <span class="n">Lx</span> <span class="o">=</span> <span class="mf">1.0</span>         <span class="c1"># [m] domain length</span>
 <span class="n">c_left</span> <span class="o">=</span> <span class="mf">1.0</span>     <span class="c1"># left boundary concentration</span>
 <span class="n">c_init</span> <span class="o">=</span> <span class="mf">0.0</span>     <span class="c1"># initial concentration</span>
@@ -313,18 +314,16 @@ and a no-flux (closed) boundary on the right. The initial concentration is zero 
 <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">c_init</span><span class="p">)</span>
 
 <span class="c1"># 3. Set the left boundary to a fixed (Dirichlet) condition</span>
-<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
-<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">c_left</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">fixedValue</span><span class="p">(</span><span class="n">c_left</span><span class="p">)</span>
 
-<span class="c1"># 4. Assign diffusivity and compute face-averaged values</span>
+<span class="c1"># 4. Assign diffusivity to cell centers and compute face-averaged values</span>
 <span class="n">D_cell</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span>
 <span class="n">D_face</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">geometricMean</span><span class="p">(</span><span class="n">D_cell</span><span class="p">)</span>
 
 <span class="c1"># 5. Time loop</span>
 <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_end</span><span class="p">:</span>
-    <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span> <span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">),</span>
            <span class="o">-</span><span class="n">pf</span><span class="o">.</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">D_face</span><span class="p">)]</span>
     <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
     <span class="n">t</span> <span class="o">+=</span> <span class="n">dt</span>

@@ -222,6 +222,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.html">Cylindrical cooling fin with Newton cooling boundary condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
@@ -328,11 +329,11 @@ recover all common boundary condition types:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">initial_value</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For a 1D mesh, the available boundaries are <code class="docutils literal notranslate"><span class="pre">.left</span></code> and <code class="docutils literal notranslate"><span class="pre">.right</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dirichlet: fix concentration to 1.0 at the left boundary</span>
+<p>For a 1D mesh, the available boundaries are <code class="docutils literal notranslate"><span class="pre">.left</span></code> and <code class="docutils literal notranslate"><span class="pre">.right</span></code>, and their <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span> coefficients can be set explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dirichlet: fix concentration to 5.0 at the left boundary</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
-<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">5.0</span>
 
 <span class="c1"># Neumann: fixed flux of 0.5 at the right boundary</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -342,6 +343,18 @@ recover all common boundary condition types:</p>
 </div>
 <p>For 2D meshes, the available boundaries are <code class="docutils literal notranslate"><span class="pre">.left</span></code>, <code class="docutils literal notranslate"><span class="pre">.right</span></code>, <code class="docutils literal notranslate"><span class="pre">.bottom</span></code>, <code class="docutils literal notranslate"><span class="pre">.top</span></code>.
 For 3D meshes, <code class="docutils literal notranslate"><span class="pre">.back</span></code> and <code class="docutils literal notranslate"><span class="pre">.front</span></code> are added.</p>
+<section id="convenient-utility-methods-for-setting-bcs">
+<h3>Convenient utility methods for setting BCs<a class="headerlink" href="#convenient-utility-methods-for-setting-bcs" title="Link to this heading">¶</a></h3>
+<p>There are convenient utility methods for directly setting Dirichlet (<a class="reference internal" href="../api/index.html#pyfvtool.boundary.BoundaryFace.fixedValue" title="pyfvtool.boundary.BoundaryFace.fixedValue"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fixedValue</span></code></a>) and Neumann (<a class="reference internal" href="../api/index.html#pyfvtool.boundary.BoundaryFace.fixedGradient" title="pyfvtool.boundary.BoundaryFace.fixedGradient"><code class="xref py py-meth docutils literal notranslate"><span class="pre">fixedGradient</span></code></a>) boundary conditions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dirichlet: fix concentration to 5.0 at the left boundary</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">fixedValue</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
+
+<span class="c1"># Neumann: fixed flux of 0.5 at the right boundary</span>
+<span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">fixedGradient</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Another utility method, <a class="reference internal" href="../api/index.html#pyfvtool.boundary.BoundaryFace.newtonCooling" title="pyfvtool.boundary.BoundaryFace.newtonCooling"><code class="xref py py-meth docutils literal notranslate"><span class="pre">newtonCooling</span></code></a> sets the specific Robin BCs corresponding to Newton’s law of cooling in heat transfer modeling.</p>
+</section>
 </section>
 <section id="periodic-boundary-conditions">
 <h2>Periodic boundary conditions<a class="headerlink" href="#periodic-boundary-conditions" title="Link to this heading">¶</a></h2>
@@ -406,7 +419,10 @@ Consult the examples notebooks for details.</p>
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Boundary conditions</a><ul>
-<li><a class="reference internal" href="#setting-boundary-conditions">Setting boundary conditions</a></li>
+<li><a class="reference internal" href="#setting-boundary-conditions">Setting boundary conditions</a><ul>
+<li><a class="reference internal" href="#convenient-utility-methods-for-setting-bcs">Convenient utility methods for setting BCs</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#periodic-boundary-conditions">Periodic boundary conditions</a></li>
 </ul>
 </li>

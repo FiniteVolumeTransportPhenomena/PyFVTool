@@ -220,6 +220,7 @@
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.html">Cylindrical cooling fin with Newton cooling boundary condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
 <li class="toctree-l2"><a class="reference internal" href="source/notebook-examples/spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
@@ -274,7 +275,7 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#X"><strong>X</strong></a> | <a href="#Y"><strong>Y</strong></a> | <a href="#Z"><strong>Z</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#N"><strong>N</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#U"><strong>U</strong></a> | <a href="#V"><strong>V</strong></a> | <a href="#X"><strong>X</strong></a> | <a href="#Y"><strong>Y</strong></a> | <a href="#Z"><strong>Z</strong></a></div>
 </section>
 <section id="A" class="genindex-section">
   <h2>A</h2>
@@ -464,6 +465,8 @@
   <h2>D</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/index.html#pyfvtool.boundary.BoundaryFace.defaultNoFlux">defaultNoFlux() (pyfvtool.boundary.BoundaryFace method)</a>
+</li>
         <li><a href="api/index.html#pyfvtool.diffusion.diffusionTerm">diffusionTerm() (in module pyfvtool.diffusion)</a>
 </li>
         <li><a href="api/index.html#pyfvtool.diffusion.diffusionTerm1D">diffusionTerm1D() (in module pyfvtool.diffusion)</a>
@@ -502,9 +505,13 @@
 </li>
         <li><a href="api/index.html#pyfvtool.face.faceLocations">faceLocations() (in module pyfvtool.face)</a>
 </li>
+        <li><a href="api/index.html#pyfvtool.face.FaceVariable">FaceVariable (class in pyfvtool.face)</a>
+</li>
     </ul></td>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="api/index.html#pyfvtool.face.FaceVariable">FaceVariable (class in pyfvtool.face)</a>
+        <li><a href="api/index.html#pyfvtool.boundary.BoundaryFace.fixedGradient">fixedGradient() (pyfvtool.boundary.BoundaryFace method)</a>
+</li>
+        <li><a href="api/index.html#pyfvtool.boundary.BoundaryFace.fixedValue">fixedValue() (pyfvtool.boundary.BoundaryFace method)</a>
 </li>
         <li><a href="api/index.html#pyfvtool.boundary.BoundaryConditionsBase.front">front (pyfvtool.boundary.BoundaryConditionsBase attribute)</a>
 </li>
@@ -597,6 +604,16 @@
           <li><a href="api/index.html#module-pyfvtool.visualization">pyfvtool.visualization</a>
 </li>
         </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="N" class="genindex-section">
+  <h2>N</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="api/index.html#pyfvtool.boundary.BoundaryFace.newtonCooling">newtonCooling() (pyfvtool.boundary.BoundaryFace method)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>

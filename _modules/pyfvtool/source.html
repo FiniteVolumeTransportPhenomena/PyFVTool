@@ -221,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.html">Cylindrical cooling fin with Newton cooling boundary condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
@@ -390,18 +391,19 @@
 
 <div class="viewcode-block" id="transientTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.source.transientTerm">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">transientTerm</span><span class="p">(</span><span class="n">phi_old</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">alfa</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">transientTerm</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Transient term of a PDE.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    phi_old: CellVariable</span>
-<span class="sd">        Old value of the variable</span>
+<span class="sd">    phi: CellVariable</span>
+<span class="sd">        Cell variable (containing the value of the previous time step)</span>
 <span class="sd">    dt: float</span>
 <span class="sd">        Time step size</span>
-<span class="sd">    alfa: float or CellVariable</span>
+<span class="sd">    alpha: float or CellVariable</span>
 <span class="sd">        Coefficient of the transient term</span>
+<span class="sd">        Default value is 1.0</span>
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -417,12 +419,12 @@
 <span class="sd">    &gt;&gt;&gt; phi_old = pf.CellVariable(m, 0.0)</span>
 <span class="sd">    &gt;&gt;&gt; M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">alfa</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CellVariable</span><span class="p">):</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">phi_old</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">alfa</span><span class="p">,</span>
-                         <span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">phi_old</span><span class="o">.</span><span class="n">domain</span><span class="p">))</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CellVariable</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span>
+                         <span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">a</span> <span class="o">=</span> <span class="n">alfa</span>
-    <span class="k">return</span> <span class="n">linearSourceTerm</span><span class="p">(</span><span class="n">a</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">constantSourceTerm</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">phi_old</span><span class="o">/</span><span class="n">dt</span><span class="p">)</span></div>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">alpha</span>
+    <span class="k">return</span> <span class="n">linearSourceTerm</span><span class="p">(</span><span class="n">a</span><span class="o">/</span><span class="n">dt</span><span class="p">),</span> <span class="n">constantSourceTerm</span><span class="p">(</span><span class="n">a</span><span class="o">*</span><span class="n">phi</span><span class="o">/</span><span class="n">dt</span><span class="p">)</span></div>
 
 
 </pre></div>

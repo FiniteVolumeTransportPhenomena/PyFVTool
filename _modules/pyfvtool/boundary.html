@@ -221,6 +221,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cartesian1D_heat_equation_variant2.html">Heat transfer with time-variant boundary conditions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical1D_diffusion_steady.html">Steady-state heat diffusion in 1D cylindrical mesh</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical1D_diffusion.html">Diffusion in 1D cylindrical mesh. Analytic and PyFVTool</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.html">Cylindrical cooling fin with Newton cooling boundary condition</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical2D_convection_Taylor.html">Convection in 2D cylindrical geometry: Taylor dispersion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/spherical1D_diffusion.html">Diffusion of an initial sphere into an infinite medium</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/spherical_coordinate_examples.html">Advection and Diffusion in Spherical Coordinates with PyFVTool</a></li>
@@ -373,10 +374,110 @@
     <span class="nd">@periodic</span><span class="o">.</span><span class="n">setter</span>       
     <span class="k">def</span><span class="w"> </span><span class="nf">periodic</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">modified</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_periodic</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_periodic</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="BoundaryFace.defaultNoFlux">
+<a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.defaultNoFlux">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">defaultNoFlux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Restore default &quot;no flux&quot; boundary condition</span>
+<span class="sd">        </span>
+<span class="sd">        Equivalent to a = 1.0; b = 0.0; c = 0.0</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+        
+<div class="viewcode-block" id="BoundaryFace.fixedValue">
+<a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.fixedValue">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fixedValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set fixed value (Dirichlet) boundary condition</span>
+<span class="sd">        </span>
+<span class="sd">        Utility function.</span>
+<span class="sd">        </span>
+<span class="sd">        Equivalent to a = 0.0; b = 1.0; c = value</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : float or ndarray</span>
+<span class="sd">            Fixed boundary value(s) to be set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">value</span></div>
 
 
+<div class="viewcode-block" id="BoundaryFace.fixedGradient">
+<a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.fixedGradient">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fixedGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradientvalue</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Set fixed gradient (Neumann) boundary condition</span>
+<span class="sd">        </span>
+<span class="sd">        Utility function.</span>
+<span class="sd">        </span>
+<span class="sd">        Equivalent to a = 1.0; b = 0.0; c = gradientvalue</span>
 
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        value : float or ndarray</span>
+<span class="sd">            Fixed boundary value(s) to be set.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">gradientvalue</span></div>
+
+        
+<div class="viewcode-block" id="BoundaryFace.newtonCooling">
+<a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.newtonCooling">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newtonCooling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">T_ext</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Apply Newton boundary conditions (specific case of Robin BCs)</span>
+<span class="sd">        </span>
+<span class="sd">        This applies Newton&#39;s law of cooling to a boundary</span>
+<span class="sd">        </span>
+<span class="sd">        Equivalent to a = k; b = h; c = h*T_ext</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        k : float</span>
+<span class="sd">            Thermal conductivity.</span>
+<span class="sd">            SI units: W m-1 K-1</span>
+<span class="sd">        h : float</span>
+<span class="sd">            Convective heat transfer (&#39;Newton&#39;) coefficient.</span>
+<span class="sd">            SI units: W m-2 K-1</span>
+<span class="sd">        T_ext : float</span>
+<span class="sd">            Temperature of the environment.</span>
+<span class="sd">            SI unit: K</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">h</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="n">T_ext</span></div>
+</div>
+
+
+        
 
 <div class="viewcode-block" id="BoundaryConditionsBase">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryConditionsBase">[docs]</a>
