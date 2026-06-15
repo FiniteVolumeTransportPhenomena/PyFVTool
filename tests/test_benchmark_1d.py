@@ -105,13 +105,13 @@ def conv_numerical_1d() -> float:
 
 class TestDiffusion(unittest.TestCase):
     def test_1d_dirichlet(self):
-        print("\nRunning 1D conduction heat transfer with Dirichlet boundary:")
+        # print("\nRunning 1D conduction heat transfer with Dirichlet boundary:")
         left_bc = "Dirichlet"
         er = T_numerical(left_bc)
         eps_T = 0.001
         self.assertLessEqual(er, eps_T)
     def test_1d_neumann(self):
-        print("\nRunning 1D conduction heat transfer with Neumann boundary:")
+        # print("\nRunning 1D conduction heat transfer with Neumann boundary:")
         left_bc = "Neumann"
         er = T_numerical(left_bc)
         eps_T = 0.001
@@ -119,7 +119,7 @@ class TestDiffusion(unittest.TestCase):
 
 class TestConvection(unittest.TestCase):
     def test_1d_convection(self):
-        print("\nRunning 1D convection:")
+        # print("\nRunning 1D convection:")
         er = conv_numerical_1d()
         eps_c = 0.001
         self.assertLessEqual(er, eps_c)

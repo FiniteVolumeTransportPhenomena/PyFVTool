@@ -17,7 +17,7 @@ and a no-flux (closed) boundary on the right. The initial concentration is zero 
 import pyfvtool as pf
 
 # Parameters
-Nx = 20          # number of finite volume cells
+Nx = 50          # number of finite volume cells
 Lx = 1.0         # [m] domain length
 c_left = 1.0     # left boundary concentration
 c_init = 0.0     # initial concentration
@@ -33,18 +33,16 @@ mesh = pf.Grid1D(Nx, Lx)
 c = pf.CellVariable(mesh, c_init)
 
 # 3. Set the left boundary to a fixed (Dirichlet) condition
-c.BCs.left.a = 0.0
-c.BCs.left.b = 1.0
-c.BCs.left.c = c_left
+c.BCs.left.fixedValue(c_left)
 
-# 4. Assign diffusivity and compute face-averaged values
+# 4. Assign diffusivity to cell centers and compute face-averaged values
 D_cell = pf.CellVariable(mesh, D_val)
 D_face = pf.geometricMean(D_cell)
 
 # 5. Time loop
 t = 0
 while t < t_end:
-    eqn = [pf.transientTerm(c, dt, 1.0),
+    eqn = [ pf.transientTerm(c, dt),
            -pf.diffusionTerm(D_face)]
     pf.solvePDE(c, eqn)
     t += dt

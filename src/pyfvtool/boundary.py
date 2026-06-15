@@ -97,8 +97,96 @@ class BoundaryFace:
     def periodic(self, val):
         self.modified = True
         self._periodic = bool(val)
+        
+    def defaultNoFlux(self):
+        """
+        Restore default "no flux" boundary condition
+        
+        Equivalent to a = 1.0; b = 0.0; c = 0.0
 
+        Returns
+        -------
+        None.
 
+        """
+        self.a = 1.0
+        self.b = 0.0
+        self.c = 0.0
+        
+    def fixedValue(self, value):
+        """
+        Set fixed value (Dirichlet) boundary condition
+        
+        Utility function.
+        
+        Equivalent to a = 0.0; b = 1.0; c = value
+
+        Parameters
+        ----------
+        value : float or ndarray
+            Fixed boundary value(s) to be set.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.a = 0.0
+        self.b = 1.0
+        self.c = value
+
+    def fixedGradient(self, gradientvalue):
+        """
+        Set fixed gradient (Neumann) boundary condition
+        
+        Utility function.
+        
+        Equivalent to a = 1.0; b = 0.0; c = gradientvalue
+
+        Parameters
+        ----------
+        value : float or ndarray
+            Fixed boundary value(s) to be set.
+
+        Returns
+        -------
+        None.
+
+        """
+        self.a = 1.0
+        self.b = 0.0
+        self.c = gradientvalue
+        
+    def newtonCooling(self, k, h, T_ext):
+        """
+        Apply Newton boundary conditions (specific case of Robin BCs)
+        
+        This applies Newton's law of cooling to a boundary
+        
+        Equivalent to a = k; b = h; c = h*T_ext
+
+        Parameters
+        ----------
+        k : float
+            Thermal conductivity.
+            SI units: W m-1 K-1
+        h : float
+            Convective heat transfer ('Newton') coefficient.
+            SI units: W m-2 K-1
+        T_ext : float
+            Temperature of the environment.
+            SI unit: K
+
+        Returns
+        -------
+        None.
+
+        """
+        self.a = k
+        self.b = h
+        self.c = h*T_ext
+
+        
 
 class BoundaryConditionsBase:
     """

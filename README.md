@@ -16,8 +16,6 @@ a(\vec{\nabla}\phi \cdot \hat{n})+b\phi=c
 ```
 An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
 
-PyFVTool is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](http://github.com/simulkade/FVTool). It was strongly inspired by [FiPy](http://www.ctcms.nist.gov/fipy/), but it has only a fraction of FiPy's features. Boundary conditions, however, are much easier (and arguably more consistently) implemented in PyFVTool. 
-
 PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
 
 The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discretization schemes in PyFVTool include:  
@@ -31,7 +29,9 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
   * Divergence and gradient terms
 
-PyFVTool is under active development. Several test cases have been validated to match analytical solutions. More validation is under way, in particular through the use of this toolbox in ongoing research projects. Initial documentation can be found at https://finitevolumetransportphenomena.github.io/PyFVTool/. The documentation includes many [examples](https://finitevolumetransportphenomena.github.io/PyFVTool/examples/index.html) in the form of Jupyter notebooks. From these examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
+PyFVTool is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](https://github.com/FiniteVolumeTransportPhenomena/FVTool). It was strongly inspired by [FiPy](https://pages.nist.gov/fipy/en/latest/index.html), but it has only a fraction of FiPy's features. Boundary conditions, however, are more easily (and arguably more consistently) implemented in PyFVTool. 
+
+PyFVTool is under active development. Several test cases have been validated to match analytical solutionsn with more validation under way, in particular through the use of this toolbox in ongoing research projects. The documentation can be found at https://finitevolumetransportphenomena.github.io/PyFVTool/. It includes many [examples](https://finitevolumetransportphenomena.github.io/PyFVTool/examples/index.html) in the form of Jupyter notebooks. From these examples, it is easy to understand how to set up finite-volume solvers for heat and mass transfer.
 
 
 ## Installation
@@ -81,13 +81,14 @@ Here is a simple example of a 1D transient diffusion equation. Further [examples
 
 ```python
 import pyfvtool as pf
+import matplotlib.pyplot as plt
 
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
 
 
 # Calculation parameters
-Nx = 20 # number of finite volume cells
+Nx = 100 # number of finite volume cells
 Lx = 1.0 # [m] length of the domain 
 c_left = 1.0 # left boundary concentration
 c_init = 0.0 # initial concentration
@@ -104,20 +105,22 @@ mesh = pf.Grid1D(Nx, Lx)
 c = pf.CellVariable(mesh, c_init)
 
 # Switch the left boundary to Dirichlet: fixed concentration
-c.BCs.left.a = 0.0
-c.BCs.left.b = 1.0
-c.BCs.left.c = c_left
+c.BCs.left.fixedValue(c_left)
 
-# Assign diffusivity to cells
+# Assign diffusivity: the diffusivity is needed at the interface between cells.
+# The required `pf.FaceVariable` is obtained here using the `pf.geometricMean`
+# averager.
 D_cell = pf.CellVariable(mesh, D_val)
-D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
+D_face = pf.geometricMean(D_cell)
 
-# Time loop
-t = 0
+# Time loop (with integrated plotting)
+plt.figure(1)
+plt.clf()
+t = 0.0
 nplot = 0
 while t<t_simulation:
     # Compose discretized terms for matrix equation
-    eqnterms = [ pf.transientTerm(c, dt, 1.0),
+    eqnterms = [ pf.transientTerm(c, dt),
                 -pf.diffusionTerm(D_face)]
 
     # Solve PDE
@@ -127,4 +130,5 @@ while t<t_simulation:
     if (nplot % Nskip == 0):
         pf.visualizeCells(c)
     nplot+=1
+plt.show()
 ```

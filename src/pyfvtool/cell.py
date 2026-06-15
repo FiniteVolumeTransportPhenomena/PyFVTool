@@ -134,8 +134,12 @@ class CellVariable:
     @property
     def cellcenters(self):
         return self.domain.cellcenters
-        
-    
+
+    # for better NumPy integration
+    def __array__(self, dtype=None):
+        return np.asarray(self.value, dtype=dtype)
+
+    # arithmetic operations with cell variables
     def __add__(self, other):
         if type(other) is CellVariable:
             return CellVariable(self.domain, 

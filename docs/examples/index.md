@@ -18,6 +18,7 @@ folder, rendered here for convenient reading.
 ../../source/notebook-examples/cartesian1D_heat_equation_variant2.ipynb
 ../../source/notebook-examples/cylindrical1D_diffusion_steady.ipynb
 ../../source/notebook-examples/cylindrical1D_diffusion.ipynb
+../../source/notebook-examples/cylindrical2D_cooling_fin_newton_boundary.ipynb
 ../../source/notebook-examples/cylindrical2D_convection_Taylor.ipynb
 ../../source/notebook-examples/spherical1D_diffusion.ipynb
 ../../source/notebook-examples/spherical_coordinate_examples.ipynb

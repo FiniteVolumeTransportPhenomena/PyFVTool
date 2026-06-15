@@ -24,13 +24,13 @@ Boundary conditions are stored on the `CellVariable` object, in its `.BCs` attri
 c = pf.CellVariable(mesh, initial_value)
 ```
 
-For a 1D mesh, the available boundaries are `.left` and `.right`:
+For a 1D mesh, the available boundaries are `.left` and `.right`, and their $a$, $b$ and $c$ coefficients can be set explicitly:
 
 ```python
-# Dirichlet: fix concentration to 1.0 at the left boundary
+# Dirichlet: fix concentration to 5.0 at the left boundary
 c.BCs.left.a = 0.0
 c.BCs.left.b = 1.0
-c.BCs.left.c = 1.0
+c.BCs.left.c = 5.0
 
 # Neumann: fixed flux of 0.5 at the right boundary
 c.BCs.right.a = 1.0
@@ -40,6 +40,21 @@ c.BCs.right.c = 0.5
 
 For 2D meshes, the available boundaries are `.left`, `.right`, `.bottom`, `.top`.
 For 3D meshes, `.back` and `.front` are added.
+
+### Convenient utility methods for setting BCs
+
+There are convenient utility methods for directly setting Dirichlet ({py:meth}`fixedValue <pyfvtool.boundary.BoundaryFace.fixedValue>`) and Neumann ({py:meth}`fixedGradient <pyfvtool.boundary.BoundaryFace.fixedGradient>`) boundary conditions.
+
+```python
+# Dirichlet: fix concentration to 5.0 at the left boundary
+c.BCs.fixedValue(5.0)
+
+# Neumann: fixed flux of 0.5 at the right boundary
+c.BCs.fixedGradient(0.5)
+```
+
+Another utility method, {py:meth}`newtonCooling <pyfvtool.boundary.BoundaryFace.newtonCooling>` sets the specific Robin BCs corresponding to Newton's law of cooling in heat transfer modeling.
+
 
 ## Periodic boundary conditions
 

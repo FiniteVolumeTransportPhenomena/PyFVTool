@@ -12,13 +12,14 @@ test script and README.md
 
 
 import pyfvtool as pf
+import matplotlib.pyplot as plt
 
 # Solving a 1D diffusion equation with a fixed concentration 
 # at the left boundary and a closed boundary on the right side
 
 
 # Calculation parameters
-Nx = 20 # number of finite volume cells
+Nx = 100 # number of finite volume cells
 Lx = 1.0 # [m] length of the domain 
 c_left = 1.0 # left boundary concentration
 c_init = 0.0 # initial concentration
@@ -35,20 +36,22 @@ mesh = pf.Grid1D(Nx, Lx)
 c = pf.CellVariable(mesh, c_init)
 
 # Switch the left boundary to Dirichlet: fixed concentration
-c.BCs.left.a = 0.0
-c.BCs.left.b = 1.0
-c.BCs.left.c = c_left
+c.BCs.left.fixedValue(c_left)
 
-# Assign diffusivity to cells
+# Assign diffusivity: the diffusivity is needed at the interface between cells.
+# The required `pf.FaceVariable` is obtained here using the `pf.geometricMean`
+# averager.
 D_cell = pf.CellVariable(mesh, D_val)
-D_face = pf.geometricMean(D_cell) # average value of diffusivity at the interfaces between cells
+D_face = pf.geometricMean(D_cell)
 
-# Time loop
-t = 0
+# Time loop (with integrated plotting)
+# plt.figure(1)
+# plt.clf()
+t = 0.0
 nplot = 0
 while t<t_simulation:
     # Compose discretized terms for matrix equation
-    eqnterms = [ pf.transientTerm(c, dt, 1.0),
+    eqnterms = [ pf.transientTerm(c, dt),
                 -pf.diffusionTerm(D_face)]
 
     # Solve PDE
@@ -58,7 +61,7 @@ while t<t_simulation:
     # if (nplot % Nskip == 0):
     #     pf.visualizeCells(c)
     nplot+=1
-    
+# plt.show()
     
     
 ### README code ends here
