@@ -9,7 +9,7 @@ The partial differential equations that can be solved numerically with PyFVTool 
 ```math
 \underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\vec{\nabla} \cdot \left(\vec{u}\phi\right)}_{\textrm{Advection term}}+\underbrace{\vec{\nabla} \cdot (-D\vec{\nabla}\phi)}_{\textrm{Diffusion term}}+\underbrace{\beta\phi}_{\textrm{Linear source term}}+\underbrace{\gamma}_{\textrm{Constant source term}}=0
 ```
-with the following general form of boundary conditions (specified by constants $a$, $b$, and $c$, with $\hat{e}$ being the unit vector in the direction of the coordinate):
+with the following general form of boundary conditions (specified by constants $a$, $b$ and $c$, with $\hat{e}$ being the unit vector in the direction of the coordinate):
 
 ```math
 a(\vec{\nabla}\phi \cdot \hat{e})+b\phi=c

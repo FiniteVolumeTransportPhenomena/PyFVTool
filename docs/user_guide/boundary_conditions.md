@@ -4,8 +4,7 @@ PyFVTool uses a **unified Robin boundary condition** form for all boundaries:
 
 $$a \,\nabla\phi \cdot \mathbf{e} + b\,\phi = c$$
 
-where $\mathbf{e}$ is the outward unit normal. By choosing $a$, $b$, and $c$ you
-recover all common boundary condition types:
+where $\mathbf{e}$ is the unit vector *in the direction of the coordinate axis*. By choosing $a$, $b$ and $c$ (taking into account the direction of the axis), all common boundary condition types are recovered:
 
 | BC type | $a$ | $b$ | $c$ |
 |---------|-----|-----|-----|
@@ -32,7 +31,7 @@ c.BCs.left.a = 0.0
 c.BCs.left.b = 1.0
 c.BCs.left.c = 5.0
 
-# Neumann: fixed flux of 0.5 at the right boundary
+# Neumann: fixed gradient of 0.5 at the right boundary
 c.BCs.right.a = 1.0
 c.BCs.right.b = 0.0
 c.BCs.right.c = 0.5
@@ -49,7 +48,7 @@ There are convenient utility methods for directly setting Dirichlet ({py:meth}`f
 # Dirichlet: fix concentration to 5.0 at the left boundary
 c.BCs.fixedValue(5.0)
 
-# Neumann: fixed flux of 0.5 at the right boundary
+# Neumann: fixed gradient of 0.5 at the right boundary
 c.BCs.fixedGradient(0.5)
 ```
 

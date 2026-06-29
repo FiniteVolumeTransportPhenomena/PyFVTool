@@ -20,6 +20,8 @@ $$
 a\nabla\phi \cdot \mathbf{e} + b\phi = c
 $$
 
+where $\mathbf{e}$ is the unit vector in the direction of the coordinate axis.
+
 PyFVTool is oriented toward **heat and mass transport phenomena** on structured meshes,
 for cases where the flow velocity field is already known or absent. It is pure scientific
 Python. Only `numpy`, `scipy`, and `matplotlib` are required.
