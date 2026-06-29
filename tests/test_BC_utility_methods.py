@@ -195,10 +195,67 @@ def test_newton_cooling(silent=True):
 
 
 
+def test_newton_cooling2(silent=True):
+    #
+    # Model of the evolution of the temperature gradient in the side-wall
+    # of a cup filled with hot chocolate milk
+    #
+    # Double Newton boundary conditions.
+    #
+    T_room = 293.15
+    T_cup_init = T_room
+    T_chocomilk = 355.0
+    
+    c_p_cup = 0.105e3 # J kg-1 K-1 porcelain specific heat capacity
+    rho_cup = 2400.0 # kg m3 porcelain density
+    k_cup = 1.5 # W m-1 K-1 porcelain thermal conductivity
+    alpha_cup = k_cup / (rho_cup*c_p_cup)
+    
+    h_chocomilk_cup = 500.0 # W m-2 K-1 (if you stir, this can be much higher)
+    h_cup_room = 20.0 # W m-2 K-1
+    
+    R_exterior = 0.040 # m 
+    R_interior = 0.036 # m
+    
+    Nr = 60
+
+    r = np.linspace(R_interior, R_exterior, Nr)
+    mesh = pf.CylindricalGrid1D(r)
+    
+    T = pf.CellVariable(mesh, T_cup_init)
+    
+    T.BCs.left.newtonCooling(k_cup, h_chocomilk_cup, T_chocomilk)
+    T.BCs.right.newtonCooling(k_cup, h_cup_room, T_room)
+    
+    dt = 0.025
+    Nt = 400
+    plotix = np.array(np.logspace(0, np.log10(Nt), 30).round(), dtype=int) - 1
+    
+    if not silent:
+        import matplotlib.pyplot as plt
+        plt.figure(10)
+        plt.clf()
+        plt.xlabel('distance from center line of cup / m')
+        plt.ylabel('temperature / K')   
+    
+    for it in range(Nt):
+        if it in plotix:
+            if not silent:
+                plt.plot(*T.plotprofile())
+        pf.solvePDE(T, [ pf.transientTerm(T, dt),
+                        -pf.diffusionTerm(pf.FaceVariable(mesh, alpha_cup))])
+    
+    assert np.all(T.value >= 0),\
+        "Negative thermodynamic temperatures detected in the side-wall"\
+        " of the cup... Something is wrong!"
+
+
+
 if __name__ == "__main__":
     test_default_bcs()
     test_default_no_flux()
     test_fixed_value()
     test_fixed_gradient()
     test_newton_cooling(silent=False)
+    test_newton_cooling2(silent=False)
     print("All tests passed.")
