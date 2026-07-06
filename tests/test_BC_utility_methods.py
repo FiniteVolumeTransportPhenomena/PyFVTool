@@ -224,7 +224,8 @@ def test_newton_cooling2(silent=True):
     
     T = pf.CellVariable(mesh, T_cup_init)
     
-    T.BCs.left.newtonCooling(k_cup, h_chocomilk_cup, T_chocomilk)
+    T.BCs.left.newtonCooling(k_cup, h_chocomilk_cup, T_chocomilk,
+                             reverse_direction = True)
     T.BCs.right.newtonCooling(k_cup, h_cup_room, T_room)
     
     dt = 0.025
