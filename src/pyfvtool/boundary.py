@@ -142,6 +142,9 @@ class BoundaryFace:
         Utility function.
         
         Equivalent to a = 1.0; b = 0.0; c = gradientvalue
+        
+        Note that the boundary conditions are always applied in the positive 
+        coordinate direction of the corresponding boundary.
 
         Parameters
         ----------
@@ -157,13 +160,22 @@ class BoundaryFace:
         self.b = 0.0
         self.c = gradientvalue
         
-    def newtonCooling(self, k, h, T_ext):
+    def newtonCooling(self, k, h, T_ext, 
+                      reverse_direction=False):
         """
         Apply Newton boundary conditions (specific case of Robin BCs)
         
         This applies Newton's law of cooling to a boundary
         
-        Equivalent to a = k; b = h; c = h*T_ext
+        Equivalent to a = k; b = h_eff; c = h_eff*T_ext, where 
+        h_eff = -h if reverse_direction else h.
+        
+        Note that the boundary conditions are always applied in the positive 
+        coordinate direction of the corresponding boundary, and that 
+        `newtonCooling` is not aware of the orientation of the boundary,
+        meaning that this information needs to be supplied explicitly via
+        the `reverse_direction` keyword. Reverse direction is typically needed
+        for 'left', 'bottom', and 'front' boundaries.
 
         Parameters
         ----------
@@ -175,16 +187,25 @@ class BoundaryFace:
             SI units: W m-2 K-1
         T_ext : float
             Temperature of the environment.
-            SI unit: K
+            SI units: K
+        reverse_direction : bool, optional
+            If True, flips the sign of the boundary flux (needed for boundaries
+            whose outward normal is opposite the positive coordinate direction,
+            e.g. 'left', 'bottom', 'front'). Default is False.
 
         Returns
         -------
         None.
 
         """
+        if reverse_direction:
+            h_eff = -h
+        else:
+            h_eff = h
+        
         self.a = k
-        self.b = h
-        self.c = h*T_ext
+        self.b = h_eff
+        self.c = h_eff*T_ext
 
         
 

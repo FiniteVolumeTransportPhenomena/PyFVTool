@@ -8,6 +8,7 @@ folder, rendered here for convenient reading.
 
 ../../source/notebook-examples/PyFVTool-introduction-demo.ipynb
 ../../source/notebook-examples/cartesian1D_diffusion_advection_mason_weaver.ipynb
+../../source/notebook-examples/cylindrical1D_cup_of_hot_chocolate_milk.ipynb
 ../../source/notebook-examples/cylindrical1D_diffusion_source_photothermal.ipynb
 ../../source/notebook-examples/cartesian1D_conv_diff_bench.ipynb
 ../../source/notebook-examples/cartesian1D_diffusion.ipynb
@@ -27,10 +28,6 @@ folder, rendered here for convenient reading.
 ../../source/notebook-examples/tutorial-wave_equation_1D.ipynb
 ../../source/notebook-examples/how-to-use-oneMKL-PARDISO-solver.ipynb
 ```
-
-## To do
-
-- Fix the document titles and headings
 
 
 ```{note}
