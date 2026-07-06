@@ -4,7 +4,7 @@ PyFVTool uses a **unified Robin boundary condition** form for all boundaries:
 
 $$a \,\nabla\phi \cdot \mathbf{e} + b\,\phi = c$$
 
-where $\mathbf{e}$ is the unit vector *in the direction of the coordinate axis*. By choosing $a$, $b$ and $c$ (taking into account the direction of the axis), all common boundary condition types are recovered:
+where $\mathbf{e}$ is the unit vector *in the direction of the coordinate axis* at the specific boundary. By choosing $a$, $b$ and $c$ (taking into account the direction of the axis), all common boundary condition types are recovered:
 
 | BC type | $a$ | $b$ | $c$ |
 |---------|-----|-----|-----|
