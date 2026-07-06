@@ -211,6 +211,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../examples/index.html">Examples</a><input aria-label="Toggle navigation of Examples" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/PyFVTool-introduction-demo.html">An introductory demonstration of PyFVTool</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cartesian1D_diffusion_advection_mason_weaver.html">Solving the Mason-Weaver equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical1D_cup_of_hot_chocolate_milk.html">A hot cup of chocolate milk</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cylindrical1D_diffusion_source_photothermal.html">Heat diffusion with a (photothermal) heating source in 1D-cylindrical geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cartesian1D_conv_diff_bench.html">1D Convection-diffusion example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../source/notebook-examples/cartesian1D_diffusion.html">Cartesian 1D: Solve a 1D diffusion equation</a></li>
@@ -428,6 +429,9 @@
 <span class="sd">        Utility function.</span>
 <span class="sd">        </span>
 <span class="sd">        Equivalent to a = 1.0; b = 0.0; c = gradientvalue</span>
+<span class="sd">        </span>
+<span class="sd">        Note that the boundary conditions are always applied in the positive </span>
+<span class="sd">        coordinate direction of the corresponding boundary.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -446,13 +450,22 @@
         
 <div class="viewcode-block" id="BoundaryFace.newtonCooling">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.newtonCooling">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">newtonCooling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">T_ext</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">newtonCooling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">T_ext</span><span class="p">,</span> 
+                      <span class="n">reverse_direction</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Apply Newton boundary conditions (specific case of Robin BCs)</span>
 <span class="sd">        </span>
 <span class="sd">        This applies Newton&#39;s law of cooling to a boundary</span>
 <span class="sd">        </span>
-<span class="sd">        Equivalent to a = k; b = h; c = h*T_ext</span>
+<span class="sd">        Equivalent to a = k; b = h_eff; c = h_eff*T_ext, where </span>
+<span class="sd">        h_eff = -h if reverse_direction else h.</span>
+<span class="sd">        </span>
+<span class="sd">        Note that the boundary conditions are always applied in the positive </span>
+<span class="sd">        coordinate direction of the corresponding boundary, and that </span>
+<span class="sd">        `newtonCooling` is not aware of the orientation of the boundary,</span>
+<span class="sd">        meaning that this information needs to be supplied explicitly via</span>
+<span class="sd">        the `reverse_direction` keyword. Reverse direction is typically needed</span>
+<span class="sd">        for &#39;left&#39;, &#39;bottom&#39;, and &#39;front&#39; boundaries.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -464,16 +477,25 @@
 <span class="sd">            SI units: W m-2 K-1</span>
 <span class="sd">        T_ext : float</span>
 <span class="sd">            Temperature of the environment.</span>
-<span class="sd">            SI unit: K</span>
+<span class="sd">            SI units: K</span>
+<span class="sd">        reverse_direction : bool, optional</span>
+<span class="sd">            If True, flips the sign of the boundary flux (needed for boundaries</span>
+<span class="sd">            whose outward normal is opposite the positive coordinate direction,</span>
+<span class="sd">            e.g. &#39;left&#39;, &#39;bottom&#39;, &#39;front&#39;). Default is False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">reverse_direction</span><span class="p">:</span>
+            <span class="n">h_eff</span> <span class="o">=</span> <span class="o">-</span><span class="n">h</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">h_eff</span> <span class="o">=</span> <span class="n">h</span>
+        
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">k</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">h</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="n">T_ext</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="n">h_eff</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">h_eff</span><span class="o">*</span><span class="n">T_ext</span></div>
 </div>
 
 

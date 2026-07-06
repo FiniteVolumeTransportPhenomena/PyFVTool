@@ -173,7 +173,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -212,6 +212,7 @@
 <li class="toctree-l1 current has-children current-page"><a class="current reference internal" href="#">Examples</a><input aria-label="Toggle navigation of Examples" checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/PyFVTool-introduction-demo.html">An introductory demonstration of PyFVTool</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_diffusion_advection_mason_weaver.html">Solving the Mason-Weaver equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_cup_of_hot_chocolate_milk.html">A hot cup of chocolate milk</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion_source_photothermal.html">Heat diffusion with a (photothermal) heating source in 1D-cylindrical geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_conv_diff_bench.html">1D Convection-diffusion example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_diffusion.html">Cartesian 1D: Solve a 1D diffusion equation</a></li>
@@ -275,7 +276,7 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
@@ -288,6 +289,7 @@ folder, rendered here for convenient reading.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/PyFVTool-introduction-demo.html">An introductory demonstration of PyFVTool</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/cartesian1D_diffusion_advection_mason_weaver.html">Solving the Mason-Weaver equation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_cup_of_hot_chocolate_milk.html">A hot cup of chocolate milk</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion_source_photothermal.html">Heat diffusion with a (photothermal) heating source in 1D-cylindrical geometry</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/cartesian1D_conv_diff_bench.html">1D Convection-diffusion example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/cartesian1D_diffusion.html">Cartesian 1D: Solve a 1D diffusion equation</a></li>
@@ -308,18 +310,12 @@ folder, rendered here for convenient reading.</p>
 <li class="toctree-l1"><a class="reference internal" href="../source/notebook-examples/how-to-use-oneMKL-PARDISO-solver.html">Using Intel oneMKL PARDISO as an external sparse direct solver for PyFVTool</a></li>
 </ul>
 </div>
-<section id="to-do">
-<h2>To do<a class="headerlink" href="#to-do" title="Link to this heading">¶</a></h2>
-<ul class="simple">
-<li><p>Fix the document titles and headings</p></li>
-</ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Notebooks are included via <code class="docutils literal notranslate"><span class="pre">nbsphinx</span></code> and are
 <strong>not re-executed</strong> at build time (set <code class="docutils literal notranslate"><span class="pre">nbsphinx_execute</span> <span class="pre">=</span> <span class="pre">'auto'</span></code> in
 <code class="docutils literal notranslate"><span class="pre">conf.py</span></code> to enable execution in CI).</p>
 </div>
-</section>
 </section>
 
         </article>
@@ -365,27 +361,8 @@ folder, rendered here for convenient reading.</p>
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Examples</a><ul>
-<li><a class="reference internal" href="#to-do">To do</a></li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>

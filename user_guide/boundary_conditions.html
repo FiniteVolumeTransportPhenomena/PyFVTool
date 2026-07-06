@@ -212,6 +212,7 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../examples/index.html">Examples</a><input aria-label="Toggle navigation of Examples" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/PyFVTool-introduction-demo.html">An introductory demonstration of PyFVTool</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_diffusion_advection_mason_weaver.html">Solving the Mason-Weaver equation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_cup_of_hot_chocolate_milk.html">A hot cup of chocolate milk</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cylindrical1D_diffusion_source_photothermal.html">Heat diffusion with a (photothermal) heating source in 1D-cylindrical geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_conv_diff_bench.html">1D Convection-diffusion example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../source/notebook-examples/cartesian1D_diffusion.html">Cartesian 1D: Solve a 1D diffusion equation</a></li>
@@ -287,8 +288,7 @@
 <div class="math notranslate nohighlight">
 \[a \,\nabla\phi \cdot \mathbf{e} + b\,\phi = c\]</div>
 </div>
-<p>where <span class="math notranslate nohighlight">\(\mathbf{e}\)</span> is the outward unit normal. By choosing <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span>, and <span class="math notranslate nohighlight">\(c\)</span> you
-recover all common boundary condition types:</p>
+<p>where <span class="math notranslate nohighlight">\(\mathbf{e}\)</span> is the unit vector <em>in the direction of the coordinate axis</em> at the specific boundary. By choosing <span class="math notranslate nohighlight">\(a\)</span>, <span class="math notranslate nohighlight">\(b\)</span> and <span class="math notranslate nohighlight">\(c\)</span> (taking into account the direction of the axis), all common boundary condition types are recovered:</p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
 <thead>
@@ -335,7 +335,7 @@ recover all common boundary condition types:</p>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">5.0</span>
 
-<span class="c1"># Neumann: fixed flux of 0.5 at the right boundary</span>
+<span class="c1"># Neumann: fixed gradient of 0.5 at the right boundary</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.5</span>
@@ -349,7 +349,7 @@ For 3D meshes, <code class="docutils literal notranslate"><span class="pre">.bac
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Dirichlet: fix concentration to 5.0 at the left boundary</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">fixedValue</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span>
 
-<span class="c1"># Neumann: fixed flux of 0.5 at the right boundary</span>
+<span class="c1"># Neumann: fixed gradient of 0.5 at the right boundary</span>
 <span class="n">c</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">fixedGradient</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
 </pre></div>
 </div>
