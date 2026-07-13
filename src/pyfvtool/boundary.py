@@ -144,7 +144,7 @@ class BoundaryFace:
         Equivalent to 
             a = scale_coeffs; b = 0.0; c = scale_coeffs*gradientvalue
         which defaults to
-            a = 1.0; b = 0.0: c = gradientvalue
+            a = 1.0; b = 0.0; c = gradientvalue
         
         Note that the boundary conditions are always applied in the positive 
         coordinate direction of the corresponding boundary.
