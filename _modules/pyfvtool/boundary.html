@@ -422,13 +422,16 @@
 
 <div class="viewcode-block" id="BoundaryFace.fixedGradient">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.fixedGradient">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fixedGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradientvalue</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fixedGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradientvalue</span><span class="p">,</span> <span class="n">scale_coeffs</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Set fixed gradient (Neumann) boundary condition</span>
 <span class="sd">        </span>
 <span class="sd">        Utility function.</span>
 <span class="sd">        </span>
-<span class="sd">        Equivalent to a = 1.0; b = 0.0; c = gradientvalue</span>
+<span class="sd">        Equivalent to </span>
+<span class="sd">            a = scale_coeffs; b = 0.0; c = scale_coeffs*gradientvalue</span>
+<span class="sd">        which defaults to</span>
+<span class="sd">            a = 1.0; b = 0.0; c = gradientvalue</span>
 <span class="sd">        </span>
 <span class="sd">        Note that the boundary conditions are always applied in the positive </span>
 <span class="sd">        coordinate direction of the corresponding boundary.</span>
@@ -437,15 +440,23 @@
 <span class="sd">        ----------</span>
 <span class="sd">        value : float or ndarray</span>
 <span class="sd">            Fixed boundary value(s) to be set.</span>
+<span class="sd">        scale_coeffs : float, optional</span>
+<span class="sd">            Expert feature. Scales the Neumann BC coefficient by a constant </span>
+<span class="sd">            factor, giving the same gradient, but with different matrix </span>
+<span class="sd">            coefficients in the matrix equation. Can be used to harmonize the </span>
+<span class="sd">            matrix coefficients, for  bringing the boundary coefficients in the</span>
+<span class="sd">            same range as the other matrix elements. This helps in robustly</span>
+<span class="sd">            solving the sparse matrix equation.</span>
+<span class="sd">            The default scale factor is 1.0.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">scale_coeffs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">gradientvalue</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">scale_coeffs</span> <span class="o">*</span> <span class="n">gradientvalue</span></div>
 
         
 <div class="viewcode-block" id="BoundaryFace.newtonCooling">

@@ -1673,15 +1673,29 @@ apply_BCs()</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyfvtool.boundary.BoundaryFace.fixedGradient">
-<span class="sig-name descname"><span class="pre">fixedGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradientvalue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/boundary.html#BoundaryFace.fixedGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.fixedGradient" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fixedGradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">gradientvalue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale_coeffs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/boundary.html#BoundaryFace.fixedGradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.boundary.BoundaryFace.fixedGradient" title="Link to this definition">¶</a></dt>
 <dd><p>Set fixed gradient (Neumann) boundary condition</p>
 <p>Utility function.</p>
-<p>Equivalent to a = 1.0; b = 0.0; c = gradientvalue</p>
+<dl class="simple">
+<dt>Equivalent to</dt><dd><p>a = scale_coeffs; b = 0.0; c = scale_coeffs*gradientvalue</p>
+</dd>
+<dt>which defaults to</dt><dd><p>a = 1.0; b = 0.0; c = gradientvalue</p>
+</dd>
+</dl>
 <p>Note that the boundary conditions are always applied in the positive
 coordinate direction of the corresponding boundary.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>ndarray</em>) – Fixed boundary value(s) to be set.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em> or </em><em>ndarray</em>) – Fixed boundary value(s) to be set.</p></li>
+<li><p><strong>scale_coeffs</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a><em>, </em><em>optional</em>) – Expert feature. Scales the Neumann BC coefficient by a constant
+factor, giving the same gradient, but with different matrix
+coefficients in the matrix equation. Can be used to harmonize the
+matrix coefficients, for  bringing the boundary coefficients in the
+same range as the other matrix elements. This helps in robustly
+solving the sparse matrix equation.
+The default scale factor is 1.0.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>None.</p>
