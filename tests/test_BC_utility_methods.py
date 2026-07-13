@@ -97,6 +97,8 @@ def test_fixed_gradient():
     rhocp = 1.0
     alpha = k / rhocp
     
+    #
+    # Calculate 1D profile, with fixedGradient BC on the left
     mesh = pf.Grid1D(Nx, Lx)
     Tcell = pf.CellVariable(mesh, 0.0) 
         
@@ -109,12 +111,35 @@ def test_fixed_gradient():
         assert bc.c[0] == cc, "fixedGradient BC error"
 
     pf.solvePDE(Tcell, [-pf.diffusionTerm(pf.FaceVariable(mesh, alpha))])
-
+       
     # check gradient (will be same over full domain)
     xx, TT = Tcell.plotprofile() # get profile with outer face values
     steadygrad = (TT[-1]-TT[0])/(xx[-1]-xx[0])
-    
     assert np.allclose(-kbc, steadygrad)
+   
+    
+    #
+    # Re-do calculation, but test the scale_coeffs keyword
+    mesh = pf.Grid1D(Nx, Lx)
+    Tcell = pf.CellVariable(mesh, 0.0) 
+        
+    Tcell.BCs.right.fixedValue(T_ext)
+    coeffscale = 2.0
+    Tcell.BCs.left.fixedGradient(-kbc, scale_coeffs=coeffscale)
+    
+    for bc, cc in zip([Tcell.BCs.left], [-kbc]):
+        assert bc.a[0] == coeffscale, "fixedGradient BC error (scaled coefficients)"
+        assert bc.b[0] == 0.0, "fixedGradient BC error (scaled coefficients)"
+        assert bc.c[0] == cc*coeffscale, "fixedGradient BC error (scaled coefficients)"
+
+    pf.solvePDE(Tcell, [-pf.diffusionTerm(pf.FaceVariable(mesh, alpha))])
+    
+    # check gradient (will be same over full domain)
+    xx, TT = Tcell.plotprofile() # get profile with outer face values
+    steadygrad = (TT[-1]-TT[0])/(xx[-1]-xx[0])
+    assert np.allclose(-kbc, steadygrad)
+
+
 
 
 

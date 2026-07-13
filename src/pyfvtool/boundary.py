@@ -135,13 +135,16 @@ class BoundaryFace:
         self.b = 1.0
         self.c = value
 
-    def fixedGradient(self, gradientvalue):
+    def fixedGradient(self, gradientvalue, scale_coeffs=1.0):
         """
         Set fixed gradient (Neumann) boundary condition
         
         Utility function.
         
-        Equivalent to a = 1.0; b = 0.0; c = gradientvalue
+        Equivalent to 
+            a = scale_coeffs; b = 0.0; c = scale_coeffs*gradientvalue
+        which defaults to
+            a = 1.0; b = 0.0: c = gradientvalue
         
         Note that the boundary conditions are always applied in the positive 
         coordinate direction of the corresponding boundary.
@@ -150,15 +153,23 @@ class BoundaryFace:
         ----------
         value : float or ndarray
             Fixed boundary value(s) to be set.
+        scale_coeffs : float, optional
+            Expert feature. Scales the Neumann BC coefficient by a constant 
+            factor, giving the same gradient, but with different matrix 
+            coefficients in the matrix equation. Can be used to harmonize the 
+            matrix coefficients, for  bringing the boundary coefficients in the
+            same range as the other matrix elements. This helps in robustly
+            solving the sparse matrix equation.
+            The default scale factor is 1.0.
 
         Returns
         -------
         None.
 
         """
-        self.a = 1.0
+        self.a = scale_coeffs
         self.b = 0.0
-        self.c = gradientvalue
+        self.c = scale_coeffs * gradientvalue
         
     def newtonCooling(self, k, h, T_ext, 
                       reverse_direction=False):
