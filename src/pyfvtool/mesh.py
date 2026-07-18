@@ -449,7 +449,9 @@ class CylindricalGrid1D(Grid1D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V = 2.0*np.pi*self.cellsize.r[1:-1]*self.cellcenters.r
+        V_inner = np.pi*self.facecenters.r[0:-1]**2
+        V_outer = np.pi*self.facecenters.r[1:]**2
+        V = np.abs(V_outer - V_inner)
         return V
     
 
