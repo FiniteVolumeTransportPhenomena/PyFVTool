@@ -451,9 +451,9 @@ class CylindricalGrid1D(Grid1D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V_inner = np.pi*self.facecenters.r[0:-1]**2
-        V_outer = np.pi*self.facecenters.r[1:]**2
-        V = np.abs(V_outer - V_inner)
+        R2_inner = self.facecenters.r[0:-1]**2
+        R2_outer = self.facecenters.r[1:  ]**2
+        V = np.pi * np.abs(R2_outer - R2_inner)
         return V
     
 
@@ -525,9 +525,9 @@ class SphericalGrid1D(Grid1D):
         np.ndarray
             containing all cell volumes, arranged according to gridcells
         """
-        V_inner = 4.0/3.0*np.pi*self.facecenters.r[0:-1]**3
-        V_outer = 4.0/3.0*np.pi*self.facecenters.r[1:]**3
-        V = np.abs(V_outer - V_inner)
+        R3_inner = self.facecenters.r[0:-1]**3
+        R3_outer = self.facecenters.r[1:  ]**3
+        V = 4.0/3.0 * np.pi * np.abs(R3_outer - R3_inner)
         return V
     
 
@@ -765,9 +765,10 @@ class CylindricalGrid2D(Grid2D):
             containing all cell volumes, arranged according to gridcells
         
         """
-        A_inner = np.pi*self.facecenters.r[0:-1, np.newaxis]**2
-        A_outer = np.pi*self.facecenters.r[1:  , np.newaxis]**2
-        V = self.cellsize.z[np.newaxis, 1:-1]*np.abs(A_outer-A_inner)
+        R2_inner = self.facecenters.r[0:-1]**2
+        R2_outer = self.facecenters.r[1:  ]**2
+        A = np.pi * np.abs(R2_outer - R2_inner)
+        V = A[:, np.newaxis] * self.cellsize.z[np.newaxis, 1:-1] 
         return V
 
 
@@ -855,11 +856,12 @@ class PolarGrid2D(Grid2D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V_inner = np.pi*self.facecenters.r[0:-1]**2
-        V_outer = np.pi*self.facecenters.r[1:  ]**2
-        V_full = np.abs(V_outer-V_inner)
+        R2_inner = self.facecenters.r[0:-1]**2
+        R2_outer = self.facecenters.r[1:  ]**2
+        V_full = np.pi * np.abs(R2_outer - R2_inner)
         diff_theta = np.abs(self.facecenters.theta[1:]-self.facecenters.theta[0:-1])
-        V = diff_theta[np.newaxis, :]/(2*np.pi)*V_full[:, np.newaxis]
+        V = diff_theta[np.newaxis, :]/(2*np.pi)\
+            * V_full[:, np.newaxis]
         return V
 
 
@@ -1153,9 +1155,11 @@ class CylindricalGrid3D(Grid3D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        A_inner = np.pi*self.facecenters.r[0:-1, np.newaxis]**2
-        A_outer = np.pi*self.facecenters.r[1:  , np.newaxis]**2
-        V_full = self.cellsize.z[np.newaxis, 1:-1]*np.abs(A_outer-A_inner)
+        R2_inner = self.facecenters.r[0:-1]**2
+        R2_outer = self.facecenters.r[1:  ]**2
+        A = np.pi * np.abs(R2_outer - R2_inner)
+        V_full = A[:, np.newaxis]\
+                 * self.cellsize.z[np.newaxis, 1:-1]
         diff_theta = np.abs(self.facecenters.theta[1:]-self.facecenters.theta[0:-1])
         V = diff_theta[np.newaxis, :, np.newaxis]/(2*np.pi)\
             * V_full[:, np.newaxis, :]
@@ -1277,9 +1281,9 @@ class SphericalGrid3D(Grid3D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V_inner = 4.0/3.0*np.pi*self.facecenters.r[0:-1]**3
-        V_outer = 4.0/3.0*np.pi*self.facecenters.r[1:]**3
-        V_full = np.abs(V_outer - V_inner)
+        R3_inner = self.facecenters.r[0:-1]**3
+        R3_outer = self.facecenters.r[1:  ]**3
+        V_full =  4.0/3.0 * np.pi * np.abs(R3_outer - R3_inner)
         diff_theta = np.abs(self.facecenters.theta[1:]-self.facecenters.theta[0:-1])
         diff_phi = np.abs(self.facecenters.phi[1:]-self.facecenters.phi[0:-1])
         V = V_full[:, np.newaxis, np.newaxis]\
