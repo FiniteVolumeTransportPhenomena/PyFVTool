@@ -352,6 +352,8 @@ class Grid1D(MeshStructure):
                 np.array([0.0]),
                 np.array([0.0]),
                 coordlabels)
+        else:
+            raise TypeError('Incorrect number of arguments for creation of 1D mesh structure.')
         dims = np.array([Nx], dtype=int)
         cellsize = cell_size
         cellcenters = cell_location
@@ -646,6 +648,8 @@ class Grid2D(MeshStructure):
                 int_range(0, Ny)*dy,
                 np.array([0.0]),
                 coordlabels)
+        else:
+            raise TypeError('Incorrect number of arguments for creation of 2D mesh structure.')
     
         dims = np.array([Nx, Ny], dtype=int)
         cellsize = cell_size
@@ -1000,6 +1004,8 @@ class Grid3D(MeshStructure):
                 int_range(0, Ny)*dy,
                 int_range(0, Nz)*dz,
                 coordlabels)
+        else:
+            raise TypeError('Incorrect number of arguments for creation of 3D mesh structure.')
         G = int_range(1, (Nx+2)*(Ny+2)*(Nz+2))-1
         G = G.reshape(Nx+2, Ny+2, Nz+2)
         dims = np.array([Nx, Ny, Nz], dtype=int)
