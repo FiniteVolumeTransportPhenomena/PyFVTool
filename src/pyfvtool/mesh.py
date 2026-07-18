@@ -1274,10 +1274,14 @@ class SphericalGrid3D(Grid3D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V = self.cellcenters._x[:,np.newaxis,np.newaxis]**2\
-            *np.sin(self.cellcenters._y[np.newaxis,:,np.newaxis])\
-            *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
-            *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-            *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
+        V_inner = 4.0/3.0*np.pi*self.facecenters.r[0:-1]**3
+        V_outer = 4.0/3.0*np.pi*self.facecenters.r[1:]**3
+        V_full = np.abs(V_outer - V_inner)
+        diff_theta = np.abs(self.facecenters.theta[1:]-self.facecenters.theta[0:-1])
+        diff_phi = np.abs(self.facecenters.phi[1:]-self.facecenters.phi[0:-1])
+        V = V_full[:, np.newaxis, np.newaxis]\
+            * (diff_theta[np.newaxis, :, np.newaxis]/np.pi)\
+            * (diff_phi[np.newaxis, np.newaxis, :]/(2.0*np.pi))\
+
         return V
     

@@ -63,7 +63,7 @@ def test_polar_grid_2d():
 def test_polar_grid_2d_slice():
     """Test that the total cell volume matches the analytical volume for 
     PolarGrid2D (only a quarter slice)."""
-    THETA = 0.5 * np.pi
+    THETA = (2.0/4) * np.pi
     msh = pf.PolarGrid2D(Nr, Ntheta, R, THETA)
     u = pf.CellVariable(msh, 1.0)
     expected_volume = (np.pi * R**2)/4
@@ -132,6 +132,24 @@ def test_spherical_grid_3d():
 
 
 
+def test_spherical_grid_3d_slice_uneven():
+    """Test that the total cell volume matches the analytical volume for SphericalGrid3D.
+    (Uneven slices) """
+    Rloc = np.array([0.0, 0.2, 0.7, 1.0])
+    THETAloc = np.pi*np.array([0.1, 0.25, 0.65, 0.9])
+    PHIloc = 2*np.pi*np.array([0.5, 0.6, 0.8, 0.9, 1.0])
+    msh = pf.SphericalGrid3D(Rloc, THETAloc, PHIloc)
+    u = pf.CellVariable(msh, 1.0)
+    expected_volume = (4/3 * np.pi * R**3)*0.8*0.5
+    mshsum = np.sum(msh.cellvolume)
+    uintg = u.domainIntegral()
+    print(fmtstr.format(msh.__repr__(), expected_volume, mshsum, uintg))
+    assert np.allclose(expected_volume, mshsum), "SphericalGrid3D volume error"
+    assert np.allclose(expected_volume, uintg), "SphericalGrid3D volume error"
+
+
+
+
 if __name__ == '__main__':
     test_cylindrical_grid_1d()
     test_cylindrical_grid_2d()
@@ -141,4 +159,5 @@ if __name__ == '__main__':
     test_spherical_grid_1d()
     test_spherical_grid_1d_uneven()
     test_spherical_grid_3d()
+    test_spherical_grid_3d_slice_uneven()
     
