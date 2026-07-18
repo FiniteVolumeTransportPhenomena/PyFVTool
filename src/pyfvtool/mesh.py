@@ -1148,10 +1148,12 @@ class CylindricalGrid3D(Grid3D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V = self.cellcenters._x[:,np.newaxis,np.newaxis]\
-            *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
-            *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-            *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
+        A_inner = np.pi*self.facecenters.r[0:-1, np.newaxis]**2
+        A_outer = np.pi*self.facecenters.r[1:  , np.newaxis]**2
+        V_full = self.cellsize.z[np.newaxis, 1:-1]*np.abs(A_outer-A_inner)
+        diff_theta = np.abs(self.facecenters.theta[1:]-self.facecenters.theta[0:-1])
+        V = diff_theta[np.newaxis, :, np.newaxis]/(2*np.pi)\
+            * V_full[:, np.newaxis, :]
         return V
 
 

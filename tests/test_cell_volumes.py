@@ -9,11 +9,11 @@ import pyfvtool as pf
 
 # Global parameters
 R = 1.0
-Nr = 5
-Ntheta = 5
+Nr = 4
+Ntheta = 4
 Z = 1.0
-Nz = 5
-Nphi = 5
+Nz = 4
+Nphi = 4
 
 # Output params
 fmtstr = "{0:.13s}    {1:.12f}  {2:.12f}  {3:.12f}"
