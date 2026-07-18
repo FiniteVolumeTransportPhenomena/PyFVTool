@@ -159,13 +159,14 @@ class CellProp:
 
 
 
-
 class CellSize(CellProp):
     pass
 
 
+
 class CellLocation(CellProp):
     pass
+
 
 
 class FaceLocation(CellProp):
@@ -377,8 +378,7 @@ class Grid1D(MeshStructure):
         np.ndarray
             containing all cell volumes, arranged according to gridcells
         """
-        # if (type(self) is Grid1D):           
-        V = self.cellsize._x[1:-1]
+        V = self.cellsize.x[1:-1]
         return V 
 
 
@@ -677,8 +677,8 @@ class Grid2D(MeshStructure):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V = self.cellsize._x[1:-1][:, np.newaxis]\
-            *self.cellsize._y[1:-1][np.newaxis, :]
+        V = self.cellsize.x[1:-1, np.newaxis]\
+            * self.cellsize.y[np.newaxis, 1:-1]
         return V
 
 
@@ -1039,9 +1039,9 @@ class Grid3D(MeshStructure):
             containing all cell volumes, arranged according to gridcells
         
         """
-        V = self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
-            *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-            *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
+        V = self.cellsize.x[1:-1, np.newaxis, np.newaxis]\
+            * self.cellsize.y[np.newaxis, 1:-1, np.newaxis]\
+            * self.cellsize.z[np.newaxis, np.newaxis, 1:-1]
         return V
     
 
@@ -1111,9 +1111,6 @@ class CylindricalGrid3D(Grid3D):
 
 
     def __init__(self, *args):
-        """
-
-        """
         direct_init = False # Flag to indicate if this is a 'direct' __init__
                             # not requiring any parsing of arguments.
                             # These 'direct' instantiantions are used
