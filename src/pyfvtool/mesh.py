@@ -29,7 +29,7 @@ class CellProp:
         return str(self)
     
     
-    # The following coordinate-labeling properties should probably be read-only.
+    # The following coordinate-labeling properties should be read-only.
     # For this reason, the 'setters' have been commented out, but are kept for
     # future reference.
 
@@ -359,8 +359,7 @@ class Grid1D(MeshStructure):
         return dims, cellsize, cellcenters, facecenters, corners, edges
 
     def __repr__(self):
-        print(f"1D Cartesian mesh with {self.dims[0]} cells")
-        return ""
+        return f"1D Cartesian mesh with Nx={self.dims[0]} cells"
 
     def cell_numbers(self):
         Nx = self.dims[0]
@@ -437,8 +436,7 @@ class CylindricalGrid1D(Grid1D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        print(f"1D Cylindrical (radial) mesh with Nr={self.dims[0]} cells")
-        return ""
+        return f"1D Cylindrical (radial) mesh with Nr={self.dims[0]} cells"
 
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
@@ -655,7 +653,7 @@ class Grid2D(MeshStructure):
         return dims, cellsize, cellcenters, facecenters, corners, edges
 
     def __repr__(self):
-        return f"2D Cartesian mesh with {self.dims[0]}x{self.dims[1]} cells"
+        return f"2D Cartesian mesh with Nx={self.dims[0]} x Ny={self.dims[1]} cells"
     
     def cell_numbers(self):
         Nx, Ny = self.dims
@@ -749,9 +747,7 @@ class CylindricalGrid2D(Grid2D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        print(
-            f"2D Cylindrical mesh with Nr={self.dims[0]}xNz={self.dims[1]} cells")
-        return ""
+        return f"2D Cylindrical mesh with Nr={self.dims[0]} x Nz={self.dims[1]} cells"
     
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
@@ -841,7 +837,7 @@ class PolarGrid2D(Grid2D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        return f"2D Polar mesh with N_r={self.dims[0]}xN_theta={self.dims[1]} cells"
+        return f"2D Polar mesh with Nr={self.dims[0]} x Ntheta={self.dims[1]} cells"
 
 
     def _getCellVolumes(self):
@@ -1023,7 +1019,7 @@ class Grid3D(MeshStructure):
 
     def __repr__(self):
         return  f"3D Cartesian mesh with "\
-            f"Nx={self.dims[0]}xNy={self.dims[1]}xNz={self.dims[1]} cells"
+            f"Nx={self.dims[0]} x Ny={self.dims[1]} x Nz={self.dims[1]} cells"
 
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
@@ -1140,8 +1136,8 @@ class CylindricalGrid3D(Grid3D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        return f"3D Cylindrical mesh with Nr={self.dims[0]}x"\
-            f"N_theta={self.dims[1]}xNz={self.dims[1]} cells"
+        return f"3D Cylindrical mesh with Nr={self.dims[0]} x "\
+            f"Ntheta={self.dims[1]} x Nz={self.dims[1]} cells"
 
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
@@ -1263,8 +1259,8 @@ class SphericalGrid3D(Grid3D):
                          face_location, corners, edges)
 
     def __repr__(self):
-        return f"3D Shperical mesh with Nr={self.dims[0]}x"\
-            "N_theta={self.dims[1]}xN_phi={self.dims[1]} cells"
+        return f"3D Spherical mesh with Nr={self.dims[0]} x "\
+            f"Ntheta={self.dims[1]} x Nphi={self.dims[1]} cells"
             
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
