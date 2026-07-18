@@ -209,46 +209,6 @@ class MeshStructure:
         """
         raise NotImplementedError("_getCellVolumes not implemented for this mesh structure!")
         return None
-    
-        #
-        # Old code, can be removed on future clean-up, after a last check
-        # (once we sufficiently test calculated volumes and total domain
-        # volume)
-        #
-        # if (type(self) is Grid1D):
-        #     c = self.cellsize._x[1:-1]
-        # elif (type(self) is CylindricalGrid1D):
-        #     c = 2.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x
-        # elif (type(self) is SphericalGrid1D):
-        #     c = 4.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x**2
-        # elif (type(self) is Grid2D):
-        #     c = self.cellsize._x[1:-1][:, np.newaxis]\
-        #         *self.cellsize._y[1:-1][np.newaxis, :]
-        # elif (type(self) is CylindricalGrid2D):
-        #     c = 2.0*np.pi*self.cellcenters._x[:, np.newaxis]\
-        #         *self.cellsize._x[1:-1][:, np.newaxis]\
-        #         *self.cellsize._y[1:-1][np.newaxis, :]
-        # elif (type(self) is PolarGrid2D):
-        #     c = self.cellcenters._x[:, np.newaxis]\
-        #         *self.cellsize._x[1:-1][:, np.newaxis]\
-        #         *self.cellsize._y[1:-1][np.newaxis, :]
-        # elif (type(self) is Grid3D):
-        #     c = self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
-        #         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-        #         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
-        # elif (type(self) is CylindricalGrid3D):
-        #     c = self.cellcenters._x[:,np.newaxis,np.newaxis]\
-        #         *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
-        #         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-        #         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
-        # elif (type(self) is SphericalGrid3D):
-        #     c = self.cellcenters._x[:,np.newaxis,np.newaxis]**2\
-        #         *np.sin(self.cellcenters._y[np.newaxis,:,np.newaxis])\
-        #         *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
-        #         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
-        #         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
-        # return c
-
 
     # read-only property cellvolume
     @property
