@@ -208,6 +208,7 @@ class MeshStructure:
         """
         raise NotImplementedError("_getCellVolumes not implemented for this mesh structure!")
         return None
+    
         #
         # Old code, can be removed on future clean-up, after a last check
         # (once we sufficiently test calculated volumes and total domain
@@ -246,7 +247,8 @@ class MeshStructure:
         #         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
         #         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
         # return c
-              
+
+
     # read-only property cellvolume
     @property
     def cellvolume(self):
@@ -447,8 +449,7 @@ class CylindricalGrid1D(Grid1D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        # elif (type(self) is CylindricalGrid1D):
-        V = 2.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x
+        V = 2.0*np.pi*self.cellsize.r[1:-1]*self.cellcenters.r
         return V
     
 
@@ -520,8 +521,9 @@ class SphericalGrid1D(Grid1D):
         np.ndarray
             containing all cell volumes, arranged according to gridcells
         """
-        # elif (type(self) is SphericalGrid1D):
-        V = 4.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x**2
+        V_inner = 4.0/3.0*np.pi*self.facecenters.r[0:-1]**3
+        V_outer = 4.0/3.0*np.pi*self.facecenters.r[1:]**3
+        V = np.abs(V_outer - V_inner)
         return V
     
 
@@ -669,7 +671,6 @@ class Grid2D(MeshStructure):
             containing all cell volumes, arranged according to gridcells
 
         """
-        # elif (type(self) is Grid2D):
         V = self.cellsize._x[1:-1][:, np.newaxis]\
             *self.cellsize._y[1:-1][np.newaxis, :]
         return V
@@ -758,7 +759,6 @@ class CylindricalGrid2D(Grid2D):
             containing all cell volumes, arranged according to gridcells
         
         """
-        #elif (type(self) is CylindricalGrid2D):
         V = 2.0*np.pi*self.cellcenters._x[:, np.newaxis]\
             *self.cellsize._x[1:-1][:, np.newaxis]\
             *self.cellsize._y[1:-1][np.newaxis, :]
@@ -849,7 +849,6 @@ class PolarGrid2D(Grid2D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        # elif (type(self) is PolarGrid2D):
         V = self.cellcenters._x[:, np.newaxis]\
             *self.cellsize._x[1:-1][:, np.newaxis]\
             *self.cellsize._y[1:-1][np.newaxis, :]
@@ -1030,7 +1029,6 @@ class Grid3D(MeshStructure):
             containing all cell volumes, arranged according to gridcells
         
         """
-        # elif (type(self) is Grid3D):
         V = self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
             *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
             *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]
@@ -1148,7 +1146,6 @@ class CylindricalGrid3D(Grid3D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        # elif (type(self) is CylindricalGrid3D):
         V = self.cellcenters._x[:,np.newaxis,np.newaxis]\
             *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
             *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\
@@ -1271,7 +1268,6 @@ class SphericalGrid3D(Grid3D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        # elif (type(self) is SphericalGrid3D):
         V = self.cellcenters._x[:,np.newaxis,np.newaxis]**2\
             *np.sin(self.cellcenters._y[np.newaxis,:,np.newaxis])\
             *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\
