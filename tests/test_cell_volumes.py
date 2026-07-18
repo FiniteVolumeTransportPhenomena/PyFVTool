@@ -5,9 +5,7 @@ Testing cell volume calculation by evaluating the total domain volume.
 import numpy as np
 import pyfvtool as pf
 
-# For now, bypass the asserts for spherical meshes, simply printing the
-# erroneous results, without failing.
-BYPASS_SPHERICAL_ASSERTS = True
+
 
 # Global parameters
 R = 1.0
@@ -84,9 +82,8 @@ def test_spherical_grid_1d():
     mshsum = np.sum(msh.cellvolume)
     uintg = u.domainIntegral()
     print(fmtstr.format(msh.__repr__(), expected_volume, mshsum, uintg))
-    if not BYPASS_SPHERICAL_ASSERTS:
-        assert np.allclose(expected_volume, mshsum), "SphericalGrid1D volume error"
-        assert np.allclose(expected_volume, uintg), "SphericalGrid1D volume error"
+    assert np.allclose(expected_volume, mshsum), "SphericalGrid1D volume error"
+    assert np.allclose(expected_volume, uintg), "SphericalGrid1D volume error"
 
 
 
@@ -100,9 +97,8 @@ def test_spherical_grid_1d_uneven():
     mshsum = np.sum(msh.cellvolume)
     uintg = u.domainIntegral()
     print(fmtstr.format(msh.__repr__(), expected_volume, mshsum, uintg))
-    if not BYPASS_SPHERICAL_ASSERTS:
-        assert np.allclose(expected_volume, mshsum), "SphericalGrid1D volume error"
-        assert np.allclose(expected_volume, uintg), "SphericalGrid1D volume error"
+    assert np.allclose(expected_volume, mshsum), "SphericalGrid1D volume error"
+    assert np.allclose(expected_volume, uintg), "SphericalGrid1D volume error"
 
 
 
@@ -116,9 +112,9 @@ def test_spherical_grid_3d():
     mshsum = np.sum(msh.cellvolume)
     uintg = u.domainIntegral()
     print(fmtstr.format(msh.__repr__(), expected_volume, mshsum, uintg))
-    if not BYPASS_SPHERICAL_ASSERTS:
-        assert np.allclose(expected_volume, mshsum), "SphericalGrid3D volume error"
-        assert np.allclose(expected_volume, uintg), "SphericalGrid3D volume error"
+    assert np.allclose(expected_volume, mshsum), "SphericalGrid3D volume error"
+    assert np.allclose(expected_volume, uintg), "SphericalGrid3D volume error"
+
 
 
 
@@ -130,7 +126,4 @@ if __name__ == '__main__':
     test_spherical_grid_1d()
     test_spherical_grid_1d_uneven()
     test_spherical_grid_3d()
-    # Remove BYPASS_SPHERICAL_ASSERTS once bug fixed
-    assert not BYPASS_SPHERICAL_ASSERTS, "Do not by-pass asserts for spherical meshes"
-    
     
