@@ -851,9 +851,11 @@ class PolarGrid2D(Grid2D):
             containing all cell volumes, arranged according to gridcells
 
         """
-        V = self.cellcenters._x[:, np.newaxis]\
-            *self.cellsize._x[1:-1][:, np.newaxis]\
-            *self.cellsize._y[1:-1][np.newaxis, :]
+        V_inner = np.pi*self.facecenters.r[0:-1]**2
+        V_outer = np.pi*self.facecenters.r[1:  ]**2
+        V_full = np.abs(V_outer-V_inner)
+        diff_theta = np.abs(self.facecenters.theta[1:]-self.facecenters.theta[0:-1])
+        V = diff_theta[np.newaxis, :]/(2*np.pi)*V_full[:, np.newaxis]
         return V
 
 
