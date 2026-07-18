@@ -761,9 +761,9 @@ class CylindricalGrid2D(Grid2D):
             containing all cell volumes, arranged according to gridcells
         
         """
-        V = 2.0*np.pi*self.cellcenters._x[:, np.newaxis]\
-            *self.cellsize._x[1:-1][:, np.newaxis]\
-            *self.cellsize._y[1:-1][np.newaxis, :]
+        A_inner = np.pi*self.facecenters.r[0:-1, np.newaxis]**2
+        A_outer = np.pi*self.facecenters.r[1:  , np.newaxis]**2
+        V = self.cellsize.z[np.newaxis, 1:-1]*np.abs(A_outer-A_inner)
         return V
 
 
