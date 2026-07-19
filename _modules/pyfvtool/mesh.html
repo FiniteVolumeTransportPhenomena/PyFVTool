@@ -308,7 +308,7 @@
         <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
     
     
-    <span class="c1"># The following coordinate-labeling properties should probably be read-only.</span>
+    <span class="c1"># The following coordinate-labeling properties should be read-only.</span>
     <span class="c1"># For this reason, the &#39;setters&#39; have been commented out, but are kept for</span>
     <span class="c1"># future reference.</span>
 
@@ -439,7 +439,6 @@
 
 
 
-
 <div class="viewcode-block" id="CellSize">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.CellSize">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CellSize</span><span class="p">(</span><span class="n">CellProp</span><span class="p">):</span>
@@ -447,10 +446,12 @@
 
 
 
+
 <div class="viewcode-block" id="CellLocation">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.CellLocation">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CellLocation</span><span class="p">(</span><span class="n">CellProp</span><span class="p">):</span>
     <span class="k">pass</span></div>
+
 
 
 
@@ -499,45 +500,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;_getCellVolumes not implemented for this mesh structure!&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
-        <span class="c1">#</span>
-        <span class="c1"># Old code, can be removed on future clean-up, after a last check</span>
-        <span class="c1"># (once we sufficiently test calculated volumes and total domain</span>
-        <span class="c1"># volume)</span>
-        <span class="c1">#</span>
-        <span class="c1"># if (type(self) is Grid1D):</span>
-        <span class="c1">#     c = self.cellsize._x[1:-1]</span>
-        <span class="c1"># elif (type(self) is CylindricalGrid1D):</span>
-        <span class="c1">#     c = 2.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x</span>
-        <span class="c1"># elif (type(self) is SphericalGrid1D):</span>
-        <span class="c1">#     c = 4.0*np.pi*self.cellsize._x[1:-1]*self.cellcenters._x**2</span>
-        <span class="c1"># elif (type(self) is Grid2D):</span>
-        <span class="c1">#     c = self.cellsize._x[1:-1][:, np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._y[1:-1][np.newaxis, :]</span>
-        <span class="c1"># elif (type(self) is CylindricalGrid2D):</span>
-        <span class="c1">#     c = 2.0*np.pi*self.cellcenters._x[:, np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._x[1:-1][:, np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._y[1:-1][np.newaxis, :]</span>
-        <span class="c1"># elif (type(self) is PolarGrid2D):</span>
-        <span class="c1">#     c = self.cellcenters._x[:, np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._x[1:-1][:, np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._y[1:-1][np.newaxis, :]</span>
-        <span class="c1"># elif (type(self) is Grid3D):</span>
-        <span class="c1">#     c = self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]</span>
-        <span class="c1"># elif (type(self) is CylindricalGrid3D):</span>
-        <span class="c1">#     c = self.cellcenters._x[:,np.newaxis,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]</span>
-        <span class="c1"># elif (type(self) is SphericalGrid3D):</span>
-        <span class="c1">#     c = self.cellcenters._x[:,np.newaxis,np.newaxis]**2\</span>
-        <span class="c1">#         *np.sin(self.cellcenters._y[np.newaxis,:,np.newaxis])\</span>
-        <span class="c1">#         *self.cellsize._x[1:-1][:,np.newaxis,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._y[1:-1][np.newaxis,:,np.newaxis]\</span>
-        <span class="c1">#         *self.cellsize._z[1:-1][np.newaxis,np.newaxis,:]</span>
-        <span class="c1"># return c</span>
-              
+
     <span class="c1"># read-only property cellvolume</span>
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">cellvolume</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -644,6 +607,8 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]),</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]),</span>
                 <span class="n">coordlabels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments for creation of 1D mesh structure.&#39;</span><span class="p">)</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Nx</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">cellsize</span> <span class="o">=</span> <span class="n">cell_size</span>
         <span class="n">cellcenters</span> <span class="o">=</span> <span class="n">cell_location</span>
@@ -653,8 +618,7 @@
         <span class="k">return</span> <span class="n">dims</span><span class="p">,</span> <span class="n">cellsize</span><span class="p">,</span> <span class="n">cellcenters</span><span class="p">,</span> <span class="n">facecenters</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;1D Cartesian mesh with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;1D Cartesian mesh with Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
 
 <div class="viewcode-block" id="Grid1D.cell_numbers">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid1D.cell_numbers">[docs]</a>
@@ -671,8 +635,7 @@
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># if (type(self) is Grid1D):           </span>
-        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">V</span> </div>
 
 
@@ -737,8 +700,7 @@
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;1D Cylindrical (radial) mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;1D Cylindrical (radial) mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
@@ -749,8 +711,9 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is CylindricalGrid1D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_x</span>
+        <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">V</span></div>
 
     
@@ -825,8 +788,9 @@
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is SphericalGrid1D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_x</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">R3_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+        <span class="n">R3_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">/</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R3_outer</span> <span class="o">-</span> <span class="n">R3_inner</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">V</span></div>
 
     
@@ -950,6 +914,8 @@
                 <span class="n">int_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ny</span><span class="p">)</span><span class="o">*</span><span class="n">dy</span><span class="p">,</span>
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]),</span>
                 <span class="n">coordlabels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments for creation of 2D mesh structure.&#39;</span><span class="p">)</span>
     
         <span class="n">dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">cellsize</span> <span class="o">=</span> <span class="n">cell_size</span>
@@ -961,7 +927,7 @@
         <span class="k">return</span> <span class="n">dims</span><span class="p">,</span> <span class="n">cellsize</span><span class="p">,</span> <span class="n">cellcenters</span><span class="p">,</span> <span class="n">facecenters</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Cartesian mesh with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">x</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Cartesian mesh with Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ny=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
     
 <div class="viewcode-block" id="Grid2D.cell_numbers">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid2D.cell_numbers">[docs]</a>
@@ -980,9 +946,8 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is Grid2D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">V</span></div>
 
 
@@ -1061,9 +1026,7 @@
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;2D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">xNz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
@@ -1074,10 +1037,10 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1">#elif (type(self) is CylindricalGrid2D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> 
         <span class="k">return</span> <span class="n">V</span></div>
 
 
@@ -1156,7 +1119,7 @@
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Polar mesh with N_r=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">xN_theta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Polar mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -1168,10 +1131,12 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is PolarGrid2D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_x</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">V_full</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
+        <span class="n">diff_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">diff_theta</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>\
+            <span class="o">*</span> <span class="n">V_full</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">V</span></div>
 
 
@@ -1319,6 +1284,8 @@
                 <span class="n">int_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Ny</span><span class="p">)</span><span class="o">*</span><span class="n">dy</span><span class="p">,</span>
                 <span class="n">int_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nz</span><span class="p">)</span><span class="o">*</span><span class="n">dz</span><span class="p">,</span>
                 <span class="n">coordlabels</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments for creation of 3D mesh structure.&#39;</span><span class="p">)</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Nz</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">Nz</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
@@ -1344,7 +1311,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span>  <span class="sa">f</span><span class="s2">&quot;3D Cartesian mesh with &quot;</span>\
-            <span class="sa">f</span><span class="s2">&quot;Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">xNy=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">xNz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ny=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
@@ -1355,10 +1322,9 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 <span class="sd">        </span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is Grid3D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:]</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
+            <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">V</span></div>
 
     
@@ -1431,9 +1397,6 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a &#39;direct&#39; __init__</span>
                             <span class="c1"># not requiring any parsing of arguments.</span>
                             <span class="c1"># These &#39;direct&#39; instantiantions are used</span>
@@ -1464,8 +1427,8 @@
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;3D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">x&quot;</span>\
-            <span class="sa">f</span><span class="s2">&quot;N_theta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">xNz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;3D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x &quot;</span>\
+            <span class="sa">f</span><span class="s2">&quot;Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
@@ -1476,11 +1439,14 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is CylindricalGrid3D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_x</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:]</span>
+        <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
+        <span class="n">V_full</span> <span class="o">=</span> <span class="n">A</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
+                 <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">diff_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">diff_theta</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>\
+            <span class="o">*</span> <span class="n">V_full</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span>
         <span class="k">return</span> <span class="n">V</span></div>
 
 
@@ -1590,8 +1556,8 @@
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;3D Shperical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">x&quot;</span>\
-            <span class="s2">&quot;N_theta=</span><span class="si">{self.dims[1]}</span><span class="s2">xN_phi=</span><span class="si">{self.dims[1]}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;3D Spherical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x &quot;</span>\
+            <span class="sa">f</span><span class="s2">&quot;Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nphi=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
             
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
@@ -1602,12 +1568,15 @@
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># elif (type(self) is SphericalGrid3D):</span>
-        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_x</span><span class="p">[:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>\
-            <span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">])</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_y</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
-            <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_z</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,:]</span>
+        <span class="n">R3_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+        <span class="n">R3_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">3</span>
+        <span class="n">V_full</span> <span class="o">=</span>  <span class="mf">4.0</span><span class="o">/</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R3_outer</span> <span class="o">-</span> <span class="n">R3_inner</span><span class="p">)</span>
+        <span class="n">diff_theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">diff_phi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">phi</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="n">V_full</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
+            <span class="o">*</span> <span class="p">(</span><span class="n">diff_theta</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>\
+            <span class="o">*</span> <span class="p">(</span><span class="n">diff_phi</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="p">:]</span><span class="o">/</span><span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>\
+
         <span class="k">return</span> <span class="n">V</span></div>
 
     
