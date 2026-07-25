@@ -311,9 +311,9 @@ in Cartesian, cylindrical, and spherical coordinate systems.</p>
 </tbody>
 </table>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Lx</span><span class="p">)</span>           <span class="c1"># Nx cells over [0, Lx]</span>
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span> <span class="c1"># radial direction</span>
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Lx</span><span class="p">)</span>            <span class="c1"># Nx cells over [0, Lx]</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span> <span class="c1"># Radial direction (&quot;leek&quot;)</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid1D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Lr</span><span class="p">)</span>   <span class="c1"># Radial direction (&quot;onion&quot;)</span>
 </pre></div>
 </div>
 </section>
@@ -333,11 +333,15 @@ in Cartesian, cylindrical, and spherical coordinate systems.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CylindricalGrid2D</span></code></p></td>
 <td><p>Cylindrical (<span class="math notranslate nohighlight">\(r, z\)</span>)</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PolarGrid2D</span></code></p></td>
+<td><p>Cylindrical (<span class="math notranslate nohighlight">\(r, \theta\)</span>)</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid2D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Lx</span><span class="p">,</span> <span class="n">Ly</span><span class="p">)</span>
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid2D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Nz</span><span class="p">,</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">Lz</span><span class="p">)</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">PolarGrid2D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">Ltheta</span><span class="p">)</span> <span class="c1"># Ltheta 0 ... 2*pi</span>
 </pre></div>
 </div>
 </section>
@@ -357,17 +361,21 @@ in Cartesian, cylindrical, and spherical coordinate systems.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CylindricalGrid3D</span></code></p></td>
 <td><p>Cylindrical (<span class="math notranslate nohighlight">\(r, \theta, z\)</span>)</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SphericalGrid3D</span></code></p></td>
+<td><p>Spherical (<span class="math notranslate nohighlight">\(r, \theta, \phi\)</span>)</p></td>
+</tr>
 </tbody>
 </table>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid3D</span><span class="p">(</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span><span class="p">,</span> <span class="n">Lx</span><span class="p">,</span> <span class="n">Ly</span><span class="p">,</span> <span class="n">Lz</span><span class="p">)</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CylindricalGrid3D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="n">Nz</span><span class="p">,</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">Ltheta</span><span class="p">,</span> <span class="n">Lz</span><span class="p">)</span> <span class="c1"># Ltheta 0...2*pi</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">SphericalGrid3D</span><span class="p">(</span><span class="n">Nr</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">,</span> <span class="n">Nphi</span><span class="p">,</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">Ltheta</span><span class="p">,</span> <span class="n">Lphi</span><span class="p">)</span> <span class="c1"># Ltheta 0...pi; Lphi 0...2*pi</span>
 </pre></div>
 </div>
 </section>
-<section id="non-uniform-grids">
-<h2>Non-uniform grids<a class="headerlink" href="#non-uniform-grids" title="Link to this heading">¶</a></h2>
-<p>You can pass an array of cell face positions instead of a uniform length,
-giving full control over cell spacing:</p>
+<section id="non-uniform-but-still-regular-grids">
+<h2>Non-uniform (but still regular) grids<a class="headerlink" href="#non-uniform-but-still-regular-grids" title="Link to this heading">¶</a></h2>
+<p>Instead of specifying the number of cells of uniform length, you can pass an array of cell face positions. This gives full control over cell spacing:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="n">x_faces</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>  <span class="c1"># non-uniform spacing</span>
 <span class="n">mesh</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">Grid1D</span><span class="p">(</span><span class="n">x_faces</span><span class="p">)</span>
@@ -587,7 +595,7 @@ You generally don’t access these directly, but they are available:</p>
 <li><a class="reference internal" href="#d-meshes">1D meshes</a></li>
 <li><a class="reference internal" href="#id1">2D meshes</a></li>
 <li><a class="reference internal" href="#id2">3D meshes</a></li>
-<li><a class="reference internal" href="#non-uniform-grids">Non-uniform grids</a></li>
+<li><a class="reference internal" href="#non-uniform-but-still-regular-grids">Non-uniform (but still regular) grids</a></li>
 <li><a class="reference internal" href="#mesh-properties">Mesh properties</a></li>
 <li><a class="reference internal" href="#pyfvtool-s-inner-workings-user-api-coordinate-labels-vs-internal-private-labels">PyFVTool’s inner workings: user (API) coordinate labels vs internal (private) labels</a><ul>
 <li><a class="reference internal" href="#cell-and-mesh-properties">Cell and mesh properties</a></li>

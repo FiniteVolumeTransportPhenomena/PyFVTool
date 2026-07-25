@@ -12,27 +12,29 @@ import pyfvtool as pf
 ## 1D meshes
 
 | Class | Coordinate system |
-|-------|------------------|
+|-------|-------------------|
 | `Grid1D` | Cartesian ($x$) |
 | `CylindricalGrid1D` | Cylindrical ($r$) |
 | `SphericalGrid1D` | Spherical ($r$) |
 
 ```python
-mesh = pf.Grid1D(Nx, Lx)           # Nx cells over [0, Lx]
-mesh = pf.CylindricalGrid1D(Nr, Lr) # radial direction
-mesh = pf.SphericalGrid1D(Nr, Lr)
+mesh = pf.Grid1D(Nx, Lx)            # Nx cells over [0, Lx]
+mesh = pf.CylindricalGrid1D(Nr, Lr) # Radial direction ("leek")
+mesh = pf.SphericalGrid1D(Nr, Lr)   # Radial direction ("onion")
 ```
 
 ## 2D meshes
 
 | Class | Coordinate system |
-|-------|------------------|
+|-------|-------------------|
 | `Grid2D` | Cartesian ($x, y$) |
 | `CylindricalGrid2D` | Cylindrical ($r, z$) |
+| `PolarGrid2D` | Cylindrical ($r, \theta$) |
 
 ```python
 mesh = pf.Grid2D(Nx, Ny, Lx, Ly)
 mesh = pf.CylindricalGrid2D(Nr, Nz, Lr, Lz)
+mesh = pf.PolarGrid2D(Nr, Ntheta, Lr, Ltheta) # Ltheta 0 ... 2*pi
 ```
 
 ## 3D meshes
@@ -41,15 +43,17 @@ mesh = pf.CylindricalGrid2D(Nr, Nz, Lr, Lz)
 |-------|------------------|
 | `Grid3D` | Cartesian ($x, y, z$) |
 | `CylindricalGrid3D` | Cylindrical ($r, \theta, z$) |
+| `SphericalGrid3D` | Spherical ($r, \theta, \phi$) |
 
 ```python
 mesh = pf.Grid3D(Nx, Ny, Nz, Lx, Ly, Lz)
+mesh = pf.CylindricalGrid3D(Nr, Ntheta, Nz, Lr, Ltheta, Lz) # Ltheta 0...2*pi
+mesh = pf.SphericalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lphi) # Ltheta 0...pi; Lphi 0...2*pi
 ```
 
-## Non-uniform grids
+## Non-uniform (but still regular) grids
 
-You can pass an array of cell face positions instead of a uniform length,
-giving full control over cell spacing:
+Instead of specifying the number of cells of uniform length, you can pass an array of cell face positions. This gives full control over cell spacing:
 
 ```python
 import numpy as np
