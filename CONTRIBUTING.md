@@ -9,8 +9,7 @@ A suitable development and test Python environment can be created with conda. We
 ```bash
 conda create --name pyfvtool_dev python=3.12 mkl numpy scipy matplotlib spyder jupyterlab pytest tqdm
 conda activate pyfvtool_dev
-conda install sphinx furo myst-parser nbsphinx pandoc
-pip install sphinx-copybutton sphinx-autobuild
+conda install sphinx furo myst-parser nbsphinx pandoc sphinx-copybutton sphinx-autobuild
 ```
 
 Once the environment configured and activated, you can change your working directory to the local copy of the `pyfvtool` repository and install an editable (development) version.
