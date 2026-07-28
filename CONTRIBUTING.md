@@ -17,8 +17,14 @@ Once the environment configured and activated, you can change your working direc
 ```
 pip install --editable .
 ```
-
 (Do not forget the trailing dot!)
+
+or
+
+
+```
+pip install --editable . --no-deps
+```
 
 
 ## Testing
