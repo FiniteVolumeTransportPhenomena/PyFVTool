@@ -6,6 +6,7 @@ from scipy.sparse import csr_array
 
 from .mesh import MeshStructure
 from .mesh import Grid1D, Grid2D, Grid3D
+from .mesh import SphericalGrid1D, CylindricalGrid1D
 from .mesh import CylindricalGrid2D
 from .mesh import PolarGrid2D, CylindricalGrid3D, SphericalGrid3D
 from .utilities import int_range
@@ -897,6 +898,9 @@ def boundaryConditionsTerm1D(BC: BoundaryConditions1D):
         s[q] = -(BC.left.b.item()/2 - BC.left.a.item()/dx_1)
         BCRHS[G[i]] = -BC.left.c.item()
     elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
+        if (type(BC.domain) is SphericalGrid1D)\
+            or (type(BC.domain) is CylindricalGrid1D):
+                raise ValueError("Radial periodic boundary conditions are not physically meaningful.")
         # Right boundary
         i = Nx+1
         q = q+1

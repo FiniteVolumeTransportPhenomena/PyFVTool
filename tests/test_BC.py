@@ -70,7 +70,7 @@ def test_gaoflow_PolarGrid2D():
     assert failed,\
         "Radial periodic boundary conditions should raise ValueError for PolarGrid2D."
 
- 
+
 
 def test_gaoflow_CylindricalGrid2D():
     msh = pf.CylindricalGrid2D(4, 4, 1.0, 1.0)
@@ -85,6 +85,38 @@ def test_gaoflow_CylindricalGrid2D():
         failed = True
     assert failed,\
         "Radial periodic boundary conditions should raise ValueError for CylindricalGrid2D."
+        
+
+
+def test_gaoflow_CylindricalGrid1D():
+    msh = pf.CylindricalGrid1D(4, 1.0)
+    BC = pf.BoundaryConditions(msh)
+    BC.left.periodic = True
+    BC.right.periodic = True
+    failed = False
+    try:
+        BCterm = pf.boundaryConditionsTerm(BC)
+    except ValueError:
+        BCterm = None
+        failed = True
+    assert failed,\
+        "Radial periodic boundary conditions should raise ValueError for CylindricalGrid1D."
+      
+
+
+def test_gaoflow_SphericalGrid1D():
+    msh = pf.SphericalGrid1D(4, 1.0)
+    BC = pf.BoundaryConditions(msh)
+    BC.left.periodic = True
+    BC.right.periodic = True
+    failed = False
+    try:
+        BCterm = pf.boundaryConditionsTerm(BC)
+    except ValueError:
+        BCterm = None
+        failed = True
+    assert failed,\
+        "Radial periodic boundary conditions should raise ValueError for SphericalGrid1D."
 
 
 
@@ -94,5 +126,8 @@ if __name__=='__main__':
     test_gaoflow_SphericalGrid3D()
     test_gaoflow_PolarGrid2D()
     test_gaoflow_CylindricalGrid2D()
+    test_gaoflow_CylindricalGrid1D()
+    test_gaoflow_SphericalGrid1D()
+    
     
     
