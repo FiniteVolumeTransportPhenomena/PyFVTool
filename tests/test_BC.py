@@ -12,6 +12,7 @@ import numpy as np
 import pyfvtool as pf
 
 
+
 def test_gaoflow_Grid3D():
     msh = pf.Grid3D(4, 4, 4, 1.0, 1.0, 1.0)
     BC = pf.BoundaryConditions(msh)
@@ -20,6 +21,7 @@ def test_gaoflow_Grid3D():
     BCterm = pf.boundaryConditionsTerm(BC)
     assert BCterm[0].nnz == 312,\
         "Unexpected number of stored sparse matrix elements for periodic BCs in Grid3D"
+
 
 
 def test_gaoflow_CylindricalGrid3D():
@@ -34,11 +36,28 @@ def test_gaoflow_CylindricalGrid3D():
         BCterm = None
         failed = True
     assert failed,\
-        "Radial periodic boundary conditions should fail for CylindricalGrid3D."
+        "Radial periodic boundary conditions should raise ValueError for CylindricalGrid3D."
 
  
+
+def test_gaoflow_SphericalGrid3D():
+    msh = pf.SphericalGrid3D(4, 4, 4, 1.0, np.pi, 2*np.pi)
+    BC = pf.BoundaryConditions(msh)
+    BC.left.periodic = True
+    BC.right.periodic = True
+    failed = False
+    try:
+        BCterm = pf.boundaryConditionsTerm(BC)
+    except ValueError:
+        BCterm = None
+        failed = True
+    assert failed,\
+        "Radial periodic boundary conditions should raise ValueError for SphericalGrid3D."
+
 
 
 if __name__=='__main__':
     test_gaoflow_Grid3D()
     test_gaoflow_CylindricalGrid3D()
+    test_gaoflow_SphericalGrid3D()
+    
