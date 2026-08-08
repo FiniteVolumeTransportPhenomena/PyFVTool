@@ -8,6 +8,10 @@ vscode/
 _build/
 local/
 
+# Packaging build artifacts
+build/
+dist/
+
 # Git is case-sensitive on some operating systems
 PyFVTool.egg-info/
 pyfvtool.egg-info/
