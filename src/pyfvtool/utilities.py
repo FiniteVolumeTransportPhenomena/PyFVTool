@@ -4,11 +4,18 @@ utility functions come here
 
 import numpy as np
 
-def int_range(a:int, b:int) -> np.ndarray:
+
+
+def int_range(a: int, b: int) -> np.ndarray:
     """
-    returns a range of integer values from a to b
+    Returns an array of integers from a to b, inclusive.
+
+    Raises:
+        ValueError: if a > b.
     """
-    return np.linspace(a, b, b-a+1, dtype=int)
+    if (a > b):
+        raise ValueError(f"int_range: expected a <= b, got a={a}, b={b}")
+    return np.arange(a, b + 1)
 
 
 
@@ -27,8 +34,8 @@ def fluxLimiter(flName: str, eps =2e-16):
     available flux limiters are: 'CHARM', 'HCUS', 'HQUICK', 'VanLeer',
     'VanAlbada1', 'VanAlbada2', 'MinMod', 'SUPERBEE', 'Sweby', 'Osher',
     'Koren', 'smart', 'MUSCL', 'QUICK', 'MC', and 'UMIST'.
-    Default limiter is 'SUPERBEE'. See:
-    <http://en.wikipedia.org/wiki/Flux_limiter>
+    Default limiter is 'SUPERBEE'. 
+    See: https://en.wikipedia.org/wiki/Flux_limiter
     
     """
     if flName=="CHARM":
