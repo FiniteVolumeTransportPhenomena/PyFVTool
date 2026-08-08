@@ -1058,6 +1058,8 @@ def boundaryConditionsTerm2D(BC: BoundaryConditions2D):
         s[q] = -(BC.left.b/2 - BC.left.a/dx_1)
         BCRHS[G[i,j]] = -BC.left.c
     elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
+        if (type(BC.domain) is CylindricalGrid2D):
+            raise ValueError("Radial periodic boundary conditions are not physically meaningful.")
         # Right boundary
         i = Nx+1
         j = int_range(1, Ny)
@@ -2088,6 +2090,8 @@ def boundaryConditionsTermSpherical3D(BC: BoundaryConditions3D):
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
                          shape=((Nx+2)*(Ny+2)*(Nz+2), (Nx+2)*(Ny+2)*(Nz+2)))
     return BCMatrix, BCRHS
+
+
 
 def boundaryConditionsTerm(BC):
     """
