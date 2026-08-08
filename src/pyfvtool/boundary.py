@@ -1677,49 +1677,57 @@ def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
         s[q] = -(BC.left.b/2 - BC.left.a/dx_1).ravel()
         BCRHS[G[i,j,k].ravel()] = -(BC.left.c).ravel()
     elif BC.right.periodic or BC.left.periodic: # periodic
-        # Right boundary
-        i=Nx+1
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i-1,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[0,j,k].ravel()
-        s[q] = dx_end/dx_1
-        q = q[-1]+int_range[1,Ny*Nz]
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[1,j,k].ravel()
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j,k].ravel()] = 0.0
+        raise ValueError("Radial periodic boundary conditions are not physically relevant in CylindricalGrid3D.")
+        #
+        # Keep this code for future reference, once a physically relevant
+        # case has been identified for radially periodic BCs...
+        #
+        # # Right boundary
+        # i=Nx+1
+        # j=j_ind
+        # k=k_ind
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[i,j,k].ravel()
+        # s[q] = 1.0
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[i-1,j,k].ravel()
+        # s[q] = -1.0
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[0,j,k].ravel()
+        # s[q] = dx_end/dx_1
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[1,j,k].ravel()
+        # s[q] = -dx_end/dx_1
+        # BCRHS[G[i,j,k].ravel()] = 0.0
 
-        # Left boundary
-        i = 0
-        j=j_ind
-        k=k_ind
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[i+1,j,k].ravel()
-        s[q] = 1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx,j,k].ravel()
-        s[q] = -1.0
-        q = q[-1]+int_range(1,Ny*Nz)
-        ii[q] = G[i,j,k].ravel()
-        jj[q] = G[Nx+1,j,k].ravel()
-        s[q] = -1.0
-        BCRHS[G[i,j,k].ravel()] = 0.0
+        # # Left boundary
+        # i = 0
+        # j=j_ind
+        # k=k_ind
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[i,j,k].ravel()
+        # s[q] = 1.0
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[i+1,j,k].ravel()
+        # s[q] = 1.0
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[Nx,j,k].ravel()
+        # s[q] = -1.0
+        # q = q[-1]+int_range(1,Ny*Nz)
+        # ii[q] = G[i,j,k].ravel()
+        # jj[q] = G[Nx+1,j,k].ravel()
+        # s[q] = -1.0
+        # BCRHS[G[i,j,k].ravel()] = 0.0
+        #
+        #
+        #
     if (not BC.front.periodic) and (not BC.back.periodic):
         # Front boundary
         k=Nz+1
