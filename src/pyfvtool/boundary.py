@@ -1488,45 +1488,53 @@ def boundaryConditionsTermPolar2D(BC: BoundaryConditions2D):
         s[q] = -(BC.left.b/2 - BC.left.a/dx_1)
         BCRHS[G[i,j]] = -BC.left.c
     elif BC.right.periodic or BC.left.periodic:  # periodic boundary condition
-        # Right boundary
-        i = Nx+1
-        j = int_range(1, Ny)
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = 1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i-1,j]
-        s[q] = -1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[0,j]
-        s[q] = dx_end/dx_1
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[1,j]
-        s[q] = -dx_end/dx_1
-        BCRHS[G[i,j]] = 0
-        # Left boundary
-        i = 0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i,j]
-        s[q] = 1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[i+1,j]
-        s[q] = 1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[Nx,j]
-        s[q] = -1.0
-        q = q[-1]+j
-        ii[q] = G[i,j]
-        jj[q] = G[Nx+1,j]
-        s[q] = -1.0
-        BCRHS[G[i,j]] = 0.0
+        raise ValueError("Radial periodic boundary conditions are not physically meaningful.")
+        #
+        # Keep the following code for future reference, once a physically relevant
+        # case has been identified for radial periodic BCs...
+        #
+        # # Right boundary
+        # i = Nx+1
+        # j = int_range(1, Ny)
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[i,j]
+        # s[q] = 1
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[i-1,j]
+        # s[q] = -1
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[0,j]
+        # s[q] = dx_end/dx_1
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[1,j]
+        # s[q] = -dx_end/dx_1
+        # BCRHS[G[i,j]] = 0
+        # # Left boundary
+        # i = 0
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[i,j]
+        # s[q] = 1.0
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[i+1,j]
+        # s[q] = 1.0
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[Nx,j]
+        # s[q] = -1.0
+        # q = q[-1]+j
+        # ii[q] = G[i,j]
+        # jj[q] = G[Nx+1,j]
+        # s[q] = -1.0
+        # BCRHS[G[i,j]] = 0.0
+        #
+        #
+        #
     # Build the sparse matrix of the boundary conditions
     q = q[-1] + 1
     BCMatrix = csr_array((s[0:q], (ii[0:q], jj[0:q])), 
@@ -1679,7 +1687,7 @@ def boundaryConditionsTermCylindrical3D(BC: BoundaryConditions3D):
     elif BC.right.periodic or BC.left.periodic: # periodic
         raise ValueError("Radial periodic boundary conditions are not physically meaningful.")
         #
-        # Keep this code for future reference, once a physically relevant
+        # Keep the following code for future reference, once a physically relevant
         # case has been identified for radial periodic BCs...
         #
         # # Right boundary
@@ -1953,7 +1961,7 @@ def boundaryConditionsTermSpherical3D(BC: BoundaryConditions3D):
     elif BC.right.periodic or BC.left.periodic: # periodic
         raise ValueError("Radial periodic boundary conditions are not physically meaningful.")
         #
-        # Keep this code for future reference, once a physically relevant
+        # Keep the following code for future reference, once a physically relevant
         # case has been identified for radial periodic BCs...
         #
         # # Right boundary
