@@ -1262,7 +1262,7 @@ def boundaryConditionsTerm3D(BC: BoundaryConditions3D):
         ii[q] = G[i,j,k].ravel()
         jj[q] = G[0,j,k].ravel()
         s[q] = dx_end/dx_1
-        q = q[-1]+int_range[1,Ny*Nz]
+        q = q[-1]+int_range(1,Ny*Nz)
         ii[q] = G[i,j,k].ravel()
         jj[q] = G[1,j,k].ravel()
         s[q] = -dx_end/dx_1
