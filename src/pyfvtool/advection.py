@@ -1025,8 +1025,8 @@ def convectionUpwindTerm3D(u: FaceVariable, *args):
     AN[:, -1, :] = AN[:, -1, :]/2.0
     APy[:, -1, :] = APy[:, -1, :]+vn_min[:, -1, :]/(2.0*DYp[:, -1, :])
     # Back boundary:
-    APz[:, :, 0] = APz[:, :, 1]-wb_max[:, :, 1]/(2.0*DZp[:, :, 0])
-    AB[:, :, 0] = AB[:, :, 1]/2.0
+    APz[:, :, 0] = APz[:, :, 0]-wb_max[:, :, 0]/(2.0*DZp[:, :, 0])
+    AB[:, :, 0] = AB[:, :, 0]/2.0
     # Front boundary:
     AF[:, :, -1] = AF[:, :, -1]/2.0
     APz[:, :, -1] = APz[:, :, -1]+wf_min[:, :, -1]/(2.0*DZp[:, :, -1])
