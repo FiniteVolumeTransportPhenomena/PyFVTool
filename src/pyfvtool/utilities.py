@@ -1,35 +1,50 @@
 """
-utility functions come here
+Utility functions and classes for PyFVTool core code
 """
-
+from collections.abc import Callable
 import numpy as np
 
-def int_range(a:int, b:int) -> np.ndarray:
+
+
+def int_range(a: int, b: int) -> np.ndarray:
     """
-    returns a range of integer values from a to b
+    Returns an array of integers from a to b, inclusive.
+
+    Raises:
+        ValueError: if a > b.
     """
-    return np.linspace(a, b, b-a+1, dtype=int)
+    if (a > b):
+        raise ValueError(f"int_range: expected a <= b, got a={a}, b={b}")
+    return np.arange(a, b + 1)
 
 
 
-def fluxLimiter(flName: str, eps =2e-16):
+def fluxLimiter(flName: str, eps: float = 2e-16) -> Callable[[np.ndarray], np.ndarray]:
     """
-    returns a flux limiter function
+    Returns a flux limiter function handle of the user's choice.
 
     Parameters
-    -----
+    ----------
+    flName : str
+        Name of the flux limiter to use. Available options are:
+        'CHARM', 'HCUS', 'HQUICK', 'ospre', 'VanLeer', 'VanAlbada1',
+        'VanAlbada2', 'MinMod', 'SUPERBEE', 'Sweby', 'Osher', 'Koren',
+        'smart', 'MUSCL', 'QUICK', and 'UMIST'.
+        If an unrecognized name is given, 'SUPERBEE' is used instead
+        and a warning is printed.
+    eps : float, optional
+        Small value used to avoid division by zero in limiters with
+        removable singularities (default: 2e-16).
 
-    
+    Returns
+    -------
+    FL : Callable[[np.ndarray], np.ndarray]
+        A function that computes the flux limiter value(s) for a given
+        ratio of successive gradients ``r``.
+
     Notes
     -----
-    This function returns a function handle to a flux limiter of user's
-    choice.
-    available flux limiters are: 'CHARM', 'HCUS', 'HQUICK', 'VanLeer',
-    'VanAlbada1', 'VanAlbada2', 'MinMod', 'SUPERBEE', 'Sweby', 'Osher',
-    'Koren', 'smart', 'MUSCL', 'QUICK', 'MC', and 'UMIST'.
-    Default limiter is 'SUPERBEE'. See:
-    <http://en.wikipedia.org/wiki/Flux_limiter>
-    
+    See: https://en.wikipedia.org/wiki/Flux_limiter
     """
     if flName=="CHARM":
         def FL(r):
