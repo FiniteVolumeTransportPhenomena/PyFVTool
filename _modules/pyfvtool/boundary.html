@@ -283,6 +283,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshStructure</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid1D</span><span class="p">,</span> <span class="n">Grid2D</span><span class="p">,</span> <span class="n">Grid3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">SphericalGrid1D</span><span class="p">,</span> <span class="n">CylindricalGrid1D</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">CylindricalGrid2D</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">PolarGrid2D</span><span class="p">,</span> <span class="n">CylindricalGrid3D</span><span class="p">,</span> <span class="n">SphericalGrid3D</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">int_range</span>
@@ -1227,6 +1228,9 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span>  <span class="c1"># periodic boundary condition</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">)</span>\
+            <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
         <span class="c1"># Right boundary</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">+</span><span class="mi">1</span>
@@ -1357,11 +1361,11 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">i</span>
         <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> 
+        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="p">]</span> 
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">i</span>
         <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>  
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -1391,6 +1395,8 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span>  <span class="c1"># periodic boundary condition</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
         <span class="c1"># Right boundary</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
         <span class="n">j</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ny</span><span class="p">)</span>
@@ -1598,7 +1604,7 @@
         <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">]</span>
+        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
         <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
@@ -1793,11 +1799,11 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">i</span>
         <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> 
+        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="p">]</span> 
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">i</span>
         <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>  
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">Ny</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
 
@@ -1827,45 +1833,53 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span>  <span class="c1"># periodic boundary condition</span>
-        <span class="c1"># Right boundary</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
-        <span class="n">j</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ny</span><span class="p">)</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="c1"># Left boundary</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">Nx</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">j</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">Nx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">]</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Keep the following code for future reference, once a physically relevant</span>
+        <span class="c1"># case has been identified for radial periodic BCs...</span>
+        <span class="c1">#</span>
+        <span class="c1"># # Right boundary</span>
+        <span class="c1"># i = Nx+1</span>
+        <span class="c1"># j = int_range(1, Ny)</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[i,j]</span>
+        <span class="c1"># s[q] = 1</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[i-1,j]</span>
+        <span class="c1"># s[q] = -1</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[0,j]</span>
+        <span class="c1"># s[q] = dx_end/dx_1</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[1,j]</span>
+        <span class="c1"># s[q] = -dx_end/dx_1</span>
+        <span class="c1"># BCRHS[G[i,j]] = 0</span>
+        <span class="c1"># # Left boundary</span>
+        <span class="c1"># i = 0</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[i,j]</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[i+1,j]</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[Nx,j]</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># q = q[-1]+j</span>
+        <span class="c1"># ii[q] = G[i,j]</span>
+        <span class="c1"># jj[q] = G[Nx+1,j]</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># BCRHS[G[i,j]] = 0.0</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
     <span class="c1"># Build the sparse matrix of the boundary conditions</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
     <span class="n">BCMatrix</span> <span class="o">=</span> <span class="n">csr_array</span><span class="p">((</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">q</span><span class="p">],</span> <span class="p">(</span><span class="n">ii</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">q</span><span class="p">],</span> <span class="n">jj</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">q</span><span class="p">])),</span> 
@@ -2019,49 +2033,57 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span> <span class="c1"># periodic</span>
-        <span class="c1"># Right boundary</span>
-        <span class="n">i</span><span class="o">=</span><span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
-        <span class="n">j</span><span class="o">=</span><span class="n">j_ind</span>
-        <span class="n">k</span><span class="o">=</span><span class="n">k_ind</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">]</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Keep the following code for future reference, once a physically relevant</span>
+        <span class="c1"># case has been identified for radial periodic BCs...</span>
+        <span class="c1">#</span>
+        <span class="c1"># # Right boundary</span>
+        <span class="c1"># i=Nx+1</span>
+        <span class="c1"># j=j_ind</span>
+        <span class="c1"># k=k_ind</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i-1,j,k].ravel()</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[0,j,k].ravel()</span>
+        <span class="c1"># s[q] = dx_end/dx_1</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[1,j,k].ravel()</span>
+        <span class="c1"># s[q] = -dx_end/dx_1</span>
+        <span class="c1"># BCRHS[G[i,j,k].ravel()] = 0.0</span>
 
-        <span class="c1"># Left boundary</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">j</span><span class="o">=</span><span class="n">j_ind</span>
-        <span class="n">k</span><span class="o">=</span><span class="n">k_ind</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">Nx</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">Nx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># # Left boundary</span>
+        <span class="c1"># i = 0</span>
+        <span class="c1"># j=j_ind</span>
+        <span class="c1"># k=k_ind</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i+1,j,k].ravel()</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[Nx,j,k].ravel()</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[Nx+1,j,k].ravel()</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># BCRHS[G[i,j,k].ravel()] = 0.0</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">BC</span><span class="o">.</span><span class="n">front</span><span class="o">.</span><span class="n">periodic</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">BC</span><span class="o">.</span><span class="n">back</span><span class="o">.</span><span class="n">periodic</span><span class="p">):</span>
         <span class="c1"># Front boundary</span>
         <span class="n">k</span><span class="o">=</span><span class="n">Nz</span><span class="o">+</span><span class="mi">1</span>
@@ -2288,52 +2310,57 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span> <span class="c1"># periodic</span>
-        <span class="c1"># for a spherical coordinate system, the left and right boundaries (in the radial direction) cannot be periodic?</span>
-        <span class="c1"># or at least I cannot imagine them being periodic</span>
-        <span class="c1"># TODO: add a warning here; do the same for all radial boundaries</span>
-        <span class="c1"># Right boundary</span>
-        <span class="n">i</span><span class="o">=</span><span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
-        <span class="n">j</span><span class="o">=</span><span class="n">j_ind</span>
-        <span class="n">k</span><span class="o">=</span><span class="n">k_ind</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">]</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">dx_end</span><span class="o">/</span><span class="n">dx_1</span>
-        <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="c1"># Keep the following code for future reference, once a physically relevant</span>
+        <span class="c1"># case has been identified for radial periodic BCs...</span>
+        <span class="c1">#</span>
+        <span class="c1"># # Right boundary</span>
+        <span class="c1"># i=Nx+1</span>
+        <span class="c1"># j=j_ind</span>
+        <span class="c1"># k=k_ind</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i-1,j,k].ravel()</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[0,j,k].ravel()</span>
+        <span class="c1"># s[q] = dx_end/dx_1</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[1,j,k].ravel()</span>
+        <span class="c1"># s[q] = -dx_end/dx_1</span>
+        <span class="c1"># BCRHS[G[i,j,k].ravel()] = 0.0</span>
 
-        <span class="c1"># Left boundary</span>
-        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
-        <span class="n">j</span><span class="o">=</span><span class="n">j_ind</span>
-        <span class="n">k</span><span class="o">=</span><span class="n">k_ind</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">Nx</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">Ny</span><span class="o">*</span><span class="n">Nz</span><span class="p">)</span>
-        <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">jj</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">G</span><span class="p">[</span><span class="n">Nx</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
-        <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
-        <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="c1"># # Left boundary</span>
+        <span class="c1"># i = 0</span>
+        <span class="c1"># j=j_ind</span>
+        <span class="c1"># k=k_ind</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[i+1,j,k].ravel()</span>
+        <span class="c1"># s[q] = 1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[Nx,j,k].ravel()</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># q = q[-1]+int_range(1,Ny*Nz)</span>
+        <span class="c1"># ii[q] = G[i,j,k].ravel()</span>
+        <span class="c1"># jj[q] = G[Nx+1,j,k].ravel()</span>
+        <span class="c1"># s[q] = -1.0</span>
+        <span class="c1"># BCRHS[G[i,j,k].ravel()] = 0.0</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
+        <span class="c1">#</span>
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">BC</span><span class="o">.</span><span class="n">front</span><span class="o">.</span><span class="n">periodic</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">BC</span><span class="o">.</span><span class="n">back</span><span class="o">.</span><span class="n">periodic</span><span class="p">):</span>
         <span class="c1"># Front boundary</span>
         <span class="n">k</span><span class="o">=</span><span class="n">Nz</span><span class="o">+</span><span class="mi">1</span>
@@ -2412,6 +2439,8 @@
     <span class="n">BCMatrix</span> <span class="o">=</span> <span class="n">csr_array</span><span class="p">((</span><span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">q</span><span class="p">],</span> <span class="p">(</span><span class="n">ii</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">q</span><span class="p">],</span> <span class="n">jj</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">q</span><span class="p">])),</span> 
                          <span class="n">shape</span><span class="o">=</span><span class="p">((</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Nz</span><span class="o">+</span><span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Nz</span><span class="o">+</span><span class="mi">2</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">BCMatrix</span><span class="p">,</span> <span class="n">BCRHS</span></div>
+
+
 
 
 <div class="viewcode-block" id="boundaryConditionsTerm">
