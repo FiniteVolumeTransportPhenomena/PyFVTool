@@ -1028,11 +1028,11 @@ def boundaryConditionsTerm2D(BC: BoundaryConditions2D):
         s[q] = 1
         q = q[-1]+i
         ii[q] = G[i,j]
-        jj[q] = G[i,Ny+1] 
+        jj[q] = G[i,Ny] 
         s[q] = -1
         q = q[-1]+i
         ii[q] = G[i,j]  
-        jj[q] = G[i,Ny+2]
+        jj[q] = G[i,Ny+1]
         s[q] = -1
         BCRHS[G[i,j]] = 0
 
@@ -1460,11 +1460,11 @@ def boundaryConditionsTermPolar2D(BC: BoundaryConditions2D):
         s[q] = 1
         q = q[-1]+i
         ii[q] = G[i,j]
-        jj[q] = G[i,Ny+1] 
+        jj[q] = G[i,Ny] 
         s[q] = -1
         q = q[-1]+i
         ii[q] = G[i,j]  
-        jj[q] = G[i,Ny+2]
+        jj[q] = G[i,Ny+1]
         s[q] = -1
         BCRHS[G[i,j]] = 0
 

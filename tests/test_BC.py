@@ -20,7 +20,7 @@ def test_gaoflow_Grid3D():
     BC.right.periodic = True
     BCterm = pf.boundaryConditionsTerm(BC)
     assert BCterm[0].nnz == 312,\
-        "Unexpected number of stored sparse matrix elements for periodic BCs in Grid3D"
+        f"Unexpected number of stored sparse matrix elements for periodic BCs in Grid3D: {BCterm[0].nnz}"
 
 
 
@@ -120,6 +120,28 @@ def test_gaoflow_SphericalGrid1D():
 
 
 
+def test_gaoflow_Grid2D_top_bottom():
+    msh = pf.Grid2D(4, 4, 1.0, 1.0)
+    BC = pf.BoundaryConditions(msh)
+    BC.top.periodic = True
+    BC.bottom.periodic = True
+    BCterm = pf.boundaryConditionsTerm(BC)
+    assert BCterm[0].nnz == 52,\
+        f"Unexpected number of stored sparse matrix elements for periodic BCs in Grid2D: {BCterm[0].nnz}"
+
+
+
+def test_gaoflow_PolarGrid2D_top_bottom():
+    msh = pf.PolarGrid2D(4, 4, 1.0, 2*np.pi)
+    BC = pf.BoundaryConditions(msh)
+    BC.top.periodic = True
+    BC.bottom.periodic = True
+    BCterm = pf.boundaryConditionsTerm(BC)
+    assert BCterm[0].nnz == 52,\
+        f"Unexpected number of stored sparse matrix elements for periodic BCs in PolarGrid2D: {BCterm[0].nnz}"
+
+
+
 if __name__=='__main__':
     test_gaoflow_Grid3D()
     test_gaoflow_CylindricalGrid3D()
@@ -128,6 +150,10 @@ if __name__=='__main__':
     test_gaoflow_CylindricalGrid2D()
     test_gaoflow_CylindricalGrid1D()
     test_gaoflow_SphericalGrid1D()
+    test_gaoflow_Grid2D_top_bottom()
+    test_gaoflow_PolarGrid2D_top_bottom()
+    
+    
     
     
     
