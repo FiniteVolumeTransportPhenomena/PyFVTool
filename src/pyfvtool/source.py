@@ -22,7 +22,8 @@ def constantSourceTerm(gamma: CellVariable):
     Returns
     -------
     RHS: np.ndarray
-        Right hand side of the source term
+        Right hand side term corresponding to a constant source. (The 
+        corresponding matrix term is zero.)
     
     Examples
     --------
@@ -70,15 +71,16 @@ def linearSourceTerm(beta: CellVariable):
     
     Returns
     -------
-    RHS: np.ndarray
-        Right hand side of the source term
+    M: scipy.sparse.csr_array
+        Matrix term corresponding to a linear source. (The corresponding RHS is 
+        zero.)
     
     Examples
     --------
     >>> import pyfvtool as pf
     >>> m = pf.Grid1D(10, 1.0)
     >>> beta = pf.CellVariable(m, 1.0)
-    >>> RHS = pf.linearSourceTerm(beta)
+    >>> M = pf.linearSourceTerm(beta)
     """
     m = beta.domain
     if issubclass(type(m), Grid1D):
