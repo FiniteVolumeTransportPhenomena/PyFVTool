@@ -301,7 +301,8 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    RHS: np.ndarray</span>
-<span class="sd">        Right hand side of the source term</span>
+<span class="sd">        Right hand side term corresponding to a constant source. (The </span>
+<span class="sd">        corresponding matrix term is zero.)</span>
 <span class="sd">    </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -352,15 +353,16 @@
 <span class="sd">    </span>
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    RHS: np.ndarray</span>
-<span class="sd">        Right hand side of the source term</span>
+<span class="sd">    M: scipy.sparse.csr_array</span>
+<span class="sd">        Matrix term corresponding to a linear source. (The corresponding RHS is </span>
+<span class="sd">        zero.)</span>
 <span class="sd">    </span>
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; import pyfvtool as pf</span>
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; beta = pf.CellVariable(m, 1.0)</span>
-<span class="sd">    &gt;&gt;&gt; RHS = pf.linearSourceTerm(beta)</span>
+<span class="sd">    &gt;&gt;&gt; M = pf.linearSourceTerm(beta)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">beta</span><span class="o">.</span><span class="n">domain</span>
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
