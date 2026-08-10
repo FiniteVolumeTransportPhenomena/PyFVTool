@@ -51,7 +51,7 @@ mesh = pf.CylindricalGrid3D(Nr, Ntheta, Nz, Lr, Ltheta, Lz) # Ltheta 0...2*pi
 mesh = pf.SphericalGrid3D(Nr, Ntheta, Nphi, Lr, Ltheta, Lphi) # Ltheta 0...pi; Lphi 0...2*pi
 ```
 
-## Non-uniform (but still regular) grids
+## Non-uniform (but still structured) grids
 
 Instead of specifying the number of cells of uniform length, you can pass an array of cell face positions. This gives full control over cell spacing:
 
