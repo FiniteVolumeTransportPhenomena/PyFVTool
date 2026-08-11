@@ -990,7 +990,7 @@ class Grid3D(MeshStructure):
 
     def __repr__(self):
         return  f"3D Cartesian mesh with "\
-            f"Nx={self.dims[0]} x Ny={self.dims[1]} x Nz={self.dims[1]} cells"
+            f"Nx={self.dims[0]} x Ny={self.dims[1]} x Nz={self.dims[2]} cells"
 
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
@@ -1104,7 +1104,7 @@ class CylindricalGrid3D(Grid3D):
 
     def __repr__(self):
         return f"3D Cylindrical mesh with Nr={self.dims[0]} x "\
-            f"Ntheta={self.dims[1]} x Nz={self.dims[1]} cells"
+            f"Ntheta={self.dims[1]} x Nz={self.dims[2]} cells"
 
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
@@ -1230,7 +1230,7 @@ class SphericalGrid3D(Grid3D):
 
     def __repr__(self):
         return f"3D Spherical mesh with Nr={self.dims[0]} x "\
-            f"Ntheta={self.dims[1]} x Nphi={self.dims[1]} cells"
+            f"Ntheta={self.dims[1]} x Nphi={self.dims[2]} cells"
             
     def _getCellVolumes(self):
         """Get the volumes of all finite volume cells in the mesh
