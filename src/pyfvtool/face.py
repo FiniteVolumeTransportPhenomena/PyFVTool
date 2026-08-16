@@ -556,7 +556,7 @@ def faceLocations(m: MeshStructure):
         Y._zvalue = np.tile(z, (N[0], N[1]+1, 1))
 
         z = np.zeros((1,1,N[2]+1))
-        z[0, 0, :] = m.cellcenters._z
+        z[0, 0, :] = m.facecenters._z
         Z._xvalue = np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2]+1))
         Z._yvalue = np.tile((m.facecenters._y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]+1))
         Z._zvalue = np.tile(z, (N[0], N[1], 1))
