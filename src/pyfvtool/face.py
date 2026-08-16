@@ -544,6 +544,7 @@ def faceLocations(m: MeshStructure):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
         Z = FaceVariable(m, 0)
+        
         z = np.zeros((1,1,N[2]))
         z[0, 0, :] = m.cellcenters._z
         
@@ -557,10 +558,12 @@ def faceLocations(m: MeshStructure):
 
         z = np.zeros((1,1,N[2]+1))
         z[0, 0, :] = m.facecenters._z
+        
         Z._xvalue = np.tile(m.cellcenters._x[:, np.newaxis, np.newaxis], (1, N[1], N[2]+1))
         Z._yvalue = np.tile((m.facecenters._y[:, np.newaxis].T)[:, :, np.newaxis], (N[0], 1, N[2]+1))
         Z._zvalue = np.tile(z, (N[0], N[1], 1))
         return X, Y, Z
+        
     raise TypeError('mesh type not implemented')
     return None
         
