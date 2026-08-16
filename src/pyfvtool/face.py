@@ -540,7 +540,8 @@ def faceLocations(m: MeshStructure):
         return X, Y
         
     elif (type(m) is Grid3D)\
-       or (type(m) is CylindricalGrid3D):
+       or (type(m) is CylindricalGrid3D)\
+       or (type(m) is SphericalGrid3D):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
         Z = FaceVariable(m, 0)
