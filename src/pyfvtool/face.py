@@ -567,7 +567,8 @@ def faceLocations(m: MeshStructure):
     raise TypeError('mesh type not implemented')
     return None
         
-        
+  
+  
 def faceeval(f, *args):
     """
     Evaluate a function f on a FaceVariable.
