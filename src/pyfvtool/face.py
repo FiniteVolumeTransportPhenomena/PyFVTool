@@ -523,14 +523,15 @@ def faceLocations(m: MeshStructure):
     N = m.dims
     
     if (type(m) is Grid1D)\
-     or (type(m) is CylindricalGrid1D):
+       or (type(m) is CylindricalGrid1D)\
+       or (type(m) is SphericalGrid1D):
         X = FaceVariable(m, 0)
         X._xvalue = m.facecenters._x
         return X
         
     elif (type(m) is Grid2D)\
-       or (type(m) is CylindricalGrid2D)\
-       or (type(m) is PolarGrid2D):
+         or (type(m) is CylindricalGrid2D)\
+         or (type(m) is PolarGrid2D):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
         X._xvalue = np.tile(m.facecenters._x[:, np.newaxis], (1, N[1]))
@@ -540,8 +541,8 @@ def faceLocations(m: MeshStructure):
         return X, Y
         
     elif (type(m) is Grid3D)\
-       or (type(m) is CylindricalGrid3D)\
-       or (type(m) is SphericalGrid3D):
+         or (type(m) is CylindricalGrid3D)\
+         or (type(m) is SphericalGrid3D):
         X = FaceVariable(m, 0)
         Y = FaceVariable(m, 0)
         Z = FaceVariable(m, 0)
