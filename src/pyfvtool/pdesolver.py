@@ -1,14 +1,23 @@
 import numpy as np
 
+
 from scipy.sparse import csr_array
 from scipy.sparse.linalg import spsolve
 from scipy.sparse.linalg import use_solver
+
 use_solver(useUmfpack=False) 
-# For reproducibility, do not automatically use any installed `scikits.umfpack`
-# solver. Always use the built-in SuperLU by default. In PyFVTool, the
-# `scikits.umfpack.spsolve` solver (if installed) should be supplied via
-# the `externalsolver` keyword argument of `solvePDE`, as is the case for
-# the `pypardiso.spsolve` solver (and any other external solvers).
+# For computational reproducibility, always use the built-in SuperLU by 
+# default, instead of automatically using any installed `scikits.umfpack` 
+# solver.
+# This automatic switching depending on which optional libraries are 
+# installed is considered bad behaviour as it may break reproducibility. 
+# Note that `use_solver` sets global state within scipy for the remainder 
+# of the session, so this setting must not be overridden elsewhere.
+# In PyFVTool, any solver other than scipy's built-in SuperLU should be
+# supplied via the `externalsolver` keyword argument of `solvePDE`.
+# This helps ensure computational reproducibility as it clearly documents 
+# any external solver being used.
+
 
 from .mesh import MeshStructure
 from .cell import CellVariable
