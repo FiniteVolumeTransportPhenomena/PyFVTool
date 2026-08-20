@@ -316,8 +316,8 @@ def divergenceTermSpherical1D(F:FaceVariable):
     # extract data from the mesh structure
     Nx = F.domain.dims[0]
     G = F.domain.cell_numbers()
-    DX = F.domain.cellsize._x[1:-1]
-    rp = F.domain.cellcenters._x
+    # DX = F.domain.cellsize._x[1:-1]
+    # rp = F.domain.cellcenters._x
     rf = F.domain.facecenters._x
     # define the vector of cell index
     row_index = G[1:Nx+1] # main diagonal
@@ -327,8 +327,8 @@ def divergenceTermSpherical1D(F:FaceVariable):
     Fw = F._xvalue[0:Nx]
     re = rf[1:Nx+1]
     rw = rf[0:Nx]
-    # compute the divergence
-    div_x = (re*re*Fe-rw*Fw)/(DX*rp*rp)
+    # compute the divergence (finite-volume form)
+    div_x = (re*re*Fe - rw*rw*Fw) * (3.0/(re**3 - rw**3))
     # define the RHS Vector
     RHSdiv = np.zeros(Nx+2)
     # assign the values of the RHS vector
