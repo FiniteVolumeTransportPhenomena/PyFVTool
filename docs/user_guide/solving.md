@@ -50,7 +50,7 @@ For these larger systems (50,000 ... 1,000,000 cells, rough estimate), a "multi-
 
 In the same "multi-processor, shared-memory" category, 'SuperLU_MT' is the multithreaded variant of the aforementioned SuperLU solver. It is not currently interfaced with PyFVTool but is a promising open-source candidate.
 
-Beyond this (say, > 1,000,000 cells, 3D meshes), it may be possible to interface PyFVTool to the MUMPS direct sparse solver, but for now this is considered far beyond the intended use of PyFVTool. If your simulation becomes this big, you should discuss with a friendly computational expert and consider moving your simulation to a whole different software altogether. A change of computational could bring salvation: for very large 3D structured grids, the 'alternating direction, implicit' (ADI) method may - under certain conditions - be more efficient than bluntly trying to solve the giant matrix equation with a massively parallel sparse direct solver.
+Beyond this (say, > 1,000,000 cells, 3D meshes), it may be possible to interface PyFVTool to the MUMPS direct sparse solver, but for now this is considered far beyond the intended use of PyFVTool. If your simulation becomes this big, you should discuss with a friendly computational expert and consider moving your simulation to a whole different software altogether. A change of computational approach could bring salvation: for very large 3D structured grids, the 'alternating direction, implicit' (ADI) method may - under certain conditions - be more efficient than bluntly trying to solve the giant matrix equation with a massively parallel sparse direct solver.
 
 
 ### Further background on solving sparse matrix equations
