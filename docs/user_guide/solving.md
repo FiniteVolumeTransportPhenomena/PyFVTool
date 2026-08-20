@@ -50,7 +50,7 @@ For these larger systems (50,000 ... 1,000,000 cells, rough estimate), a "multi-
 
 In the same "multi-processor, shared-memory" category, 'SuperLU_MT' is the multithreaded variant of the aforementioned SuperLU solver. It is not currently interfaced with PyFVTool but is a promising open-source candidate.
 
-Beyond this (> 1,000,000 cells, 3D meshes), it may be possible to interface PyFVTool to the MUMPS direct sparse solver, but for now this is considered far beyond the intended use of PyFVTool. If your simulation becomes this big, you should consider discussing with computational experts and consider moving your simulation to a whole different software altogether.
+Beyond this (say, > 1,000,000 cells, 3D meshes), it may be possible to interface PyFVTool to the MUMPS direct sparse solver, but for now this is considered far beyond the intended use of PyFVTool. If your simulation becomes this big, you should discuss with a friendly computational expert and consider moving your simulation to a whole different software altogether. A change of computational could bring salvation: for very large 3D structured grids, the 'alternating direction, implicit' (ADI) method may - under certain conditions - be more efficient than bluntly trying to solve the giant matrix equation with a massively parallel sparse direct solver.
 
 
 ### Further background on solving sparse matrix equations
@@ -62,9 +62,5 @@ This contasts with MATLAB's built-in `x = A\b` sparse solver, which has been eng
 With the built-in SuperLU, as with external solvers, several strategies may still be tried in PyFVTool to make computation more efficient. One promising and unexplored strategy is to re-use, where possible, the symbolic factorization performed by the sparse solver or even the numerical LU factorization. The symbolic factorization can be re-used when the 'sparsity pattern' of the sparse matrix remains the same between time steps. This calls for separating the different steps taken by the sparse solve code: symbolic factorization, numerical factorization and solution of the linear system. Interestingly, the `pypardiso` interface uses this strategy in a basic fashion, and this may partially explain the substantial decrease in computation time when using the MKL PARDISO solver.
 
 As a final remark, we only consider direct sparse solvers for PyFVTool, since the more efficient alternative, iterative solvers, come with their own set of (largely unexplored) head-aches.
-
-
-
-
 
 
