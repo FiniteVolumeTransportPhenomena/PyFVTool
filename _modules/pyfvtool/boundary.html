@@ -299,16 +299,16 @@
 <div class="viewcode-block" id="BoundaryFace">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BoundaryFace</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Class describing the boundary condition of a single face</span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> 
                  <span class="n">periodic</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">b</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>\
             <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;a, b, c must be np.ndarray&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'a, b, c must be np.ndarray'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_a</span> <span class="o">=</span> <span class="n">TrackedArray</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_b</span> <span class="o">=</span> <span class="n">TrackedArray</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_c</span> <span class="o">=</span> <span class="n">TrackedArray</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
@@ -317,18 +317,18 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">':'</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">':'</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">""</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">modified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Boolean to indicate if boundary conditions were modified since last update.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Boolean to indicate if boundary conditions were modified since last update."""</span>
         <span class="n">change</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span><span class="o">.</span><span class="n">modified</span>\
                  <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span><span class="o">.</span><span class="n">modified</span>\
                  <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span><span class="o">.</span><span class="n">modified</span>
@@ -343,7 +343,7 @@
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">a</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Coefficient array `a` of the boundary condition.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Coefficient array `a` of the boundary condition."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_a</span>
     
     <span class="nd">@a</span><span class="o">.</span><span class="n">setter</span>
@@ -352,7 +352,7 @@
         
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">b</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Coefficient array `b` of the boundary condition.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Coefficient array `b` of the boundary condition."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_b</span>
 
     <span class="nd">@b</span><span class="o">.</span><span class="n">setter</span>       
@@ -361,7 +361,7 @@
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Coefficient array `c` of the boundary condition.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Coefficient array `c` of the boundary condition."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c</span>
 
     <span class="nd">@c</span><span class="o">.</span><span class="n">setter</span>       
@@ -370,7 +370,7 @@
         
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">periodic</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Boolean. If True, use periodic boundary condition.&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""Boolean. If True, use periodic boundary condition."""</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_periodic</span>
 
     <span class="nd">@periodic</span><span class="o">.</span><span class="n">setter</span>       
@@ -381,8 +381,8 @@
 <div class="viewcode-block" id="BoundaryFace.defaultNoFlux">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.defaultNoFlux">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">defaultNoFlux</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Restore default &quot;no flux&quot; boundary condition</span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Restore default "no flux" boundary condition</span>
 <span class="sd">        </span>
 <span class="sd">        Equivalent to a = 1.0; b = 0.0; c = 0.0</span>
 
@@ -390,7 +390,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        None.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="mf">0.0</span></div>
@@ -399,7 +399,7 @@
 <div class="viewcode-block" id="BoundaryFace.fixedValue">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.fixedValue">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fixedValue</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set fixed value (Dirichlet) boundary condition</span>
 <span class="sd">        </span>
 <span class="sd">        Utility function.</span>
@@ -415,7 +415,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        None.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">1.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">value</span></div>
@@ -424,7 +424,7 @@
 <div class="viewcode-block" id="BoundaryFace.fixedGradient">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.fixedGradient">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">fixedGradient</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gradientvalue</span><span class="p">,</span> <span class="n">scale_coeffs</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Set fixed gradient (Neumann) boundary condition</span>
 <span class="sd">        </span>
 <span class="sd">        Utility function.</span>
@@ -454,7 +454,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        None.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="n">scale_coeffs</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">b</span> <span class="o">=</span> <span class="mf">0.0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">c</span> <span class="o">=</span> <span class="n">scale_coeffs</span> <span class="o">*</span> <span class="n">gradientvalue</span></div>
@@ -464,10 +464,10 @@
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryFace.newtonCooling">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">newtonCooling</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">T_ext</span><span class="p">,</span> 
                       <span class="n">reverse_direction</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Apply Newton boundary conditions (specific case of Robin BCs)</span>
 <span class="sd">        </span>
-<span class="sd">        This applies Newton&#39;s law of cooling to a boundary</span>
+<span class="sd">        This applies Newton's law of cooling to a boundary</span>
 <span class="sd">        </span>
 <span class="sd">        Equivalent to a = k; b = h_eff; c = h_eff*T_ext, where </span>
 <span class="sd">        h_eff = -h if reverse_direction else h.</span>
@@ -477,7 +477,7 @@
 <span class="sd">        `newtonCooling` is not aware of the orientation of the boundary,</span>
 <span class="sd">        meaning that this information needs to be supplied explicitly via</span>
 <span class="sd">        the `reverse_direction` keyword. Reverse direction is typically needed</span>
-<span class="sd">        for &#39;left&#39;, &#39;bottom&#39;, and &#39;front&#39; boundaries.</span>
+<span class="sd">        for 'left', 'bottom', and 'front' boundaries.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -485,7 +485,7 @@
 <span class="sd">            Thermal conductivity.</span>
 <span class="sd">            SI units: W m-1 K-1</span>
 <span class="sd">        h : float</span>
-<span class="sd">            Convective heat transfer (&#39;Newton&#39;) coefficient.</span>
+<span class="sd">            Convective heat transfer ('Newton') coefficient.</span>
 <span class="sd">            SI units: W m-2 K-1</span>
 <span class="sd">        T_ext : float</span>
 <span class="sd">            Temperature of the environment.</span>
@@ -493,13 +493,13 @@
 <span class="sd">        reverse_direction : bool, optional</span>
 <span class="sd">            If True, flips the sign of the boundary flux (needed for boundaries</span>
 <span class="sd">            whose outward normal is opposite the positive coordinate direction,</span>
-<span class="sd">            e.g. &#39;left&#39;, &#39;bottom&#39;, &#39;front&#39;). Default is False.</span>
+<span class="sd">            e.g. 'left', 'bottom', 'front'). Default is False.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        None.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">if</span> <span class="n">reverse_direction</span><span class="p">:</span>
             <span class="n">h_eff</span> <span class="o">=</span> <span class="o">-</span><span class="n">h</span>
         <span class="k">else</span><span class="p">:</span>
@@ -516,7 +516,7 @@
 <div class="viewcode-block" id="BoundaryConditionsBase">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryConditionsBase">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">BoundaryConditionsBase</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Base class for the boundary conditions</span>
 <span class="sd">     </span>
 <span class="sd">    </span>
@@ -537,7 +537,7 @@
 <span class="sd">        boundary condition for the back face</span>
 <span class="sd">    front : BoundaryFace</span>
 <span class="sd">        boundary condition for the back face</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">,</span>
                  <span class="n">left</span><span class="p">:</span> <span class="n">BoundaryFace</span><span class="p">,</span> <span class="n">right</span><span class="p">:</span> <span class="n">BoundaryFace</span><span class="p">,</span>
@@ -554,21 +554,21 @@
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">':'</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">""</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">&#39;:&#39;</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
-        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">item</span><span class="p">,</span> <span class="s1">':'</span><span class="p">,</span> <span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">])</span>
+        <span class="k">return</span> <span class="s2">""</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">modified</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        True if any of the BoundaryFace conditions has changed since last </span>
 <span class="sd">        apply_BCs()</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1"># To keep things simple, we always include all possible faces,</span>
         <span class="c1"># even for 1D and 2D, since all BoundaryFaces always exist, even when </span>
         <span class="c1"># they are not used in a specific geometry.</span>
@@ -638,7 +638,7 @@
 <div class="viewcode-block" id="BoundaryConditions">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.BoundaryConditions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">BoundaryConditions</span><span class="p">(</span><span class="n">mesh</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create an object for holding boundary conditions (factory function)</span>
+<span class="w">    </span><span class="sd">"""Create an object for holding boundary conditions (factory function)</span>
 <span class="sd">    </span>
 
 <span class="sd">    Parameters</span>
@@ -651,7 +651,7 @@
 <span class="sd">    Subclass instance of BoundaryConditionsBase class</span>
 <span class="sd">        Object holding all information defining boundary conditions.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
         
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">mesh</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">BoundaryConditions1D</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
@@ -673,9 +673,9 @@
 <div class="viewcode-block" id="cellValuesWithBoundaries1D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundaries1D">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundaries1D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cellValuesWithBoundaries for 1D mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># extract data from the mesh structure</span>
     <span class="c1"># Nx = MeshStructure.numberofcells</span>
@@ -703,9 +703,9 @@
 <div class="viewcode-block" id="cellValuesWithBoundaries2D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundaries2D">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundaries2D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cellValuesWithBoundaries for 2D mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># extract data from the mesh structure</span>
     <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dims</span>
@@ -763,9 +763,9 @@
 <div class="viewcode-block" id="cellValuesWithBoundaries3D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundaries3D">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundaries3D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cellValuesWithBoundaries for 3D mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dims</span>
     <span class="n">dx_1</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -865,9 +865,9 @@
 <div class="viewcode-block" id="cellValuesWithBoundariesCylindrical3D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundariesCylindrical3D">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundariesCylindrical3D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cellValuesWithBoundaries for Cylindrical3D mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dims</span>
     <span class="n">dx_1</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">_x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -968,9 +968,9 @@
 <div class="viewcode-block" id="cellValuesWithBoundariesPolar2D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundariesPolar2D">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundariesPolar2D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cellValuesWithBoundaries for Polar2D mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># extract data from the mesh structure</span>
     <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dims</span>
@@ -1028,9 +1028,9 @@
 <div class="viewcode-block" id="cellValuesWithBoundariesSpherical3D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundariesSpherical3D">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundariesSpherical3D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    cellValuesWithBoundaries for Spherical3D mesh</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="c1"># TBD</span>
     
     <span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dims</span>
@@ -1133,7 +1133,7 @@
 <div class="viewcode-block" id="cellValuesWithBoundaries">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.cellValuesWithBoundaries">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellValuesWithBoundaries</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Return all cell values with the boundary values calculated given the</span>
 <span class="sd">    boundary conditions.</span>
 
@@ -1148,7 +1148,7 @@
 <span class="sd">    -------</span>
 <span class="sd">    phiBC : array_like</span>
 <span class="sd">        All cell values (internal and boundary), including boundaries</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cellValuesWithBoundaries1D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span>
@@ -1163,7 +1163,7 @@
     <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">cellValuesWithBoundariesSpherical3D</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span> <span class="n">BC</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The cellValuesWithBoundaries function is not defined for this mesh type.&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"The cellValuesWithBoundaries function is not defined for this mesh type."</span><span class="p">)</span></div>
 
 
 
@@ -1174,7 +1174,7 @@
 <span class="c1">#</span>
 
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="sd">Discretizing boundary conditions to csr array</span>
 <span class="sd">Example:</span>
 <span class="sd">row = np.array([0, 0, 1, 2, 2, 2])</span>
@@ -1184,7 +1184,7 @@
 <span class="sd">array([[1, 0, 2],</span>
 <span class="sd">       [0, 0, 3],</span>
 <span class="sd">       [4, 5, 6]])</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 
 <div class="viewcode-block" id="boundaryConditionsTerm1D">
@@ -1201,7 +1201,7 @@
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="n">BCRHS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># RHS vector</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># a counter in case I&#39;m wrong with my count of nonzero elements</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># a counter in case I'm wrong with my count of nonzero elements</span>
 
     <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span><span class="p">):</span>
         <span class="c1"># right boundary</span>
@@ -1230,7 +1230,7 @@
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span>  <span class="c1"># periodic boundary condition</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">)</span>\
             <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Radial periodic boundary conditions are not physically meaningful."</span><span class="p">)</span>
         <span class="c1"># Right boundary</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
         <span class="n">q</span> <span class="o">=</span> <span class="n">q</span><span class="o">+</span><span class="mi">1</span>
@@ -1291,7 +1291,7 @@
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="n">BCRHS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># RHS vector</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># a counter in case I&#39;m wrong with my count of nonzero elements</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># a counter in case I'm wrong with my count of nonzero elements</span>
     <span class="c1">#  assign value to the corner nodes (useless cells)</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">corners</span>
@@ -1396,7 +1396,7 @@
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span>  <span class="c1"># periodic boundary condition</span>
         <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Radial periodic boundary conditions are not physically meaningful."</span><span class="p">)</span>
         <span class="c1"># Right boundary</span>
         <span class="n">i</span> <span class="o">=</span> <span class="n">Nx</span><span class="o">+</span><span class="mi">1</span>
         <span class="n">j</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">Ny</span><span class="p">)</span>
@@ -1729,7 +1729,7 @@
     <span class="n">s</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nb</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
     <span class="n">BCRHS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span>  <span class="c1"># RHS vector</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># a counter in case I&#39;m wrong with my count of nonzero elements</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>  <span class="c1"># a counter in case I'm wrong with my count of nonzero elements</span>
     <span class="c1">#  assign value to the corner nodes (useless cells)</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="n">ii</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">corners</span>
@@ -1833,7 +1833,7 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">]]</span> <span class="o">=</span> <span class="o">-</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span>  <span class="c1"># periodic boundary condition</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Radial periodic boundary conditions are not physically meaningful."</span><span class="p">)</span>
         <span class="c1">#</span>
         <span class="c1"># Keep the following code for future reference, once a physically relevant</span>
         <span class="c1"># case has been identified for radial periodic BCs...</span>
@@ -2033,7 +2033,7 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span> <span class="c1"># periodic</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Radial periodic boundary conditions are not physically meaningful."</span><span class="p">)</span>
         <span class="c1">#</span>
         <span class="c1"># Keep the following code for future reference, once a physically relevant</span>
         <span class="c1"># case has been identified for radial periodic BCs...</span>
@@ -2310,7 +2310,7 @@
         <span class="n">s</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="o">/</span><span class="n">dx_1</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
         <span class="n">BCRHS</span><span class="p">[</span><span class="n">G</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">j</span><span class="p">,</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()]</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
     <span class="k">elif</span> <span class="n">BC</span><span class="o">.</span><span class="n">right</span><span class="o">.</span><span class="n">periodic</span> <span class="ow">or</span> <span class="n">BC</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">periodic</span><span class="p">:</span> <span class="c1"># periodic</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Radial periodic boundary conditions are not physically meaningful.&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"Radial periodic boundary conditions are not physically meaningful."</span><span class="p">)</span>
         <span class="c1">#</span>
         <span class="c1"># Keep the following code for future reference, once a physically relevant</span>
         <span class="c1"># case has been identified for radial periodic BCs...</span>
@@ -2446,7 +2446,7 @@
 <div class="viewcode-block" id="boundaryConditionsTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.boundary.boundaryConditionsTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">boundaryConditionsTerm</span><span class="p">(</span><span class="n">BC</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Generate the terms of the matrix equation representing the boundary conditions</span>
 
 <span class="sd">    Parameters</span>
@@ -2461,7 +2461,7 @@
 <span class="sd">    BCRHS : numpy.ndarray (1D)</span>
 <span class="sd">        RHS column vector representing the boundary conditions</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">BC</span><span class="o">.</span><span class="n">domain</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">boundaryConditionsTerm1D</span><span class="p">(</span><span class="n">BC</span><span class="p">)</span>

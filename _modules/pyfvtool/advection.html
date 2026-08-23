@@ -2078,7 +2078,7 @@
 <div class="viewcode-block" id="convectionTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.advection.convectionTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">convectionTerm</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">FaceVariable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_array</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns the discretized convection term, :math:`\\nabla \\cdot (u \\phi)`.</span>
 
 <span class="sd">    Parameters</span>
@@ -2096,7 +2096,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; u = pf.FaceVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; M = pf.convectionTerm(u)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">convectionTerm1D</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
@@ -2121,7 +2121,7 @@
 <div class="viewcode-block" id="convectionUpwindTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.advection.convectionUpwindTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">convectionUpwindTerm</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">FaceVariable</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_array</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns the discretized upwind convection term, :math:`\\nabla \\cdot (u \\phi)`.</span>
 <span class="sd">    The convection term is evaluated based on the upwind scheme.</span>
 
@@ -2140,7 +2140,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; u = pf.FaceVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; M = pf.convectionUpwindTerm(u)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">convectionUpwindTerm1D</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
@@ -2161,14 +2161,14 @@
         <span class="k">return</span> <span class="n">convectionUpwindTermSpherical3D</span><span class="p">(</span><span class="n">u</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">&quot;convectionUpwindTerm is not defined for this Mesh type.&quot;</span><span class="p">)</span></div>
+            <span class="s2">"convectionUpwindTerm is not defined for this Mesh type."</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="convectionTVDupwindRHSTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.advection.convectionTVDupwindRHSTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">convectionTVDupwindRHSTerm</span><span class="p">(</span><span class="n">u</span><span class="p">:</span> <span class="n">FaceVariable</span><span class="p">,</span> <span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">FL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Returns the TVD correction vector for the upwind convection term, </span>
 <span class="sd">    :math:`\\nabla \\cdot (u \\phi)`.</span>
 <span class="sd">    The convection term is evaluated based on the TVD upwind scheme.</span>
@@ -2188,9 +2188,9 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; u = pf.FaceVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; phi = pf.CellVariable(m, 1.0)</span>
-<span class="sd">    &gt;&gt;&gt; FL = pf.fluxLimiter(&#39;SUPERBEE&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; FL = pf.fluxLimiter('SUPERBEE')</span>
 <span class="sd">    &gt;&gt;&gt; RHS = pf.convectionTVDupwindRHSTerm(u, phi, FL)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">convectionTvdRHS1D</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">FL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
@@ -2211,7 +2211,7 @@
         <span class="k">return</span> <span class="n">convectionTvdRHSSpherical3D</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">FL</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-            <span class="s2">&quot;convectionTVDupwindRHSTerm is not defined for this Mesh type.&quot;</span><span class="p">)</span></div>
+            <span class="s2">"convectionTVDupwindRHSTerm is not defined for this Mesh type."</span><span class="p">)</span></div>
 
 </pre></div>
         </article>

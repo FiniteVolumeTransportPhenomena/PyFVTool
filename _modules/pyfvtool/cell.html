@@ -317,7 +317,7 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh_struct</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">,</span> <span class="n">cell_value</span><span class="p">,</span> <span class="o">*</span><span class="n">arg</span><span class="p">,</span>
                  <span class="n">BCsTerm_precalc</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a cell variable of class CellVariable</span>
 
 <span class="sd">        Parameters</span>
@@ -329,7 +329,7 @@
 <span class="sd">        BC: BoundaryConditions</span>
 <span class="sd">            Boundary conditions to be applied to the cell variable.</span>
 <span class="sd">            *Required if CellVariable represents a solution variable.* This</span>
-<span class="sd">            requirement also applies if default &#39;no-flux&#39; boundary conditions are</span>
+<span class="sd">            requirement also applies if default 'no-flux' boundary conditions are</span>
 <span class="sd">            desired, in which case the BoundaryCondition should be created without</span>
 <span class="sd">            further parameters (see .boundary.BoundaryConditions)</span>
 <span class="sd">        BCsTerm_precalc : Boolean, optional</span>
@@ -348,7 +348,7 @@
 <span class="sd">        CellVariable</span>
 <span class="sd">            An initialized instance of CellVariable.</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">BCsTerm_precalc</span> <span class="o">=</span> <span class="n">BCsTerm_precalc</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">mesh_struct</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="kc">None</span>
@@ -369,14 +369,14 @@
             <span class="c1"># simply fill</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">TrackedArray</span><span class="p">(</span><span class="n">cell_value</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The cell size </span><span class="si">{</span><span class="n">cell_value</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> is not valid &quot;</span>\
-                             <span class="sa">f</span><span class="s2">&quot;for a mesh of size </span><span class="si">{</span><span class="n">mesh_struct</span><span class="o">.</span><span class="n">dims</span><span class="si">}</span><span class="s2">.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"The cell size </span><span class="si">{</span><span class="n">cell_value</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> is not valid "</span>\
+                             <span class="sa">f</span><span class="s2">"for a mesh of size </span><span class="si">{</span><span class="n">mesh_struct</span><span class="o">.</span><span class="n">dims</span><span class="si">}</span><span class="s2">."</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">BCs</span> <span class="o">=</span> <span class="n">arg</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">BCs</span> <span class="o">=</span> <span class="n">BoundaryConditions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">'Incorrect number of arguments'</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># initialize self._value incl. ghost cells</span>
@@ -594,14 +594,14 @@
 <div class="viewcode-block" id="CellVariable.apply_BCs">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.cell.CellVariable.apply_BCs">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply_BCs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update ghost cells according to the boundary conditions and the </span>
+<span class="w">        </span><span class="sd">"""Update ghost cells according to the boundary conditions and the </span>
 <span class="sd">        internal (inner) cell values.</span>
 <span class="sd">        </span>
 <span class="sd">        In standard use, i.e. when solving equations with `solvePDE()`, it is</span>
 <span class="sd">        NOT necessary to call this method, as the updates are handled </span>
 <span class="sd">        automatically.</span>
 <span class="sd">        </span>
-<span class="sd">        In certain special &#39;expert-level&#39; cases, specific calls to this method</span>
+<span class="sd">        In certain special 'expert-level' cases, specific calls to this method</span>
 <span class="sd">        may be necessary. For instance, when the CellVariable is used before </span>
 <span class="sd">        calling `solvePDE()`. Or when when working with the function</span>
 <span class="sd">        `solveMatrixPDE()` instead of `solvePDE()`.</span>
@@ -615,7 +615,7 @@
 <span class="sd">        The `modified` attribute of the `CellVariableBCs` is reset, as well as</span>
 <span class="sd">        the `modified` attribute of the `CellVariable.value`</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_value</span> <span class="o">=</span> <span class="n">TrackedArray</span><span class="p">(</span><span class="n">cellValuesWithBoundaries</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
                                                             <span class="bp">self</span><span class="o">.</span><span class="n">BCs</span><span class="p">))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">BCsTerm_precalc</span><span class="p">:</span>
@@ -637,7 +637,7 @@
 <div class="viewcode-block" id="CellVariable.copy">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.cell.CellVariable.copy">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">copy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Create a copy of the CellVariable</span>
 <span class="sd">        </span>
 <span class="sd">        </span>
@@ -645,7 +645,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        CellVariable</span>
 <span class="sd">            Copy of the CellVariable.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="k">return</span> <span class="n">CellVariable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_value</span><span class="p">),</span>
                             <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">BCs</span><span class="p">))</span></div>
 
@@ -653,10 +653,10 @@
 <div class="viewcode-block" id="CellVariable.plotprofile">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.cell.CellVariable.plotprofile">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">plotprofile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Create a &#39;profile&#39; of a cell variable for plotting, export, etc. </span>
+<span class="w">        </span><span class="sd">"""</span>
+<span class="sd">        Create a 'profile' of a cell variable for plotting, export, etc. </span>
 <span class="sd">        </span>
-<span class="sd">        &#39;Plot profiles&#39; are sets of arrays that contain the axes&#39; coordinates,</span>
+<span class="sd">        'Plot profiles' are sets of arrays that contain the axes' coordinates,</span>
 <span class="sd">        cell values, including the values at the boundaries.</span>
 <span class="sd">        </span>
 <span class="sd">        For 2D and 3D visualization, it is perhaps better to use only the </span>
@@ -715,7 +715,7 @@
 <span class="sd">            z coordinates.</span>
 <span class="sd">        phi0 : np.ndarray</span>
 <span class="sd">            Value of the CellVariables at those coordinates.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="c1">#</span>
         <span class="c1"># TODO:</span>
         <span class="c1">#    Add a keyword that specifies how the outer FaceValues will be estimated</span>
@@ -772,7 +772,7 @@
             <span class="n">phi0</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:]</span><span class="o">=</span><span class="mf">0.5</span><span class="o">*</span><span class="p">(</span><span class="n">phi0</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">,:,:]</span><span class="o">+</span><span class="n">phi0</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,:,:])</span>
             <span class="k">return</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">phi0</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;plotprofile() not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"plotprofile() not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span></div>
 
     
@@ -780,13 +780,13 @@
 <div class="viewcode-block" id="CellVariable.domainIntegral">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.cell.CellVariable.domainIntegral">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">domainIntegral</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">"""</span>
 <span class="sd">        Calculate the finite-volume integral of a CellVariable over entire domain</span>
 <span class="sd">        </span>
 <span class="sd">        The finite-volume integral over the entire mesh domain gives the total</span>
 <span class="sd">        amount of `CellVariable` present in the system. Calculation of this</span>
 <span class="sd">        integral is useful for checking conservation of the quantity concerned</span>
-<span class="sd">        (in case of &#39;no-flux&#39; BCs), or for monitoring its evolution due to </span>
+<span class="sd">        (in case of 'no-flux' BCs), or for monitoring its evolution due to </span>
 <span class="sd">        exchanges via the boundaries (other BCs) or to the presence of source</span>
 <span class="sd">        terms.</span>
 <span class="sd">    </span>
@@ -799,7 +799,7 @@
 <span class="sd">        float</span>
 <span class="sd">            Total finite-volume integral over entire domain.</span>
 <span class="sd">    </span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellvolume</span>
         <span class="n">c</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">value</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">v</span><span class="o">*</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span></div>
@@ -811,7 +811,7 @@
 <div class="viewcode-block" id="cellLocations">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.cell.cellLocations">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">cellLocations</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    this function returns the location of the cell centers as cell variables. </span>
 <span class="sd">    </span>
 <span class="sd">    It can later be used in defining properties that are variable in space.</span>
@@ -844,7 +844,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    """</span>    
     <span class="n">N</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">dims</span>
    
     
@@ -868,7 +868,7 @@
         <span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">_z</span>
         <span class="n">Z</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span>
-    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;mesh type not implemented&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'mesh type not implemented'</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span> </div>
 
 

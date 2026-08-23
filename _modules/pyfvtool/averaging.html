@@ -275,7 +275,7 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for pyfvtool.averaging</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;This module contains functions for averaging node values to face values.</span>
+<span></span><span class="sd">"""This module contains functions for averaging node values to face values.</span>
 
 
 <span class="sd">Functions:</span>
@@ -294,7 +294,7 @@
 <span class="sd">    </span>
 <span class="sd">    tvdMean - NotImplemented</span>
 <span class="sd">    </span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 
@@ -324,7 +324,7 @@
 <div class="viewcode-block" id="linearMean">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.averaging.linearMean">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">linearMean</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FaceVariable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Linearly interpolate a mesh-variable defined on mesh-nodes to mesh-faces.   </span>
 <span class="sd">    </span>
 <span class="sd">    This function gets the value of the field variable phi defined over the MeshStructure and calculates the value on the cell faces via linear interpolation, for a uniform Mesh.  </span>
@@ -352,7 +352,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    """</span>    
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">cell_size_array</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">FaceVariable</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
@@ -383,7 +383,7 @@
 <div class="viewcode-block" id="arithmeticMean">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.averaging.arithmeticMean">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">arithmeticMean</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by arithmetic averaging adjacent node values.   </span>
 <span class="sd">    </span>
 <span class="sd">    This function gets the value of the field variable phi defined over the MeshStructure and calculates the arithmetic average on the cell faces, for a uniform Mesh::</span>
@@ -423,7 +423,7 @@
 <span class="sd">    &gt;&gt;&gt; mesh = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; phi = pf.CellVariable(mesh, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; phi_face = pf.arithmeticMean(phi)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">cell_size_array</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
@@ -449,7 +449,7 @@
 <div class="viewcode-block" id="geometricMean">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.averaging.geometricMean">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">geometricMean</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by geometric averaging adjacent node values.   </span>
 <span class="sd">    </span>
 <span class="sd">    This function gets the value of the field variable phi defined over the MeshStructure and calculates the geometric average on the cell faces, for a uniform Mesh::</span>
@@ -484,7 +484,7 @@
 <span class="sd">                phi_face = ( \\prod(phi_nodes) )^(1/N_nodes)</span>
 <span class="sd">                         = exp( ln( arithmeticMean(...) ) )</span>
 
-<span class="sd">    It is always intermediate to the harmonic or arithmetic means, and tends to the central value of th eset by &#39;weight&#39;.</span>
+<span class="sd">    It is always intermediate to the harmonic or arithmetic means, and tends to the central value of th eset by 'weight'.</span>
 
 <span class="sd">    Weighting the average by the cell length in the appropriate dimension is necessary for multi-dimensional grids, and is a necessary step in the extension to non-uniform grid spacing in 1-dimension. </span>
 
@@ -492,7 +492,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="n">dx</span> <span class="o">=</span> <span class="n">cell_size_array</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span>
         <span class="n">n</span><span class="o">=</span> <span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -525,7 +525,7 @@
 <div class="viewcode-block" id="harmonicMean">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.averaging.harmonicMean">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">harmonicMean</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by harmonic averaging adjacent node values.   </span>
 <span class="sd">    </span>
 <span class="sd">    This function gets the value of the field variable phi defined over the MeshStructure and calculates the harmonic average on the cell faces, for a uniform Mesh::</span>
@@ -560,7 +560,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     
     <span class="c1"># calculates the average values of a cell variable. The output is a</span>
     <span class="c1"># face variable</span>
@@ -596,7 +596,7 @@
 <div class="viewcode-block" id="upwindMean">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.averaging.upwindMean">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">upwindMean</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">FaceVariable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by matching the node value carried by the flow.   </span>
 <span class="sd">    </span>
 <span class="sd">    This function gets the value of the field variable phi defined over the MeshStructure and determines the value on the cell faces by applying a zeroeth order hold in the direction of the flow. </span>
@@ -630,7 +630,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    """</span>    
     
     <span class="c1"># calculates the average values of a cell variable. The output is a</span>
     <span class="c1"># face variable</span>
@@ -700,7 +700,7 @@
 <div class="viewcode-block" id="tvdMean">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.averaging.tvdMean">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">tvdMean</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">u</span><span class="p">:</span> <span class="n">FaceVariable</span><span class="p">,</span> <span class="n">FL</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Interpolate a mesh-variable defined on mesh-nodes to mesh-faces by matching the node value carried by the flow on a grid with a Total Variation Diminishing (TVD) discretization.   </span>
 <span class="sd">    </span>
 <span class="sd">    This function gets the value of the field variable phi defined over the MeshStructure and determines the value on the cell faces by applying a flow-weighted average / including a linearization of the local flow (first order hold in the direction of the flow). </span>
@@ -730,8 +730,8 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>        
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;tvdMean is not implemented yet!&quot;</span><span class="p">)</span></div>
+<span class="sd">    """</span>        
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"tvdMean is not implemented yet!"</span><span class="p">)</span></div>
 
 <span class="c1">#     # u is a face variable</span>
 <span class="c1">#     # phi is a cell variable</span>

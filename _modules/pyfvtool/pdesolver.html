@@ -297,7 +297,7 @@
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.pdesolver.solvePDE">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">solvePDE</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> 
               <span class="n">externalsolver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellVariable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Solve a PDE using the finite volume method</span>
 <span class="sd">    </span>
 <span class="sd">    This solver routine constructs the matrix equation from the FVM-discretized</span>
@@ -308,7 +308,7 @@
 <span class="sd">    boundary conditions, as these are handled automatically by solvePDE.</span>
 <span class="sd">    </span>
 <span class="sd">    The CellVariable is updated with the solution values, and a</span>
-<span class="sd">    reference to this one and the same variable is returned. If the &#39;old&#39; </span>
+<span class="sd">    reference to this one and the same variable is returned. If the 'old' </span>
 <span class="sd">    input CellVariable is to be conserved, it should be copied beforehand to</span>
 <span class="sd">    a separate instance.</span>
 
@@ -338,7 +338,7 @@
 <span class="sd">    CellVariable</span>
 <span class="sd">        The updated CellVariable.</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">externalsolver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">solver</span> <span class="o">=</span> <span class="n">spsolve</span>
     <span class="k">else</span><span class="p">:</span>
@@ -354,15 +354,15 @@
     
     <span class="c1"># Initialize overall cumulative matrix and right-hand side for </span>
     <span class="c1"># matrix equation</span>
-    <span class="n">M</span> <span class="o">=</span> <span class="n">Mbc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># need to copy, so that original &#39;bcterm&#39; is protected</span>
-    <span class="n">RHS</span> <span class="o">=</span> <span class="n">RHSbc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># need to copy, so that original &#39;bcterm&#39; is protected</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">Mbc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># need to copy, so that original 'bcterm' is protected</span>
+    <span class="n">RHS</span> <span class="o">=</span> <span class="n">RHSbc</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span> <span class="c1"># need to copy, so that original 'bcterm' is protected</span>
     
     <span class="c1"># Cumulate all equation terms</span>
     <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">eqnterms</span><span class="p">:</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">term</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">):</span>
             <span class="n">Mterm</span><span class="p">,</span> <span class="n">RHSterm</span> <span class="o">=</span> <span class="n">term</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">Mterm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">RHSterm</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">):</span>
-                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unknown term&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Unknown term'</span><span class="p">)</span>
             <span class="n">M</span> <span class="o">+=</span> <span class="n">Mterm</span>
             <span class="n">RHS</span> <span class="o">+=</span> <span class="n">RHSterm</span>
         <span class="k">elif</span> <span class="n">term</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
@@ -370,7 +370,7 @@
         <span class="k">elif</span> <span class="n">term</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="n">M</span> <span class="o">+=</span> <span class="n">term</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unknown term&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Unknown term'</span><span class="p">)</span>
 
     <span class="c1"># Solve!</span>
     <span class="n">phi_new_values</span> <span class="o">=</span> <span class="n">solver</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">RHS</span><span class="p">)</span>
@@ -388,15 +388,15 @@
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.pdesolver.solveMatrixPDE">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">solveMatrixPDE</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">,</span> <span class="n">M</span><span class="p">:</span><span class="n">csr_array</span><span class="p">,</span> <span class="n">RHS</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span>
              <span class="n">externalsolver</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellVariable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Solve the PDE discretized according to the finite volume method    </span>
 <span class="sd">        </span>
-<span class="sd">    This &#39;expert-level&#39; solver routine uses the M matrix and RHS right-hand side </span>
+<span class="sd">    This 'expert-level' solver routine uses the M matrix and RHS right-hand side </span>
 <span class="sd">    vector directly. These matrices should be constructed beforehand by </span>
 <span class="sd">    combining the different M matrices and RHS vectors generated using the</span>
 <span class="sd">    xxxTerm routines, including those related to the boundary conditions.</span>
 <span class="sd">    </span>
-<span class="sd">    Returns a new CellVariable without changing the input (&#39;old&#39;) CellVariable.</span>
+<span class="sd">    Returns a new CellVariable without changing the input ('old') CellVariable.</span>
 <span class="sd">    </span>
 <span class="sd">    Application of boundary condition terms and updating the related ghost</span>
 <span class="sd">    cells should be handled entirely by the (expert-level) user.</span>
@@ -419,7 +419,7 @@
 <span class="sd">    phi: CellVariable</span>
 <span class="sd">        Solution of the PDE (newly created CellVariable instance)</span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="k">if</span> <span class="n">externalsolver</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">solver</span> <span class="o">=</span> <span class="n">spsolve</span>
@@ -436,7 +436,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">solveExplicitPDE</span><span class="p">(</span><span class="n">phi_old</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> 
                      <span class="n">dt</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> 
                      <span class="n">RHS</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CellVariable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Solve the PDE using an explicit finite volume method.</span>
 
 <span class="sd">    Parameters</span>
@@ -454,7 +454,7 @@
 <span class="sd">    phi: CellVariable</span>
 <span class="sd">        Solution of the PDE</span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">phi_old</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">modified</span> <span class="ow">or</span> <span class="n">phi_old</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">modified</span><span class="p">:</span>
         <span class="n">phi_old</span><span class="o">.</span><span class="n">apply_BCs</span><span class="p">()</span>
     

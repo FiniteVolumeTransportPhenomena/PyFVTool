@@ -353,10 +353,10 @@
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Boundary condition</span>
-<span class="n">left_bc</span> <span class="o">=</span> <span class="s2">&quot;Neumann&quot;</span>
+<span class="n">left_bc</span> <span class="o">=</span> <span class="s2">"Neumann"</span>
 
 <span class="n">BC</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">left_bc</span> <span class="o">==</span> <span class="s2">&quot;Dirichlet&quot;</span><span class="p">:</span>
+<span class="k">if</span> <span class="n">left_bc</span> <span class="o">==</span> <span class="s2">"Dirichlet"</span><span class="p">:</span>
     <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">a</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">b</span><span class="p">[:]</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">T</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">left</span><span class="o">.</span><span class="n">c</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">Ts</span>
@@ -408,11 +408,11 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Left BC: &#39;</span><span class="o">+</span><span class="n">left_bc</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T_an</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">T_num</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">({</span><span class="s1">&#39;Analytic&#39;</span><span class="p">,</span> <span class="s1">&#39;PyFVTool FVM&#39;</span><span class="p">})</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;x [m]&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;T [K]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Left BC: '</span><span class="o">+</span><span class="n">left_bc</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">T_an</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">T_num</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">({</span><span class="s1">'Analytic'</span><span class="p">,</span> <span class="s1">'PyFVTool FVM'</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'x [m]'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'T [K]'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>

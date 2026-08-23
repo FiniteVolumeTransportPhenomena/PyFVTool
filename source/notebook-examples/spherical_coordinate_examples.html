@@ -399,7 +399,7 @@ number was used.</p>
     <span class="n">D_val</span> <span class="o">=</span> <span class="mf">1e-5</span>  <span class="c1"># diffusion coefficient (gas phase)</span>
 
     <span class="c1"># Create a cell variable with initial concentration</span>
-    <span class="c1"># By default, &#39;no flux&#39; boundary conditions are applied</span>
+    <span class="c1"># By default, 'no flux' boundary conditions are applied</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">CellVariable</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">c_init</span><span class="p">)</span>
 
     <span class="c1"># Switch the right boundary to Dirichlet: fixed concentration</span>
@@ -456,12 +456,12 @@ number was used.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c1</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1D spherical&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh3</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c3</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;3D spherical&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh1_rad</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c1_rad</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;1D Cylindrical&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh3_cyl</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c3_cyl</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;3D cylindrical&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;r [m]&quot;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Concentration [-]&quot;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh1</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c1</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"1D spherical"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh3</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c3</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"3D spherical"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh1_rad</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c1_rad</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"1D Cylindrical"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">mesh3_cyl</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">c3_cyl</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"3D cylindrical"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">"r [m]"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">"Concentration [-]"</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
@@ -550,7 +550,7 @@ number was used.</p>
 <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">dt</span> <span class="o">=</span> <span class="mf">10000.0</span>
 <span class="n">n_steps</span> <span class="o">=</span> <span class="mi">5</span>
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">),</span> <span class="n">bar_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{desc}</span><span class="s2">: </span><span class="si">{percentage:3.0f}% c</span><span class="s2">ompleted&quot;</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_steps</span><span class="p">),</span> <span class="n">bar_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{desc}</span><span class="s2">: </span><span class="si">{percentage:3.0f}% c</span><span class="s2">ompleted"</span><span class="p">):</span>
     <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
            <span class="n">convectionterm</span><span class="p">]</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
@@ -603,10 +603,10 @@ number was used.</p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the result: use a polar plot for plotting a &#39;slice&#39; at a certain value of &#39;phi&#39;</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the result: use a polar plot for plotting a 'slice' at a certain value of 'phi'</span>
 <span class="c1"># (lemon - or mellon - style slice)</span>
 
-<span class="c1"># select the &#39;phi&#39; using its index</span>
+<span class="c1"># select the 'phi' using its index</span>
 <span class="n">iphi</span> <span class="o">=</span> <span class="mi">5</span>
 
 <span class="n">r</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span>
@@ -619,11 +619,11 @@ number was used.</p>
 <span class="n">Z</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="p">:,</span> <span class="n">iphi</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">phideg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">phi</span><span class="p">[</span><span class="n">iphi</span><span class="p">])</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;phi = </span><span class="si">{</span><span class="n">phideg</span><span class="si">}</span><span class="s1">°&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">'phi = </span><span class="si">{</span><span class="n">phideg</span><span class="si">}</span><span class="s1">°'</span><span class="p">)</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># set the color range between 0 and 1</span>
-<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Concentration [-]&quot;</span><span class="p">)</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Concentration [-]"</span><span class="p">)</span>
 <span class="c1"># zoom in to the region of interest</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">([</span><span class="n">r_earth</span> <span class="o">-</span> <span class="n">Lr</span><span class="p">,</span> <span class="n">r_earth</span> <span class="o">+</span> <span class="n">Lr</span><span class="p">])</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
@@ -642,7 +642,7 @@ number was used.</p>
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># First version of a 3D plotting routine</span>
-<span class="c1"># Plot a spherical view of a single layer at height/depth &#39;r&#39;</span>
+<span class="c1"># Plot a spherical view of a single layer at height/depth 'r'</span>
 <span class="c1"># (onion-layer style)</span>
 
 <span class="c1"># select r by index</span>
@@ -662,8 +662,8 @@ number was used.</p>
 
 <span class="c1"># Create a 3D plot</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;r = </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="n">ir</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="sa">f</span><span class="s1">'r = </span><span class="si">{</span><span class="n">mesh</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="n">ir</span><span class="p">]</span><span class="si">}</span><span class="s1">'</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">"3d"</span><span class="p">)</span>
 
 <span class="c1"># Plot the surface</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>
@@ -924,7 +924,7 @@ number was used.</p>
 <span class="n">dt</span> <span class="o">=</span> <span class="mf">1.0</span>
 <span class="n">n_step</span> <span class="o">=</span> <span class="mi">50</span>
 
-<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_step</span><span class="p">),</span> <span class="n">bar_format</span><span class="o">=</span><span class="s2">&quot;</span><span class="si">{desc}</span><span class="s2">: </span><span class="si">{percentage:3.0f}% c</span><span class="s2">ompleted&quot;</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_step</span><span class="p">),</span> <span class="n">bar_format</span><span class="o">=</span><span class="s2">"</span><span class="si">{desc}</span><span class="s2">: </span><span class="si">{percentage:3.0f}% c</span><span class="s2">ompleted"</span><span class="p">):</span>
     <span class="n">eqn</span> <span class="o">=</span> <span class="p">[</span><span class="n">pf</span><span class="o">.</span><span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
            <span class="n">convectionterm</span><span class="p">]</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqn</span><span class="p">)</span>
@@ -949,12 +949,12 @@ number was used.</p>
 <span class="n">R</span><span class="p">,</span> <span class="n">Theta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">)</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Theta</span><span class="p">)</span>
-<span class="n">Z</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="c1"># TO DO: make sure that you extract the values for a certain &#39;phi&#39;...</span>
+<span class="n">Z</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span> <span class="c1"># TO DO: make sure that you extract the values for a certain 'phi'...</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">polar</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># set the color range between 0 and 1</span>
-<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
-<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Concentration [-]&quot;</span><span class="p">);</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">Theta</span><span class="p">,</span> <span class="n">R</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">cax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Concentration [-]"</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -1000,7 +1000,7 @@ number was used.</p>
 
 <span class="c1"># Create a 3D plot</span>
 <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">&quot;3d&quot;</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">111</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">"3d"</span><span class="p">)</span>
 
 <span class="c1"># Plot the surface</span>
 <span class="n">ax</span><span class="o">.</span><span class="n">plot_surface</span><span class="p">(</span>

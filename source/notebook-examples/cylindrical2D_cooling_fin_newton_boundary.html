@@ -333,7 +333,7 @@ cylinder.</em></p>
 <span class="n">T_source</span> <span class="o">=</span> <span class="mf">400.0</span>
 <span class="n">T_ext</span> <span class="o">=</span> <span class="mf">280.0</span>
 <span class="n">rixsel</span> <span class="o">=</span> <span class="n">Nr</span><span class="o">//</span><span class="mi">2</span> <span class="c1"># index of r position whose z profile is analysed</span>
-               <span class="c1"># Take center of domain as representative &#39;radially averaged&quot; temperature</span>
+               <span class="c1"># Take center of domain as representative 'radially averaged" temperature</span>
                <span class="c1"># along the rod</span>
 <span class="n">Tdev_tol</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="c1"># acceptable deviation between FVM Cylindrical2D and analytic 1D model</span>
 </pre></div>
@@ -362,7 +362,7 @@ cylinder.</em></p>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Tcell</span><span class="o">.</span><span class="n">BCs</span><span class="o">.</span><span class="n">bottom</span><span class="o">.</span><span class="n">fixedValue</span><span class="p">(</span><span class="n">T_source</span><span class="p">)</span>
 
-<span class="c1"># Finally, the &#39;top&#39; boundary condition setting should be irrelevant</span>
+<span class="c1"># Finally, the 'top' boundary condition setting should be irrelevant</span>
 <span class="c1"># because the cylinder should long enough such that the extremity is</span>
 <span class="c1"># already at T_ext. All BC types should give same result.</span>
 <span class="c1"># Tcell.BCs.top.fixedValue(T_ext)</span>
@@ -433,12 +433,12 @@ cylinder.</em></p>
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zz</span><span class="p">,</span> <span class="n">Trrzz</span><span class="p">[</span><span class="n">rixsel</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;FVM Cyl2D&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zz</span><span class="p">,</span> <span class="n">Tan</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;analytic 1D&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;T / K&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;z / m&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zz</span><span class="p">,</span> <span class="n">Trrzz</span><span class="p">[</span><span class="n">rixsel</span><span class="p">,</span> <span class="p">:],</span> <span class="s1">'r-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'FVM Cyl2D'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zz</span><span class="p">,</span> <span class="n">Tan</span><span class="p">,</span> <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'analytic 1D'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'T / K'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'z / m'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Cylindrical cooling fin with Newton boundaries&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'Cylindrical cooling fin with Newton boundaries'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -457,7 +457,7 @@ cylinder.</em></p>
 
 <span class="n">Tdev</span> <span class="o">=</span> <span class="n">Tan</span> <span class="o">-</span> <span class="n">Trrzz</span><span class="p">[</span><span class="n">rixsel</span><span class="p">,</span> <span class="p">:]</span>
 <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">Tdev</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">Tdev_tol</span><span class="p">),</span>\
-    <span class="s2">&quot;deviation beyond tolerance between Cylindrical2D FVM and analytical 1D models&quot;</span>
+    <span class="s2">"deviation beyond tolerance between Cylindrical2D FVM and analytical 1D models"</span>
 </pre></div>
 </div>
 </div>

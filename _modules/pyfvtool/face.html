@@ -289,7 +289,7 @@
 <div class="viewcode-block" id="FaceVariable">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.face.FaceVariable">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">FaceVariable</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Face variable class</span>
 <span class="sd">    </span>
 
@@ -299,7 +299,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; f = pf.FaceVariable(m, 1.0)</span>
 
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">,</span> <span class="n">faceval</span> <span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="o">...</span>
@@ -357,7 +357,7 @@
                     <span class="n">_yvalue</span> <span class="o">=</span> <span class="n">faceval</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">Nz</span><span class="p">))</span>
                     <span class="n">_zvalue</span> <span class="o">=</span> <span class="n">faceval</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Unexpected number of arguments&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Unexpected number of arguments'</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">domain</span> <span class="o">=</span> <span class="n">mesh</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_xvalue</span> <span class="o">=</span> <span class="n">_xvalue</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_yvalue</span> <span class="o">=</span> <span class="n">_yvalue</span>
@@ -373,13 +373,13 @@
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;xvalue does not exist for cylindrical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'xvalue does not exist for cylindrical grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;xvalue does not exist for polar or spherical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'xvalue does not exist for polar or spherical grids'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
      
     <span class="nd">@xvalue</span><span class="o">.</span><span class="n">setter</span>
@@ -391,13 +391,13 @@
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;xvalue does not exist for cylindrical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'xvalue does not exist for cylindrical grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;xvalue does not exist for polar or spherical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'xvalue does not exist for polar or spherical grids'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
               
     
@@ -407,17 +407,17 @@
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>    
              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yvalue</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;yvalue does not exist for 1D Cartesian grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'yvalue does not exist for 1D Cartesian grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;yvalue does not exist for cylindrical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'yvalue does not exist for cylindrical grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;yvalue does not exist for polar or spherical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'yvalue does not exist for polar or spherical grids'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
     
     <span class="nd">@yvalue</span><span class="o">.</span><span class="n">setter</span>
@@ -426,17 +426,17 @@
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>    
              <span class="bp">self</span><span class="o">.</span><span class="n">_yvalue</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;yvalue does not exist for 1D Cartesian grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'yvalue does not exist for 1D Cartesian grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;yvalue does not exist for cylindrical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'yvalue does not exist for cylindrical grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;yvalue does not exist for polar or spherical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'yvalue does not exist for polar or spherical grids'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
 
         
@@ -447,17 +447,17 @@
              <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_zvalue</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;zvalue does not exist for 1D and 2D Cartesian grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'zvalue does not exist for 1D and 2D Cartesian grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
-             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;zvalue does not exist for 1D cylindrical grids&#39;</span><span class="p">)</span>            
+             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'zvalue does not exist for 1D cylindrical grids'</span><span class="p">)</span>            
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">):</span>
               <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_yvalue</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;zvalue does not exist for polar or spherical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'zvalue does not exist for polar or spherical grids'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                              <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>       
 
     <span class="nd">@zvalue</span><span class="o">.</span><span class="n">setter</span>
@@ -467,17 +467,17 @@
              <span class="bp">self</span><span class="o">.</span><span class="n">_zvalue</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;zvalue does not exist for 1D and 2D Cartesian grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'zvalue does not exist for 1D and 2D Cartesian grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
-             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;zvalue does not exist for 1D cylindrical grids&#39;</span><span class="p">)</span>            
+             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'zvalue does not exist for 1D cylindrical grids'</span><span class="p">)</span>            
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">):</span>
               <span class="bp">self</span><span class="o">.</span><span class="n">_yvalue</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;zvalue does not exist for polar or spherical grids&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'zvalue does not exist for polar or spherical grids'</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+             <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                              <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>   
 
 
@@ -486,7 +486,7 @@
         <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>    
-             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;rvalue does not exist for Cartesian grids&#39;</span><span class="p">)</span>
+             <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'rvalue does not exist for Cartesian grids'</span><span class="p">)</span>
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">)</span>\
@@ -495,7 +495,7 @@
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xvalue</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
      
     <span class="nd">@rvalue</span><span class="o">.</span><span class="n">setter</span>
@@ -512,7 +512,7 @@
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_xvalue</span> <span class="o">=</span> <span class="n">value</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>
 
 
@@ -525,12 +525,12 @@
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;thetavalue does not exist for Cartesian grids&#39;</span><span class="p">)</span>    
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'thetavalue does not exist for Cartesian grids'</span><span class="p">)</span>    
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;thetavalue does not exist for 1D and 2D cylindrical grids&#39;</span><span class="p">)</span> 
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'thetavalue does not exist for 1D and 2D cylindrical grids'</span><span class="p">)</span> 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>        
         
     <span class="nd">@thetavalue</span><span class="o">.</span><span class="n">setter</span>
@@ -542,12 +542,12 @@
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;thetavalue does not exist for Cartesian grids&#39;</span><span class="p">)</span>    
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'thetavalue does not exist for Cartesian grids'</span><span class="p">)</span>    
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;thetavalue does not exist for 1D and 2D cylindrical grids&#39;</span><span class="p">)</span> 
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'thetavalue does not exist for 1D and 2D cylindrical grids'</span><span class="p">)</span> 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>      
 
 
@@ -558,14 +558,14 @@
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;phivalue does not exist for Cartesian grids&#39;</span><span class="p">)</span>    
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'phivalue does not exist for Cartesian grids'</span><span class="p">)</span>    
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
           <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
           <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
           <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;phivalue does not exist for cylindrical and polar grids&#39;</span><span class="p">)</span> 
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'phivalue does not exist for cylindrical and polar grids'</span><span class="p">)</span> 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>        
         
     <span class="nd">@phivalue</span><span class="o">.</span><span class="n">setter</span>
@@ -575,14 +575,14 @@
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid2D</span><span class="p">)</span>\
          <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;phivalue does not exist for Cartesian grids&#39;</span><span class="p">)</span>    
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'phivalue does not exist for Cartesian grids'</span><span class="p">)</span>    
         <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">)</span>\
           <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid2D</span><span class="p">)</span>\
           <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">PolarGrid2D</span><span class="p">)</span>\
           <span class="ow">or</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid3D</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">&#39;phivalue does not exist for cylindrical and polar grids&#39;</span><span class="p">)</span> 
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s1">'phivalue does not exist for cylindrical and polar grids'</span><span class="p">)</span> 
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;FaceVariable not implemented for mesh type &#39;</span><span class="si">{0:s}</span><span class="s2">&#39;&quot;</span><span class="o">.</span>\
+            <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"FaceVariable not implemented for mesh type '</span><span class="si">{0:s}</span><span class="s2">'"</span><span class="o">.</span>\
                             <span class="nb">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">domain</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">))</span>   
                 
     
@@ -768,7 +768,7 @@
 <div class="viewcode-block" id="faceLocations">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.face.faceLocations">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">faceLocations</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="n">MeshStructure</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    this function returns the location of the cell faces as face variables. </span>
 <span class="sd">    </span>
 <span class="sd">    It can later be used for the calculation of face variables as a function of location</span>
@@ -800,7 +800,7 @@
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;     </span>
 <span class="sd">    </span>
-<span class="sd">    &quot;&quot;&quot;</span>    
+<span class="sd">    """</span>    
     
     <span class="n">N</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">dims</span>
     
@@ -848,7 +848,7 @@
         <span class="n">Z</span><span class="o">.</span><span class="n">_zvalue</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="p">(</span><span class="n">N</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">N</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">Z</span>
         
-    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;mesh type not implemented&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'mesh type not implemented'</span><span class="p">)</span>
     <span class="k">return</span> <span class="kc">None</span></div>
 
         
@@ -857,14 +857,14 @@
 <div class="viewcode-block" id="faceeval">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.face.faceeval">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">faceeval</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Evaluate a function f on a FaceVariable.</span>
 <span class="sd">    Examples:</span>
 <span class="sd">    &gt;&gt;&gt; import pyfvtool as pf</span>
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; f = pf.FaceVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; g = pf.faceeval(lambda x: x**2, f)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FaceVariable</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span>
                             <span class="n">f</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">_xvalue</span><span class="p">),</span>

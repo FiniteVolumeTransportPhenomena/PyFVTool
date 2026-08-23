@@ -337,14 +337,14 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">crank522</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&#39;&#39;&#39;evaluate eqn 5.22 for a given r,t</span>
+<span class="w">    </span><span class="sd">'''evaluate eqn 5.22 for a given r,t</span>
 <span class="sd">    a : radius of cylinder</span>
 <span class="sd">    D : diffusion coefficient</span>
 
 <span class="sd">    the following global variables need to be set</span>
 
 <span class="sd">    Nterm_crank : number of terms to be evaluated</span>
-<span class="sd">    &#39;&#39;&#39;</span>
+<span class="sd">    '''</span>
     <span class="k">global</span> <span class="n">Nterm_crank</span>
 
     <span class="n">aalp</span> <span class="o">=</span> <span class="n">jn_zeros</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nterm_crank</span><span class="p">)</span>
@@ -388,9 +388,9 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
           <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]:</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">crank522</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">a_val</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_an</span><span class="p">])</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_an</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;rel. radial position&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rel. temperature&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;analytic solution&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'rel. radial position'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'rel. temperature'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'analytic solution'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
@@ -479,7 +479,7 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
         <span class="n">r</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
         <span class="n">c_an</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">crank522</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span><span class="n">t</span><span class="p">,</span><span class="n">a_val</span><span class="p">,</span><span class="n">D_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_an</span><span class="p">])</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_an</span><span class="p">,</span><span class="n">c_an</span><span class="p">,</span> <span class="s1">&#39;k:&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_an</span><span class="p">,</span><span class="n">c_an</span><span class="p">,</span> <span class="s1">'k:'</span><span class="p">)</span>
     <span class="c1"># calculate the value of D at the faces</span>
     <span class="c1"># as the harmonic mean of the values at the centers</span>
     <span class="n">Dave</span> <span class="o">=</span> <span class="n">harmonicMean</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
@@ -487,9 +487,9 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
              <span class="p">[</span> <span class="n">transientTerm</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">alfa</span><span class="p">),</span>
               <span class="o">-</span><span class="n">diffusionTerm</span><span class="p">(</span><span class="n">Dave</span><span class="p">)])</span>
     <span class="n">t</span> <span class="o">+=</span> <span class="n">deltat</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position $r$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;rel. temperature $T$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;FVM (PyFVTool) solution. Dotted line = analytic&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'radial position $r$'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'rel. temperature $T$'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">'FVM (PyFVTool) solution. Dotted line = analytic'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -511,9 +511,9 @@ then start, which takes more time (don’t overdo it - use a timer. Oh, and by t
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r_num</span><span class="p">,</span> <span class="n">phi_num</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
 <span class="n">phi_an_r_num</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">crank522</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">a_val</span><span class="p">,</span> <span class="n">D_val</span><span class="p">)</span> <span class="k">for</span> <span class="n">rr</span> <span class="ow">in</span> <span class="n">r_num</span><span class="p">])</span>
 <span class="n">norm_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">phi_num</span> <span class="o">-</span> <span class="n">phi_an_r_num</span><span class="p">)</span><span class="o">/</span><span class="n">phi_an_r_num</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position $r$&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;norm. error FV vs analytic&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'radial position $r$'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'norm. error FV vs analytic'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

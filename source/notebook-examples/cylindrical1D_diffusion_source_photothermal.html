@@ -371,7 +371,7 @@
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;t_c = </span><span class="si">{</span><span class="n">t_c</span><span class="o">*</span><span class="mf">1000.</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> ms&#39;</span><span class="p">)</span>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'t_c = </span><span class="si">{</span><span class="n">t_c</span><span class="o">*</span><span class="mf">1000.</span><span class="si">:</span><span class="s1">.3f</span><span class="si">}</span><span class="s1"> ms'</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -390,8 +390,8 @@ t_c = 4.365 ms
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rrx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">w</span><span class="o">*</span><span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rrx</span><span class="p">,</span> <span class="n">S</span><span class="p">(</span><span class="n">rrx</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;irradiance [W/m2]&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position [m]&#39;</span><span class="p">);</span> <span class="c1"># semicolon to avoid print text object descriptor to output</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'irradiance [W/m2]'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'radial position [m]'</span><span class="p">);</span> <span class="c1"># semicolon to avoid print text object descriptor to output</span>
 </pre></div>
 </div>
 </div>
@@ -408,9 +408,9 @@ t_c = 4.365 ms
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">DeltaT_Carter</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">t_c</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Carter1984 expression</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># for now. TODO</span>
     <span class="n">A</span> <span class="o">=</span> <span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="n">k</span><span class="p">)</span>
     <span class="n">B</span> <span class="o">=</span> <span class="n">P</span><span class="o">*</span><span class="n">alpha</span>
@@ -425,26 +425,26 @@ t_c = 4.365 ms
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">tlintgd</span><span class="p">(</span><span class="n">ti</span><span class="p">,</span> <span class="n">tc</span><span class="p">,</span> <span class="n">r2w2</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    integrand for photothermal heat profile analytic solution</span>
 
 <span class="sd">    ti : float</span>
-<span class="sd">    t&#39; in the formula (integration variable)</span>
+<span class="sd">    t' in the formula (integration variable)</span>
 <span class="sd">    tc : float</span>
 <span class="sd">         t_c as specified in formula t_c=(w**2*c*rho)/(4*k)</span>
 <span class="sd">    r2w2 : float</span>
 <span class="sd">           r2w2 = r**2/w**2 (to avoid recalculation)</span>
 
 <span class="sd">    more optimisation may be possible (2/tc factor) but wait for now</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ti</span><span class="o">/</span><span class="n">tc</span><span class="p">)))</span>
     <span class="n">B</span> <span class="o">=</span> <span class="n">exp</span><span class="p">((</span><span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">r2w2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">ti</span><span class="o">/</span><span class="n">tc</span><span class="p">)))</span>
     <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">B</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_DeltaT_Sheldon</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">tc</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sheldon1982 expression (scalar only)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="c1"># for now. TODO</span>
     <span class="n">A</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">P</span><span class="o">*</span><span class="n">alpha</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">pi</span><span class="o">*</span><span class="n">cp</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="n">w</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
     <span class="n">r2w2</span> <span class="o">=</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">w</span><span class="o">**</span><span class="mi">2</span>
@@ -452,9 +452,9 @@ t_c = 4.365 ms
     <span class="k">return</span> <span class="n">A</span><span class="o">*</span><span class="n">C</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">DeltaT_Sheldon</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">tc</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Sheldon1982 expression (scalar/vector)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="o">==</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_DeltaT_Sheldon</span><span class="p">(</span><span class="n">rrr</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">)</span>\
                            <span class="k">for</span> <span class="n">rrr</span> <span class="ow">in</span> <span class="n">r</span><span class="p">])</span>
@@ -480,11 +480,11 @@ t_c = 4.365 ms
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t</span> <span class="o">=</span> <span class="mf">0.1</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr1</span><span class="p">,</span> <span class="n">DeltaT_Carter</span><span class="p">(</span><span class="n">rr1</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span>
-         <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Carter1984 (expon. integ.)&#39;</span><span class="p">)</span>
+         <span class="s1">'r-'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Carter1984 (expon. integ.)'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span>
-         <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Sheldon1982 (simple integ.)&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position / m&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;temp. change / K&#39;</span><span class="p">)</span>
+         <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">'Sheldon1982 (simple integ.)'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'radial position / m'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'temp. change / K'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -604,11 +604,11 @@ t_c = 4.365 ms
     <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">sample_i</span><span class="p">:</span>
         <span class="n">r</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">fv_T</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
         <span class="n">ln0</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">phi</span><span class="p">)</span>
-        <span class="n">ln1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">deltat</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span> <span class="s1">&#39;k:&#39;</span><span class="p">)</span>
+        <span class="n">ln1</span><span class="p">,</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">rr0</span><span class="p">,</span> <span class="n">i</span><span class="o">*</span><span class="n">deltat</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">),</span> <span class="s1">'k:'</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">OKlegend</span><span class="p">:</span>
             <span class="n">OKlegend</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="n">ln0</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;FVM&#39;</span><span class="p">)</span>
-            <span class="n">ln1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;analytic&#39;</span><span class="p">)</span>
+            <span class="n">ln0</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'FVM'</span><span class="p">)</span>
+            <span class="n">ln1</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">'analytic'</span><span class="p">)</span>
     <span class="c1"># create time-dependent matrix contributions (transientTerm)</span>
     <span class="n">transientterm</span> <span class="o">=</span> <span class="n">transientTerm</span><span class="p">(</span><span class="n">fv_T</span><span class="p">,</span> <span class="n">deltat</span><span class="p">,</span> <span class="n">fv_transcoeff</span><span class="p">)</span>
 
@@ -621,8 +621,8 @@ t_c = 4.365 ms
 
 <span class="k">if</span> <span class="n">OKlegend</span><span class="p">:</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position / m&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;temp. change / K&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'radial position / m'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'temp. change / K'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -644,9 +644,9 @@ t_c = 4.365 ms
 <span class="n">r_num</span><span class="p">,</span> <span class="n">phi_num</span> <span class="o">=</span> <span class="n">fv_T</span><span class="o">.</span><span class="n">plotprofile</span><span class="p">()</span>
 <span class="n">phi_an_r_num</span> <span class="o">=</span> <span class="n">DeltaT_Sheldon</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">t_c</span><span class="p">)</span>
 <span class="n">norm_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">phi_num</span> <span class="o">-</span> <span class="n">phi_an_r_num</span><span class="p">)</span><span class="o">/</span><span class="n">phi_an_r_num</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">&#39;o&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;radial position / m&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;norm. error FV vs analytic&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">,</span> <span class="s1">'o'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'radial position / m'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'norm. error FV vs analytic'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>

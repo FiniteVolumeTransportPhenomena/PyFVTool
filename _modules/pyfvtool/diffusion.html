@@ -759,7 +759,7 @@
 <div class="viewcode-block" id="diffusionTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.diffusion.diffusionTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">diffusionTerm</span><span class="p">(</span><span class="n">D</span><span class="p">:</span> <span class="n">FaceVariable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">csr_array</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds the discretized diffusion term in matrix form for a given</span>
+<span class="w">    </span><span class="sd">"""Builds the discretized diffusion term in matrix form for a given</span>
 <span class="sd">    Cartesian mesh.</span>
 
 <span class="sd">    Parameters</span>
@@ -778,7 +778,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; D = pf.FaceVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; M = pf.diffusionTerm(D)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">diffusionTerm1D</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CylindricalGrid1D</span><span class="p">):</span>
@@ -798,7 +798,7 @@
     <span class="k">elif</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">domain</span><span class="p">)</span> <span class="ow">is</span> <span class="n">SphericalGrid3D</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">diffusionTermSpherical3D</span><span class="p">(</span><span class="n">D</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;DiffusionTerm is not defined for this Mesh type.&quot;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">"DiffusionTerm is not defined for this Mesh type."</span><span class="p">)</span></div>
 
 </pre></div>
         </article>

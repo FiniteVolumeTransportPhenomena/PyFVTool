@@ -365,7 +365,7 @@
 
 <span class="c1"># # It runs now</span>
 <span class="c1"># # the [:, np.newaxis] is just amazing!</span>
-<span class="c1"># # The code is not clean. I&#39;m still doing lots of copy and pasting with tons of</span>
+<span class="c1"># # The code is not clean. I'm still doing lots of copy and pasting with tons of</span>
 <span class="c1"># # boiler plate. But remember any answer is better than no answer.</span>
 <span class="c1"># # The final boundary: 3D cylindrical</span>
 <span class="c1"># m_cyl = MeshCylindrical3D(7,9,10, 1, 2*np.pi,3)</span>
@@ -376,7 +376,7 @@
 
 <span class="c1"># # It runs now! Now I will add all the cell and face variable creations.</span>
 <span class="c1"># # the saga continues</span>
-<span class="c1"># # Now I&#39;m creating the CellVariables, for which I need cellBoundary functions.</span>
+<span class="c1"># # Now I'm creating the CellVariables, for which I need cellBoundary functions.</span>
 <span class="c1"># # Here they are being tested:</span>
 <span class="c1"># Nx = 5</span>
 <span class="c1"># Ny = 6</span>
@@ -423,10 +423,10 @@
 <span class="c1"># # the overloading functions must wait until later this afternoon.</span>
 <span class="c1"># # for overloading, python has __add__ and __radd__ for the second argument and __iadd__ for +=</span>
 <span class="c1"># # It will be a lot of writing today!</span>
-<span class="c1"># # now I&#39;m moving to porting the diffusion and advection terms.</span>
+<span class="c1"># # now I'm moving to porting the diffusion and advection terms.</span>
 <span class="c1"># # It is going to be fun because we are very close to having the first 1D problems solved!</span>
 <span class="c1"># # I will also write the first tests for the cell and face creation here:</span>
-<span class="c1"># # let&#39;s create a face variable and test the diffusion term</span>
+<span class="c1"># # let's create a face variable and test the diffusion term</span>
 <span class="c1"># D = createFaceVariable(m1, np.array([1.0]))</span>
 <span class="c1"># # D_obj = DiffusionTerm(D)</span>
 <span class="c1"># M = diffusionTerm1D(D)</span>
@@ -437,7 +437,7 @@
 <span class="c1"># M = diffusionTerm2D(D2)</span>
 <span class="c1"># print(M[0])</span>
 
-<span class="c1"># # Now I&#39;m testing the first PDE:</span>
+<span class="c1"># # Now I'm testing the first PDE:</span>
 <span class="c1"># # steady state diffusion equation</span>
 <span class="c1"># m1 = Mesh1D(20, 1.0)</span>
 <span class="c1"># BC = createBC(m1)</span>
@@ -484,7 +484,7 @@
 <span class="c1"># # with a bit of clean up. Everything is already done in</span>
 <span class="c1"># # pyplot for Julia.</span>
 
-<span class="c1"># # Now I&#39;m just testing the 3D diffusion term.</span>
+<span class="c1"># # Now I'm just testing the 3D diffusion term.</span>
 <span class="c1"># m3 = Mesh3D(Nx, Ny, Nz, Lx, Ly, Lz)</span>
 <span class="c1"># D3 = createFaceVariable(m3, np.array([1.0, 2.0, 3.0]))</span>
 <span class="c1"># M3 = diffusionTerm(D3)</span>
@@ -507,16 +507,16 @@
     <span class="n">D</span> <span class="o">=</span> <span class="n">createFaceVariable</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]))</span>
     <span class="n">M</span> <span class="o">=</span> <span class="n">diffusionTerm</span><span class="p">(</span><span class="n">D</span><span class="p">)</span>
 <span class="n">u</span> <span class="o">=</span> <span class="n">createFaceVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;before upwind call: &quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"before upwind call: "</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">xvalue</span><span class="p">)</span>
 <span class="n">uu</span> <span class="o">=</span> <span class="n">createFaceVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.0</span><span class="p">])</span>
 <span class="n">M1</span> <span class="o">=</span> <span class="n">convectionTerm</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
 <span class="n">Mup</span> <span class="o">=</span> <span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">uu</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;after upwind call: &quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"after upwind call: "</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">xvalue</span><span class="p">)</span>
 <span class="n">BC1</span> <span class="o">=</span> <span class="n">createBC</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">BC1</span><span class="p">)</span>
-<span class="n">FL</span> <span class="o">=</span> <span class="n">fluxLimiter</span><span class="p">(</span><span class="s2">&quot;SUPERBEE&quot;</span><span class="p">)</span>
+<span class="n">FL</span> <span class="o">=</span> <span class="n">fluxLimiter</span><span class="p">(</span><span class="s2">"SUPERBEE"</span><span class="p">)</span>
 <span class="n">rhs_tvd</span> <span class="o">=</span> <span class="n">convectionTvdRHSTerm</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">FL</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">rhs_tvd</span><span class="p">)</span>
 
@@ -524,7 +524,7 @@
 <span class="c1"># not a bad thing necessarily. I can clean them up later. One issue is that if there</span>
 <span class="c1"># is a bug in those part, than I have to clean up several functions.</span>
 <span class="c1"># I have implemented two more concection (that is advection really) terms.</span>
-<span class="c1"># I also deactivated previous days&#39; function calls to make this code</span>
+<span class="c1"># I also deactivated previous days' function calls to make this code</span>
 <span class="c1"># lighter.</span>
 <span class="c1"># Here we go:</span>
 <span class="n">ucyl1</span> <span class="o">=</span> <span class="n">createFaceVariable</span><span class="p">(</span><span class="n">mcyl1</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">])</span>
@@ -532,7 +532,7 @@
 <span class="n">Mup</span> <span class="o">=</span> <span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 <span class="n">BCcyl1</span> <span class="o">=</span> <span class="n">createBC</span><span class="p">(</span><span class="n">mcyl1</span><span class="p">)</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">mcyl1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">BCcyl1</span><span class="p">)</span>
-<span class="n">FL</span> <span class="o">=</span> <span class="n">fluxLimiter</span><span class="p">(</span><span class="s2">&quot;SUPERBEE&quot;</span><span class="p">)</span>
+<span class="n">FL</span> <span class="o">=</span> <span class="n">fluxLimiter</span><span class="p">(</span><span class="s2">"SUPERBEE"</span><span class="p">)</span>
 <span class="n">rhs_tvd</span> <span class="o">=</span> <span class="n">convectionTvdRHSTerm</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">FL</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">rhs_tvd</span><span class="p">)</span>
 
@@ -541,7 +541,7 @@
 <span class="n">Mup</span> <span class="o">=</span> <span class="n">convectionUpwindTerm</span><span class="p">(</span><span class="n">u2</span><span class="p">,</span> <span class="n">u2</span><span class="p">)</span>
 <span class="n">BC2</span> <span class="o">=</span> <span class="n">createBC</span><span class="p">(</span><span class="n">m2</span><span class="p">)</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">m2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">BC2</span><span class="p">)</span>
-<span class="n">FL</span> <span class="o">=</span> <span class="n">fluxLimiter</span><span class="p">(</span><span class="s2">&quot;SUPERBEE&quot;</span><span class="p">)</span>
+<span class="n">FL</span> <span class="o">=</span> <span class="n">fluxLimiter</span><span class="p">(</span><span class="s2">"SUPERBEE"</span><span class="p">)</span>
 <span class="c1"># rhs_tvd = convectionTvdRHS2D(u, phi, FL, u)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">rhs_tvd</span><span class="p">)</span>
 
@@ -574,11 +574,11 @@
     <span class="n">c_face</span> <span class="o">=</span> <span class="n">linearMean</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 
 <span class="c1"># seems to run fine. I also missed a couple of mistake in source that are fixed now.</span>
-<span class="c1"># Now the linear averaging works fine. I&#39;m also getting the hang of np.newaxis and</span>
-<span class="c1"># how to do vectorization the right way in numpy (I guess). I&#39;m not sure if my code is the most efficient one</span>
+<span class="c1"># Now the linear averaging works fine. I'm also getting the hang of np.newaxis and</span>
+<span class="c1"># how to do vectorization the right way in numpy (I guess). I'm not sure if my code is the most efficient one</span>
 <span class="c1"># but it does not look too bad.</span>
 
-<span class="c1"># more development despite limited time. At this point, I&#39;m using this code for</span>
+<span class="c1"># more development despite limited time. At this point, I'm using this code for</span>
 <span class="c1"># therapy :-)</span>
 <span class="n">bc</span> <span class="o">=</span> <span class="n">createBC</span><span class="p">(</span><span class="n">m1</span><span class="p">)</span>
 <span class="n">phi</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">cellcenters</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="n">bc</span><span class="p">)</span>
@@ -589,10 +589,10 @@
 <span class="c1"># visualizeCells(phi)</span>
 
 <span class="c1"># I missed a lot of stories here since the development and debugging became a bit too fast.</span>
-<span class="c1"># I finally added some integrated tests in the form of analytical solutions. Now, I&#39;m going</span>
+<span class="c1"># I finally added some integrated tests in the form of analytical solutions. Now, I'm going</span>
 <span class="c1"># to make it availale via pypi and conda-forge</span>
 <span class="c1"># but before that, I create some more examples and convenience functions.</span>
-<span class="c1"># let&#39;s see if createCellVariable works fine:</span>
+<span class="c1"># let's see if createCellVariable works fine:</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">dims</span><span class="p">),</span> <span class="n">createBC</span><span class="p">(</span><span class="n">m1</span><span class="p">))</span>
 <span class="n">c</span> <span class="o">=</span> <span class="n">createCellVariable</span><span class="p">(</span><span class="n">m1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">m1</span><span class="o">.</span><span class="n">dims</span><span class="p">))</span>

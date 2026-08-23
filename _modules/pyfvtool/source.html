@@ -287,7 +287,7 @@
 <div class="viewcode-block" id="constantSourceTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.source.constantSourceTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">constantSourceTerm</span><span class="p">(</span><span class="n">gamma</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Constant source term in a PDE.</span>
 <span class="sd">    </span>
 <span class="sd">    The value of this source `gamma` may be different in each cell, but is </span>
@@ -310,7 +310,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; gamma = pf.CellVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; RHS = pf.constantSourceTerm(gamma)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">gamma</span><span class="o">.</span><span class="n">domain</span>
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="n">Nx</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -340,7 +340,7 @@
 <div class="viewcode-block" id="linearSourceTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.source.linearSourceTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">linearSourceTerm</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Linear source term in a PDE.</span>
 
 <span class="sd">    The linear source term takes the form `beta*phi` where `phi` is the</span>
@@ -363,7 +363,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; beta = pf.CellVariable(m, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; M = pf.linearSourceTerm(beta)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">beta</span><span class="o">.</span><span class="n">domain</span>
     <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">m</span><span class="p">),</span> <span class="n">Grid1D</span><span class="p">):</span>
         <span class="n">Nx</span> <span class="o">=</span> <span class="n">m</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -395,7 +395,7 @@
 <div class="viewcode-block" id="transientTerm">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.source.transientTerm">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">transientTerm</span><span class="p">(</span><span class="n">phi</span><span class="p">:</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Transient term of a PDE.</span>
 
 <span class="sd">    Parameters</span>
@@ -421,7 +421,7 @@
 <span class="sd">    &gt;&gt;&gt; m = pf.Grid1D(10, 1.0)</span>
 <span class="sd">    &gt;&gt;&gt; phi_old = pf.CellVariable(m, 0.0)</span>
 <span class="sd">    &gt;&gt;&gt; M, RHS = pf.transientTerm(phi_old, 1.0, 1.0)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span> <span class="ow">is</span> <span class="n">CellVariable</span><span class="p">):</span>
         <span class="n">a</span> <span class="o">=</span> <span class="n">CellVariable</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span>
                          <span class="n">BoundaryConditions</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">domain</span><span class="p">))</span>

@@ -299,9 +299,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">result</span>
     
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -309,133 +309,133 @@
     
     
     <span class="c1"># The following coordinate-labeling properties should be read-only.</span>
-    <span class="c1"># For this reason, the &#39;setters&#39; have been commented out, but are kept for</span>
+    <span class="c1"># For this reason, the 'setters' have been commented out, but are kept for</span>
     <span class="c1"># future reference.</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;x&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_x&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'x'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'x'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_x'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Unexpectedly, user label &#39;x&#39; does not correspond to &#39;_x&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"Unexpectedly, user label 'x' does not correspond to '_x'"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This mesh has no coordinate labeled &#39;x&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"This mesh has no coordinate labeled 'x'."</span><span class="p">)</span>
             
     <span class="c1"># @x.setter</span>
     <span class="c1"># def x(self, value):</span>
-    <span class="c1">#     if &#39;x&#39; in self.coordlabels:</span>
-    <span class="c1">#         if self.coordlabels[&#39;x&#39;]==&#39;_x&#39;:</span>
+    <span class="c1">#     if 'x' in self.coordlabels:</span>
+    <span class="c1">#         if self.coordlabels['x']=='_x':</span>
     <span class="c1">#             self._x = value</span>
     <span class="c1">#         else:</span>
-    <span class="c1">#             raise AttributeError(&quot;Unexpectedly, user label &#39;x&#39; does not correspond to &#39;_x&#39;&quot;)</span>
+    <span class="c1">#             raise AttributeError("Unexpectedly, user label 'x' does not correspond to '_x'")</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         raise AttributeError(&quot;This mesh has no coordinate labeled &#39;x&#39;.&quot;)</span>
+    <span class="c1">#         raise AttributeError("This mesh has no coordinate labeled 'x'.")</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">r</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;r&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_x&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'r'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'r'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_x'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_x</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;Unexpectedly, user label &#39;r&#39; does not correspond to &#39;_x&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"Unexpectedly, user label 'r' does not correspond to '_x'"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This mesh has no coordinate labeled &#39;r&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"This mesh has no coordinate labeled 'r'."</span><span class="p">)</span>
             
     <span class="c1"># @r.setter</span>
     <span class="c1"># def r(self, value):</span>
-    <span class="c1">#     if &#39;r&#39; in self.coordlabels:</span>
-    <span class="c1">#         if self.coordlabels[&#39;r&#39;]==&#39;_x&#39;:</span>
+    <span class="c1">#     if 'r' in self.coordlabels:</span>
+    <span class="c1">#         if self.coordlabels['r']=='_x':</span>
     <span class="c1">#             self._x = value</span>
     <span class="c1">#         else:</span>
-    <span class="c1">#             raise AttributeError(&quot;Unexpectedly, user label &#39;r&#39; does not correspond to &#39;_x&#39;&quot;)</span>
+    <span class="c1">#             raise AttributeError("Unexpectedly, user label 'r' does not correspond to '_x'")</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         raise AttributeError(&quot;This mesh has no coordinate labeled &#39;r&#39;.&quot;)</span>
+    <span class="c1">#         raise AttributeError("This mesh has no coordinate labeled 'r'.")</span>
     
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">z</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;z&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_y&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'z'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_y'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_z&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_z'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected label correspondence: &#39;z&#39; -&gt; &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected label correspondence: 'z' -&gt; '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'z'</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This mesh has no coordinate labeled &#39;z&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"This mesh has no coordinate labeled 'z'."</span><span class="p">)</span>
             
     <span class="c1"># @z.setter</span>
     <span class="c1"># def z(self, value):</span>
-    <span class="c1">#     if &#39;z&#39; in self.coordlabels:</span>
-    <span class="c1">#         if self.coordlabels[&#39;z&#39;]==&#39;_y&#39;:</span>
+    <span class="c1">#     if 'z' in self.coordlabels:</span>
+    <span class="c1">#         if self.coordlabels['z']=='_y':</span>
     <span class="c1">#             self._y = value</span>
-    <span class="c1">#         if self.coordlabels[&#39;z&#39;]==&#39;_z&#39;:</span>
+    <span class="c1">#         if self.coordlabels['z']=='_z':</span>
     <span class="c1">#             self._z = value</span>
     <span class="c1">#         else:</span>
-    <span class="c1">#             raise AttributeError(f&quot;Unexpected label correspondence: &#39;z&#39; -&gt; &#39;{self.coordlabels[&#39;z&#39;]}&#39;&quot;)</span>
+    <span class="c1">#             raise AttributeError(f"Unexpected label correspondence: 'z' -&gt; '{self.coordlabels['z']}'")</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         raise AttributeError(&quot;This mesh has no coordinate labeled &#39;z&#39;.&quot;)</span>
+    <span class="c1">#         raise AttributeError("This mesh has no coordinate labeled 'z'.")</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;y&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_y&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'y'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_y'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected label correspondence: &#39;y&#39; -&gt; &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected label correspondence: 'y' -&gt; '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This mesh has no coordinate labeled &#39;y&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"This mesh has no coordinate labeled 'y'."</span><span class="p">)</span>
             
     <span class="c1"># @y.setter</span>
     <span class="c1"># def y(self, value):</span>
-    <span class="c1">#     if &#39;y&#39; in self.coordlabels:</span>
-    <span class="c1">#         if self.coordlabels[&#39;y&#39;]==&#39;_y&#39;:</span>
+    <span class="c1">#     if 'y' in self.coordlabels:</span>
+    <span class="c1">#         if self.coordlabels['y']=='_y':</span>
     <span class="c1">#             self._y = value</span>
     <span class="c1">#         else:</span>
-    <span class="c1">#             raise AttributeError(f&quot;Unexpected label correspondence: &#39;y&#39; -&gt; &#39;{self.coordlabels[&#39;y&#39;]}&#39;&quot;)</span>
+    <span class="c1">#             raise AttributeError(f"Unexpected label correspondence: 'y' -&gt; '{self.coordlabels['y']}'")</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         raise AttributeError(&quot;This mesh has no coordinate labeled &#39;y&#39;.&quot;)</span>
+    <span class="c1">#         raise AttributeError("This mesh has no coordinate labeled 'y'.")</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">theta</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;theta&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;theta&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_y&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'theta'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'theta'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_y'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected label correspondence: &#39;theta&#39; -&gt; &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected label correspondence: 'theta' -&gt; '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This mesh has no coordinate labeled &#39;theta&#39;.&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"This mesh has no coordinate labeled 'theta'."</span><span class="p">)</span>
             
     <span class="c1"># @theta.setter</span>
     <span class="c1"># def theta(self, value):</span>
-    <span class="c1">#     if &#39;theta&#39; in self.coordlabels:</span>
-    <span class="c1">#         if self.coordlabels[&#39;theta&#39;]==&#39;_y&#39;:</span>
+    <span class="c1">#     if 'theta' in self.coordlabels:</span>
+    <span class="c1">#         if self.coordlabels['theta']=='_y':</span>
     <span class="c1">#             self._y = value</span>
     <span class="c1">#         else:</span>
-    <span class="c1">#             raise AttributeError(f&quot;Unexpected label correspondence: &#39;theta&#39; -&gt; &#39;{self.coordlabels[&#39;y&#39;]}&#39;&quot;)</span>
+    <span class="c1">#             raise AttributeError(f"Unexpected label correspondence: 'theta' -&gt; '{self.coordlabels['y']}'")</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         raise AttributeError(&quot;This mesh has no coordinate labeled &#39;theta&#39;.&quot;)</span>
+    <span class="c1">#         raise AttributeError("This mesh has no coordinate labeled 'theta'.")</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">phi</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;phi&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;phi&#39;</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_z&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s1">'phi'</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'phi'</span><span class="p">]</span><span class="o">==</span><span class="s1">'_z'</span><span class="p">:</span>
                 <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unexpected label correspondence: &#39;phi&#39; -&gt; &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Unexpected label correspondence: 'phi' -&gt; '</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">coordlabels</span><span class="p">[</span><span class="s1">'y'</span><span class="p">]</span><span class="si">}</span><span class="s2">'"</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;This mesh has no coordinate labeled &#39;phi&#39;.&quot;</span><span class="p">)</span></div>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">"This mesh has no coordinate labeled 'phi'."</span><span class="p">)</span></div>
 
             
     <span class="c1"># @phi.setter</span>
     <span class="c1"># def phi(self, value):</span>
-    <span class="c1">#     if &#39;phi&#39; in self.coordlabels:</span>
-    <span class="c1">#         if self.coordlabels[&#39;phi&#39;]==&#39;_z&#39;:</span>
+    <span class="c1">#     if 'phi' in self.coordlabels:</span>
+    <span class="c1">#         if self.coordlabels['phi']=='_z':</span>
     <span class="c1">#             self._z = value</span>
     <span class="c1">#         else:</span>
-    <span class="c1">#             raise AttributeError(f&quot;Unexpected label correspondence: &#39;phi&#39; -&gt; &#39;{self.coordlabels[&#39;y&#39;]}&#39;&quot;)</span>
+    <span class="c1">#             raise AttributeError(f"Unexpected label correspondence: 'phi' -&gt; '{self.coordlabels['y']}'")</span>
     <span class="c1">#     else:</span>
-    <span class="c1">#         raise AttributeError(&quot;This mesh has no coordinate labeled &#39;phi&#39;.&quot;)</span>
+    <span class="c1">#         raise AttributeError("This mesh has no coordinate labeled 'phi'.")</span>
 
 
 
@@ -477,9 +477,9 @@
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="s2">""</span>
         <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
-            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">result</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">item</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">temp</span><span class="p">[</span><span class="n">item</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span>
         <span class="k">return</span> <span class="n">result</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_facelocation_to_cellsize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">facelocation</span><span class="p">):</span>
@@ -488,7 +488,7 @@
                           <span class="n">facelocation</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">facelocation</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]])</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -497,8 +497,8 @@
 <span class="sd">        </span>
 <span class="sd">        This is an abstract method, and implemented separately in each</span>
 <span class="sd">        MeshStructure subclass.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;_getCellVolumes not implemented for this mesh structure!&quot;</span><span class="p">)</span>
+<span class="sd">        """</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">"_getCellVolumes not implemented for this mesh structure!"</span><span class="p">)</span>
         <span class="k">return</span> <span class="kc">None</span>
 
     <span class="c1"># read-only property cellvolume</span>
@@ -516,7 +516,7 @@
 <div class="viewcode-block" id="Grid1D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid1D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Grid1D</span><span class="p">(</span><span class="n">MeshStructure</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 1D Cartesian grid (x)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 1D Cartesian grid (x)</span>
 <span class="sd">    =====================================</span>
 <span class="sd">    </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -546,7 +546,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import Grid1D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = Grid1D(10, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Lx</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
@@ -571,7 +571,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_1d_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">}):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_1d_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'x'</span><span class="p">:</span><span class="s1">'_x'</span><span class="p">}):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="c1"># Use face locations</span>
             <span class="n">facelocationX</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -608,7 +608,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]),</span>
                 <span class="n">coordlabels</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments for creation of 1D mesh structure.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Incorrect number of arguments for creation of 1D mesh structure.'</span><span class="p">)</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Nx</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">cellsize</span> <span class="o">=</span> <span class="n">cell_size</span>
         <span class="n">cellcenters</span> <span class="o">=</span> <span class="n">cell_location</span>
@@ -618,7 +618,7 @@
         <span class="k">return</span> <span class="n">dims</span><span class="p">,</span> <span class="n">cellsize</span><span class="p">,</span> <span class="n">cellcenters</span><span class="p">,</span> <span class="n">facecenters</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;1D Cartesian mesh with Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"1D Cartesian mesh with Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
 
 <div class="viewcode-block" id="Grid1D.cell_numbers">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid1D.cell_numbers">[docs]</a>
@@ -628,13 +628,13 @@
 
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">V</span> </div>
 
@@ -644,7 +644,7 @@
 <div class="viewcode-block" id="CylindricalGrid1D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.CylindricalGrid1D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CylindricalGrid1D</span><span class="p">(</span><span class="n">Grid1D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 1D cylindrical grid (r)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 1D cylindrical grid (r)</span>
 <span class="sd">    =======================================</span>
 <span class="sd">    </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -674,7 +674,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import CylindricalGrid1D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = CylindricalGrid1D(10, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Lr</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
@@ -695,22 +695,22 @@
                 <span class="o">=</span> <span class="n">args</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span> <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>\
-                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_1d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">})</span>
+                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_1d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'r'</span><span class="p">:</span><span class="s1">'_x'</span><span class="p">})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;1D Cylindrical (radial) mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"1D Cylindrical (radial) mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">V</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
@@ -722,7 +722,7 @@
 <div class="viewcode-block" id="SphericalGrid1D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.SphericalGrid1D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SphericalGrid1D</span><span class="p">(</span><span class="n">Grid1D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 1D spherical grid (r)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 1D spherical grid (r)</span>
 <span class="sd">    =====================================</span>
 <span class="sd">    </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -752,7 +752,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import SphericalGrid1D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = SphericalGrid1D(10, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Lr</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
@@ -773,21 +773,21 @@
                 <span class="o">=</span> <span class="n">args</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span> <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>\
-                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_1d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">})</span>
+                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_1d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'r'</span><span class="p">:</span><span class="s1">'_x'</span><span class="p">})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;1D Spherical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"1D Spherical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">R3_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">R3_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">V</span> <span class="o">=</span> <span class="mf">4.0</span><span class="o">/</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R3_outer</span> <span class="o">-</span> <span class="n">R3_inner</span><span class="p">)</span>
@@ -803,7 +803,7 @@
 <div class="viewcode-block" id="Grid2D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid2D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Grid2D</span><span class="p">(</span><span class="n">MeshStructure</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 2D Cartesian grid (x, y)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 2D Cartesian grid (x, y)</span>
 <span class="sd">    ========================================</span>
 <span class="sd">    </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -840,7 +840,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import Grid2D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = Grid2D(10, 10, 10.0, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
 
     <span class="nd">@overload</span>
@@ -869,8 +869,8 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_2d_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;y&#39;</span><span class="p">:</span><span class="s1">&#39;_y&#39;</span><span class="p">}):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_2d_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'x'</span><span class="p">:</span><span class="s1">'_x'</span><span class="p">,</span>
+                                                 <span class="s1">'y'</span><span class="p">:</span><span class="s1">'_y'</span><span class="p">}):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
             <span class="c1"># Use face locations</span>
             <span class="n">facelocationX</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -915,7 +915,7 @@
                 <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">]),</span>
                 <span class="n">coordlabels</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments for creation of 2D mesh structure.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Incorrect number of arguments for creation of 2D mesh structure.'</span><span class="p">)</span>
     
         <span class="n">dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
         <span class="n">cellsize</span> <span class="o">=</span> <span class="n">cell_size</span>
@@ -927,7 +927,7 @@
         <span class="k">return</span> <span class="n">dims</span><span class="p">,</span> <span class="n">cellsize</span><span class="p">,</span> <span class="n">cellcenters</span><span class="p">,</span> <span class="n">facecenters</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Cartesian mesh with Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ny=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"2D Cartesian mesh with Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ny=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
     
 <div class="viewcode-block" id="Grid2D.cell_numbers">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid2D.cell_numbers">[docs]</a>
@@ -938,14 +938,14 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
             <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">V</span></div>
@@ -956,7 +956,7 @@
 <div class="viewcode-block" id="CylindricalGrid2D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.CylindricalGrid2D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CylindricalGrid2D</span><span class="p">(</span><span class="n">Grid2D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 2D cylindrical grid (r, z)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 2D cylindrical grid (r, z)</span>
 <span class="sd">    ==========================================</span>
 <span class="sd">    </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -996,7 +996,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import CylindricalGrid2D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = CylindricalGrid2D(10, 10, 10.0, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Nz</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1020,23 +1020,23 @@
                 <span class="o">=</span> <span class="n">args</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span> <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>\
-                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_2d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;r&#39;</span><span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;z&#39;</span><span class="p">:</span><span class="s1">&#39;_y&#39;</span><span class="p">})</span>
+                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_2d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'r'</span><span class="p">:</span><span class="s1">'_x'</span><span class="p">,</span>
+                                                          <span class="s1">'z'</span><span class="p">:</span><span class="s1">'_y'</span><span class="p">})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"2D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
     
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 <span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
@@ -1049,7 +1049,7 @@
 <div class="viewcode-block" id="PolarGrid2D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.PolarGrid2D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">PolarGrid2D</span><span class="p">(</span><span class="n">Grid2D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 2D polar grid (r, theta)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 2D polar grid (r, theta)</span>
 <span class="sd">    ========================================</span>
 <span class="sd">    </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -1084,7 +1084,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import PolarGrid2D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = PolarGrid2D(10, 10, 10.0, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Lr</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Ltheta</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
         <span class="o">...</span>
@@ -1111,26 +1111,26 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">theta_max</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">theta_max</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">):</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Recreate the mesh with an upper bound of 2*pi for </span><span class="se">\\</span><span class="s2">theta or there will be unknown consequences!&quot;</span><span class="p">)</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">"Recreate the mesh with an upper bound of 2*pi for </span><span class="se">\\</span><span class="s2">theta or there will be unknown consequences!"</span><span class="p">)</span>
             <span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span> <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>\
-                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_2d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;r&#39;</span>    <span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;theta&#39;</span><span class="p">:</span><span class="s1">&#39;_y&#39;</span><span class="p">})</span>
+                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_2d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'r'</span>    <span class="p">:</span><span class="s1">'_x'</span><span class="p">,</span>
+                                                          <span class="s1">'theta'</span><span class="p">:</span><span class="s1">'_y'</span><span class="p">})</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;2D Polar mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"2D Polar mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
 
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">V_full</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
@@ -1149,12 +1149,12 @@
 <div class="viewcode-block" id="Grid3D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.Grid3D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Grid3D</span><span class="p">(</span><span class="n">MeshStructure</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 3D Cartesian grid (x, y, z)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 3D Cartesian grid (x, y, z)</span>
 <span class="sd">    ===========================================</span>
 <span class="sd">        </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
 <span class="sd">    locations or from the number of cells and domain length. There are multiple</span>
-<span class="sd">    overloaded &#39;__init__&#39; methods available to provide flexibility in</span>
+<span class="sd">    overloaded '__init__' methods available to provide flexibility in</span>
 <span class="sd">    instantiation.</span>
 <span class="sd">    </span>
 <span class="sd">    </span>
@@ -1196,7 +1196,7 @@
 <span class="sd">    &gt;&gt;&gt; mesh = Grid3D(10, 10, 10, 10.0, 10.0, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)    </span>
 <span class="sd">        </span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Ny</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Nz</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
                        <span class="n">Lx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Ly</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">Lz</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
@@ -1214,9 +1214,9 @@
         <span class="o">...</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a &#39;direct&#39; __init__</span>
+        <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a 'direct' __init__</span>
                             <span class="c1"># not requiring any parsing of arguments.</span>
-                            <span class="c1"># These &#39;direct&#39; instantiantions are used</span>
+                            <span class="c1"># These 'direct' instantiantions are used</span>
                             <span class="c1"># internally.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">6</span><span class="p">:</span>
             <span class="c1"># Resolve ambiguous @overload situation for 3D meshes</span>
@@ -1233,9 +1233,9 @@
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_3d_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;x&#39;</span><span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;y&#39;</span><span class="p">:</span><span class="s1">&#39;_y&#39;</span><span class="p">,</span>
-                                                 <span class="s1">&#39;z&#39;</span><span class="p">:</span><span class="s1">&#39;_z&#39;</span><span class="p">}):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_mesh_3d_param</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'x'</span><span class="p">:</span><span class="s1">'_x'</span><span class="p">,</span>
+                                                 <span class="s1">'y'</span><span class="p">:</span><span class="s1">'_y'</span><span class="p">,</span>
+                                                 <span class="s1">'z'</span><span class="p">:</span><span class="s1">'_z'</span><span class="p">}):</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
             <span class="c1"># Use face locations</span>
             <span class="n">facelocationX</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
@@ -1285,7 +1285,7 @@
                 <span class="n">int_range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Nz</span><span class="p">)</span><span class="o">*</span><span class="n">dz</span><span class="p">,</span>
                 <span class="n">coordlabels</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">&#39;Incorrect number of arguments for creation of 3D mesh structure.&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s1">'Incorrect number of arguments for creation of 3D mesh structure.'</span><span class="p">)</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">int_range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="p">(</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">Nz</span><span class="o">+</span><span class="mi">2</span><span class="p">))</span><span class="o">-</span><span class="mi">1</span>
         <span class="n">G</span> <span class="o">=</span> <span class="n">G</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Nx</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">Ny</span><span class="o">+</span><span class="mi">2</span><span class="p">,</span> <span class="n">Nz</span><span class="o">+</span><span class="mi">2</span><span class="p">)</span>
         <span class="n">dims</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">Nx</span><span class="p">,</span> <span class="n">Ny</span><span class="p">,</span> <span class="n">Nz</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
@@ -1310,18 +1310,18 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span>  <span class="sa">f</span><span class="s2">&quot;3D Cartesian mesh with &quot;</span>\
-            <span class="sa">f</span><span class="s2">&quot;Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ny=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span>  <span class="sa">f</span><span class="s2">"3D Cartesian mesh with "</span>\
+            <span class="sa">f</span><span class="s2">"Nx=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Ny=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 <span class="sd">        </span>
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
             <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">y</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]</span>\
             <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">cellsize</span><span class="o">.</span><span class="n">z</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -1333,7 +1333,7 @@
 <div class="viewcode-block" id="CylindricalGrid3D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.CylindricalGrid3D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">CylindricalGrid3D</span><span class="p">(</span><span class="n">Grid3D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 3D cylindrical grid (r, theta, z)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 3D cylindrical grid (r, theta, z)</span>
 <span class="sd">    =================================================</span>
 <span class="sd">        </span>
 <span class="sd">    This class can be instantiated in different ways: from a list of cell face</span>
@@ -1377,7 +1377,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import CylindricalGrid3D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = CylindricalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     <span class="nd">@overload</span>
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Nr</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Ntheta</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Nz</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -1397,9 +1397,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a &#39;direct&#39; __init__</span>
+        <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a 'direct' __init__</span>
                             <span class="c1"># not requiring any parsing of arguments.</span>
-                            <span class="c1"># These &#39;direct&#39; instantiantions are used</span>
+                            <span class="c1"># These 'direct' instantiantions are used</span>
                             <span class="c1"># internally.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">6</span><span class="p">:</span>
             <span class="c1"># Resolve ambiguous @overload situation for 3D meshes</span>
@@ -1416,29 +1416,29 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">theta_max</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">theta_max</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Recreate the mesh with an upper bound of 2*pi for theta or there will be unknown consequences!&quot;</span><span class="p">)</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">"Recreate the mesh with an upper bound of 2*pi for theta or there will be unknown consequences!"</span><span class="p">)</span>
 
             <span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span> <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>\
-                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_3d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;r&#39;</span>    <span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;theta&#39;</span><span class="p">:</span><span class="s1">&#39;_y&#39;</span><span class="p">,</span>
-                                                          <span class="s1">&#39;z&#39;</span>    <span class="p">:</span><span class="s1">&#39;_z&#39;</span><span class="p">})</span>
+                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_3d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'r'</span>    <span class="p">:</span><span class="s1">'_x'</span><span class="p">,</span>
+                                                          <span class="s1">'theta'</span><span class="p">:</span><span class="s1">'_y'</span><span class="p">,</span>
+                                                          <span class="s1">'z'</span>    <span class="p">:</span><span class="s1">'_z'</span><span class="p">})</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;3D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x &quot;</span>\
-            <span class="sa">f</span><span class="s2">&quot;Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"3D Cylindrical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x "</span>\
+            <span class="sa">f</span><span class="s2">"Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nz=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">R2_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">R2_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">2</span>
         <span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R2_outer</span> <span class="o">-</span> <span class="n">R2_inner</span><span class="p">)</span>
@@ -1455,7 +1455,7 @@
 <div class="viewcode-block" id="SphericalGrid3D">
 <a class="viewcode-back" href="../../api/index.html#pyfvtool.mesh.SphericalGrid3D">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">SphericalGrid3D</span><span class="p">(</span><span class="n">Grid3D</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh based on a 3D spherical grid (r, theta, phi)</span>
+<span class="w">    </span><span class="sd">"""Mesh based on a 3D spherical grid (r, theta, phi)</span>
 <span class="sd">    =================================================</span>
 <span class="sd">    </span>
 <span class="sd">    Create a SphericalGrid3D object from a list of cell face locations or from</span>
@@ -1499,7 +1499,7 @@
 <span class="sd">    &gt;&gt;&gt; from pyfvtool import SphericalGrid3D</span>
 <span class="sd">    &gt;&gt;&gt; mesh = SphericalGrid3D(10, 10, 10, 10.0, 10.0, 10.0)</span>
 <span class="sd">    &gt;&gt;&gt; print(mesh)</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
 
     
     <span class="nd">@overload</span>
@@ -1520,9 +1520,9 @@
 
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
-        <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a &#39;direct&#39; __init__</span>
+        <span class="n">direct_init</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1"># Flag to indicate if this is a 'direct' __init__</span>
                             <span class="c1"># not requiring any parsing of arguments.</span>
-                            <span class="c1"># These &#39;direct&#39; instantiations are used</span>
+                            <span class="c1"># These 'direct' instantiations are used</span>
                             <span class="c1"># internally.</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span><span class="o">==</span><span class="mi">6</span><span class="p">:</span>
             <span class="c1"># Resolve ambiguous @overload situation for 3D meshes</span>
@@ -1542,32 +1542,32 @@
                 <span class="n">phi_max</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
             
             <span class="k">if</span> <span class="n">theta_max</span> <span class="o">&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Recreate the mesh with an upper bound of pi for </span><span class="se">\\</span><span class="s2">theta&quot;</span>\
-                    <span class="s2">&quot; or there will be unknown consequences!&quot;</span><span class="p">)</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">"Recreate the mesh with an upper bound of pi for </span><span class="se">\\</span><span class="s2">theta"</span>\
+                    <span class="s2">" or there will be unknown consequences!"</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">phi_max</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">:</span>
-                <span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Recreate the mesh with an upper bound of 2*pi for </span><span class="se">\\</span><span class="s2">phi&quot;</span>\
-                    <span class="s2">&quot; or there will be unknown consequences! Do not forget to use a periodic boundary condition for </span><span class="se">\\</span><span class="s2">phi!&quot;</span><span class="p">)</span>
+                <span class="n">warn</span><span class="p">(</span><span class="s2">"Recreate the mesh with an upper bound of 2*pi for </span><span class="se">\\</span><span class="s2">phi"</span>\
+                    <span class="s2">" or there will be unknown consequences! Do not forget to use a periodic boundary condition for </span><span class="se">\\</span><span class="s2">phi!"</span><span class="p">)</span>
             <span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span> <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span>\
-                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_3d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;r&#39;</span>    <span class="p">:</span><span class="s1">&#39;_x&#39;</span><span class="p">,</span>
-                                                        <span class="s1">&#39;theta&#39;</span><span class="p">:</span><span class="s1">&#39;_y&#39;</span><span class="p">,</span>
-                                                        <span class="s1">&#39;phi&#39;</span>  <span class="p">:</span><span class="s1">&#39;_z&#39;</span><span class="p">})</span>
+                <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_mesh_3d_param</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">coordlabels</span><span class="o">=</span><span class="p">{</span><span class="s1">'r'</span>    <span class="p">:</span><span class="s1">'_x'</span><span class="p">,</span>
+                                                        <span class="s1">'theta'</span><span class="p">:</span><span class="s1">'_y'</span><span class="p">,</span>
+                                                        <span class="s1">'phi'</span>  <span class="p">:</span><span class="s1">'_z'</span><span class="p">})</span>
 
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">dims</span><span class="p">,</span> <span class="n">cell_size</span><span class="p">,</span> <span class="n">cell_location</span><span class="p">,</span>
                          <span class="n">face_location</span><span class="p">,</span> <span class="n">corners</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;3D Spherical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x &quot;</span>\
-            <span class="sa">f</span><span class="s2">&quot;Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nphi=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells&quot;</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">"3D Spherical mesh with Nr=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> x "</span>\
+            <span class="sa">f</span><span class="s2">"Ntheta=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2"> x Nphi=</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dims</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2"> cells"</span>
             
     <span class="k">def</span><span class="w"> </span><span class="nf">_getCellVolumes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the volumes of all finite volume cells in the mesh</span>
+<span class="w">        </span><span class="sd">"""Get the volumes of all finite volume cells in the mesh</span>
 <span class="sd">        </span>
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        np.ndarray</span>
 <span class="sd">            containing all cell volumes, arranged according to gridcells</span>
 
-<span class="sd">        &quot;&quot;&quot;</span>
+<span class="sd">        """</span>
         <span class="n">R3_inner</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">R3_outer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">facecenters</span><span class="o">.</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span>  <span class="p">]</span><span class="o">**</span><span class="mi">3</span>
         <span class="n">V_full</span> <span class="o">=</span>  <span class="mf">4.0</span><span class="o">/</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">R3_outer</span> <span class="o">-</span> <span class="n">R3_inner</span><span class="p">)</span>

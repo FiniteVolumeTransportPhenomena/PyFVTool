@@ -335,9 +335,9 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualization routine (imshow-based)</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">phi_visualize</span><span class="p">():</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;t = </span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> s&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">'t = </span><span class="si">{</span><span class="n">t</span><span class="si">:</span><span class="s1">.1f</span><span class="si">}</span><span class="s1"> s'</span><span class="p">)</span>
     <span class="c1"># avoid ghost cells</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">origin</span> <span class="o">=</span> <span class="s1">&#39;lower&#39;</span><span class="p">,</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">origin</span> <span class="o">=</span> <span class="s1">'lower'</span><span class="p">,</span>
                <span class="n">extent</span> <span class="o">=</span> <span class="p">[</span><span class="n">zz</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zz</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">rr</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="n">rzoom</span><span class="p">,</span> <span class="n">rr</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">rzoom</span><span class="p">])</span>
 </pre></div>
 </div>
@@ -363,7 +363,7 @@
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># analytic expression from Taylor 1953</span>
 <span class="k">def</span><span class="w"> </span><span class="nf">TaylorA3</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
              <span class="n">X</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">C_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">u_0</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">X</span><span class="o">/</span><span class="n">u_0</span><span class="p">),</span> <span class="s1">&#39;t &lt; X/u_0 not implemented&#39;</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">t</span> <span class="o">&gt;=</span> <span class="n">X</span><span class="o">/</span><span class="n">u_0</span><span class="p">),</span> <span class="s1">'t &lt; X/u_0 not implemented'</span>
     <span class="k">if</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">X</span><span class="p">):</span>
         <span class="n">C_m</span> <span class="o">=</span> <span class="n">C_0</span> <span class="o">*</span> <span class="n">x</span><span class="o">/</span><span class="p">(</span><span class="n">u_0</span><span class="o">*</span><span class="n">t</span><span class="p">)</span>
     <span class="k">elif</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;=</span> <span class="n">X</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="n">u_0</span><span class="o">*</span><span class="n">t</span><span class="p">):</span>
@@ -493,8 +493,8 @@
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
     <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">rr</span><span class="o">*</span><span class="mf">1e6</span><span class="p">,</span> <span class="n">u</span><span class="o">.</span><span class="n">zvalue</span><span class="p">[:,</span> <span class="n">i</span><span class="p">])</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$r$ / µm&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;$u_z(r)$ / m s$^{-1}$&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'$r$ / µm'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'$u_z(r)$ / m s$^{-1}$'</span><span class="p">);</span>
 </pre></div>
 </div>
 </div>
@@ -745,8 +745,8 @@ t = 10.0 s
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">ix</span><span class="p">,</span> <span class="p">(</span><span class="n">tprof</span><span class="p">,</span> <span class="n">phiprof</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">phiprofs</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">ix</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="n">lbl1</span> <span class="o">=</span> <span class="s1">&#39;FVM&#39;</span>
-        <span class="n">lbl2</span> <span class="o">=</span> <span class="s1">&#39;analytic&#39;</span>
+        <span class="n">lbl1</span> <span class="o">=</span> <span class="s1">'FVM'</span>
+        <span class="n">lbl2</span> <span class="o">=</span> <span class="s1">'analytic'</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">lbl1</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="n">lbl2</span> <span class="o">=</span> <span class="kc">None</span>
@@ -754,8 +754,8 @@ t = 10.0 s
              <span class="n">label</span><span class="o">=</span><span class="n">lbl1</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">tprof</span> <span class="o">&gt;=</span> <span class="n">X</span><span class="o">/</span><span class="n">umax</span><span class="p">:</span>
         <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">zzz</span><span class="p">,</span> <span class="n">TaylorA3_vec</span><span class="p">(</span><span class="n">zzz</span><span class="o">-</span><span class="n">DX</span><span class="p">,</span> <span class="n">tprof</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">C_0</span><span class="p">,</span> <span class="n">umax</span><span class="p">),</span>
-                 <span class="s1">&#39;k:&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">lbl2</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;z / m&#39;</span><span class="p">)</span>
+                 <span class="s1">'k:'</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">lbl2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'z / m'</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -786,8 +786,8 @@ t = 10.0 s
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">z_num</span><span class="p">,</span> <span class="n">norm_err</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;norm. error&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;$z$ / m&#39;</span><span class="p">);</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">'norm. error'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">'$z$ / m'</span><span class="p">);</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span><span class="mf">0.01</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -815,7 +815,7 @@ t = 10.0 s
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># very basic benchmark for testing integrity of Notebook and calculations</span>
 <span class="c1"># checks if the normalized error is below a certain threshold (0.15% of max)</span>
 <span class="c1"># over a range of z (between 1/3 and 1/2 of full scale)</span>
-<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_err</span><span class="p">[</span><span class="n">Nz</span><span class="o">//</span><span class="mi">3</span><span class="p">:</span><span class="n">Nz</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.0015</span><span class="p">),</span> <span class="s1">&#39;benchmark test failed in cylindrical2D_convection&#39;</span>
+<span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">norm_err</span><span class="p">[</span><span class="n">Nz</span><span class="o">//</span><span class="mi">3</span><span class="p">:</span><span class="n">Nz</span><span class="o">//</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.0015</span><span class="p">),</span> <span class="s1">'benchmark test failed in cylindrical2D_convection'</span>
 </pre></div>
 </div>
 </div>
