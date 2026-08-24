@@ -19,7 +19,7 @@ from .diffusion import diffusionTerm
 from .source import linearSourceTerm, constantSourceTerm, transientTerm
 from .boundary import BoundaryConditions, boundaryConditionsTerm
 from .utilities import fluxLimiter
-from .calculus import gradientTerm, divergenceTerm, gradientTermFixedBC
+from .calculus import gradient, divergenceTerm, gradientFixedBC
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
 from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE

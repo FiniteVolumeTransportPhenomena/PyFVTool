@@ -94,22 +94,20 @@ for i in range(len(mesh_nonuniform)):
     c_conv.append(pf.solveMatrixPDE(mesh_nonuniform[i], 
                                     M_conv[i]-M_dif[i]+M_bc[i],
                                     RHS_bc[i]))
-# # visualize
-# # figure(2)
-# # for i=1:N_mesh
-# #     subplot(3, 3, i)
-# #     visualizeCells(c_conv[i])
-# # end
-# # println("Convection-Diffusion equation solved and visualized successfully")
-# ## Part VII: test the calculus functions
+
+### gradient, divergence
+# perhaps add a real test later on!
+#
 grad_c=[]
 for i in range(len(mesh_nonuniform)):
-    grad_c.append(pf.gradientTerm(c_dif[i]))
+    grad_c.append(pf.gradient(c_dif[i]))
 
 div_c=[]
 for i in range(len(mesh_nonuniform)):
     div_c.append(pf.divergenceTerm(grad_c[i]))
 print("Gradient and divergence functions work fine!")
+
+
 # ## Solve a dynamic equation
 dt=0.1
 FL1=pf.fluxLimiter("SUPERBEE")

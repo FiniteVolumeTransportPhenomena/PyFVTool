@@ -8,9 +8,9 @@ from .face import FaceVariable
 
 
 
-def gradientTerm(phi: CellVariable):
+def gradient(phi: CellVariable):
     """
-    This function calculates the gradient of a cell variable. The output is a face variable.
+    Calculate the gradient of a cell variable. The output is a face variable.
 
     Parameters
     ----------
@@ -20,18 +20,16 @@ def gradientTerm(phi: CellVariable):
     Returns
     -------
     FaceVariable
-        The gradient of the cell variable.
+        The gradient of the cell variable. A vector field.
     
     Examples
     --------
     >>> import pyfvtool as pf
     >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
-    >>> gradPhi = pf.gradientTerm(phi)
+    >>> gradPhi = pf.gradient(phi)
     >>> gradPhi._xvalue
     """
-    # calculates the gradient of a variable
-    # the output is a face variable
     if issubclass(type(phi.domain), Grid1D):
         dx = 0.5*(phi.domain.cellsize._x[0:-1]+phi.domain.cellsize._x[1:])
         return FaceVariable(phi.domain,
@@ -89,6 +87,8 @@ def gradientTerm(phi: CellVariable):
                       phi._value[1:-1, 0:-1, 1:-1])/(dy[np.newaxis,:,np.newaxis]*rp),
                      (phi._value[1:-1, 1:-1, 1:] -
                      phi._value[1:-1, 1:-1, 0:-1])/(dz[np.newaxis,np.newaxis,:]*rp*np.sin(thetap)))
+
+
 
 # =============== Divergence 1D Term ============================
 def divergenceTerm1D(F: FaceVariable):
@@ -383,7 +383,7 @@ def divergenceTerm(F: FaceVariable):
     >>> import pyfvtool as pf
     >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
-    >>> gradPhi = pf.gradientTerm(phi)
+    >>> gradPhi = pf.gradient(phi)
     >>> RHSdiv = pf.divergenceTerm(gradPhi)
     """
     if (type(F.domain) is Grid1D):
@@ -409,7 +409,7 @@ def divergenceTerm(F: FaceVariable):
     return RHSdiv
 
 
-def gradientTermFixedBC(phi):
+def gradientFixedBC(phi):
     """
     Warning: 
         
@@ -449,9 +449,9 @@ def gradientTermFixedBC(phi):
     >>> m = pf.Grid1D(10, 1.0)
     >>> phi = pf.CellVariable(m, 1.0)
     >>> sin_phi = pf.celleval(np.sin, sw.BC2GhostCells())
-    >>> gradPhi = pf.gradientTermFixedBC(sin_phi)
+    >>> gradPhi = pf.gradientFixedBC(sin_phi)
     """
-    faceGrad = gradientTerm(phi)
+    faceGrad = gradient(phi)
     if issubclass(type(phi.domain), Grid1D):
         faceGrad._xvalue[0] = 2*faceGrad._xvalue[0]
         faceGrad._xvalue[-1] = 2*faceGrad._xvalue[-1]

@@ -15,7 +15,7 @@ from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionsTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
-from pyfvtool import gradientTerm, divergenceTerm
+from pyfvtool import gradient, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
 from pyfvtool import transientTerm
 from pyfvtool import solveMatrixPDE, solveExplicitPDE
@@ -158,22 +158,21 @@ for i in range(len(mesh_nonuniform)):
     M_dif.append(M)
     M_conv.append(convectionTerm(0.1*f_n[i]))
     c_conv.append(solveMatrixPDE(mesh_nonuniform[i], M_conv[i]-M_dif[i]+M_bc[i], RHS_bc[i]))
-# # visualize
-# # figure(2)
-# # for i=1:N_mesh
-# #     subplot(3, 3, i)
-# #     visualizeCells(c_conv[i])
-# # end
-# # println("Convection-Diffusion equation solved and visualized successfully")
-# ## Part VII: test the calculus functions
+
+
+### gradient, divergence
+# perhaps add a real test later on!
+#
 grad_c=[]
 for i in range(len(mesh_nonuniform)):
-    grad_c.append(gradientTerm(c_dif[i]))
+    grad_c.append(gradient(c_dif[i]))
 
 div_c=[]
 for i in range(len(mesh_nonuniform)):
     div_c.append(divergenceTerm(grad_c[i]))
 print("Gradient and divergence functions work fine!")
+
+
 # ## Solve a dynamic equation
 dt=0.1
 FL1=fluxLimiter("SUPERBEE")
@@ -225,6 +224,7 @@ print("Averaging functions run smoothly!")
 
 # end # end function
 
+
 # the explicit solver
 # define the domain
 L = 5.0  # domain length
@@ -250,7 +250,7 @@ dt = 0.001 # time step
 final_t = 0.5
 for t in np.arange(dt, final_t, dt):
     # step 1: calculate divergence term
-    RHS = divergenceTerm(Dave*gradientTerm(c_old))
+    RHS = divergenceTerm(Dave*gradient(c_old))
     # step 2: calculate the new value for internal cells
     c = solveExplicitPDE(c_old, dt, RHS)
     c_old.update_value(c)
