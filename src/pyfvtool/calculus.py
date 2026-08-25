@@ -449,3 +449,13 @@ def divergenceTerm(F: FaceVariable):
     else:
         raise Exception("DivergenceTerm is not defined for this Mesh type.")
     return RHSdiv
+
+
+
+#  =============== Divergence CellVariable ============================
+
+def divergence(F: FaceVariable):
+    RHSvec = divergenceTerm(F)
+    m = F.domain
+    divF = CellVariable(m, RHSvec.reshape(m.dims+2))
+    return divF

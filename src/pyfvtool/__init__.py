@@ -1,4 +1,4 @@
-__version__ = "0.5.2"
+__version__ = "0.5.3"
 
 __author__ = ["Ali A. Eftekhari", "Martinus H. V. Werts"]
 
@@ -19,7 +19,8 @@ from .diffusion import diffusionTerm
 from .source import linearSourceTerm, constantSourceTerm, transientTerm
 from .boundary import BoundaryConditions, boundaryConditionsTerm
 from .utilities import fluxLimiter
-from .calculus import gradient, divergenceTerm, gradientFixedBC
+from .calculus import gradient, gradientFixedBC
+from .calculus import divergence, divergenceTerm
 from .averaging import linearMean, arithmeticMean, upwindMean,\
                        harmonicMean, geometricMean, tvdMean
 from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE
