@@ -455,6 +455,19 @@ def divergenceTerm(F: FaceVariable):
 #  =============== Divergence CellVariable ============================
 
 def divergence(F: FaceVariable):
+    """
+    Compute the divergence of a vector field contained in a FaceVariable.
+
+    Parameters
+    ----------
+    F : FaceVariable
+        The face variable for which the divergence is calculated.
+
+    Returns
+    -------
+    CellVariable
+        A CellVariable containing the values of the divergence.
+    """
     RHSvec = divergenceTerm(F)
     m = F.domain
     divF = CellVariable(m, RHSvec.reshape(m.dims+2))

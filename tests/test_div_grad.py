@@ -10,6 +10,7 @@ import numpy as np
 import pyfvtool as pf
 
 
+
 # Grid3D tests
 def test_gradient_Grid3D():
     # very simple gradient test
@@ -36,7 +37,8 @@ def test_divergence_Grid2D():
     
     analytic = -2 * u2.value
     err = div_grad_u2.value - analytic
-    # never mind the edges
+    
+    # never mind what happens at the edges of the domain
     assert np.max(np.abs(err[1:-1, 1:-1])) < 0.001
     # look at conservation of scalar, and analytic expectation
     np.testing.assert_allclose(
