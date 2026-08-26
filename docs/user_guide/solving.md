@@ -38,6 +38,8 @@ For those users wishing to use a different, more powerful solver, PyFVTool provi
 
 ### Opportunities for increasing PyFVTool's computational power 
 
+*See also:* [Sparse solver benchmarks](./solver_benchmarks.md)
+
 Many very powerful sparse matrix solver libraries exist. These are the workhorses of modern scientific computing involving finite-difference, finite-volume and finite-element methods. These libraries are actually specialized computer programs in their own right and need an expert hand to tune them to optimal performance. Further information can be found in the [HPC lecture notes by T. Betcke](https://tbetcke.github.io/hpc_lecture_notes/sparse_solvers_introduction.html) 
 
 As indicated, for 1D and 2D meshes up to about 50,000 FV cells, the built-in single-threaded SuperLU solver is expected to work very well and allows for more-or-less interactive simulations (seconds to minutes). 
