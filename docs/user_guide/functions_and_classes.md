@@ -19,7 +19,7 @@ from pyfvtool import CellVariable, FaceVariable
 from pyfvtool import BoundaryConditions
 from pyfvtool import boundaryConditionTerm, diffusionTerm
 from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
-from pyfvtool import gradientTerm, divergenceTerm
+from pyfvtool import gradient, divergenceTerm
 from pyfvtool import linearSourceTerm, constantSourceTerm
 from pyfvtool import transientTerm
 from pyfvtool import solvePDE, solveMatrixPDE, solveExplicitPDE
@@ -57,7 +57,7 @@ from pyfvtool import visualizeCells
 - boundaryConditionTerm, diffusionTerm
 - convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
 	- fluxLimiter
-- gradientTerm, divergenceTerm
+- gradient, divergenceTerm
 - linearSourceTerm, constantSourceTerm
 - transientTerm
 
