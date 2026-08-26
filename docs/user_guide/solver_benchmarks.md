@@ -1,4 +1,4 @@
-# Sparse solver benchmarks with PyFVTool
+# Sparse solver benchmarks
 
 For selection and tuning of specific sparse solvers, it is good to have relevant benchmarks. As indicated in ['Solving PDEs'](./solving.md), the performance of a solver depends on the type of equation being solved, the mesh geometry, boundary conditions. Different solver algorithms have different strengths and weaknesses, and should be tested for different transport phenomena.
 
