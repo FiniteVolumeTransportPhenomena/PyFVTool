@@ -241,6 +241,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solver_benchmarks.html">Sparse solver benchmarks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../origin_story.html">PyFVTool Origins</a></li>
 </ul>
@@ -283,25 +284,47 @@
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="solving-pdes">
 <h1>Solving PDEs<a class="headerlink" href="#solving-pdes" title="Link to this heading">¶</a></h1>
-<p>Once equation terms are assembled, pass them to <code class="docutils literal notranslate"><span class="pre">solvePDE</span></code> together with the
+<p>Once the equation terms are assembled into a list, pass them to <code class="docutils literal notranslate"><span class="pre">solvePDE</span></code> together with the
 <code class="docutils literal notranslate"><span class="pre">CellVariable</span></code> that holds the unknown:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">equation_terms</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">solvePDE</span></code> builds the global sparse matrix, applies boundary conditions, solves
-the linear system, and writes the updated values back into <code class="docutils literal notranslate"><span class="pre">c</span></code> in-place.</p>
+<p><code class="docutils literal notranslate"><span class="pre">solvePDE</span></code> builds the global sparse matrix equation, including the terms related to the boundary conditions, solves the linear system, and writes the updated values back into <code class="docutils literal notranslate"><span class="pre">c</span></code> in-place.</p>
 <section id="time-stepping">
 <h2>Time-stepping<a class="headerlink" href="#time-stepping" title="Link to this heading">¶</a></h2>
-<p>PyFVTool uses <strong>implicit (backward) Euler</strong> time integration by default via
-<code class="docutils literal notranslate"><span class="pre">transientTerm</span></code>. This is unconditionally stable, allowing larger time steps
-than explicit schemes at the cost of solving a linear system each step.</p>
+<p>PyFVTool uses <strong>implicit (backward) Euler</strong> time integration by default via <code class="docutils literal notranslate"><span class="pre">transientTerm</span></code>. This is unconditionally stable, allowing larger time steps than explicit schemes at the cost of solving a linear system each step.</p>
 </section>
 <section id="nonlinear-pdes">
 <h2>Nonlinear PDEs<a class="headerlink" href="#nonlinear-pdes" title="Link to this heading">¶</a></h2>
-<p>For nonlinear problems, <strong>Picard iteration</strong> (fixed-point iteration) could be used:
-linearize the nonlinear coefficients around the current solution, solve, update,
-and repeat until convergence. <a class="reference external" href="https://pages.nist.gov/fipy/en/latest/FAQ.html#iterations-timesteps-and-sweeps-oh-my">FiPy calls this “sweeping”</a>. In other FVM literature, this may be referred to as “nonlinear iterations”.</p>
+<p>For nonlinear problems, <strong>Picard iteration</strong> (fixed-point iteration) may be used: linearize the nonlinear coefficients around the current solution, solve, update, and repeat until convergence. <a class="reference external" href="https://pages.nist.gov/fipy/en/latest/FAQ.html#iterations-timesteps-and-sweeps-oh-my">FiPy calls this “sweeping”</a>. In other FVM literature, this may be referred to as “nonlinear iterations”.</p>
 <p>With PyFVTool, Picard iteration has not yet been used, and there are at present no examples of solving nonlinear PDEs (hello, Navier-Stokes!) in PyFVTool.</p>
+</section>
+<section id="problem-size-computation-time-and-choice-of-sparse-solver">
+<h2>Problem size, computation time and choice of sparse solver<a class="headerlink" href="#problem-size-computation-time-and-choice-of-sparse-solver" title="Link to this heading">¶</a></h2>
+<section id="current-limitations-of-pyfvtool">
+<h3>Current limitations of PyFVTool<a class="headerlink" href="#current-limitations-of-pyfvtool" title="Link to this heading">¶</a></h3>
+<p>PyFVTool can solve steady-state and time-dependent equations. Steady-state solutions are obtained in a single solver step, whereas time-dependent equations require successively solving the transient equation for each time step. This latter process can involve a large number of time steps. Especially in the latter case, the computation time for each solver step becomes an issue. This is directly related to how fast the sparse matrix solver routine can crunch the matrix equation resulting from the FVM formulation of the transport PDE.</p>
+<p>PyFVTool, aiming for simple modeling of transport phenomena, simply calls SciPy’s built-in SuperLU sparse solver by default, without any fine-tuning or optimization. This works fine for small 1D or moderate 2D problems (up to about 50,000 finite-volume cells, as a rule of thumb on 2026 hardware), but becomes very slow for larger 2D and 3D problems.</p>
+<p>For those users wishing to use a different, more powerful solver, PyFVTool provides the possiblity to supply an external solver via the <code class="docutils literal notranslate"><span class="pre">externalsolver</span></code> keyword argument for <code class="docutils literal notranslate"><span class="pre">solvePDE()</span></code>. This external solver may then be tuned to work optimally for a specific simulation. Be warned that in this case, you are entering mostly uncharted territory, as this is beyond the basic usage of PyFVTool.</p>
+</section>
+<section id="opportunities-for-increasing-pyfvtool-s-computational-power">
+<h3>Opportunities for increasing PyFVTool’s computational power<a class="headerlink" href="#opportunities-for-increasing-pyfvtool-s-computational-power" title="Link to this heading">¶</a></h3>
+<p><em>See also:</em> <a class="reference internal" href="solver_benchmarks.html"><span class="std std-doc">Sparse solver benchmarks</span></a></p>
+<p>Many very powerful sparse matrix solver libraries exist. These are the workhorses of modern scientific computing involving finite-difference, finite-volume and finite-element methods. These libraries are actually specialized computer programs in their own right and need an expert hand to tune them to optimal performance. Further information can be found in the <a class="reference external" href="https://tbetcke.github.io/hpc_lecture_notes/sparse_solvers_introduction.html">HPC lecture notes by T. Betcke</a></p>
+<p>As indicated, for 1D and 2D meshes up to about 50,000 FV cells, the built-in single-threaded SuperLU solver is expected to work very well and allows for more-or-less interactive simulations (seconds to minutes).</p>
+<p>As an alternative, the <a class="reference external" href="https://github.com/scikit-sparse/scikit-sparse"><code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code></a> package provides expert access to solvers contained in the well-known SuiteSparse library, such as UMFPACK and CHOLMOD, which are in the same single-threaded category as the built-in SuperLU. <a class="reference external" href="https://github.com/scikit-sparse/scikit-sparse"><code class="docutils literal notranslate"><span class="pre">scikit-sparse</span></code></a>, under active development as of 2026, should not to be confused with <code class="docutils literal notranslate"><span class="pre">scikit-umfpack</span></code>. We do not recommend <code class="docutils literal notranslate"><span class="pre">scikit-umfpack</span></code> as there are hurdles to its use and it is not well supported across platforms and Python versions.</p>
+<p>For larger problems, the computational effort inevitably increases strongly, already for transient problems on 2D meshes of 50,000 … 1,000,000 cells, but even more so for 3D meshes. Here, the computation time with SuperLU becomes so long that any interactivity is lost. Provisions should be made to separate the computation and the post-processing, i.e. storing the FVM results in a data file (e.g. HDF5) as the calculation proceeds and then processing these results with a separate Python script. Also, the computation should be done on a fixed computer workstation or a node of an HPC cluster instead of on your laptop, so that the latter does not suffer thermal stress and the computation can be left to run overnight.</p>
+<p>For these larger systems (50,000 … 1,000,000 cells, rough estimate), a “multi-processor, shared-memory” direct sparse solver can be used. Until now, The only solver that has been <a class="reference internal" href="../source/notebook-examples/how-to-use-oneMKL-PARDISO-solver.html"><span class="std std-doc">successfully used with PyFVTool is Intel’s oneMKL PARDISO solver</span></a>, thanks to the <code class="docutils literal notranslate"><span class="pre">pypardiso</span></code> project. The solver works both on Windows and Linux systems, but requires an Intel multi-core processor.</p>
+<p>In the same “multi-processor, shared-memory” category, ‘SuperLU_MT’ is the multithreaded variant of the aforementioned SuperLU solver. It is not currently interfaced with PyFVTool but is a promising open-source candidate.</p>
+<p>Beyond this (say, &gt; 1,000,000 cells, 3D meshes), it may be possible to interface PyFVTool to the MUMPS direct sparse solver, but for now this is considered far beyond the intended use of PyFVTool. If your simulation becomes this big, you should discuss with a friendly computational expert and consider moving your simulation to a whole different software altogether. A change of computational approach could bring salvation: for very large 3D structured grids, the ‘alternating direction, implicit’ (ADI) method may - under certain conditions - be more efficient than bluntly trying to solve the giant matrix equation with a massively parallel sparse direct solver.</p>
+</section>
+<section id="further-background-on-solving-sparse-matrix-equations">
+<h3>Further background on solving sparse matrix equations<a class="headerlink" href="#further-background-on-solving-sparse-matrix-equations" title="Link to this heading">¶</a></h3>
+<p>It is important to bear in mind that the computational effort for solving the sparse system does not only depend on the number of cells but also on the specific computational grid (1D, 2D, or 3D, Cartesian, cylindrical, spherical) and the type of equation being solved (e.g. pure diffusion or diffusion-advection).  The solvers in SciPy require manual selection and tuning for optimal performance.</p>
+<p>This contasts with MATLAB’s built-in <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">A\b</span></code> sparse solver, which has been engineered to automatically choose its algorithm (UMFPACK, CHOLMOD or even banded solvers) and ‘auto-tune’ it for optimum performance by cleverly analyzing the input matrix. In SciPy, SuperLU is called with default parameter settings. It solves the sparse system, but not necessarily in the minimum amount of time.</p>
+<p>With the built-in SuperLU, as with external solvers, several strategies may still be tried in PyFVTool to make computation more efficient. One promising and unexplored strategy is to re-use, where possible, the symbolic factorization performed by the sparse solver or even the numerical LU factorization. The symbolic factorization can be re-used when the ‘sparsity pattern’ of the sparse matrix remains the same between time steps. This calls for separating the different steps taken by the sparse solve code: symbolic factorization, numerical factorization and solution of the linear system. Interestingly, the <code class="docutils literal notranslate"><span class="pre">pypardiso</span></code> interface uses this strategy in a basic fashion, and this may partially explain the substantial decrease in computation time when using the MKL PARDISO solver.</p>
+<p>As a final remark, we only consider direct sparse solvers for PyFVTool, since the more efficient alternative, iterative solvers, come with their own set of (largely unexplored) head-aches.</p>
+</section>
 </section>
 </section>
 
@@ -363,6 +386,12 @@ and repeat until convergence. <a class="reference external" href="https://pages.
 <li><a class="reference internal" href="#">Solving PDEs</a><ul>
 <li><a class="reference internal" href="#time-stepping">Time-stepping</a></li>
 <li><a class="reference internal" href="#nonlinear-pdes">Nonlinear PDEs</a></li>
+<li><a class="reference internal" href="#problem-size-computation-time-and-choice-of-sparse-solver">Problem size, computation time and choice of sparse solver</a><ul>
+<li><a class="reference internal" href="#current-limitations-of-pyfvtool">Current limitations of PyFVTool</a></li>
+<li><a class="reference internal" href="#opportunities-for-increasing-pyfvtool-s-computational-power">Opportunities for increasing PyFVTool’s computational power</a></li>
+<li><a class="reference internal" href="#further-background-on-solving-sparse-matrix-equations">Further background on solving sparse matrix equations</a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

@@ -240,6 +240,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../user_guide/solver_benchmarks.html">Sparse solver benchmarks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../origin_story.html">PyFVTool Origins</a></li>
 </ul>
@@ -277,15 +278,24 @@
           <h1>Source code for pyfvtool.pdesolver</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
+
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse</span><span class="w"> </span><span class="kn">import</span> <span class="n">csr_array</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">spsolve</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.sparse.linalg</span><span class="w"> </span><span class="kn">import</span> <span class="n">use_solver</span>
+
 <span class="n">use_solver</span><span class="p">(</span><span class="n">useUmfpack</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
-<span class="c1"># For reproducibility, do not automatically use any installed `scikits.umfpack`</span>
-<span class="c1"># solver. Always use the built-in SuperLU by default. In PyFVTool, the</span>
-<span class="c1"># `scikits.umfpack.spsolve` solver (if installed) should be supplied via</span>
-<span class="c1"># the `externalsolver` keyword argument of `solvePDE`, as is the case for</span>
-<span class="c1"># the `pypardiso.spsolve` solver (and any other external solvers).</span>
+<span class="c1"># For computational reproducibility, always use the built-in SuperLU by </span>
+<span class="c1"># default, instead of automatically using any installed `scikits.umfpack` </span>
+<span class="c1"># solver.</span>
+<span class="c1"># This automatic switching depending on which optional libraries are </span>
+<span class="c1"># installed is considered bad behaviour as it may break reproducibility. </span>
+<span class="c1"># Note that `use_solver` sets global state within scipy for the remainder </span>
+<span class="c1"># of the session, so this setting must not be overridden elsewhere.</span>
+<span class="c1"># In PyFVTool, any solver other than scipy's built-in SuperLU should be</span>
+<span class="c1"># supplied via the `externalsolver` keyword argument of `solvePDE`.</span>
+<span class="c1"># This helps ensure computational reproducibility as it clearly documents </span>
+<span class="c1"># any external solver being used.</span>
+
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">MeshStructure</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellVariable</span>

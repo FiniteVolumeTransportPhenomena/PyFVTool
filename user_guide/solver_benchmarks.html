@@ -2,10 +2,11 @@
 <html class="no-js" lang="en" data-content_root="../">
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html">
+    <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="index" title="Index" href="../genindex.html"><link rel="search" title="Search" href="../search.html"><link rel="next" title="Changelog" href="../changelog.html"><link rel="prev" title="Contributing" href="../contributing.html">
 
     <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>Overview: module code - PyFVTool documentation</title>
+        <title>Sparse solver benchmarks - PyFVTool documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -172,7 +173,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -198,13 +199,13 @@
 </ul>
 <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/meshes.html">Meshes</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/cell_variables.html">Cell variables</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/boundary_conditions.html">Boundary conditions</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/discretization.html">Discretization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/solving.html">Solving PDEs</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/visualization.html">Visualization</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/functions_and_classes.html">PyFVTool functions and classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="meshes.html">Meshes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cell_variables.html">Cell variables</a></li>
+<li class="toctree-l1"><a class="reference internal" href="boundary_conditions.html">Boundary conditions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="discretization.html">Discretization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="solving.html">Solving PDEs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="visualization.html">Visualization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="functions_and_classes.html">PyFVTool functions and classes</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul>
@@ -238,9 +239,9 @@
 <li class="toctree-l1"><a class="reference internal" href="../api/index.html">API reference</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
-<ul>
+<ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../user_guide/solver_benchmarks.html">Sparse solver benchmarks</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Sparse solver benchmarks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../origin_story.html">PyFVTool Origins</a></li>
 </ul>
@@ -262,7 +263,13 @@
           <span>Back to top</span>
         </a>
         <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
+          <div class="view-this-page">
+  <a class="muted-link" href="../_sources/user_guide/solver_benchmarks.md.txt" title="View this page">
+    <svg><use href="#svg-eye"></use></svg>
+    <span class="visually-hidden">View this page</span>
+  </a>
+</div>
+<div class="theme-toggle-container theme-toggle-content">
             <button class="theme-toggle" aria-label="Toggle Light / Dark / Auto color theme">
               <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
               <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
@@ -270,30 +277,98 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>All modules for which code is available</h1>
-<ul><li><a href="pyfvtool/advection.html">pyfvtool.advection</a></li>
-<li><a href="pyfvtool/averaging.html">pyfvtool.averaging</a></li>
-<li><a href="pyfvtool/boundary.html">pyfvtool.boundary</a></li>
-<li><a href="pyfvtool/cell.html">pyfvtool.cell</a></li>
-<li><a href="pyfvtool/diffusion.html">pyfvtool.diffusion</a></li>
-<li><a href="pyfvtool/face.html">pyfvtool.face</a></li>
-<li><a href="pyfvtool/mesh.html">pyfvtool.mesh</a></li>
-<li><a href="pyfvtool/pdesolver.html">pyfvtool.pdesolver</a></li>
-<li><a href="pyfvtool/source.html">pyfvtool.source</a></li>
-<li><a href="pyfvtool/visualization.html">pyfvtool.visualization</a></li>
+          <section class="tex2jax_ignore mathjax_ignore" id="sparse-solver-benchmarks">
+<h1>Sparse solver benchmarks<a class="headerlink" href="#sparse-solver-benchmarks" title="Link to this heading">¶</a></h1>
+<p>For selection and tuning of specific sparse solvers, it is good to have relevant benchmarks. As indicated in <a class="reference internal" href="solving.html"><span class="std std-doc">‘Solving PDEs’</span></a>, the performance of a solver depends on the type of equation being solved, the mesh geometry, boundary conditions. Different solver algorithms have different strengths and weaknesses, and should be tested for different transport phenomena.</p>
+<p>Here, we collect relevant benchmarks, i.e. actually solving PDEs appearing in the study of transport phenomena.</p>
+<section id="pyfvtool-sparse-solver-benchmark-260826">
+<h2>PyFVTool sparse solver benchmark 260826<a class="headerlink" href="#pyfvtool-sparse-solver-benchmark-260826" title="Link to this heading">¶</a></h2>
+<p>Simple wall time measurement.</p>
+<ul class="simple">
+<li><p>SuperLU (single-threaded): <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code> default built-in <code class="docutils literal notranslate"><span class="pre">spsolve</span></code> (SciPy 1.18.0)</p></li>
+<li><p>PARDISO (multi-threaded): Intel MKL PARDISO via <code class="docutils literal notranslate"><span class="pre">pypardiso</span></code> (MKL 2026.0.1)</p></li>
 </ul>
+<p>Hardware: MOLTECH-Anjou HPC compute node (32+ Gb RAM, Intel Xeon, 20+ threads, Linux)</p>
+<p>Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical grid <span class="math notranslate nohighlight">\((r, z)\)</span></p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Grid size</p></th>
+<th class="head"><p>FVM cells</p></th>
+<th class="head"><p>SuperLU</p></th>
+<th class="head"><p>PARDISO</p></th>
+<th class="head"><p>Speed-up</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><em>Nr x Nz</em></p></td>
+<td><p><em>incl. ghost</em></p></td>
+<td><p><em>iter/s</em></p></td>
+<td><p><em>iter/s</em></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>50 x 2070</p></td>
+<td><p>107744</p></td>
+<td><p>2.365</p></td>
+<td><p>16.90</p></td>
+<td><p>7.14</p></td>
+</tr>
+<tr class="row-even"><td><p>50 x 4500</p></td>
+<td><p>234104</p></td>
+<td><p>1.118</p></td>
+<td><p>8.524</p></td>
+<td><p>7.62</p></td>
+</tr>
+<tr class="row-odd"><td><p>100 x 2070</p></td>
+<td><p>211344</p></td>
+<td><p>0.599</p></td>
+<td><p>8.899</p></td>
+<td><p>14.86</p></td>
+</tr>
+<tr class="row-even"><td><p>100 x 4500</p></td>
+<td><p>459204</p></td>
+<td><p>0.290</p></td>
+<td><p>4.060</p></td>
+<td><p>14.00</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>SciPy’s built-in <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> with SuperLU provides a solid, default baseline. Note that it is single-threaded and does not perform any optimization (e.g. re-using symbolic/numerical factorization). Make sure that SciPy actually uses the built-in SuperLU by calling <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.use_solver(useUmfpack=False)</span></code>. Without this call, SciPy’s sparse solving behaviour becomes unpredictable.</p>
+<p>Intel’s MKL PARDISO solver was used without explicit control of the number of threads used (Using <code class="docutils literal notranslate"><span class="pre">top</span></code>, we estimate between 10 and 20 threads, depending on problem size). The parallelization by PARDISO is quite efficient in our 2D cylindrical case.</p>
+</section>
+</section>
+
         </article>
       </div>
       <footer>
         
         <div class="related-pages">
-          
-          
+          <a class="next-page" href="../changelog.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title">Changelog</div>
+              </div>
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="../contributing.html">
+              <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title">Contributing</div>
+                
+              </div>
+            </a>
         </div>
         <div class="bottom-of-page">
           <div class="left-details">
@@ -312,8 +387,27 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Sparse solver benchmarks</a><ul>
+<li><a class="reference internal" href="#pyfvtool-sparse-solver-benchmark-260826">PyFVTool sparse solver benchmark 260826</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
@@ -325,5 +419,7 @@
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
     <script src="../_static/copybutton.js?v=f281be69"></script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     </body>
 </html>

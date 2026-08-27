@@ -241,6 +241,7 @@
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/solver_benchmarks.html">Sparse solver benchmarks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="origin_story.html">PyFVTool Origins</a></li>
 </ul>
@@ -283,10 +284,8 @@
         <article role="main" id="furo-main-content">
           <section class="tex2jax_ignore mathjax_ignore" id="pyfvtool">
 <h1>PyFVTool<a class="headerlink" href="#pyfvtool" title="Link to this heading">¶</a></h1>
-<p><strong>PyFVTool</strong> is a Python toolbox for solving convection-diffusion-reaction equations
-using the <a class="reference external" href="https://en.wikipedia.org/wiki/Finite_volume_method">finite volume method</a> (FVM).</p>
-<p>It discretizes and numerically solves the conservative form of transient PDEs of the
-general form:</p>
+<p><strong>PyFVTool</strong> is a Python toolbox for solving convection-diffusion-reaction equations using the <a class="reference external" href="https://en.wikipedia.org/wiki/Finite_volume_method">finite volume method</a> (FVM).</p>
+<p>It discretizes and numerically solves the conservative form of transient PDEs of the general form:</p>
 <div class="math-wrapper docutils container">
 <div class="math notranslate nohighlight">
 \[
@@ -305,9 +304,7 @@ a\nabla\phi \cdot \mathbf{e} + b\phi = c
 \]</div>
 </div>
 <p>where <span class="math notranslate nohighlight">\(\mathbf{e}\)</span> is the unit vector in the direction of the coordinate axis.</p>
-<p>PyFVTool is oriented toward <strong>heat and mass transport phenomena</strong> on structured meshes,
-for cases where the flow velocity field is already known or absent. It is pure scientific
-Python. Only <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> are required.</p>
+<p>PyFVTool is oriented toward <strong>heat and mass transport phenomena</strong> on structured meshes, for cases where the flow velocity field is already known or absent. It is pure scientific Python. Only <code class="docutils literal notranslate"><span class="pre">numpy</span></code>, <code class="docutils literal notranslate"><span class="pre">scipy</span></code>, and <code class="docutils literal notranslate"><span class="pre">matplotlib</span></code> are required.</p>
 <hr class="docutils" />
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
@@ -364,6 +361,7 @@ Python. Only <code class="docutils literal notranslate"><span class="pre">numpy<
 <li class="toctree-l1"><a class="reference internal" href="user_guide/solving.html">Solving PDEs</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/solving.html#time-stepping">Time-stepping</a></li>
 <li class="toctree-l2"><a class="reference internal" href="user_guide/solving.html#nonlinear-pdes">Nonlinear PDEs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="user_guide/solving.html#problem-size-computation-time-and-choice-of-sparse-solver">Problem size, computation time and choice of sparse solver</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="user_guide/visualization.html">Visualization</a><ul>
@@ -407,6 +405,7 @@ Python. Only <code class="docutils literal notranslate"><span class="pre">numpy<
 <p class="caption" role="heading"><span class="caption-text">Development</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="user_guide/solver_benchmarks.html">Sparse solver benchmarks</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
 <li class="toctree-l1"><a class="reference internal" href="origin_story.html">PyFVTool Origins</a></li>
 </ul>

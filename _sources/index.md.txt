@@ -1,10 +1,8 @@
 # PyFVTool
 
-**PyFVTool** is a Python toolbox for solving convection-diffusion-reaction equations
-using the [finite volume method](https://en.wikipedia.org/wiki/Finite_volume_method) (FVM).
+**PyFVTool** is a Python toolbox for solving convection-diffusion-reaction equations using the [finite volume method](https://en.wikipedia.org/wiki/Finite_volume_method) (FVM).
 
-It discretizes and numerically solves the conservative form of transient PDEs of the
-general form:
+It discretizes and numerically solves the conservative form of transient PDEs of the general form:
 
 $$
 	\alpha\frac{\partial\phi}{\partial t}
@@ -22,9 +20,7 @@ $$
 
 where $\mathbf{e}$ is the unit vector in the direction of the coordinate axis.
 
-PyFVTool is oriented toward **heat and mass transport phenomena** on structured meshes,
-for cases where the flow velocity field is already known or absent. It is pure scientific
-Python. Only `numpy`, `scipy`, and `matplotlib` are required.
+PyFVTool is oriented toward **heat and mass transport phenomena** on structured meshes, for cases where the flow velocity field is already known or absent. It is pure scientific Python. Only `numpy`, `scipy`, and `matplotlib` are required.
 
 ---
 
@@ -69,6 +65,7 @@ api/index
 :caption: Development
 
 contributing
+user_guide/solver_benchmarks
 changelog
 origin_story
 ```
