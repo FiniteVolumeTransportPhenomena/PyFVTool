@@ -300,7 +300,7 @@
 <p>With PyFVTool, Picard iteration has not yet been used, and there are at present no examples of solving nonlinear PDEs (hello, Navier-Stokes!) in PyFVTool.</p>
 </section>
 <section id="problem-size-computation-time-and-choice-of-sparse-solver">
-<h2>Problem size, computation time and choice of sparse solver<a class="headerlink" href="#problem-size-computation-time-and-choice-of-sparse-solver" title="Link to this heading">¶</a></h2>
+<h2>Problem size, computation time, and choice of sparse solver<a class="headerlink" href="#problem-size-computation-time-and-choice-of-sparse-solver" title="Link to this heading">¶</a></h2>
 <section id="current-limitations-of-pyfvtool">
 <h3>Current limitations of PyFVTool<a class="headerlink" href="#current-limitations-of-pyfvtool" title="Link to this heading">¶</a></h3>
 <p>PyFVTool can solve steady-state and time-dependent equations. Steady-state solutions are obtained in a single solver step, whereas time-dependent equations require successively solving the transient equation for each time step. This latter process can involve a large number of time steps. Especially in the latter case, the computation time for each solver step becomes an issue. This is directly related to how fast the sparse matrix solver routine can crunch the matrix equation resulting from the FVM formulation of the transport PDE.</p>
@@ -386,7 +386,7 @@
 <li><a class="reference internal" href="#">Solving PDEs</a><ul>
 <li><a class="reference internal" href="#time-stepping">Time-stepping</a></li>
 <li><a class="reference internal" href="#nonlinear-pdes">Nonlinear PDEs</a></li>
-<li><a class="reference internal" href="#problem-size-computation-time-and-choice-of-sparse-solver">Problem size, computation time and choice of sparse solver</a><ul>
+<li><a class="reference internal" href="#problem-size-computation-time-and-choice-of-sparse-solver">Problem size, computation time, and choice of sparse solver</a><ul>
 <li><a class="reference internal" href="#current-limitations-of-pyfvtool">Current limitations of PyFVTool</a></li>
 <li><a class="reference internal" href="#opportunities-for-increasing-pyfvtool-s-computational-power">Opportunities for increasing PyFVTool’s computational power</a></li>
 <li><a class="reference internal" href="#further-background-on-solving-sparse-matrix-equations">Further background on solving sparse matrix equations</a></li>
