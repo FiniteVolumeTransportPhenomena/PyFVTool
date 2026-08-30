@@ -30,6 +30,7 @@ myst_enable_extensions = [
     'colon_fence',  # ::: as an alternative to ``` for directives
     'deflist',      # Definition lists
 ]
+myst_heading_anchors = 3
 
 # Napoleon settings (adjust to match your docstring style)
 napoleon_numpy_docstring = True

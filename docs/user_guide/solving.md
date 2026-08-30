@@ -25,7 +25,7 @@ With PyFVTool, Picard iteration has not yet been used, and there are at present 
 
 
 
-## Problem size, computation time and choice of sparse solver
+## Problem size, computation time, and choice of sparse solver
 
 ### Current limitations of PyFVTool
 
