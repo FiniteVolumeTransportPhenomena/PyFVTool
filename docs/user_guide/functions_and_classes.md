@@ -12,21 +12,26 @@ See also `__init__.py` in the `pyfvtool` module directory.
 Taken from test script:
 
 ```python
-from pyfvtool import Grid1D, Grid2D, Grid3D
-from pyfvtool import CylindricalGrid1D, CylindricalGrid2D
-from pyfvtool import CylindricalGrid3D, PolarGrid2D
-from pyfvtool import CellVariable, FaceVariable
-from pyfvtool import BoundaryConditions
-from pyfvtool import boundaryConditionTerm, diffusionTerm
-from pyfvtool import convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
-from pyfvtool import gradient, divergenceTerm
-from pyfvtool import linearSourceTerm, constantSourceTerm
-from pyfvtool import transientTerm
-from pyfvtool import solvePDE, solveMatrixPDE, solveExplicitPDE
-from pyfvtool import harmonicMean, linearMean, arithmeticMean, geometricMean
-from pyfvtool import upwindMean
-from pyfvtool import fluxLimiter
-from pyfvtool import visualizeCells
+from .mesh import Grid1D, CylindricalGrid1D, SphericalGrid1D
+from .mesh import Grid2D, CylindricalGrid2D, PolarGrid2D 
+from .mesh import Grid3D, CylindricalGrid3D, SphericalGrid3D
+from .advection import convectionTerm, convectionTVDupwindRHSTerm,\
+                       convectionUpwindTerm
+from .diffusion import diffusionTerm
+from .source import linearSourceTerm, constantSourceTerm, transientTerm
+from .boundary import BoundaryConditions, boundaryConditionsTerm
+from .utilities import fluxLimiter
+from .calculus import gradient, gradientFixedBC
+from .calculus import divergence, divergenceTerm
+from .averaging import linearMean, arithmeticMean, upwindMean,\
+                       harmonicMean, geometricMean, tvdMean
+from .pdesolver import solveMatrixPDE, solvePDE, solveExplicitPDE
+from .cell import CellVariable
+from .cell import funceval, celleval
+from .cell import cellLocations
+from .face import FaceVariable, faceeval
+from .face import faceLocations
+from .visualization import visualizeCells
 ```
 
 ## Mesh definition
@@ -57,7 +62,7 @@ from pyfvtool import visualizeCells
 - boundaryConditionTerm, diffusionTerm
 - convectionTerm, convectionUpwindTerm, convectionTVDupwindRHSTerm
 	- fluxLimiter
-- gradient, divergenceTerm
+- gradient, divergence, divergenceTerm
 - linearSourceTerm, constantSourceTerm
 - transientTerm
 

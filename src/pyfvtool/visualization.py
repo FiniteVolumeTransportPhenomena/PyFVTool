@@ -68,15 +68,19 @@ def visualizeCells(phi: CellVariable,
             vmin = phi0.min()
         if vmax is None:
             vmax = phi0.max()
-        ax.pcolormesh(x, y, phi0.T,
-                     vmin=vmin, vmax=vmax,
-                     cmap=cmap, shading=shading)
+        im = ax.pcolormesh(x, y, phi0.T,
+                           vmin=vmin, vmax=vmax,
+                           cmap=cmap, shading=shading)
+        plt.sca(ax)
+        plt.sci(im)
 
     elif (type(phi.domain) is PolarGrid2D):
         x, y, phi0 = phi.plotprofile()
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="polar")
-        ax.pcolor(y, x, phi0)
+        im = ax.pcolor(y, x, phi0)
+        plt.sca(ax)
+        plt.sci(im)
 
     elif (type(phi.domain) is Grid3D):
         x, y, z, phi0 = phi.plotprofile()
