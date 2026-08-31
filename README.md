@@ -6,14 +6,16 @@ PyFVTool discretizes and numerically solves the conservative form of transient [
 
 The partial differential equations that can be solved numerically with PyFVTool have the general form
 
-```math
-\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\vec{\nabla} \cdot \left(\vec{u}\phi\right)}_{\textrm{Advection term}}+\underbrace{\vec{\nabla} \cdot (-D\vec{\nabla}\phi)}_{\textrm{Diffusion term}}+\underbrace{\beta\phi}_{\textrm{Linear source term}}+\underbrace{\gamma}_{\textrm{Constant source term}}=0
-```
+$$
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}\_{\textrm{Transient term}}+\underbrace{\vec{\nabla} \cdot \left(\vec{u}\phi\right)}\_{\textrm{Advection term}}+\underbrace{\vec{\nabla} \cdot (-D\vec{\nabla}\phi)}\_{\textrm{Diffusion term}}+\underbrace{\beta\phi}\_{\textrm{Linear source term}}+\underbrace{\gamma}\_{\textrm{Constant source term}}=0
+$$
+
 with the following general form of boundary conditions (specified by constants $a$, $b$ and $c$, with $\hat{e}$ being the unit vector in the direction of the coordinate at the specific boundary):
 
-```math
+$$
 a(\vec{\nabla}\phi \cdot \hat{e})+b\phi=c
-```
+$$
+
 An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
 
 PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
@@ -128,7 +130,7 @@ while t<t_simulation:
     t+=dt
 
     if (nplot % Nskip == 0):
-        pf.visualizeCells(c)
+        pf.visualizeCells(c, show=False)
     nplot+=1
 plt.show()
 ```
