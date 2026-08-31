@@ -53,16 +53,16 @@ Of course, do not forget to  `conda activate pyfvtool_user`  the environment eve
 
 ### Installation of PyFVTool
 
-Install PyFVTool into your specific PyFVTool Conda environment using `pip`. You will need `Python 3.12` (or later) and `numpy` (version 2.0.0 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
+Install PyFVTool into your specific PyFVTool Conda environment using `pip`.
 
 ```
-pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+pip install pyfvtool
 ```
 
 If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.com/), you can enter the following in the first cell of a Colab Notebook:
 
 ```
-!pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+!pip install pyfvtool
 ```
 
 This will install PyFVTool in the current Colab instance, and make it available for import in the Notebook.
