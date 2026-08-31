@@ -29,7 +29,7 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * [Dirichlet](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition), [Neumann](https://en.wikipedia.org/wiki/Neumann_boundary_condition), [Robin](https://en.wikipedia.org/wiki/Robin_boundary_condition), and [periodic](https://en.wikipedia.org/wiki/Periodic_boundary_conditions) boundary conditions
   * (Relatively) easy linearization of nonlinear PDEs
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
-  * Divergence and gradient terms
+  * Divergence and gradient
 
 PyFVTool is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](https://github.com/FiniteVolumeTransportPhenomena/FVTool). It was strongly inspired by [FiPy](https://pages.nist.gov/fipy/en/latest/index.html), but it has only a fraction of FiPy's features. Boundary conditions, however, are more easily (and arguably more consistently) implemented in PyFVTool. 
 
