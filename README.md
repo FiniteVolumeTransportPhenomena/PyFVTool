@@ -38,11 +38,16 @@ PyFVTool is under active development. Several test cases have been validated to 
 
 ## Installation
 
+PyFVTool can be simply installed from the command line using `pip`.
+
+```
+pip install pyfvtool
+```
+
 ### Python environment
 
-We recommend to use PyFVTool with Python 3.12 (no more, no less) and the most recent NumPy and SciPy versions. It is also highly recommended to use the [MiniForge](https://conda-forge.org/download/) / Anaconda / miniconda Python distributions and to set up a specific environment for PyFVTool (we'll call the environment `pyfvtool_user`).
+PyFVTool is best used with Python 3.12 and the most recent NumPy and SciPy versions. We recommend the [conda-forge](https://conda-forge.org/download/) Python distribution. A specific environment for PyFVTool may be set up as follows.
 
-This requires two commands to be launched from the command-line prompt.
 ```
 conda create --name pyfvtool_user python=3.12 numpy scipy matplotlib spyder jupyterlab tqdm
 
@@ -51,27 +56,24 @@ conda activate pyfvtool_user
 
 Of course, do not forget to  `conda activate pyfvtool_user`  the environment every time you run Python code that uses PyFVTool.
 
-### Installation of PyFVTool
+### JupyterLite, Google Colab
 
-Install PyFVTool into your specific PyFVTool Conda environment using `pip`.
+PyFVTool can be used inside [JupyterLite](https://jupyter.org/try-jupyter). Your calculations will be run completely inside your web browser! No local Python installation needed. To install PyFVTool in JupyterLite, enter the following in the first cell:
 
+```python
+import piplite
+await piplite.install("pyfvtool")
 ```
-pip install pyfvtool
-```
 
-If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.com/), you can enter the following in the first cell of a Colab Notebook:
+PyFVTool also works in [Google Colab](https://colab.research.google.com/), you can enter the following in the first cell of a Colab Notebook to install it in the current Colab instance:
 
 ```
 !pip install pyfvtool
 ```
 
-This will install PyFVTool in the current Colab instance, and make it available for import in the Notebook.
-
-
-
 
 ### Development installation
-If you would like to work on the source code, it is possible to install a development version using `pip`. See [`CONTRIBUTING.md`](https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/blob/main/CONTRIBUTING.md)
+If you would like to work on the source code, it is possible to install a development version. See [`CONTRIBUTING.md`](https://github.com/FiniteVolumeTransportPhenomena/PyFVTool/blob/main/CONTRIBUTING.md)
 
 
 
