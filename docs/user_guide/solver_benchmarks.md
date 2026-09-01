@@ -40,6 +40,7 @@ Here we keep track of different computations with the MKL PARDISO solver while g
 
 Hardware: MOLTECH-Anjou HPC compute node (Intel Xeon)
 
+Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical grid $(r, z)$
 
 
 
