@@ -6,14 +6,16 @@ PyFVTool discretizes and numerically solves the conservative form of transient [
 
 The partial differential equations that can be solved numerically with PyFVTool have the general form
 
-```math
-\underbrace{\alpha\frac{\partial\phi}{\partial t}}_{\textrm{Transient term}}+\underbrace{\vec{\nabla} \cdot \left(\vec{u}\phi\right)}_{\textrm{Advection term}}+\underbrace{\vec{\nabla} \cdot (-D\vec{\nabla}\phi)}_{\textrm{Diffusion term}}+\underbrace{\beta\phi}_{\textrm{Linear source term}}+\underbrace{\gamma}_{\textrm{Constant source term}}=0
-```
+$$
+\underbrace{\alpha\frac{\partial\phi}{\partial t}}\_{\textrm{Transient term}}+\underbrace{\vec{\nabla} \cdot \left(\vec{u}\phi\right)}\_{\textrm{Advection term}}+\underbrace{\vec{\nabla} \cdot (-D\vec{\nabla}\phi)}\_{\textrm{Diffusion term}}+\underbrace{\beta\phi}\_{\textrm{Linear source term}}+\underbrace{\gamma}\_{\textrm{Constant source term}}=0
+$$
+
 with the following general form of boundary conditions (specified by constants $a$, $b$ and $c$, with $\hat{e}$ being the unit vector in the direction of the coordinate at the specific boundary):
 
-```math
+$$
 a(\vec{\nabla}\phi \cdot \hat{e})+b\phi=c
-```
+$$
+
 An important feature of PyFVTool is that it is 'pure scientific Python' (*i.e.* it needs only Python and the standard scientific computing libraries  `numpy`, `scipy` and `matplotlib` to run). Further optional dependencies may appear in the future, *e.g.*, for increasing the computational speed via optimised numerical libraries, but these will remain optional.
 
 PyFVTool is limited to calculations on structured meshes (regular grids). It is oriented to calculation of heat and mass transport phenomena (diffusion-advection-reaction) for the frequent cases where the flow velocity field is already known (or where flow is absent). It is not particularly suited for fluid dynamics (solving Navier-Stokes), which requires implementation of further numerical schemes on top of the current PyFVTool ([simulkade](https://github.com/simulkade) knows how).  For fluid dynamics, other specialized finite-volume codes exist.
@@ -27,7 +29,7 @@ The [finite-volume](https://en.wikipedia.org/wiki/Finite_volume_method) discreti
   * [Dirichlet](https://en.wikipedia.org/wiki/Dirichlet_boundary_condition), [Neumann](https://en.wikipedia.org/wiki/Neumann_boundary_condition), [Robin](https://en.wikipedia.org/wiki/Robin_boundary_condition), and [periodic](https://en.wikipedia.org/wiki/Periodic_boundary_conditions) boundary conditions
   * (Relatively) easy linearization of nonlinear PDEs
   * Averaging methods (linear, arithmetic, geometric, harmonic, upwind, TVD)
-  * Divergence and gradient terms
+  * Divergence and gradient
 
 PyFVTool is a Python implementation of [A. A. Eftekhari](https://github.com/simulkade)'s Matlab/Octave FVM solver [FVTool](https://github.com/FiniteVolumeTransportPhenomena/FVTool). It was strongly inspired by [FiPy](https://pages.nist.gov/fipy/en/latest/index.html), but it has only a fraction of FiPy's features. Boundary conditions, however, are more easily (and arguably more consistently) implemented in PyFVTool. 
 
@@ -51,16 +53,16 @@ Of course, do not forget to  `conda activate pyfvtool_user`  the environment eve
 
 ### Installation of PyFVTool
 
-Install PyFVTool into your specific PyFVTool Conda environment using `pip`. You will need `Python 3.12` (or later) and `numpy` (version 2.0.0 or later), `scipy`, and `matplotlib`, which are provided for by the Conda `pyfvtool_user` environment. The current `pip` install sources PyFVTool directly from GitHub.
+Install PyFVTool into your specific PyFVTool Conda environment using `pip`.
 
 ```
-pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+pip install pyfvtool
 ```
 
 If you'd like to use PyFVTool in [Google Colab](https://colab.research.google.com/), you can enter the following in the first cell of a Colab Notebook:
 
 ```
-!pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+!pip install pyfvtool
 ```
 
 This will install PyFVTool in the current Colab instance, and make it available for import in the Notebook.
@@ -128,7 +130,7 @@ while t<t_simulation:
     t+=dt
 
     if (nplot % Nskip == 0):
-        pf.visualizeCells(c)
+        pf.visualizeCells(c, show=False)
     nplot+=1
 plt.show()
 ```

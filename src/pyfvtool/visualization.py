@@ -14,22 +14,38 @@ def visualizeCells(phi: CellVariable,
                    vmin = None,
                    vmax = None,
                    cmap = "viridis",
-                   shading = "gouraud"):
+                   shading = "gouraud",
+                   show = True):
     """
-    Visualize the cell variable.
+    Visualize the cell variable in a suitable graph.
     
     Parameters
     ----------
     phi: CellVariable
          Cell variable to be visualized
     vmin: float
-         Minimum value of the colormap
+         Minimum value of the colormap (2D and 3D plots)
     vmax: float
-         Maximum value of the colormap
+         Maximum value of the colormap (2D and 3D plots)
     cmap: str
-         Colormap
+         Colormap (2D and 3D plots)
     shading: str
-         Shading method
+         Shading method (2D and 3D plots)
+    show: bool
+         If True (default), call plt.show() at the end. Set to False
+         to defer showing, e.g. to further customize the plot before
+         displaying it, or (in the case of 1D plots) to superpose
+         several curves in the same graph.
+
+    Returns
+    -------
+    fig: matplotlib.figure.Figure
+    ax: matplotlib.axes.Axes
+         The figure and axes on which the variable was plotted. For
+         Grid1D, repeated calls superpose onto the current axes
+         (via plt.gca()); note this assumes the current axes, if any,
+         is a standard 2D rectilinear axes rather than a leftover
+         polar/3D one from a prior plot.
     
     Examples
     --------
@@ -39,23 +55,32 @@ def visualizeCells(phi: CellVariable,
     >>> pf.visualizeCells(phi)
     """
     if isinstance(phi.domain, Grid1D):
+        ax = plt.gca()
+        fig = ax.figure
         x, phi0 = phi.plotprofile()
-        plt.plot(x, phi0)
+        ax.plot(x, phi0)
 
     elif (type(phi.domain) is Grid2D) or (type(phi.domain) is CylindricalGrid2D):
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
         x, y, phi0 = phi.plotprofile()
         if vmin is None:
             vmin = phi0.min()
         if vmax is None:
             vmax = phi0.max()
-        plt.pcolormesh(x, y, phi0.T, 
-                       vmin=vmin, vmax=vmax,
-                       cmap=cmap, shading=shading)
+        im = ax.pcolormesh(x, y, phi0.T,
+                           vmin=vmin, vmax=vmax,
+                           cmap=cmap, shading=shading)
+        plt.sca(ax)
+        plt.sci(im)
 
     elif (type(phi.domain) is PolarGrid2D):
         x, y, phi0 = phi.plotprofile()
-        plt.subplot(111, polar="true")
-        plt.pcolor(y, x, phi0)
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection="polar")
+        im = ax.pcolor(y, x, phi0)
+        plt.sca(ax)
+        plt.sci(im)
 
     elif (type(phi.domain) is Grid3D):
         x, y, z, phi0 = phi.plotprofile()
@@ -63,13 +88,13 @@ def visualizeCells(phi: CellVariable,
         vmax = np.max(phi0)
         mynormalize = lambda a:((a - vmin)/(vmax-vmin))
         Nx, Ny, Nz = phi.domain.dims
-        a= np.ones((Nx+2,Ny+2,Nz+2))
+        a = np.ones((Nx+2,Ny+2,Nz+2))
         X = x*a
         Y = y*a
         Z = z*a
 
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection = "3d")
+        ax = fig.add_subplot(111, projection="3d")
 
         ax.plot_surface(X[0,:,:], Y[0,:,:], Z[0,:,:],
                         facecolors=plt.cm.viridis(mynormalize(phi0[0,:,:])),
@@ -114,9 +139,6 @@ def visualizeCells(phi: CellVariable,
         ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
                        facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
                        alpha=alfa)
-        ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
-                       facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
-                       alpha=alfa)
         ax.plot_surface(X[:, :, int(Nz/2)], Y[:, :, int(Nz/2)], Z[:, :, int(Nz/2)],
                        facecolors=plt.cm.viridis(mynormalize(phi0[:, :, int(Nz/2)])),
                        alpha=alfa)
@@ -141,28 +163,15 @@ def visualizeCells(phi: CellVariable,
         fig = plt.figure()
         ax = fig.add_subplot(111, projection="3d")
         alfa = 1.0
-        # ax.plot_surface(X[:, 0, :], Y[:, 0, :], Z[:, 0, :],
-        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, 0, :])),
-        #                alpha=alfa)
-        # ax.plot_surface(X[:, int(Ny/2)+1, :], Y[:, int(Ny/2)+1, :], Z[:, int(Ny/2)+1, :],
-        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, int(Ny/2)+1, :])),
-        #                alpha=alfa)
-        # ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
-        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
-        #                alpha=alfa)
-        # ax.plot_surface(X[:, :, 0], Y[:, :, 0], Z[:, :, 0],
-        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, 0])),
-        #                alpha=alfa)
-        # ax.plot_surface(X[:, :, int(Nz/2)], Y[:, :, int(Nz/2)], Z[:, :, int(Nz/2)],
-        #                facecolors=plt.cm.viridis(mynormalize(phi0[:, :, int(Nz/2)])),
-        #                alpha=alfa)
         ax.plot_surface(X[-1, :, :], Y[-1, :, :], Z[-1, :, :],
                        facecolors=plt.cm.viridis(mynormalize(phi0[-1, :, :])),
                        alpha=alfa)
-        
+
     else:
         # just in case...
         raise ValueError('Unsupported mesh: '+str(type(phi.domain)))
-        
-    plt.show()
-    
+
+    if show:
+        plt.show()
+
+    return fig, ax

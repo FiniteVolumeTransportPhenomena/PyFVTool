@@ -204,7 +204,7 @@ def test_newton_cooling(silent=True):
         import matplotlib.pyplot as plt
         plt.figure(1)
         plt.clf()
-        pf.visualizeCells(Tcell)
+        pf.visualizeCells(Tcell, show=False)
         # in the future, come up with more fancy plotting
     
         plt.figure(2)

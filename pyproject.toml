@@ -4,8 +4,8 @@
 name = "pyfvtool"
 dynamic = ["version"] # version will be read from pyfvtool/__init__.py
 authors = [
-    { name="Ali A. Eftekhari", email="aliak@dtu.dk" },
-    { name="Martinus H. V. Werts", email="martinus.werts@univ-angers.fr" }
+    { name = "Ali A. Eftekhari", email = "aliak@dtu.dk" },
+    { name = "Martinus H. V. Werts", email = "martinus.werts@univ-angers.fr" }
 ]
 description = "Finite-volume toolbox in Python"
 classifiers = [
@@ -37,5 +37,5 @@ build-backend = "setuptools.build_meta"
 where = ["src"]
 
 [tool.setuptools.dynamic]
- # version will be read from pyfvtool/__init__.py
+# version will be read from pyfvtool/__init__.py
 version = {attr = "pyfvtool.__version__"}
