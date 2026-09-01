@@ -1,11 +1,9 @@
-# minimalist pyproject.toml for PyFVTool
-
 [project]
 name = "pyfvtool"
 dynamic = ["version"] # version will be read from pyfvtool/__init__.py
 authors = [
-    { name = "Ali A. Eftekhari", email = "aliak@dtu.dk" },
-    { name = "Martinus H. V. Werts", email = "martinus.werts@univ-angers.fr" }
+    { name = "Ali A. Eftekhari" },
+    { name = "Martinus H. V. Werts" }
 ]
 description = "Finite-volume toolbox in Python"
 classifiers = [
