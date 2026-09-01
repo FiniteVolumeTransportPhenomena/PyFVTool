@@ -7,12 +7,14 @@ Here, we collect relevant benchmarks, i.e. actually solving PDEs appearing in th
 
 ## PyFVTool sparse solver benchmark 260826
 
-Simple wall time measurement.
+Comparison between built-in solver and external solver. Simple wall time measurement.
 
 - SuperLU (single-threaded): `scipy.sparse` default built-in `spsolve` (SciPy 1.18.0)
 - PARDISO (multi-threaded): Intel MKL PARDISO via `pypardiso` (MKL 2026.0.1)
 
 Hardware: MOLTECH-Anjou HPC compute node (32+ Gb RAM, Intel Xeon, 20+ threads, Linux)
+
+SLURM/environment config: Ncpu=32; RAM=32Gb; MKL=unrestricted
 
 Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical grid $(r, z)$
 
@@ -30,4 +32,20 @@ Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical g
 SciPy's built-in `scipy.sparse.linalg.spsolve` with SuperLU provides a solid, default baseline. Note that it is single-threaded and does not perform any optimization (e.g. re-using symbolic/numerical factorization). Make sure that SciPy actually uses the built-in SuperLU by calling `scipy.sparse.linalg.use_solver(useUmfpack=False)`. Without this call, SciPy's sparse solving behaviour becomes unpredictable.
 
 Intel's MKL PARDISO solver was used without explicit control of the number of threads used (Using `top`, we estimate between 10 and 20 threads, depending on problem size). The parallelization by PARDISO is quite efficient in our 2D cylindrical case.
+
+
+## PyFVTool sparse solver benchmark 260830
+
+Here we keep track of different computations with the MKL PARDISO solver while gradually changing the amount of compute and memory requested. We now explicitly set the number of threads for MKL.
+
+Hardware: MOLTECH-Anjou HPC compute node (Intel Xeon)
+
+
+
+
+| Grid size  | FVM cells | PARDISO | SLURM/environment |
+| --- | ---  | --- | --- | 
+| *Nr x Nz*  | *incl. ghost* | *iter/s* |            |
+| 75 x 2070	 | 159544        |	13.01  | Ncpu=16; RAM=16Gb; MKL=16threads,dynamic |
+| 75 x 4500  | 346654        |   5.703 | Ncpu=16; RAM=16Gb; MKL=16threads,dynamic |
 
