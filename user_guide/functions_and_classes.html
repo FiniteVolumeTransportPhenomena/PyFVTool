@@ -290,21 +290,26 @@
 <h2>Initial list (not necessarily complete!)<a class="headerlink" href="#initial-list-not-necessarily-complete" title="Link to this heading">¶</a></h2>
 <p>See also <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code> in the <code class="docutils literal notranslate"><span class="pre">pyfvtool</span></code> module directory.</p>
 <p>Taken from test script:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid1D</span><span class="p">,</span> <span class="n">Grid2D</span><span class="p">,</span> <span class="n">Grid3D</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CylindricalGrid1D</span><span class="p">,</span> <span class="n">CylindricalGrid2D</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CylindricalGrid3D</span><span class="p">,</span> <span class="n">PolarGrid2D</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellVariable</span><span class="p">,</span> <span class="n">FaceVariable</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundaryConditions</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">boundaryConditionTerm</span><span class="p">,</span> <span class="n">diffusionTerm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">convectionTerm</span><span class="p">,</span> <span class="n">convectionUpwindTerm</span><span class="p">,</span> <span class="n">convectionTVDupwindRHSTerm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">divergenceTerm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">linearSourceTerm</span><span class="p">,</span> <span class="n">constantSourceTerm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">transientTerm</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">solvePDE</span><span class="p">,</span> <span class="n">solveMatrixPDE</span><span class="p">,</span> <span class="n">solveExplicitPDE</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">harmonicMean</span><span class="p">,</span> <span class="n">linearMean</span><span class="p">,</span> <span class="n">arithmeticMean</span><span class="p">,</span> <span class="n">geometricMean</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">upwindMean</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">fluxLimiter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pyfvtool</span><span class="w"> </span><span class="kn">import</span> <span class="n">visualizeCells</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid1D</span><span class="p">,</span> <span class="n">CylindricalGrid1D</span><span class="p">,</span> <span class="n">SphericalGrid1D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid2D</span><span class="p">,</span> <span class="n">CylindricalGrid2D</span><span class="p">,</span> <span class="n">PolarGrid2D</span> 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mesh</span><span class="w"> </span><span class="kn">import</span> <span class="n">Grid3D</span><span class="p">,</span> <span class="n">CylindricalGrid3D</span><span class="p">,</span> <span class="n">SphericalGrid3D</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.advection</span><span class="w"> </span><span class="kn">import</span> <span class="n">convectionTerm</span><span class="p">,</span> <span class="n">convectionTVDupwindRHSTerm</span><span class="p">,</span>\
+                       <span class="n">convectionUpwindTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.diffusion</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusionTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.source</span><span class="w"> </span><span class="kn">import</span> <span class="n">linearSourceTerm</span><span class="p">,</span> <span class="n">constantSourceTerm</span><span class="p">,</span> <span class="n">transientTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.boundary</span><span class="w"> </span><span class="kn">import</span> <span class="n">BoundaryConditions</span><span class="p">,</span> <span class="n">boundaryConditionsTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utilities</span><span class="w"> </span><span class="kn">import</span> <span class="n">fluxLimiter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.calculus</span><span class="w"> </span><span class="kn">import</span> <span class="n">gradient</span><span class="p">,</span> <span class="n">gradientFixedBC</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.calculus</span><span class="w"> </span><span class="kn">import</span> <span class="n">divergence</span><span class="p">,</span> <span class="n">divergenceTerm</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.averaging</span><span class="w"> </span><span class="kn">import</span> <span class="n">linearMean</span><span class="p">,</span> <span class="n">arithmeticMean</span><span class="p">,</span> <span class="n">upwindMean</span><span class="p">,</span>\
+                       <span class="n">harmonicMean</span><span class="p">,</span> <span class="n">geometricMean</span><span class="p">,</span> <span class="n">tvdMean</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.pdesolver</span><span class="w"> </span><span class="kn">import</span> <span class="n">solveMatrixPDE</span><span class="p">,</span> <span class="n">solvePDE</span><span class="p">,</span> <span class="n">solveExplicitPDE</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">CellVariable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">funceval</span><span class="p">,</span> <span class="n">celleval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.cell</span><span class="w"> </span><span class="kn">import</span> <span class="n">cellLocations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.face</span><span class="w"> </span><span class="kn">import</span> <span class="n">FaceVariable</span><span class="p">,</span> <span class="n">faceeval</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.face</span><span class="w"> </span><span class="kn">import</span> <span class="n">faceLocations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.visualization</span><span class="w"> </span><span class="kn">import</span> <span class="n">visualizeCells</span>
 </pre></div>
 </div>
 </section>
@@ -348,7 +353,7 @@
 <li><p>fluxLimiter</p></li>
 </ul>
 </li>
-<li><p>gradient, divergenceTerm</p></li>
+<li><p>gradient, divergence, divergenceTerm</p></li>
 <li><p>linearSourceTerm, constantSourceTerm</p></li>
 <li><p>transientTerm</p></li>
 </ul>

@@ -2611,17 +2611,32 @@ SuperLU solver will be used.</p></li>
 <span id="visualization"></span><h2>Visualization<a class="headerlink" href="#module-pyfvtool.visualization" title="Link to this heading">¶</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyfvtool.visualization.visualizeCells">
-<span class="sig-prename descclassname"><span class="pre">pyfvtool.visualization.</span></span><span class="sig-name descname"><span class="pre">visualizeCells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><span class="pre">CellVariable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shading</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gouraud'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/visualization.html#visualizeCells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.visualization.visualizeCells" title="Link to this definition">¶</a></dt>
-<dd><p>Visualize the cell variable.</p>
+<span class="sig-prename descclassname"><span class="pre">pyfvtool.visualization.</span></span><span class="sig-name descname"><span class="pre">visualizeCells</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><span class="pre">CellVariable</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'viridis'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shading</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gouraud'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyfvtool/visualization.html#visualizeCells"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyfvtool.visualization.visualizeCells" title="Link to this definition">¶</a></dt>
+<dd><p>Visualize the cell variable in a suitable graph.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>phi</strong> (<a class="reference internal" href="#pyfvtool.cell.CellVariable" title="pyfvtool.cell.CellVariable"><em>CellVariable</em></a>) – Cell variable to be visualized</p></li>
-<li><p><strong>vmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Minimum value of the colormap</p></li>
-<li><p><strong>vmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum value of the colormap</p></li>
-<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Colormap</p></li>
-<li><p><strong>shading</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Shading method</p></li>
+<li><p><strong>vmin</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Minimum value of the colormap (2D and 3D plots)</p></li>
+<li><p><strong>vmax</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – Maximum value of the colormap (2D and 3D plots)</p></li>
+<li><p><strong>cmap</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Colormap (2D and 3D plots)</p></li>
+<li><p><strong>shading</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – Shading method (2D and 3D plots)</p></li>
+<li><p><strong>show</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – If True (default), call plt.show() at the end. Set to False
+to defer showing, e.g. to further customize the plot before
+displaying it, or (in the case of 1D plots) to superpose
+several curves in the same graph.</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>fig</strong> (<em>matplotlib.figure.Figure</em>)</p></li>
+<li><p><strong>ax</strong> (<em>matplotlib.axes.Axes</em>) – The figure and axes on which the variable was plotted. For
+Grid1D, repeated calls superpose onto the current axes
+(via plt.gca()); note this assumes the current axes, if any,
+is a standard 2D rectilinear axes rather than a leftover
+polar/3D one from a prior plot.</p></li>
+</ul>
+</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>

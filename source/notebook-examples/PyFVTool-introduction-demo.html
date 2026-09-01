@@ -1063,17 +1063,25 @@ several different terms (diffusion, advection/convection, source/reaction) to th
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># visualize the solution</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
 <span class="n">pf</span><span class="o">.</span><span class="n">visualizeCells</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
-<div class="nboutput nblast docutils container">
+<div class="nboutput docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
 <img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_60_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_60_0.png" />
 </div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[31]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+(&lt;Figure size 640x480 with 1 Axes&gt;, &lt;Axes: &gt;)
+</pre></div></div>
 </div>
 <p>Just to get excited a little bit, only change the mesh definition command from <code class="docutils literal notranslate"><span class="pre">Grid1D(Nx,L)</span></code> to <code class="docutils literal notranslate"><span class="pre">Grid2D(Nx,Nx,L,L)</span></code>, run the code and see what happens.</p>
 <div class="nbinput docutils container">
@@ -1101,8 +1109,7 @@ several different terms (diffusion, advection/convection, source/reaction) to th
 <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">)</span>
 
 <span class="c1"># Visualize the solution</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="n">pf</span><span class="o">.</span><span class="n">visualizeCells</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="n">pf</span><span class="o">.</span><span class="n">visualizeCells</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">show</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># add show=False to modify graph afterwards (add colorbar)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">();</span>
 </pre></div>
 </div>
@@ -1141,10 +1148,7 @@ several different terms (diffusion, advection/convection, source/reaction) to th
 <span class="n">pf</span><span class="o">.</span><span class="n">solvePDE</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">eqnterms</span><span class="p">)</span>
 
 <span class="c1"># Visualize the solution</span>
-<span class="n">hfig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
-<span class="c1"># ax = hfig.add_subplot(projection='3d')</span>
 <span class="n">pf</span><span class="o">.</span><span class="n">visualizeCells</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-<span class="c1"># plt.colorbar()</span>
 </pre></div>
 </div>
 </div>
@@ -1152,16 +1156,17 @@ several different terms (diffusion, advection/convection, source/reaction) to th
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<div class="highlight"><pre>
-&lt;Figure size 640x480 with 0 Axes&gt;
-</pre></div></div>
+<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_64_0.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_64_0.png" />
+</div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[33]:
+</pre></div>
 </div>
 <div class="output_area docutils container">
-<img alt="../../_images/source_notebook-examples_PyFVTool-introduction-demo_64_1.png" src="../../_images/source_notebook-examples_PyFVTool-introduction-demo_64_1.png" />
-</div>
+<div class="highlight"><pre>
+(&lt;Figure size 640x480 with 1 Axes&gt;, &lt;Axes3D: &gt;)
+</pre></div></div>
 </div>
 <p>This is usually the way we develop new mathematical models for a physical phenomenon. Write the equation, solve it in 1D, compare it to the analytical solution, then solve it numerically in 2D and 3D for more realistic cases with heterogeneous transfer coefficients and other nonidealities (and perhaps compare it to some experimental data)</p>
 </section>
