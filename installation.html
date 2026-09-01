@@ -286,7 +286,7 @@
 <h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">¶</a></h1>
 <section id="requirements">
 <h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading">¶</a></h2>
-<p>PyFVTool requires <strong>Python 3.12</strong> and the following packages:</p>
+<p>PyFVTool requires Python 3.12 and the following packages:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> ≥ 2.0</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">scipy</span></code></p></li>
@@ -295,32 +295,36 @@
 </section>
 <section id="installing-with-pip">
 <h2>Installing with pip<a class="headerlink" href="#installing-with-pip" title="Link to this heading">¶</a></h2>
-<p>The recommended way to install PyFVTool is directly from GitHub using <code class="docutils literal notranslate"><span class="pre">pip</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
-</pre></div>
-</div>
-<section id="in-a-conda-environment-recommended">
-<h3>In a conda environment (recommended)<a class="headerlink" href="#in-a-conda-environment-recommended" title="Link to this heading">¶</a></h3>
-<p>We strongly recommend creating a dedicated conda environment:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>pyfvtool_user<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.12<span class="w"> </span>numpy<span class="w"> </span>scipy<span class="w"> </span>matplotlib<span class="w"> </span>spyder<span class="w"> </span>jupyterlab<span class="w"> </span>tqdm
-conda<span class="w"> </span>activate<span class="w"> </span>pyfvtool_user
-pip<span class="w"> </span>install<span class="w"> </span>git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
-</pre></div>
-</div>
-<p>Remember to run <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">pyfvtool_user</span></code> each time before using PyFVTool.</p>
-</section>
-<section id="in-google-colab">
-<h3>In Google Colab<a class="headerlink" href="#in-google-colab" title="Link to this heading">¶</a></h3>
-<p>Add the following to the first cell of your notebook:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install git+https://github.com/FiniteVolumeTransportPhenomena/PyFVTool.git
+<p>PyFVTool can be simply installed from the command line using <code class="docutils literal notranslate"><span class="pre">pip</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">pyfvtool</span>
 </pre></div>
 </div>
 </section>
+<section id="python-environment">
+<h2>Python environment<a class="headerlink" href="#python-environment" title="Link to this heading">¶</a></h2>
+<p>PyFVTool is best used with Python 3.12 and the most recent NumPy and SciPy versions. We recommend the <a class="reference external" href="https://conda-forge.org/download/">conda-forge</a> Python distribution. A specific environment for PyFVTool may be set up as follows.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">conda</span> <span class="n">create</span> <span class="o">--</span><span class="n">name</span> <span class="n">pyfvtool_user</span> <span class="n">python</span><span class="o">=</span><span class="mf">3.12</span> <span class="n">numpy</span> <span class="n">scipy</span> <span class="n">matplotlib</span> <span class="n">spyder</span> <span class="n">jupyterlab</span> <span class="n">tqdm</span>
+
+<span class="n">conda</span> <span class="n">activate</span> <span class="n">pyfvtool_user</span>
+</pre></div>
+</div>
+<p>Of course, do not forget to  <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">activate</span> <span class="pre">pyfvtool_user</span></code>  the environment every time you run Python code that uses PyFVTool.</p>
+</section>
+<section id="jupyterlite-google-colab">
+<h2>JupyterLite, Google Colab<a class="headerlink" href="#jupyterlite-google-colab" title="Link to this heading">¶</a></h2>
+<p>PyFVTool can be used inside <a class="reference external" href="https://jupyter.org/try-jupyter">JupyterLite</a>. Your calculations will be run completely inside your web browser! No local Python installation needed. To install PyFVTool in JupyterLite, enter the following in the first cell:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">piplite</span>
+<span class="k">await</span> <span class="n">piplite</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="s2">"pyfvtool"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>PyFVTool also works in <a class="reference external" href="https://colab.research.google.com/">Google Colab</a>, you can enter the following in the first cell of a Colab Notebook to install it in the current Colab instance:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>!pip install pyfvtool
+</pre></div>
+</div>
 </section>
 <section id="development-installation">
 <h2>Development installation<a class="headerlink" href="#development-installation" title="Link to this heading">¶</a></h2>
-<p>If you want to modify the source code, install a development (editable) version.
-See <a class="reference internal" href="contributing.html"><span class="doc std std-doc">Contributing</span></a> for details.</p>
+<p>If you would like to work on the source code, it is possible to install a development version. See <a class="reference internal" href="contributing.html"><span class="std std-doc">“Contributing”</span></a>.</p>
 </section>
 </section>
 
@@ -381,11 +385,9 @@ See <a class="reference internal" href="contributing.html"><span class="doc std 
             <ul>
 <li><a class="reference internal" href="#">Installation</a><ul>
 <li><a class="reference internal" href="#requirements">Requirements</a></li>
-<li><a class="reference internal" href="#installing-with-pip">Installing with pip</a><ul>
-<li><a class="reference internal" href="#in-a-conda-environment-recommended">In a conda environment (recommended)</a></li>
-<li><a class="reference internal" href="#in-google-colab">In Google Colab</a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#installing-with-pip">Installing with pip</a></li>
+<li><a class="reference internal" href="#python-environment">Python environment</a></li>
+<li><a class="reference internal" href="#jupyterlite-google-colab">JupyterLite, Google Colab</a></li>
 <li><a class="reference internal" href="#development-installation">Development installation</a></li>
 </ul>
 </li>

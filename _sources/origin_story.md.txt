@@ -1,6 +1,6 @@
 # PyFVTool Origins
 
-The origin story of PyFVTool has not yet been told. It can likely be reconstructed from remaining digital artefacts, which may be found by exploration of GitHub and the Internets.
+The origin story of PyFVTool has not yet been told. It can likely be reconstructed from remaining digital artefacts, which may be found by exploration of GitHub and the Internets. It is known that PyFVTool was translated from an ancient work known as FVTool, which was written in the MATLAB language.
 
 
 ## A precious digital artefact: `dev_story.py`

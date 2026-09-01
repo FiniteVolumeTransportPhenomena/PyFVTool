@@ -1,6 +1,6 @@
 # Contributing
 
-Contributions are welcome — including documentation improvements!
+Contributions are welcome, including documentation improvements.
 
 ## Setting up a development environment
 
