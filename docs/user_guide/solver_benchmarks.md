@@ -36,7 +36,9 @@ Intel's MKL PARDISO solver was used without explicit control of the number of th
 
 ## PyFVTool sparse solver benchmark 260830
 
-Here we keep track of different computations with the MKL PARDISO solver while gradually changing the amount of compute and memory requested. We now explicitly set the number of threads for MKL.
+Here we keep track of different computations with the MKL PARDISO solver while gradually changing the amount of compute and memory requested. We now explicitly set the number of threads for MKL. 
+
+These are simulations for an ongoing research project, and we monitor solver performance as we go via simple wall-time measurements. We also monitor memory, but memory is not really an issue (memory use is modest), so it is not reported here. Furthermore, the calculations are not entirely identical: some simulation parameters vary, but the general FVM computation is very similar. For several runs on the same grid size, we take the smallest value for the compute rate ('iter/s'), which varies within 5...10%.
 
 Hardware: MOLTECH-Anjou HPC compute node (Intel Xeon)
 
@@ -47,6 +49,9 @@ Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical g
 | Grid size  | FVM cells | PARDISO | SLURM/environment |
 | --- | ---  | --- | --- | 
 | *Nr x Nz*  | *incl. ghost* | *iter/s* |            |
-| 75 x 2070	 | 159544        |	13.01  | Ncpu=16; RAM=16Gb; MKL=16threads,dynamic |
-| 75 x 4500  | 346654        |   5.703 | Ncpu=16; RAM=16Gb; MKL=16threads,dynamic |
+| 75 x 2070	 | 159544        |	13.01  | Ncpu=16; RAM=16Gb; MKL=16threads, dynamic |
+| 75 x 4500  | 346654        |   5.703 | Ncpu=16; RAM=16Gb; MKL=16threads, dynamic |
+| 75 x 4500  | 346654        |   5.457 | Ncpu= 8; RAM= 8Gb; MKL= 8threads, dynamic |
+
+It seems that restricting MKL PARDISO to 8 threads instead of 16 only has a very minor effect on the compute rate for this computation. This makes it easier to squeeze in the compute job on the HPC cluster.
 
