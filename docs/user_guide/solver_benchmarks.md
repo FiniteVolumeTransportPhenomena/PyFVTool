@@ -53,6 +53,9 @@ Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical g
 | 75 x 4500  | 346654        |   5.703 | Ncpu=16; RAM=16Gb; MKL=16threads, dynamic |
 | 75 x 4500  | 346654        |   5.457 | Ncpu= 8; RAM= 8Gb; MKL= 8threads, dynamic |
 | 75 x 5400  | 415954        |   3.787 | Ncpu= 8; RAM= 8Gb; MKL= 8threads, dynamic |
+| 75 x 4800  | 369754        |   6.188 | Ncpu=16; RAM= 8Gb; MKL=16threads, dynamic |
 
-It seems that restricting MKL PARDISO to 8 threads instead of 16 only has a minor effect on the compute rate for this computation, at similar grid dimensions. This makes it easier to squeeze in the compute job on the HPC cluster.
+It seems that restricting MKL PARDISO to 8 threads instead of 16 only has a minor effect on the compute rate for this computation, at similar grid dimensions. This makes it easier to squeeze in the compute job on the HPC cluster. However, 16 threads seems the more generally 'safe' option, when the grids are larger. Memory seems not to be an issue: the computations work fine with "only" 8 Gb.
+
+Of note, there is likely some heterogeneity in performance between different compute nodes on the HPC cluster, which we do not control or monitor here. This set of benchmarks is mainly to find reasonable SLURM requests (Ncpu, RAM), while also monitoring operational performance.
 
