@@ -288,12 +288,13 @@
 <p>Here, we collect relevant benchmarks, i.e. actually solving PDEs appearing in the study of transport phenomena.</p>
 <section id="pyfvtool-sparse-solver-benchmark-260826">
 <h2>PyFVTool sparse solver benchmark 260826<a class="headerlink" href="#pyfvtool-sparse-solver-benchmark-260826" title="Link to this heading">¶</a></h2>
-<p>Simple wall time measurement.</p>
+<p>Comparison between built-in solver and external solver. Simple wall time measurement.</p>
 <ul class="simple">
 <li><p>SuperLU (single-threaded): <code class="docutils literal notranslate"><span class="pre">scipy.sparse</span></code> default built-in <code class="docutils literal notranslate"><span class="pre">spsolve</span></code> (SciPy 1.18.0)</p></li>
 <li><p>PARDISO (multi-threaded): Intel MKL PARDISO via <code class="docutils literal notranslate"><span class="pre">pypardiso</span></code> (MKL 2026.0.1)</p></li>
 </ul>
 <p>Hardware: MOLTECH-Anjou HPC compute node (32+ Gb RAM, Intel Xeon, 20+ threads, Linux)</p>
+<p>SLURM/environment config: Ncpu=32; RAM=32Gb; MKL=unrestricted</p>
 <p>Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical grid <span class="math notranslate nohighlight">\((r, z)\)</span></p>
 <div class="table-wrapper colwidths-auto docutils container">
 <table class="docutils align-default">
@@ -341,6 +342,58 @@
 </div>
 <p>SciPy’s built-in <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.spsolve</span></code> with SuperLU provides a solid, default baseline. Note that it is single-threaded and does not perform any optimization (e.g. re-using symbolic/numerical factorization). Make sure that SciPy actually uses the built-in SuperLU by calling <code class="docutils literal notranslate"><span class="pre">scipy.sparse.linalg.use_solver(useUmfpack=False)</span></code>. Without this call, SciPy’s sparse solving behaviour becomes unpredictable.</p>
 <p>Intel’s MKL PARDISO solver was used without explicit control of the number of threads used (Using <code class="docutils literal notranslate"><span class="pre">top</span></code>, we estimate between 10 and 20 threads, depending on problem size). The parallelization by PARDISO is quite efficient in our 2D cylindrical case.</p>
+</section>
+<section id="pyfvtool-sparse-solver-benchmark-260830">
+<h2>PyFVTool sparse solver benchmark 260830<a class="headerlink" href="#pyfvtool-sparse-solver-benchmark-260830" title="Link to this heading">¶</a></h2>
+<p>Here we keep track of different computations with the MKL PARDISO solver while gradually changing the amount of compute and memory requested. We now explicitly set the number of threads for MKL.</p>
+<p>These are simulations for an ongoing research project, and we monitor solver performance as we go via simple wall-time measurements. We also monitor memory, but memory is not really an issue (memory use is modest), so it is not reported here. Furthermore, the calculations are not entirely identical: some simulation parameters vary, but the general FVM computation is very similar. For several runs on the same grid size, we take the smallest value for the compute rate (‘iter/s’), which varies within 5…10%.</p>
+<p>Hardware: MOLTECH-Anjou HPC compute node (Intel Xeon)</p>
+<p>Calculation: time-dependent advection-diffusion on 2D axisymmetric cylindrical grid <span class="math notranslate nohighlight">\((r, z)\)</span></p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Grid size</p></th>
+<th class="head"><p>FVM cells</p></th>
+<th class="head"><p>PARDISO</p></th>
+<th class="head"><p>SLURM/environment</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><em>Nr x Nz</em></p></td>
+<td><p><em>incl. ghost</em></p></td>
+<td><p><em>iter/s</em></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p>75 x 2070</p></td>
+<td><p>159544</p></td>
+<td><p>13.01</p></td>
+<td><p>Ncpu=16; RAM=16Gb; MKL=16threads, dynamic</p></td>
+</tr>
+<tr class="row-even"><td><p>75 x 4500</p></td>
+<td><p>346654</p></td>
+<td><p>5.703</p></td>
+<td><p>Ncpu=16; RAM=16Gb; MKL=16threads, dynamic</p></td>
+</tr>
+<tr class="row-odd"><td><p>75 x 4500</p></td>
+<td><p>346654</p></td>
+<td><p>5.457</p></td>
+<td><p>Ncpu= 8; RAM= 8Gb; MKL= 8threads, dynamic</p></td>
+</tr>
+<tr class="row-even"><td><p>75 x 5400</p></td>
+<td><p>415954</p></td>
+<td><p>3.787</p></td>
+<td><p>Ncpu= 8; RAM= 8Gb; MKL= 8threads, dynamic</p></td>
+</tr>
+<tr class="row-odd"><td><p>75 x 4800</p></td>
+<td><p>369754</p></td>
+<td><p>6.188</p></td>
+<td><p>Ncpu=16; RAM= 8Gb; MKL=16threads, dynamic</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>It seems that restricting MKL PARDISO to 8 threads instead of 16 only has a minor effect on the compute rate for this computation, at similar grid dimensions. This makes it easier to squeeze in the compute job on the HPC cluster. However, 16 threads seems the more generally ‘safe’ option, when the grids are larger. Memory seems not to be an issue: the computations work fine with “only” 8 Gb.</p>
+<p>Of note, there is likely some heterogeneity in performance between different compute nodes on the HPC cluster, which we do not control or monitor here. This set of benchmarks is mainly to find reasonable SLURM requests (Ncpu, RAM), while also monitoring operational performance.</p>
 </section>
 </section>
 
@@ -401,6 +454,7 @@
             <ul>
 <li><a class="reference internal" href="#">Sparse solver benchmarks</a><ul>
 <li><a class="reference internal" href="#pyfvtool-sparse-solver-benchmark-260826">PyFVTool sparse solver benchmark 260826</a></li>
+<li><a class="reference internal" href="#pyfvtool-sparse-solver-benchmark-260830">PyFVTool sparse solver benchmark 260830</a></li>
 </ul>
 </li>
 </ul>
